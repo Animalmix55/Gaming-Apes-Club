@@ -1,0 +1,36 @@
+{
+  "name": "@gac/shared",
+  "version": "0.0.0",
+  "description": "Shared resources for Gaming Ape Club",
+  "main": "lib/index.js",
+  "scripts": {
+    "build": "tsc"
+  },
+  "typings": "lib/index.d.ts",
+  "typescript": {
+    "definition": "lib/index.d.ts"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.17.1",
+    "express-jwt": "^6.1.0",
+    "jsonwebtoken": "^8.5.1",
+    "node-rsa": "^1.1.1",
+    "sequelize": "^6.6.5",
+    "sharp": "^0.29.0",
+    "uuid": "^8.3.2",
+    "web3": "^1.6.0",
+    "rascal": "^13.1.2",
+    "web3-eth-contract": "^1.6.0",
+    "web3-core": "^1.6.0"
+  },
+  "peerDependencies": {
+    "typescript": "^4.3.5"
+  },
+  "files": [
+    "lib"
+  ],
+  "directories": {
+    "lib": "lib"
+  }
+}
