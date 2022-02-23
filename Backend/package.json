@@ -22,7 +22,8 @@
     "prod": "lerna run prod",
     "watch:dev": "lerna run watch:dev",
     "test": "jest",
-    "bootstrap": "lerna bootstrap"
+    "bootstrap": "lerna bootstrap",
+    "heroku:push": "cd .. && git subtree push --prefix Backend heroku master && cd Backend"
   },
   "jest": {
     "testEnvironment": "node"
