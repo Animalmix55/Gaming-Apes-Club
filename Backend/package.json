@@ -1,5 +1,5 @@
 {
-  "name": "@freeflow/backend",
+  "name": "@gac/backend",
   "version": "1.0.0",
   "description": "The backend monorepo for FreeFlow",
   "license": "MIT",
@@ -28,6 +28,7 @@
     "testEnvironment": "node"
   },
   "dependencies": {
+    "lerna": "^4.0.0",
     "@babel/cli": "^7.14.8",
     "@babel/core": "^7.15.0",
     "@babel/preset-env": "^7.15.0",
@@ -74,7 +75,6 @@
     "eslint-plugin-prettier": "^3.1.1",
     "prettier": "^2.4.1",
     "@typescript-eslint/eslint-plugin": "^4.31.2",
-    "@typescript-eslint/parser": "^4.31.2",
-    "lerna": "^4.0.0"
+    "@typescript-eslint/parser": "^4.31.2"
   }
 }
