@@ -1,0 +1,11 @@
+@font-face {
+    font-family: "RapierZero";
+    src: local("RapierZero"),
+    url(../assets/fonts/RapierZero-325M.ttf) format("truetype");
+}
+
+@font-face {
+    font-family: "RubberStamp";
+    src: local("RubberStamp"),
+        url(../assets/fonts/RubberStampStd.otf) format("truetype");
+}
