@@ -35,6 +35,10 @@ export const GlowButton = (props: Props): JSX.Element => {
         fontSize: '0.875rem !important',
         lineHeight: '1.25rem',
         fontWeight: '500',
+        ':disabled': {
+            cursor: 'not-allowed',
+            opacity: '0.7',
+        },
         '::before': {
             background: theme.backgroundGradients.purpleBlueButton,
             borderRadius: round ? '100000px' : '4px',

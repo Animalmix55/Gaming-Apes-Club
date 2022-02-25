@@ -1,4 +1,5 @@
 import express from 'express';
+import cors from 'cors';
 import { BaseResponse } from '@gac/shared';
 import keccak256 from 'keccak256';
 import Web3 from 'web3';
@@ -19,6 +20,7 @@ interface Response extends BaseResponse {
 
 router.get<string, never, Response, never, GetRequest>(
     '/',
+    cors(),
     async (req, res) => {
         const { query } = req;
         const { address } = query;

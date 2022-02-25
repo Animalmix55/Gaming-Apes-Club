@@ -47,7 +47,7 @@ export const ProviderContextProvider = ({
 
     const web3 = React.useMemo(() => {
         if (!provider) return undefined;
-        return new Web3(provider as never);
+        return new Web3(provider.provider as never);
     }, [provider]);
 
     return (
