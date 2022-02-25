@@ -21,6 +21,10 @@ export const Header = (props: Props): JSX.Element => {
                 className,
                 css({
                     height: '40px',
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    right: 0,
                     margin: '42px 42px 0px 42px',
                     display: 'flex',
                 })

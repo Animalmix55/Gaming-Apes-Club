@@ -2,6 +2,7 @@ import { Spinner } from '@fluentui/react';
 import React from 'react';
 import { useStyletron } from 'styletron-react';
 import GlowButton from '../atoms/GlowButton';
+import { useProvider } from '../contexts/ProviderContext';
 import { useThemeContext } from '../contexts/ThemeContext';
 import useCurrentTime from '../hooks/useCurrentTime';
 import useMintTimes from '../hooks/useMintTimes';
@@ -12,12 +13,14 @@ export const MintBox = (): JSX.Element => {
     const [css] = useStyletron();
     const theme = useThemeContext();
 
+    const { accounts } = useProvider();
+
     const currentTime = useCurrentTime();
     const { public: publicMint, private: privateMint } = useMintTimes(60);
     const { start: publicStart } = publicMint;
     const { start: privateStart, end: privateEnd } = privateMint;
 
-    const { isWhitelisted } = useWhitelisted();
+    const { isWhitelisted } = useWhitelisted(accounts?.[0]);
 
     return (
         <div
@@ -30,7 +33,13 @@ export const MintBox = (): JSX.Element => {
             })}
         >
             <GlowButton
-                disabled={!isWhitelisted}
+                disabled={
+                    !isWhitelisted ||
+                    !privateStart ||
+                    privateStart > currentTime ||
+                    !privateEnd ||
+                    privateEnd <= currentTime
+                }
                 className={css({ margin: '2px' })}
             >
                 <div>
@@ -62,7 +71,10 @@ export const MintBox = (): JSX.Element => {
                     )}
                 </div>
             </GlowButton>
-            <GlowButton className={css({ margin: '2px' })}>
+            <GlowButton
+                className={css({ margin: '2px' })}
+                disabled={!publicStart || publicStart >= currentTime}
+            >
                 <div>
                     <div className={css({ fontSize: '150%' })}>Public Mint</div>
                     {publicStart === undefined && <Spinner />}

@@ -20,11 +20,16 @@ interface Pallette {
     purple: RGBA;
 }
 
+interface BackgroundColors {
+    dark: RGBA;
+}
+
 export interface ThemeContextType {
     fonts: Fonts;
     fontColors: FontColors;
     pallette: Pallette;
     backgroundGradients: BackgroundGradients;
+    backgroundColor: BackgroundColors;
 }
 
 export const DefaultTheme: ThemeContextType = {
@@ -42,6 +47,9 @@ export const DefaultTheme: ThemeContextType = {
     backgroundGradients: {
         purpleBlue: 'linear-gradient(90deg, #623fe2, #238df3)',
         purpleBlueButton: 'linear-gradient(235deg, #a200ff, #060c21, #00bcd4)',
+    },
+    backgroundColor: {
+        dark: rgba(0, 0, 0),
     },
 };
 
