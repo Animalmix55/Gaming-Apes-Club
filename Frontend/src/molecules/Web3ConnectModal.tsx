@@ -58,6 +58,7 @@ export const Web3ConnectModal = (): JSX.Element => {
             styles={{
                 main: {
                     background: theme.backgroundGradients.purpleBlue,
+                    display: 'flex',
                 },
                 scrollableContent: { height: '100%', padding: '20px' },
             }}

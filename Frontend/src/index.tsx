@@ -1,36 +1,22 @@
 import { initializeIcons } from '@fluentui/react';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { createTheme, MuiThemeProvider } from '@material-ui/core/styles';
 import { ToastContainer } from 'react-toastify';
 import { Client } from 'styletron-engine-atomic';
 import { Provider } from 'styletron-react';
 import 'react-toastify/dist/ReactToastify.css';
 import './styles/global.css';
+import { QueryClient, QueryClientProvider } from 'react-query';
 import {
     GamingApeClubContextType,
     GamingApeContextProvider,
 } from './contexts/GamingApeClubContext';
 import { DefaultTheme, ThemeContextProvider } from './contexts/ThemeContext';
+import MintPage from './organisms/MintPage';
+import { ContractContextProvider } from './contexts/ContractContext';
+import { ProviderContextProvider } from './contexts/ProviderContext';
 
 initializeIcons();
-
-const theme = createTheme({
-    overrides: {
-        MuiCssBaseline: {
-            '@global': {
-                '*, *::before, *::after': {
-                    boxSizing: 'content-box',
-                },
-
-                body: {
-                    backgroundColor: '#fff',
-                    fontFamily: 'unset',
-                },
-            },
-        },
-    },
-});
 
 const {
     api,
@@ -43,32 +29,36 @@ const {
 } = { ...window } as unknown as GamingApeClubContextType;
 
 const styletron = new Client();
+const queryClient = new QueryClient();
 
 const Root = (): JSX.Element => {
     return (
-        <MuiThemeProvider theme={theme}>
-            <Provider value={styletron}>
+        <Provider value={styletron}>
+            <QueryClientProvider client={queryClient}>
                 <ThemeContextProvider value={DefaultTheme}>
-                    <GamingApeContextProvider
-                        value={{
-                            api,
-                            homeUrl,
-                            chainId,
-                            tokenAddress,
-                            discordUrl,
-                            twitterUrl,
-                            openseaUrl,
-                        }}
-                    >
-                        <>
-                            {/* <Header /> */}
-                            <ToastContainer position="bottom-left" />
-                            {/* <Footer /> */}
-                        </>
-                    </GamingApeContextProvider>
+                    <ProviderContextProvider>
+                        <GamingApeContextProvider
+                            value={{
+                                api,
+                                homeUrl,
+                                chainId,
+                                tokenAddress,
+                                discordUrl,
+                                twitterUrl,
+                                openseaUrl,
+                            }}
+                        >
+                            <ContractContextProvider>
+                                <>
+                                    <MintPage />
+                                    <ToastContainer position="bottom-left" />
+                                </>
+                            </ContractContextProvider>
+                        </GamingApeContextProvider>
+                    </ProviderContextProvider>
                 </ThemeContextProvider>
-            </Provider>
-        </MuiThemeProvider>
+            </QueryClientProvider>
+        </Provider>
     );
 };
 

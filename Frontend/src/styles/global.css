@@ -9,3 +9,7 @@
     src: local("RubberStamp"),
         url(../assets/fonts/RubberStampStd.otf) format("truetype");
 }
+
+body {
+    margin: unset;
+}

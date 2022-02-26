@@ -45,10 +45,10 @@ module.exports = {
         ],
     },
     resolveLoader: {
-        modules: [path.join(__dirname, 'node_modules')],
+        modules: ['node_modules'],
     },
     resolve: {
-        modules: [path.join(__dirname, 'node_modules')],
+        modules: ['node_modules'],
         extensions: ['.js', '.jsx', '.ts', '.tsx', '.css', '.svg', 'json'],
         fallback: {
             os: false,
