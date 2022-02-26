@@ -3,7 +3,7 @@ import cors from 'cors';
 import { BaseResponse } from '@gac/shared';
 import keccak256 from 'keccak256';
 import Web3 from 'web3';
-import { getMerkleTree, getProof } from '../helpers/MerkleTree';
+import { getMerkleTree, getProof, getRoot } from '../helpers/MerkleTree';
 import getWhitelist from '../helpers/Whitelist';
 
 const WhitelistTree = getMerkleTree(getWhitelist().map(keccak256));
@@ -16,6 +16,7 @@ interface GetRequest {
 
 interface Response extends BaseResponse {
     proof?: string[];
+    root?: string;
 }
 
 router.get<string, never, Response, never, GetRequest>(
@@ -32,13 +33,14 @@ router.get<string, never, Response, never, GetRequest>(
 
         const leaf = keccak256(address);
         const proof = getProof(WhitelistTree, leaf);
+        const root = getRoot(WhitelistTree);
 
         if (proof.length === 0) {
             res.status(404).send({ error: 'Address not found' });
             return;
         }
 
-        res.status(200).send({ proof });
+        res.status(200).send({ proof, root });
     }
 );
 

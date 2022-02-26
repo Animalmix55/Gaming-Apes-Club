@@ -10,7 +10,7 @@ export const FormatTimeOffset = (unixSeconds: number): string => {
     if (minutes) parts.push(`${minutes} minutes`);
     parts.push(`${seconds} seconds`);
 
-    return parts.join(', ');
+    return parts.slice(0, 3).join(', ');
 };
 
 export default FormatTimeOffset;

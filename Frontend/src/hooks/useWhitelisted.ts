@@ -1,31 +1,40 @@
 import React from 'react';
-import Web3 from 'web3';
-import { useProofGetter } from '../api/hooks/useProofGetter';
+import useRequest, { RequestResult } from '../api/hooks/useRequest';
+import { getProof } from '../api/Requests';
+import { useGamingApeContext } from '../contexts/GamingApeClubContext';
 
 interface WhitelistResponse {
-    isWhitelisted?: boolean;
+    isWhitelisted: boolean;
     proof?: string[];
 }
 
-export const useWhitelisted = (address?: string): WhitelistResponse => {
-    const [whitelisted, setWhitelisted] = React.useState<WhitelistResponse>({});
-    const whitelistProofGetter = useProofGetter();
+const WHITELIST_KEY = 'WHITELIST';
 
-    React.useEffect(() => {
-        if (!address || !Web3.utils.isAddress(address)) {
-            setWhitelisted({ isWhitelisted: false });
-            return;
-        }
-        setWhitelisted({});
+export const useWhitelisted = (
+    address?: string
+): RequestResult<WhitelistResponse> => {
+    const { api } = useGamingApeContext();
 
-        whitelistProofGetter(address)
-            .then((r) => {
-                setWhitelisted({ proof: r, isWhitelisted: r.length > 0 });
-            })
-            .catch(() => setWhitelisted({ isWhitelisted: false }));
-    }, [address, whitelistProofGetter]);
+    const query = React.useCallback(
+        async (account?: string): Promise<WhitelistResponse> => {
+            if (!account || !api) return { isWhitelisted: false };
 
-    return whitelisted;
+            try {
+                const proof = await getProof(api, account);
+                return { isWhitelisted: true, proof };
+            } catch (e) {
+                if (!String(e).includes('404')) throw e;
+                return { isWhitelisted: false };
+            }
+        },
+        [api]
+    );
+
+    const params = React.useMemo(() => [address], [address]);
+
+    return useRequest(query, WHITELIST_KEY, params, {
+        staleTime: 1000 * 60 * 5, // 5 mins
+    });
 };
 
 export default useWhitelisted;

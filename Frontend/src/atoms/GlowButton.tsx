@@ -3,12 +3,14 @@ import { StyleObject, useStyletron } from 'styletron-react';
 import { useThemeContext } from '../contexts/ThemeContext';
 import ClassNameBuilder from '../utilties/ClassNameBuilder';
 
-interface Props extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+export interface GlowButtonProps
+    extends React.ButtonHTMLAttributes<HTMLButtonElement> {
     round?: boolean;
     forceglow?: boolean;
     children: React.ReactNode;
+    innerclass?: string;
 }
-export const GlowButton = (props: Props): JSX.Element => {
+export const GlowButton = (props: GlowButtonProps): JSX.Element => {
     const {
         children,
         className,
@@ -16,6 +18,7 @@ export const GlowButton = (props: Props): JSX.Element => {
         onMouseLeave,
         round,
         forceglow,
+        innerclass,
     } = props;
     const [hovered, setHovered] = React.useState(false);
 
@@ -69,6 +72,7 @@ export const GlowButton = (props: Props): JSX.Element => {
 
     const passedProps = { ...props };
     delete passedProps.forceglow;
+    delete passedProps.innerclass;
 
     return (
         <button
@@ -86,22 +90,25 @@ export const GlowButton = (props: Props): JSX.Element => {
             }}
         >
             <div
-                className={css({
-                    opacity: 0.8,
-                    zIndex: 1,
-                    height: '100%',
-                    width: '100%',
-                    textAlign: 'center',
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    backgroundColor: `${theme.fontColors.dark.toRgbaString(
-                        0.7
-                    )} !important`,
-                    padding: '2px 16px 0px 16px',
-                    boxSizing: 'border-box',
-                    borderRadius: round ? '100000px' : '4px',
-                })}
+                className={ClassNameBuilder(
+                    innerclass,
+                    css({
+                        opacity: 0.8,
+                        zIndex: 1,
+                        height: '100%',
+                        width: '100%',
+                        textAlign: 'center',
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        backgroundColor: `${theme.fontColors.dark.toRgbaString(
+                            0.7
+                        )} !important`,
+                        padding: '2px 16px 0px 16px',
+                        boxSizing: 'border-box',
+                        borderRadius: round ? '100000px' : '4px',
+                    })
+                )}
             >
                 {children}
             </div>

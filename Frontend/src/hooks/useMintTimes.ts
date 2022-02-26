@@ -1,67 +1,77 @@
 import React from 'react';
+import useRequest, { RequestResult } from '../api/hooks/useRequest';
 import { useContractContext } from '../contexts/ContractContext';
 
 interface ReturnType {
     public: {
-        start?: number;
+        start: number;
     };
     private: {
-        start?: number;
-        end?: number;
+        start: number;
+        end: number;
     };
 }
+
+export const MINT_TIME_KEY = 'MINT_TIME';
 
 /**
  * @param offset The offset in seconds to return, for tolerating delays
  * @returns the mints times
  */
-export const useMintTimes = (offset: number): ReturnType => {
+export const useMintTimes = (offset: number): RequestResult<ReturnType> => {
     const { tokenContract } = useContractContext();
 
-    const [publicStart, setPublicStart] = React.useState<number>();
-    const [privateStart, setPrivateStart] = React.useState<number>();
-    const [privateEnd, setPrivateEnd] = React.useState<number>();
+    const query = React.useCallback(async () => {
+        if (!tokenContract) throw new Error('Contract not yet loaded');
 
-    React.useEffect(() => {
-        if (!tokenContract) {
-            setPublicStart(Infinity);
-            setPrivateEnd(Infinity);
-            setPrivateStart(Infinity);
+        const publicStart = Number(
+            await tokenContract.methods.publicStart().call()
+        );
+        const privateStart = Number(
+            await tokenContract.methods.whitelistStart().call()
+        );
+        const privateEnd = Number(
+            await tokenContract.methods.whitelistEnd().call()
+        );
 
-            return;
-        }
-
-        setPublicStart(undefined);
-        setPrivateEnd(undefined);
-        setPrivateStart(undefined);
-
-        tokenContract.methods
-            .publicStart()
-            .call()
-            .then((v) => setPublicStart(Number(v)))
-            .catch(() => setPublicStart(Infinity));
-        tokenContract.methods
-            .whitelistStart()
-            .call()
-            .then((v) => setPrivateStart(Number(v)))
-            .catch(() => setPrivateStart(Infinity));
-        tokenContract.methods
-            .whitelistEnd()
-            .call()
-            .then((v) => setPrivateEnd(Number(v)))
-            .catch(() => setPrivateEnd(Infinity));
+        return {
+            private: {
+                start: privateStart,
+                end: privateEnd,
+            },
+            public: {
+                start: publicStart,
+            },
+        };
     }, [tokenContract]);
 
-    return {
-        private: {
-            start:
-                privateStart !== undefined ? privateStart + offset : undefined,
-            end: privateEnd,
-        },
-        public: {
-            start: publicStart !== undefined ? publicStart + offset : undefined,
-        },
-    };
+    const [params] = React.useState([]);
+
+    const result = useRequest(query, MINT_TIME_KEY, params, {
+        staleTime: 1000 * 60 * 5, // 5 mins
+    });
+
+    return React.useMemo<RequestResult<ReturnType>>(() => {
+        const { data } = result;
+        if (data) {
+            const { public: publicTimes, private: privateTimes } = data;
+
+            return {
+                ...result,
+                data: {
+                    private: {
+                        start: privateTimes.start + offset,
+                        end: privateTimes.end,
+                    },
+                    public: {
+                        start: publicTimes.start + offset,
+                    },
+                },
+            };
+        }
+
+        return result;
+    }, [offset, result]);
 };
 
 export default useMintTimes;

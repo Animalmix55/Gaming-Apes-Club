@@ -9,8 +9,8 @@ export default {
 export const StandAlone = (): JSX.Element => (
     <div
         style={{
-            height: '80vh',
-            width: '80vw',
+            height: '100vh',
+            width: '100vw',
         }}
     >
         <MintPage />

@@ -10,7 +10,11 @@ export default {
 
 export const WithConnector = (): JSX.Element => {
     const { accounts } = useProvider();
-    const { isWhitelisted } = useWhitelisted(accounts?.[0]);
+    const { data: whitelistData } = useWhitelisted(accounts?.[0]);
+
+    if (!whitelistData) return <Spinner />;
+
+    const { isWhitelisted } = whitelistData;
 
     return (
         <div>
@@ -23,7 +27,11 @@ export const WithConnector = (): JSX.Element => {
 
 export const Input = (): JSX.Element => {
     const [address, setAddress] = React.useState<string>();
-    const { isWhitelisted } = useWhitelisted(address);
+    const { data: whitelistData } = useWhitelisted(address);
+
+    if (!whitelistData) return <Spinner />;
+
+    const { isWhitelisted } = whitelistData;
 
     return (
         <div>

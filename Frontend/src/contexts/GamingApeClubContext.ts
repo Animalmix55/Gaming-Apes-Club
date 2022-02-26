@@ -7,6 +7,7 @@ export interface GamingApeClubContextType {
     twitterUrl?: string;
     discordUrl?: string;
     openseaUrl?: string;
+    etherscanUrl?: string;
     homeUrl?: string;
     api?: string;
 }

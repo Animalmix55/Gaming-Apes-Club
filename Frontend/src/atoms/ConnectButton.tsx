@@ -119,11 +119,20 @@ export const MetaMaskButton = (props: ButtonProps): JSX.Element => {
             error={error}
             className={className}
         >
-            <img
-                className={css({ height: '48px', width: 'auto' })}
-                src={MetaMaskLogo}
-                alt={isActive ? 'Disconnect Metamask' : 'Connect Metamask'}
-            />
+            <div className={css({ padding: '5px' })}>
+                <div>
+                    <img
+                        className={css({ height: '70px', width: 'auto' })}
+                        src={MetaMaskLogo}
+                        alt={
+                            isActive
+                                ? 'Disconnect Metamask'
+                                : 'Connect Metamask'
+                        }
+                    />
+                </div>
+                <div className={css({ fontSize: '15px' })}>MetaMask</div>
+            </div>
         </ConnectButton>
     );
 };
@@ -144,15 +153,21 @@ export const WalletLinkButton = (props: ButtonProps): JSX.Element => {
             error={error}
             className={className}
         >
-            <img
-                className={css({ height: '48px', width: 'auto' })}
-                src={WalletLinkLogo}
-                alt={
-                    isActive
-                        ? 'Disconnect Coinbase Wallet'
-                        : 'Connect Coinbase Wallet'
-                }
-            />
+            <div className={css({ padding: '5px' })}>
+                <div>
+                    <img
+                        className={css({ height: '70px', width: 'auto' })}
+                        src={WalletLinkLogo}
+                        alt={
+                            isActive
+                                ? 'Disconnect Coinbase Wallet'
+                                : 'Connect Coinbase Wallet'
+                        }
+                    />
+                </div>
+                <div className={css({ fontSize: '15px' })}>Coinbase</div>
+                <div className={css({ fontSize: '15px' })}>Wallet</div>
+            </div>
         </ConnectButton>
     );
 };
@@ -173,15 +188,21 @@ export const WalletConnectButton = (props: ButtonProps): JSX.Element => {
             error={error}
             className={className}
         >
-            <img
-                className={css({ height: '48px', width: 'auto' })}
-                src={WalletConnectLogo}
-                alt={
-                    isActive
-                        ? 'Disconnect WalletConnect'
-                        : 'Connect WalletConnect'
-                }
-            />
+            <div className={css({ padding: '5px' })}>
+                <div>
+                    <img
+                        className={css({ height: '48px', width: 'auto' })}
+                        src={WalletConnectLogo}
+                        alt={
+                            isActive
+                                ? 'Disconnect WalletConnect'
+                                : 'Connect WalletConnect'
+                        }
+                    />
+                </div>
+                <div className={css({ fontSize: '15px' })}>Wallet</div>
+                <div className={css({ fontSize: '15px' })}>Connect</div>
+            </div>
         </ConnectButton>
     );
 };
