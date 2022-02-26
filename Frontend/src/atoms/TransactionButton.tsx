@@ -151,9 +151,16 @@ export const TransactionButton = <
         return childrenProp;
     }, [childrenProp, hash, pending]);
 
+    const filteredProps = { ...props } as Record<string, unknown>;
+    delete filteredProps.contract;
+    delete filteredProps.method;
+    delete filteredProps.params;
+    delete filteredProps.onTransact;
+    delete filteredProps.tx;
+
     return (
         <GlowButton
-            {...{ ...props, ref: undefined }}
+            {...filteredProps}
             disabled={(disabled && !(pending && hash)) || (pending && !hash)}
             onClick={onClick}
         >

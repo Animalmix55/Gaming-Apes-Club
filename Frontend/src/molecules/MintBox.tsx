@@ -157,7 +157,7 @@ const ActiveMintBox = ({
     );
 
     const { tokenContract } = useContractContext();
-    const [amount, setAmount] = React.useState(1);
+    const [amount] = React.useState(1);
 
     const currentTime = useCurrentTime();
 
