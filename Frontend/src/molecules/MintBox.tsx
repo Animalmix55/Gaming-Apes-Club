@@ -2,6 +2,7 @@ import { Spinner, SpinnerSize } from '@fluentui/react';
 import BigDecimal from 'js-big-decimal';
 import React from 'react';
 import { useQueryClient } from 'react-query';
+import { toast } from 'react-toastify';
 import { useStyletron } from 'styletron-react';
 import { useProofGetter } from '../api/hooks/useProofGetter';
 import FadeInOut from '../atoms/FadeInOut';
@@ -214,8 +215,9 @@ const ActiveMintBox = ({
             </div>
         );
 
-    const { private: privateMint } = mintTimeData;
-    const { end: privateEnd } = privateMint;
+    const { private: privateMint, public: publicMint } = mintTimeData;
+    const { end: privateEnd, start: privateStart } = privateMint;
+    const { start: publicStart } = publicMint;
 
     const { maxPerWallet } = mintData;
 
@@ -276,6 +278,25 @@ const ActiveMintBox = ({
                     <TransactionButton
                         disabled={!accounts?.[0] || disabled}
                         contract={tokenContract}
+                        bypassError={(err): boolean => {
+                            const errString = err.message;
+
+                            // an inactive error within the first 2 minutes is probably a fluke...
+                            if (
+                                errString
+                                    .toLowerCase()
+                                    .includes('revert inactive') &&
+                                Math.abs(currentTime - publicStart) <= 120
+                            ) {
+                                toast(
+                                    'Since the mint just began, your client might claim the transaction will fail for up to 2 minutes after mint opening (due to delays in block generation). In most scenarios, you should still be safe to mint.',
+                                    { type: 'warning', position: 'bottom-left' }
+                                );
+                                return true;
+                            }
+
+                            return false;
+                        }}
                         method="mint"
                         params={[1]}
                         tx={{ from: accounts?.[0], value }}
@@ -309,6 +330,25 @@ const ActiveMintBox = ({
                             minHeight: '60px !important',
                             fontSize: '20px !important',
                         })}
+                        bypassError={(err): boolean => {
+                            const errString = err.message;
+
+                            // an inactive error within the first 2 minutes is probably a fluke...
+                            if (
+                                errString
+                                    .toLowerCase()
+                                    .includes('revert inactive') &&
+                                Math.abs(currentTime - privateStart) <= 120
+                            ) {
+                                toast(
+                                    'Since the mint just began, your client might claim the transaction will fail for up to 2 minutes after mint opening (due to delays in block generation). In most scenarios, you should still be safe to mint.',
+                                    { type: 'warning', position: 'bottom-left' }
+                                );
+                                return true;
+                            }
+
+                            return false;
+                        }}
                     >
                         Mint {amount} ({roundAndDisplay(transactionCost)} ETH)
                     </TransactionButton>

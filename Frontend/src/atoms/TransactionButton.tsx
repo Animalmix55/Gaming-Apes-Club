@@ -12,6 +12,8 @@ export interface TransactionButtonProps<
     T extends BaseContract,
     M extends keyof T['methods']
 > extends GlowButtonProps {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    bypassError?: (err: any) => boolean;
     contract: T;
     method: M;
     params:
@@ -38,6 +40,7 @@ export const TransactionButton = <
         tx,
         children: childrenProp,
         onClick: onClickProp,
+        bypassError,
     } = props;
     const { etherscanUrl } = useGamingApeContext();
     const [pending, setPending] = React.useState(false);
@@ -62,19 +65,43 @@ export const TransactionButton = <
                         typeof params === 'function'
                             ? await params(props)
                             : params;
+                } catch (err) {
+                    setPending(false);
+                    toast(err, { type: 'error' });
+                    return;
+                }
+
+                try {
                     await contract.methods[method](
                         ...functionParams
                     ).estimateGas(tx);
                 } catch (error) {
-                    setPending(false);
-                    toast(
-                        (typeof error === 'object'
-                            ? error.message
-                            : String(error)
-                        ).split('{')[0],
-                        { type: 'error' }
-                    );
-                    return;
+                    if (!bypassError?.(error)) {
+                        setPending(false);
+                        if (typeof error === 'string')
+                            toast(error, { type: 'error' });
+                        else if (typeof error === 'object') {
+                            if (error.data?.message)
+                                toast(error.data.message, { type: 'error' });
+                            else if (error.message) {
+                                try {
+                                    // error can be a json object, expecially if from Ganache.
+                                    const body = `{${(error.message as string)
+                                        .split('{')
+                                        .slice(1)
+                                        .join('{')}`;
+                                    const obj = JSON.parse(body);
+                                    if (obj.message)
+                                        toast(obj.message, { type: 'error' });
+                                    else toast(obj, { type: 'error' });
+                                } catch (e) {
+                                    toast(error.message, { type: 'error' });
+                                }
+                            } else toast('Unexpected error', { type: 'error' });
+                        } else toast('Unexpected error', { type: 'error' });
+
+                        return;
+                    }
                 }
 
                 const trans = contract.methods[method](...functionParams).send(
@@ -115,6 +142,7 @@ export const TransactionButton = <
                 trans.on('transactionHash', setHash);
             },
             [
+                bypassError,
                 contract.methods,
                 css,
                 etherscanUrl,
@@ -157,6 +185,7 @@ export const TransactionButton = <
     delete filteredProps.params;
     delete filteredProps.onTransact;
     delete filteredProps.tx;
+    delete filteredProps.bypassError;
 
     return (
         <GlowButton
