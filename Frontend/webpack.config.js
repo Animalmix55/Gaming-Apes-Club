@@ -1,11 +1,13 @@
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
 /* eslint-disable import/no-extraneous-dependencies */
 /* eslint-disable @typescript-eslint/no-var-requires */
 const path = require('path');
 const webpack = require('webpack');
 const ImageMinimizerPlugin = require('image-minimizer-webpack-plugin');
 const { extendDefaultPlugins } = require('svgo');
+const Dotenv = require('dotenv-webpack');
 
-module.exports = {
+module.exports = (env) => ({
     entry: './src/index.tsx',
     output: {
         path: path.resolve(__dirname, 'dist'),
@@ -60,6 +62,9 @@ module.exports = {
         },
     },
     plugins: [
+        new Dotenv({
+            path: `.env${env.file ? `.${env.file}` : ''}`,
+        }),
         new webpack.ProvidePlugin({
             process: 'process/browser',
         }),
@@ -100,4 +105,4 @@ module.exports = {
             },
         }),
     ],
-};
+});

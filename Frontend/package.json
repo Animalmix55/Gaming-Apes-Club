@@ -44,6 +44,7 @@
     "axios": "^0.24.0",
     "buffer": "^6.0.3",
     "crypto-browserify": "^3.12.0",
+    "dotenv-webpack": "^7.1.0",
     "fluent-ui": "^0.1.0",
     "hamburger-react": "^2.4.1",
     "image-minimizer-webpack-plugin": "^2.2.0",
