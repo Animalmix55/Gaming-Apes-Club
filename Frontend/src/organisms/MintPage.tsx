@@ -1,5 +1,6 @@
 import React from 'react';
 import { useStyletron } from 'styletron-react';
+import DisconnectButton from '../atoms/DisconnectButton';
 import { useProvider } from '../contexts/ProviderContext';
 import { useThemeContext } from '../contexts/ThemeContext';
 import Header from '../molecules/Header';
@@ -32,6 +33,13 @@ export const MintPage = ({
                 })
             )}
         >
+            <DisconnectButton
+                className={css({
+                    position: 'absolute',
+                    left: '10px',
+                    bottom: '10px',
+                })}
+            />
             <Web3ConnectModal />
             <Header />
             <div

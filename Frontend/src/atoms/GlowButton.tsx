@@ -73,6 +73,7 @@ export const GlowButton = (props: GlowButtonProps): JSX.Element => {
     const passedProps = { ...props };
     delete passedProps.forceglow;
     delete passedProps.innerclass;
+    delete passedProps.round;
 
     return (
         <button

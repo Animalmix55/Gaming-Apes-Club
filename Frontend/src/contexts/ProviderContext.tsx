@@ -2,14 +2,15 @@ import { Web3Provider } from '@ethersproject/providers';
 import React from 'react';
 import Web3 from 'web3';
 
-import { hooks as MMHooks } from '../connectors/Metamask';
-import { hooks as WCHooks } from '../connectors/WalletConnect';
-import { hooks as WLHooks } from '../connectors/WalletLink';
+import { hooks as MMHooks, metaMask } from '../connectors/Metamask';
+import { hooks as WCHooks, walletConnect } from '../connectors/WalletConnect';
+import { hooks as WLHooks, walletLink } from '../connectors/WalletLink';
 
 export interface ProviderContextType {
     provider?: Web3Provider;
     web3?: Web3;
     accounts?: string[];
+    disconnect?: () => void;
 }
 
 export const ProviderContext = React.createContext<ProviderContextType>({});
@@ -45,13 +46,22 @@ export const ProviderContextProvider = ({
         return undefined;
     }, [MMAccounts, MMActive, WCAccounts, WCActive, WLAccounts, WLActive]);
 
+    const disconnect = React.useCallback(() => {
+        if (MMActive) return metaMask.deactivate();
+        if (WCActive) return walletConnect.deactivate();
+        if (WLActive) return walletLink.deactivate();
+        return undefined;
+    }, [MMActive, WCActive, WLActive]);
+
     const web3 = React.useMemo(() => {
         if (!provider) return undefined;
         return new Web3(provider.provider as never);
     }, [provider]);
 
     return (
-        <ProviderContext.Provider value={{ provider, web3, accounts }}>
+        <ProviderContext.Provider
+            value={{ provider, web3, accounts, disconnect }}
+        >
             {children}
         </ProviderContext.Provider>
     );
