@@ -8,10 +8,10 @@ export const DisconnectButton = ({
 }: {
     className?: string;
 }): JSX.Element => {
-    const { disconnect } = useProvider();
+    const { disconnect, accounts } = useProvider();
     const [css] = useStyletron();
 
-    if (!disconnect) return <></>;
+    if (!disconnect || !accounts) return <></>;
 
     return (
         <GlowButton
