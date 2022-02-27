@@ -1,6 +1,7 @@
 import React from 'react';
 import { StyleObject, useStyletron } from 'styletron-react';
 import { useThemeContext } from '../contexts/ThemeContext';
+import useHover from '../hooks/useHover';
 import ClassNameBuilder from '../utilties/ClassNameBuilder';
 
 export interface GlowButtonProps
@@ -11,16 +12,8 @@ export interface GlowButtonProps
     innerclass?: string;
 }
 export const GlowButton = (props: GlowButtonProps): JSX.Element => {
-    const {
-        children,
-        className,
-        onMouseEnter,
-        onMouseLeave,
-        round,
-        forceglow,
-        innerclass,
-    } = props;
-    const [hovered, setHovered] = React.useState(false);
+    const { children, className, round, forceglow, innerclass } = props;
+    const [hoverRef, hovered] = useHover<HTMLButtonElement>();
 
     const [css] = useStyletron();
     const theme = useThemeContext();
@@ -81,14 +74,7 @@ export const GlowButton = (props: GlowButtonProps): JSX.Element => {
             // eslint-disable-next-line react/jsx-props-no-spreading
             {...passedProps}
             className={ClassNameBuilder(className, css(HoverStyles))}
-            onMouseEnter={(e): void => {
-                setHovered(true);
-                return onMouseEnter?.(e);
-            }}
-            onMouseLeave={(e): void => {
-                setHovered(false);
-                return onMouseLeave?.(e);
-            }}
+            ref={hoverRef}
         >
             <div
                 className={ClassNameBuilder(
