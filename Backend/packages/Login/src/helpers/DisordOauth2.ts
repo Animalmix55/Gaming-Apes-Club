@@ -1,6 +1,8 @@
-import DiscordOauth2 from 'discord-oauth2';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import DiscordOauth2, { Member, User } from 'discord-oauth2';
 import crypto from 'crypto';
 import { RequestHandler } from 'express';
+import { BaseResponse } from '@gac/shared';
 
 export const getOauth2Client = (
     clientId: string,
@@ -65,24 +67,37 @@ export const generatureOath2Url = (client: DiscordOauth2, scope: string[]) => {
     });
 };
 
-export const discordAuthMiddleware: (client: DiscordOauth2) => RequestHandler =
-    (client) => async (req, res, next) => {
+interface AuthLocals {
+    [x: string]: unknown;
+    user: User & { member: Member };
+}
+
+export const discordAuthMiddleware: <
+    P = { [x: string]: string },
+    ResBody extends BaseResponse = BaseResponse,
+    ReqBody = any,
+    ReqQuery = qs.ParsedQs,
+    Locals extends AuthLocals = AuthLocals
+>(
+    client: DiscordOauth2,
+    guildId: string
+) => RequestHandler<P, ResBody, ReqBody, ReqQuery, Locals> =
+    (client, guildId) => async (req, res, next) => {
         const { authorization } = req.headers;
 
         if (!authorization) {
-            res.status(403).send({ error: 'No credentials sent' });
+            res.status(403).send({ error: 'No credentials sent' } as never);
             return;
         }
 
         try {
-            const user = await getUser(
-                client,
-                authorization.replace('Bearer ', '')
-            );
-            res.locals.user = user;
+            const token = authorization.replace('Bearer ', '');
+            const user = await getUser(client, token);
+            const member = await getGuildMember(client, token, guildId);
+            res.locals.user = { ...user, member };
 
             next();
         } catch (e) {
-            res.status(401).send({ error: `Bad authorization: ${e}` });
+            res.status(401).send({ error: `Bad authorization: ${e}` } as never);
         }
     };

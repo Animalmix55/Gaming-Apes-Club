@@ -6,6 +6,9 @@ import { getBalanceRouter } from '@gac/token';
 import { getLoginRouter, discordAuthMiddleware } from '@gac/login';
 import { getMarketplaceRouter } from '@gac/marketplace';
 
+const guildId = process.env.GUILD_ID;
+if (!guildId) throw new Error('Missing guild id');
+
 const app = express();
 app.use(logger('dev'));
 app.use(express.json());
@@ -28,7 +31,7 @@ const { LoginRouter, client: Oauth2Client } = getLoginRouter(
 app.use('/login', LoginRouter);
 
 // ALL AUTHENTICATED ROUTES
-app.use(discordAuthMiddleware(Oauth2Client));
+app.use(discordAuthMiddleware(Oauth2Client, guildId));
 
 app.use('/purchase', getMarketplaceRouter());
 export default app;
