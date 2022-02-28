@@ -8,7 +8,7 @@ import getWhitelist from '../helpers/Whitelist';
 
 const WhitelistTree = getMerkleTree(getWhitelist().map(keccak256));
 
-const router = express.Router();
+export const ProofRouter = express.Router();
 
 interface GetRequest {
     address: string;
@@ -19,7 +19,7 @@ interface Response extends BaseResponse {
     root?: string;
 }
 
-router.get<string, never, Response, never, GetRequest>(
+ProofRouter.get<string, never, Response, never, GetRequest>(
     '/',
     cors(),
     async (req, res) => {
@@ -44,4 +44,4 @@ router.get<string, never, Response, never, GetRequest>(
     }
 );
 
-export default router;
+export default ProofRouter;

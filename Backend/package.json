@@ -1,7 +1,7 @@
 {
   "name": "@gac/backend",
   "version": "1.0.0",
-  "description": "The backend monorepo for FreeFlow",
+  "description": "The backend monorepo for GAC",
   "license": "MIT",
   "workspaces": [
     "packages/*"
@@ -13,7 +13,7 @@
     "url": "git+https://github.com/Animalmix55/FreeFlow.git"
   },
   "scripts": {
-    "start": "lerna run start",
+    "start": "lerna run build && lerna run start",
     "transpile": "lerna run transpile",
     "clean": "lerna run clean",
     "build": "lerna run build",
