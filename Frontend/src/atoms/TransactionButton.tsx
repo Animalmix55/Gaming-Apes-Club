@@ -93,7 +93,14 @@ export const TransactionButton = <
                                     const obj = JSON.parse(body);
                                     if (obj.message)
                                         toast(obj.message, { type: 'error' });
-                                    else toast(obj, { type: 'error' });
+                                    else if (obj.originalError?.message)
+                                        toast(obj.originalError.message, {
+                                            type: 'error',
+                                        });
+                                    else
+                                        toast('Unexpected error', {
+                                            type: 'error',
+                                        });
                                 } catch (e) {
                                     toast(error.message, { type: 'error' });
                                 }
