@@ -1,0 +1,31 @@
+{
+  "name": "@gac/marketplace",
+  "version": "0.0.0",
+  "description": "Marketplace resources for Gaming Ape Club",
+  "main": "lib/index.js",
+  "scripts": {
+    "build": "tsc"
+  },
+  "typings": "lib/index.d.ts",
+  "typescript": {
+    "definition": "lib/index.d.ts"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "@types/cors": "^2.8.12"
+  },
+  "dependencies": {
+    "@gac/shared": "^0.0.0",
+    "cors": "^2.8.5",
+    "express": "~4.16.1"
+  },
+  "peerDependencies": {
+    "typescript": "^4.3.5"
+  },
+  "files": [
+    "lib"
+  ],
+  "directories": {
+    "lib": "lib"
+  }
+}

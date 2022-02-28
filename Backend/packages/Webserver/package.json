@@ -5,6 +5,7 @@
   "author": "Cory Cherven",
   "license": "ISC",
   "scripts": {
+    "start:fresh": "npx kill-port 3000 && yarn start",
     "start": "yarn prod",
     "transpile": "yarn tsc",
     "clean": "rimraf dist-server",
@@ -34,6 +35,9 @@
   "dependencies": {
     "@gac/shared": "^0.0.0",
     "@gac/whitelist": "^0.0.0",
+    "@gac/token": "^0.0.0",
+    "@gac/marketplace": "^0.0.0",
+    "@gac/login": "^0.0.0",
     "@babel/cli": "^7.14.8",
     "@babel/core": "^7.15.0",
     "@babel/preset-env": "^7.15.0",
