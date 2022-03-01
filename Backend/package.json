@@ -13,8 +13,8 @@
     "url": "git+https://github.com/Animalmix55/FreeFlow.git"
   },
   "scripts": {
-    "start:fresh": "lerna run build && lerna run start:fresh",
-    "start": "lerna run build && lerna run start",
+    "start:fresh": "lerna run build --stream && lerna run start:fresh --stream",
+    "start": "lerna run build --stream && lerna run start --stream",
     "transpile": "lerna run transpile",
     "clean": "lerna run clean",
     "build": "lerna run build",

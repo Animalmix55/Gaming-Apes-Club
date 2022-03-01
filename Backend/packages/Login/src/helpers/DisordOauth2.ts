@@ -1,8 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import DiscordOauth2, { Member, User } from 'discord-oauth2';
+import DiscordOauth2, { Member } from 'discord-oauth2';
 import crypto from 'crypto';
 import { RequestHandler } from 'express';
 import { BaseResponse } from '@gac/shared';
+import AuthLocals from '../models/AuthLocals';
 
 export const getOauth2Client = (
     clientId: string,
@@ -67,10 +68,10 @@ export const generatureOath2Url = (client: DiscordOauth2, scope: string[]) => {
     });
 };
 
-interface AuthLocals {
-    [x: string]: unknown;
-    user: User & { member: Member };
-}
+const isAdmin = (member: Member, adminRoles?: string[]) => {
+    if (!adminRoles) return false;
+    return member.roles.some((r) => adminRoles.includes(r));
+};
 
 export const discordAuthMiddleware: <
     P = { [x: string]: string },
@@ -80,9 +81,10 @@ export const discordAuthMiddleware: <
     Locals extends AuthLocals = AuthLocals
 >(
     client: DiscordOauth2,
-    guildId: string
+    guildId: string,
+    adminRoles: string[]
 ) => RequestHandler<P, ResBody, ReqBody, ReqQuery, Locals> =
-    (client, guildId) => async (req, res, next) => {
+    (client, guildId, adminRoles) => async (req, res, next) => {
         const { authorization } = req.headers;
 
         if (!authorization) {
@@ -94,7 +96,9 @@ export const discordAuthMiddleware: <
             const token = authorization.replace('Bearer ', '');
             const user = await getUser(client, token);
             const member = await getGuildMember(client, token, guildId);
+            const admin = isAdmin(member, adminRoles);
             res.locals.user = { ...user, member };
+            res.locals.isAdmin = admin;
 
             next();
         } catch (e) {
