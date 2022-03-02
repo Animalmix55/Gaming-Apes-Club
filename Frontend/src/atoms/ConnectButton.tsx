@@ -29,6 +29,7 @@ interface ConnectButtonProps<
     // eslint-disable-next-line react/no-unused-prop-types
     error: ReturnType<Web3ReactHooks['useError']>;
     isActive: ReturnType<Web3ReactHooks['useIsActive']>;
+    invalidChain?: boolean;
 }
 
 export const isWalletConnect = (
@@ -45,13 +46,20 @@ export const ConnectButton = (
     props: ConnectButtonProps & { children: React.ReactNode }
 ): JSX.Element => {
     const { chainId: requiredChainId } = useGamingApeContext();
-    const { connector, isActivating, isActive, children, className } = props;
+    const {
+        connector,
+        isActivating,
+        isActive,
+        children,
+        className,
+        invalidChain,
+    } = props;
 
     const [css] = useStyletron();
     const usingWalletConnect = isWalletConnect(connector);
 
     const onClick = (): void => {
-        if (isActivating) {
+        if ((isActive && !invalidChain) || isActivating) {
             connector.deactivate();
             return;
         }
@@ -92,7 +100,7 @@ export const ConnectButton = (
             className={className}
             type="button"
             forceglow={isActive}
-            onClick={(): Promise<void> | void => connector.deactivate()}
+            onClick={onClick}
         >
             {children}
         </GlowButton>
@@ -101,10 +109,11 @@ export const ConnectButton = (
 
 interface ButtonProps {
     className?: string;
+    invalidChain?: boolean;
 }
 
 export const MetaMaskButton = (props: ButtonProps): JSX.Element => {
-    const { className } = props;
+    const { className, invalidChain } = props;
 
     const [css] = useStyletron();
     const isActive = MMHooks.useIsActive();
@@ -117,6 +126,7 @@ export const MetaMaskButton = (props: ButtonProps): JSX.Element => {
             isActivating={isActivating}
             isActive={isActive}
             error={error}
+            invalidChain={invalidChain}
             className={className}
         >
             <div className={css({ padding: '5px' })}>
@@ -138,7 +148,7 @@ export const MetaMaskButton = (props: ButtonProps): JSX.Element => {
 };
 
 export const WalletLinkButton = (props: ButtonProps): JSX.Element => {
-    const { className } = props;
+    const { className, invalidChain } = props;
 
     const [css] = useStyletron();
     const isActive = WLHooks.useIsActive();
@@ -151,6 +161,7 @@ export const WalletLinkButton = (props: ButtonProps): JSX.Element => {
             isActivating={isActivating}
             isActive={isActive}
             error={error}
+            invalidChain={invalidChain}
             className={className}
         >
             <div className={css({ padding: '5px' })}>
@@ -173,7 +184,7 @@ export const WalletLinkButton = (props: ButtonProps): JSX.Element => {
 };
 
 export const WalletConnectButton = (props: ButtonProps): JSX.Element => {
-    const { className } = props;
+    const { className, invalidChain } = props;
 
     const [css] = useStyletron();
     const isActive = WCHooks.useIsActive();
@@ -186,6 +197,7 @@ export const WalletConnectButton = (props: ButtonProps): JSX.Element => {
             isActivating={isActivating}
             isActive={isActive}
             error={error}
+            invalidChain={invalidChain}
             className={className}
         >
             <div className={css({ padding: '5px' })}>

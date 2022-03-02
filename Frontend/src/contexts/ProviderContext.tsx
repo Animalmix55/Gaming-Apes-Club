@@ -11,6 +11,7 @@ export interface ProviderContextType {
     web3?: Web3;
     accounts?: string[];
     disconnect?: () => void;
+    chainId?: number;
 }
 
 export const ProviderContext = React.createContext<ProviderContextType>({});
@@ -23,14 +24,17 @@ export const ProviderContextProvider = ({
     const MMProvider = MMHooks.useProvider();
     const MMActive = MMHooks.useIsActive();
     const MMAccounts = MMHooks.useAccounts();
+    const MMChainId = MMHooks.useChainId();
 
     const WCProvider = WCHooks.useProvider();
     const WCActive = WCHooks.useIsActive();
     const WCAccounts = WCHooks.useAccounts();
+    const WCChainId = MMHooks.useChainId();
 
     const WLProvider = WLHooks.useProvider();
     const WLActive = WLHooks.useIsActive();
     const WLAccounts = WLHooks.useAccounts();
+    const WLChainId = MMHooks.useChainId();
 
     const provider = React.useMemo(() => {
         if (MMActive && MMProvider) return MMProvider;
@@ -46,6 +50,13 @@ export const ProviderContextProvider = ({
         return undefined;
     }, [MMAccounts, MMActive, WCAccounts, WCActive, WLAccounts, WLActive]);
 
+    const chainId = React.useMemo(() => {
+        if (MMActive) return MMChainId;
+        if (WCActive) return WCChainId;
+        if (WLActive) return WLChainId;
+        return undefined;
+    }, [MMActive, MMChainId, WCActive, WCChainId, WLActive, WLChainId]);
+
     const disconnect = React.useCallback(() => {
         if (MMActive) return metaMask.deactivate();
         if (WCActive) return walletConnect.deactivate();
@@ -60,7 +71,7 @@ export const ProviderContextProvider = ({
 
     return (
         <ProviderContext.Provider
-            value={{ provider, web3, accounts, disconnect }}
+            value={{ provider, web3, accounts, chainId, disconnect }}
         >
             {children}
         </ProviderContext.Provider>

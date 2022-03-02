@@ -4,7 +4,11 @@ import logger from 'morgan';
 import { ProofRouter } from '@gac/whitelist';
 import { getBalanceRouter } from '@gac/token';
 import { getLoginRouter, discordAuthMiddleware } from '@gac/login';
-import { getMarketplaceRouter, StartDatabase } from '@gac/marketplace';
+import {
+    getListingRouter,
+    PurchaseRouter,
+    StartDatabase,
+} from '@gac/marketplace';
 
 const { MYSQL_HOST, MYSQL_PORT, MYSQL_USER, MYSQL_PASSWORD, MYSQL_DATABASE } =
     process.env;
@@ -40,9 +44,10 @@ const { LoginRouter, client: Oauth2Client } = getLoginRouter(
 );
 
 app.use('/login', LoginRouter);
+app.use('/listing', getListingRouter(Oauth2Client, guildId, adminRoles));
 
 // ALL AUTHENTICATED ROUTES
 app.use(discordAuthMiddleware(Oauth2Client, guildId, adminRoles));
 
-app.use('/purchase', getMarketplaceRouter());
+app.use('/purchase', PurchaseRouter);
 export default app;

@@ -1,5 +1,5 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import { Modal } from '@fluentui/react';
+import { MessageBar, Modal } from '@fluentui/react';
 import React from 'react';
 import { useStyletron } from 'styletron-react';
 import {
@@ -7,12 +7,21 @@ import {
     WalletConnectButton,
     WalletLinkButton,
 } from '../atoms/ConnectButton';
+import { CHAINS } from '../Chains';
+import { useGamingApeContext } from '../contexts/GamingApeClubContext';
 import { useProvider } from '../contexts/ProviderContext';
 import { useThemeContext } from '../contexts/ThemeContext';
 
 const Web3ConnectModalInner = (): JSX.Element => {
     const [css] = useStyletron();
     const theme = useThemeContext();
+    const { chainId } = useProvider();
+    const { chainId: expectedChainId } = useGamingApeContext();
+
+    const invalidChain =
+        expectedChainId !== undefined &&
+        chainId !== undefined &&
+        chainId !== expectedChainId;
 
     return (
         <div
@@ -24,6 +33,12 @@ const Web3ConnectModalInner = (): JSX.Element => {
                 alignItems: 'center',
             })}
         >
+            {invalidChain && (
+                <MessageBar>
+                    You are connected to the wrong chain. Connect to{' '}
+                    {CHAINS[expectedChainId].name}
+                </MessageBar>
+            )}
             <div
                 className={css({
                     fontFamily: theme.fonts.title,
@@ -40,7 +55,10 @@ const Web3ConnectModalInner = (): JSX.Element => {
                     alignItems: 'stretch',
                 })}
             >
-                <MetaMaskButton className={css({ margin: '5px' })} />
+                <MetaMaskButton
+                    className={css({ margin: '5px' })}
+                    invalidChain={invalidChain}
+                />
                 <WalletConnectButton className={css({ margin: '5px' })} />
                 <WalletLinkButton className={css({ margin: '5px' })} />
             </div>
@@ -49,12 +67,18 @@ const Web3ConnectModalInner = (): JSX.Element => {
 };
 
 export const Web3ConnectModal = (): JSX.Element => {
-    const { web3 } = useProvider();
+    const { web3, chainId } = useProvider();
+    const { chainId: expectedChainId } = useGamingApeContext();
     const theme = useThemeContext();
+
+    const invalidChain =
+        expectedChainId !== undefined &&
+        chainId !== undefined &&
+        chainId !== expectedChainId;
 
     return (
         <Modal
-            isOpen={!web3}
+            isOpen={!web3 || invalidChain}
             styles={{
                 main: {
                     background: theme.backgroundGradients.purpleBlue,

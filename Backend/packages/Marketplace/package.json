@@ -17,6 +17,7 @@
   "dependencies": {
     "@gac/login": "^0.0.0",
     "@gac/shared": "^0.0.0",
+    "@gac/token": "^0.0.0",
     "cors": "^2.8.5",
     "express": "~4.16.1",
     "sequelize": "^6.17.0",

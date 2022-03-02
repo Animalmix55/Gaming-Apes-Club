@@ -26,6 +26,7 @@ const {
     discordUrl,
     twitterUrl,
     openseaUrl,
+    etherscanUrl,
 } = { ...window } as unknown as GamingApeClubContextType;
 
 const styletron = new Client();
@@ -46,6 +47,7 @@ const Root = (): JSX.Element => {
                                 discordUrl,
                                 twitterUrl,
                                 openseaUrl,
+                                etherscanUrl,
                             }}
                         >
                             <ContractContextProvider>
