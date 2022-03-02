@@ -12,10 +12,6 @@ export const InitializeModels = (instance: Sequelize): void => {
         foreignKey: 'listingId',
     });
 
-    StoredTransaction.belongsTo(StoredListing, {
-        foreignKey: 'id',
-    });
-
     StoredListing.sync({}).then(() => StoredTransaction.sync({}));
 };
 

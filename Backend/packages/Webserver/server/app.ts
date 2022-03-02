@@ -6,12 +6,24 @@ import { getBalanceRouter } from '@gac/token';
 import { getLoginRouter, discordAuthMiddleware } from '@gac/login';
 import {
     getListingRouter,
-    PurchaseRouter,
+    getTransactionRouter,
     StartDatabase,
 } from '@gac/marketplace';
 
-const { MYSQL_HOST, MYSQL_PORT, MYSQL_USER, MYSQL_PASSWORD, MYSQL_DATABASE } =
-    process.env;
+const {
+    MYSQL_HOST,
+    MYSQL_PORT,
+    MYSQL_USER,
+    MYSQL_PASSWORD,
+    MYSQL_DATABASE,
+    UNB_TOKEN,
+    GUILD_ID,
+    ADMIN_ROLES,
+    OAUTH_CLIENT_ID,
+    OAUTH_SECRET,
+    OAUTH_REDIRECT_URL,
+} = process.env;
+
 StartDatabase(
     String(MYSQL_HOST),
     Number(MYSQL_PORT),
@@ -20,9 +32,9 @@ StartDatabase(
     String(MYSQL_PASSWORD)
 );
 
-const guildId = process.env.GUILD_ID;
-const adminRoles = process.env.ADMIN_ROLES?.split(' ') || [];
-if (!guildId) throw new Error('Missing guild id');
+const adminRoles = ADMIN_ROLES?.split(' ') || [];
+if (!GUILD_ID) throw new Error('Missing guild id');
+if (!UNB_TOKEN) throw new Error('Missing UNB Token');
 
 const app = express();
 app.use(logger('dev'));
@@ -31,23 +43,20 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 // app.use(express.static(path.join(__dirname, '../public')));
 app.use('/proof', ProofRouter);
-app.use(
-    '/balance',
-    getBalanceRouter(process.env.UNB_TOKEN, process.env.GUILD_ID)
-);
+app.use('/balance', getBalanceRouter(UNB_TOKEN, GUILD_ID));
 
 const { LoginRouter, client: Oauth2Client } = getLoginRouter(
-    process.env.OAUTH_CLIENT_ID,
-    process.env.OAUTH_SECRET,
-    process.env.OAUTH_REDIRECT_URL,
-    process.env.GUILD_ID
+    OAUTH_CLIENT_ID,
+    OAUTH_SECRET,
+    OAUTH_REDIRECT_URL,
+    GUILD_ID
 );
 
 app.use('/login', LoginRouter);
-app.use('/listing', getListingRouter(Oauth2Client, guildId, adminRoles));
+app.use('/listing', getListingRouter(Oauth2Client, GUILD_ID, adminRoles));
 
 // ALL AUTHENTICATED ROUTES
-app.use(discordAuthMiddleware(Oauth2Client, guildId, adminRoles));
+app.use(discordAuthMiddleware(Oauth2Client, GUILD_ID, adminRoles));
 
-app.use('/purchase', PurchaseRouter);
+app.use('/transaction', getTransactionRouter(UNB_TOKEN, GUILD_ID));
 export default app;
