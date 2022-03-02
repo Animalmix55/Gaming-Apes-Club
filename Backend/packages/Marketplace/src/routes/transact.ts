@@ -117,7 +117,7 @@ export const getTransactionRouter = (unbToken: string, guildId: string) => {
         never,
         GetRequest,
         AuthLocals
-    >('/listing/:listingId', cors(), async (req, res) => {
+    >('/', cors(), async (req, res) => {
         const { query } = req;
         const { locals } = res;
         const { isAdmin } = locals;
@@ -126,7 +126,7 @@ export const getTransactionRouter = (unbToken: string, guildId: string) => {
         if (!isAdmin)
             return res
                 .status(403)
-                .send({ error: 'You cannot access records by listing id' });
+                .send({ error: 'You cannot access unfiltered records' });
 
         const offset = Number(offsetStr || 0);
         const limit = Number(pageSizeStr || 1000);
