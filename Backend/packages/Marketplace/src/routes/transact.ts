@@ -1,20 +1,39 @@
 import express from 'express';
 import cors from 'cors';
-import { BaseResponse } from '@gac/shared';
+import {
+    BaseResponse,
+    createJWT,
+    generateLoginMessage,
+    getGamingApeClubContract,
+    verifyJWT,
+    verifySignature,
+} from '@gac/shared';
 import AuthLocals from '@gac/login/lib/models/AuthLocals';
 import { getBalance, getUNBClient, spend } from '@gac/token';
+import Web3 from 'web3';
 import StoredListing from '../database/models/StoredListing';
 import StoredTransaction from '../database/models/StoredTransaction';
 import Transaction from '../models/Transaction';
 
+interface TransactionJWTPayload {
+    user: string;
+    signableMessage: string;
+}
+
 interface PostResponse extends BaseResponse, Partial<Transaction> {
-    success?: boolean;
     newBalance?: number;
+    signableMessage?: string;
+    signableMessageToken?: string;
 }
 
 interface PostRequest {
     listingId: string;
     quantity: number;
+    /**
+     * Optional message and signature data for listings requiring it
+     */
+    signableMessageToken?: string;
+    signature?: string;
 }
 
 interface GetRequest {
@@ -27,7 +46,13 @@ interface GetResponse extends BaseResponse {
     numRecords?: number;
 }
 
-export const getTransactionRouter = (unbToken: string, guildId: string) => {
+export const getTransactionRouter = (
+    unbToken: string,
+    guildId: string,
+    jwtPrivate: string,
+    web3: Web3,
+    gamingApeClubAddress: string
+) => {
     const TransactionRouter = express.Router();
 
     // GET
@@ -157,7 +182,7 @@ export const getTransactionRouter = (unbToken: string, guildId: string) => {
         if (!user)
             return res.status(401).send({ error: 'No authorization provided' });
 
-        const { listingId, quantity } = body;
+        const { listingId, quantity, signature, signableMessageToken } = body;
         const { id } = user;
 
         const listing = await StoredListing.findByPk(listingId);
@@ -176,7 +201,59 @@ export const getTransactionRouter = (unbToken: string, guildId: string) => {
             0
         );
 
-        const { maxPerUser, price } = listing.get();
+        let address: string;
+        const { maxPerUser, price, requiresHoldership } = listing.get();
+        if (requiresHoldership) {
+            if (!signature || !signableMessageToken) {
+                const signableMessage = generateLoginMessage();
+                const payload: TransactionJWTPayload = {
+                    user: id,
+                    signableMessage,
+                };
+                const jwt = createJWT(payload, jwtPrivate, '3m'); // token lasts 3 minutes
+                return res.status(449).send({
+                    error: 'Requires signature',
+                    signableMessage,
+                    signableMessageToken: jwt,
+                }); // retry with auth
+            }
+
+            try {
+                const { user: jwtUser, signableMessage } =
+                    verifyJWT<TransactionJWTPayload>(
+                        signableMessageToken,
+                        jwtPrivate
+                    );
+
+                if (jwtUser !== id)
+                    throw new Error('Token not issued to active user');
+
+                address = verifySignature(signature, signableMessage, web3);
+            } catch (e) {
+                return res.status(403).send({
+                    error: String(e),
+                });
+            }
+
+            const contract = getGamingApeClubContract(
+                gamingApeClubAddress,
+                web3
+            );
+
+            try {
+                const numberHeld = await contract.methods
+                    .balanceOf(address)
+                    .call();
+                if (numberHeld === '0')
+                    return res.status(403).send({
+                        error: 'You must be a token holder to transact.',
+                    });
+            } catch (e) {
+                return res
+                    .status(500)
+                    .send({ error: 'Failed to communicate with blockchain' });
+            }
+        }
 
         if (
             maxPerUser !== undefined &&

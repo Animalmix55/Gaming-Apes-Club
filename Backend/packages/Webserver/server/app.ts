@@ -9,6 +9,7 @@ import {
     getTransactionRouter,
     StartDatabase,
 } from '@gac/marketplace';
+import Web3 from 'web3';
 
 const {
     MYSQL_HOST,
@@ -22,6 +23,9 @@ const {
     OAUTH_CLIENT_ID,
     OAUTH_SECRET,
     OAUTH_REDIRECT_URL,
+    WEB3_PROVIDER,
+    TOKEN_ADDRESS,
+    JWT_PRIVATE,
 } = process.env;
 
 StartDatabase(
@@ -35,6 +39,11 @@ StartDatabase(
 const adminRoles = ADMIN_ROLES?.split(' ') || [];
 if (!GUILD_ID) throw new Error('Missing guild id');
 if (!UNB_TOKEN) throw new Error('Missing UNB Token');
+if (!WEB3_PROVIDER) throw new Error('Missing Web3 provider');
+if (!TOKEN_ADDRESS) throw new Error('Missing token address');
+if (!JWT_PRIVATE) throw new Error('Missing JWT private');
+
+const web3 = new Web3(WEB3_PROVIDER);
 
 const app = express();
 app.use(logger('dev'));
@@ -58,5 +67,8 @@ app.use('/listing', getListingRouter(Oauth2Client, GUILD_ID, adminRoles));
 // ALL AUTHENTICATED ROUTES
 app.use(discordAuthMiddleware(Oauth2Client, GUILD_ID, adminRoles));
 
-app.use('/transaction', getTransactionRouter(UNB_TOKEN, GUILD_ID));
+app.use(
+    '/transaction',
+    getTransactionRouter(UNB_TOKEN, GUILD_ID, JWT_PRIVATE, web3, TOKEN_ADDRESS)
+);
 export default app;

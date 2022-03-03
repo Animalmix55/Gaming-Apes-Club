@@ -46,6 +46,11 @@ export const InitializeListingModel = (instance: Sequelize): void => {
                 type: DataTypes.INTEGER,
                 allowNull: true,
             },
+            requiresHoldership: {
+                type: DataTypes.INTEGER,
+                allowNull: false,
+                defaultValue: false,
+            },
         },
         {
             sequelize: instance,

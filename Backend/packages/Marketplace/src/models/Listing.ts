@@ -5,6 +5,7 @@ export interface NewListing {
     price: number;
     supply?: number;
     maxPerUser?: number;
+    requiresHoldership?: boolean;
 }
 
 export interface UpdatedListing extends NewListing {
@@ -23,8 +24,16 @@ interface Sanitizer {
 }
 
 export const sanitizeAndValidateListing: Sanitizer = (model, add) => {
-    const { title, description, image, price, supply, maxPerUser, id } =
-        model as UpdatedListing;
+    const {
+        title,
+        description,
+        image,
+        price,
+        supply,
+        maxPerUser,
+        id,
+        requiresHoldership,
+    } = model as UpdatedListing;
 
     if (!add && !id) throw new Error('Missing id');
     if (typeof title !== 'string' || !title.trim())
@@ -37,6 +46,8 @@ export const sanitizeAndValidateListing: Sanitizer = (model, add) => {
     if (supply && typeof supply !== 'number') throw new Error('Invalid supply');
     if (maxPerUser && typeof maxPerUser !== 'number')
         throw new Error('Invalid user maximum');
+    if (requiresHoldership && typeof requiresHoldership !== 'boolean')
+        throw new Error('Invalid holdership requirement flag');
 
     return {
         title,
@@ -45,6 +56,7 @@ export const sanitizeAndValidateListing: Sanitizer = (model, add) => {
         price,
         supply,
         maxPerUser,
+        requiresHoldership,
         ...(!add && { id }),
     } as never;
 };
