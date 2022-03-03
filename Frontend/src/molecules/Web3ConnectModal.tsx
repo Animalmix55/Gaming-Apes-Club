@@ -53,6 +53,7 @@ const Web3ConnectModalInner = (): JSX.Element => {
                     display: 'flex',
                     justifyContent: 'center',
                     alignItems: 'stretch',
+                    flexWrap: 'wrap',
                 })}
             >
                 <MetaMaskButton
