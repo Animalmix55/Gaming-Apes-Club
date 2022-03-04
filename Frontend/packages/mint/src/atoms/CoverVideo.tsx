@@ -58,8 +58,6 @@ export const CoverVideo = (props: Props): JSX.Element => {
                     justifyContent: 'center',
                     alignItems: 'center',
                     overflow: 'hidden',
-                    height: '100vh',
-                    width: '100vw',
                 })
             )}
         >
