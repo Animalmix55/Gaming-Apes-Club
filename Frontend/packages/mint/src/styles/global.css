@@ -1,0 +1,27 @@
+@font-face {
+    font-family: "RapierZero";
+    src: local("RapierZero"),
+    url(../assets/fonts/RapierZero-325M.ttf) format("truetype");
+}
+
+@font-face {
+    font-family: "RubberStamp";
+    src: local("RubberStamp"),
+        url(../assets/fonts/RubberStampStd.otf) format("truetype");
+}
+
+@font-face {
+    font-family: "WorkSans";
+    src: local("WorkSans"),
+        url(../assets/fonts/WorkSans-ExtraBold.ttf) format("truetype");
+}
+
+@font-face {
+    font-family: "BowlbyOne";
+    src: local("BowlbyOne"),
+        url(../assets/fonts/BowlbyOneSC-Regular.ttf) format("truetype");
+}
+
+body {
+    margin: unset;
+}
