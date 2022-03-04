@@ -1,25 +1,29 @@
 import { Spinner, SpinnerSize } from '@fluentui/react';
+import {
+    FormatTimeOffset,
+    ZERO,
+    BASE,
+    roundAndDisplay,
+    MOBILE,
+} from '@gac/shared';
 import BigDecimal from 'js-big-decimal';
 import React from 'react';
 import { useQueryClient } from 'react-query';
 import { toast } from 'react-toastify';
 import { useStyletron } from 'styletron-react';
 import { useProofGetter } from '../api/hooks/useProofGetter';
-import FadeInOut from '../atoms/FadeInOut';
-import GlowButton from '../atoms/GlowButton';
-import TransactionButton from '../atoms/TransactionButton';
+import { FadeInOut } from '../atoms/FadeInOut';
+import { GlowButton } from '../atoms/GlowButton';
+import { TransactionButton } from '../atoms/TransactionButton';
 import { useContractContext } from '../contexts/ContractContext';
 import { useProvider } from '../contexts/ProviderContext';
 import { useThemeContext } from '../contexts/ThemeContext';
-import useCurrentTime from '../hooks/useCurrentTime';
-import useMintData from '../hooks/useMintData';
-import useMintTimes from '../hooks/useMintTimes';
-import useNumberMinted from '../hooks/useNumberMinted';
-import useWhitelisted from '../hooks/useWhitelisted';
-import MintType from '../models/MintType';
-import { MOBILE } from '../utilties/MediaQueries';
-import { BASE, roundAndDisplay, ZERO } from '../utilties/Numbers';
-import FormatTimeOffset from '../utilties/TimeFormatter';
+import { useCurrentTime } from '../hooks/useCurrentTime';
+import { useMintData } from '../hooks/useMintData';
+import { useMintTimes } from '../hooks/useMintTimes';
+import { useNumberMinted } from '../hooks/useNumberMinted';
+import { useWhitelisted } from '../hooks/useWhitelisted';
+import { MintType } from '../models/MintType';
 
 const SelectMintBox = ({
     setMintType,

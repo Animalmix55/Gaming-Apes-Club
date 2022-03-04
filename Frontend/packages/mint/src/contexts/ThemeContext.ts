@@ -1,5 +1,5 @@
 import React from 'react';
-import RGBA, { rgba } from '../utilties/Colors';
+import { rgba, RGBA } from '@gac/shared';
 
 interface Fonts {
     title: string;

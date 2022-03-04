@@ -6,8 +6,8 @@ import { WalletLink } from '@web3-react/walletlink';
 import React from 'react';
 import { useStyletron } from 'styletron-react';
 import { Spinner, SpinnerSize } from '@fluentui/react';
+import { ClassNameBuilder, getAddChainParameters } from '@gac/shared';
 import { GlowButton } from './GlowButton';
-import { getAddChainParameters } from '../Chains';
 import { useGamingApeContext } from '../contexts/GamingApeClubContext';
 
 import MetaMaskLogo from '../assets/png/Metamask.png';
@@ -16,7 +16,6 @@ import WalletConnectLogo from '../assets/png/walletconnect.png';
 import { metaMask, hooks as MMHooks } from '../connectors/Metamask';
 import { walletConnect, hooks as WCHooks } from '../connectors/WalletConnect';
 import { walletLink, hooks as WLHooks } from '../connectors/WalletLink';
-import ClassNameBuilder from '../utilties/ClassNameBuilder';
 import { useThemeContext } from '../contexts/ThemeContext';
 
 interface ConnectButtonProps<

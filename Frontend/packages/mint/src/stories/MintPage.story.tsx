@@ -1,5 +1,5 @@
 import React from 'react';
-import MintPage from '../organisms/MintPage';
+import { MintPage } from '../organisms/MintPage';
 
 export default {
     title: 'Organisms/MintPage',

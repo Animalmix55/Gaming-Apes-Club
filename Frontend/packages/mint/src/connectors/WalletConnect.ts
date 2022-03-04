@@ -1,6 +1,6 @@
 import { initializeConnector } from '@web3-react/core';
 import { WalletConnect } from '@web3-react/walletconnect';
-import { URLS } from '../Chains';
+import { URLS } from '@gac/shared';
 
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore

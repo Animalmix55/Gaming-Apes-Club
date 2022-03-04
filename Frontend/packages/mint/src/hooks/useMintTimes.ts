@@ -1,5 +1,5 @@
 import React from 'react';
-import useRequest, { RequestResult } from '../api/hooks/useRequest';
+import { RequestResult, useRequest } from '../api/hooks/useRequest';
 import { useContractContext } from '../contexts/ContractContext';
 
 interface ReturnType {

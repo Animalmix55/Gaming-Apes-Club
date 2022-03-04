@@ -1,5 +1,5 @@
 import React from 'react';
-import MintBox from '../molecules/MintBox';
+import { MintBox } from '../molecules/MintBox';
 
 export default {
     title: 'Molecules/MintBox',

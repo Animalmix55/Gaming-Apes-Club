@@ -1,5 +1,5 @@
 import React from 'react';
-import Chain from '../models/Chain';
+import { Chain } from '../models/Chain';
 
 export interface GamingApeClubContextType {
     tokenAddress?: string;

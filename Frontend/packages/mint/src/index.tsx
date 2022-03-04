@@ -12,7 +12,7 @@ import {
     GamingApeContextProvider,
 } from './contexts/GamingApeClubContext';
 import { DefaultTheme, ThemeContextProvider } from './contexts/ThemeContext';
-import MintPage from './organisms/MintPage';
+import { MintPage } from './organisms/MintPage';
 import { ContractContextProvider } from './contexts/ContractContext';
 import { ProviderContextProvider } from './contexts/ProviderContext';
 

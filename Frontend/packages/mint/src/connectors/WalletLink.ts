@@ -1,6 +1,6 @@
 import { initializeConnector } from '@web3-react/core';
 import { WalletLink } from '@web3-react/walletlink';
-import { URLS } from '../Chains';
+import { URLS } from '@gac/shared';
 
 export const [walletLink, hooks] = initializeConnector<WalletLink>(
     (actions) =>

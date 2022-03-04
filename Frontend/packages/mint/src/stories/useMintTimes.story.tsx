@@ -1,6 +1,6 @@
 import { Spinner } from '@fluentui/react';
 import React from 'react';
-import useMintTimes from '../hooks/useMintTimes';
+import { useMintTimes } from '../hooks/useMintTimes';
 
 export default {
     title: 'Hooks/UseMintTimes',

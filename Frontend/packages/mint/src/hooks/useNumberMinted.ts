@@ -1,7 +1,7 @@
 import React from 'react';
-import useRequest, { RequestResult } from '../api/hooks/useRequest';
+import { RequestResult, useRequest } from '../api/hooks/useRequest';
 import { useContractContext } from '../contexts/ContractContext';
-import MintType from '../models/MintType';
+import { MintType } from '../models/MintType';
 
 const NUMBER_MINTED_KEY = 'NUMBER_MINTED';
 

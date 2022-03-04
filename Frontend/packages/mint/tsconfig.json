@@ -13,6 +13,6 @@
     "resolveJsonModule": true,
     "strictNullChecks": true
   },
-  "include": ["./src"],
+  "include": ["./src", "../shared/src/utilties"],
   "exclude": ["./node_modules", "./dist"]
 }

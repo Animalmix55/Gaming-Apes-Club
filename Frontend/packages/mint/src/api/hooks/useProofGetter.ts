@@ -1,7 +1,7 @@
 import React from 'react';
 import { useGamingApeContext } from '../../contexts/GamingApeClubContext';
 import { getProof } from '../Requests';
-import useRequestGetter from './useRequestGetter';
+import { useRequestGetter } from './useRequestGetter';
 
 export const PROOF_KEY = 'PROOF';
 

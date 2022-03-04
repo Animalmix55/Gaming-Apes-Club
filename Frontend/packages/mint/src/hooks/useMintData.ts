@@ -1,8 +1,8 @@
 import BigDecimal from 'js-big-decimal';
 import React from 'react';
-import useRequest, { RequestResult } from '../api/hooks/useRequest';
+import { BASE } from '@gac/shared';
+import { RequestResult, useRequest } from '../api/hooks/useRequest';
 import { useContractContext } from '../contexts/ContractContext';
-import { BASE } from '../utilties/Numbers';
 
 interface ReturnType {
     mintPrice: BigDecimal;

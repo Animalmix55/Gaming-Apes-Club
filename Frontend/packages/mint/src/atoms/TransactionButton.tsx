@@ -6,7 +6,7 @@ import { useStyletron } from 'styletron-react';
 import { PromiEvent, TransactionReceipt } from 'web3-core';
 import { useGamingApeContext } from '../contexts/GamingApeClubContext';
 import { BaseContract, NonPayableTx, PayableTx } from '../models/types';
-import GlowButton, { GlowButtonProps } from './GlowButton';
+import { GlowButtonProps, GlowButton } from './GlowButton';
 
 export interface TransactionButtonProps<
     T extends BaseContract,

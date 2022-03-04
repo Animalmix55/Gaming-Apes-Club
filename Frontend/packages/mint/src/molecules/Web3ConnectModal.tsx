@@ -2,12 +2,12 @@
 import { MessageBar, Modal } from '@fluentui/react';
 import React from 'react';
 import { useStyletron } from 'styletron-react';
+import { CHAINS } from '@gac/shared';
 import {
     MetaMaskButton,
     WalletConnectButton,
     WalletLinkButton,
 } from '../atoms/ConnectButton';
-import { CHAINS } from '../Chains';
 import { useGamingApeContext } from '../contexts/GamingApeClubContext';
 import { useProvider } from '../contexts/ProviderContext';
 import { useThemeContext } from '../contexts/ThemeContext';

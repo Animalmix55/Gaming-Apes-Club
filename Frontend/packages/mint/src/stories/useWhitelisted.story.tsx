@@ -2,7 +2,7 @@ import { Spinner } from '@fluentui/react';
 import React from 'react';
 import { MetaMaskButton } from '../atoms/ConnectButton';
 import { useProvider } from '../contexts/ProviderContext';
-import useWhitelisted from '../hooks/useWhitelisted';
+import { useWhitelisted } from '../hooks/useWhitelisted';
 
 export default {
     title: 'Hooks/UseWhitelisted',

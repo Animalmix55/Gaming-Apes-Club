@@ -1,12 +1,12 @@
 import React from 'react';
 import { useStyletron } from 'styletron-react';
-import DisconnectButton from '../atoms/DisconnectButton';
+import { DisconnectButton } from '../atoms/DisconnectButton';
 import { useProvider } from '../contexts/ProviderContext';
 import { useThemeContext } from '../contexts/ThemeContext';
-import Header from '../molecules/Header';
-import MintBox from '../molecules/MintBox';
-import Web3ConnectModal from '../molecules/Web3ConnectModal';
-import ClassNameBuilder from '../utilties/ClassNameBuilder';
+import { Header } from '../molecules/Header';
+import { MintBox } from '../molecules/MintBox';
+import { Web3ConnectModal } from '../molecules/Web3ConnectModal';
+import { ClassNameBuilder } from '../../../shared/src/utilties/ClassNameBuilder';
 
 export const MintPage = ({
     className,

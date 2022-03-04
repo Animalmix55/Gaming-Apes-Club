@@ -2,16 +2,15 @@
   "name": "@gac/shared",
   "version": "1.0.0",
   "description": "All shared UI components for GAC",
-  "main": "index.js",
-  "license": "MIT",
-  "private": true,
+  "main": "lib/index.js",
+  "scripts": {
+    "build": "tsc"
+  },
   "typings": "lib/index.d.ts",
   "typescript": {
     "definition": "lib/index.d.ts"
   },
-  "scripts": {
-    "build": "tsc"
-  },
+  "license": "MIT",
   "peerDependencies": {
     "js-big-decimal": "^1.3.4",
     "@fluentui/react": "^8.37.6",

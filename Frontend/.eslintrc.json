@@ -9,7 +9,9 @@
         "plugin:prettier/recommended",
         "react-app",
         "prettier",
-        "plugin:react-hooks/recommended"
+        "plugin:react-hooks/recommended",
+        "plugin:import/recommended",
+        "plugin:import/typescript"
     ],
     "parser": "@typescript-eslint/parser",
     "parserOptions": {
@@ -79,5 +81,5 @@
     "globals": {
         "NodeJS": true
     },
-     "ignorePatterns": ["dist-server/","lib/", "node_modules/"]
+     "ignorePatterns": ["**/dist-server/","**/lib/", "**/node_modules/"]
 }
