@@ -1,18 +1,19 @@
 {
-  "name": "@gac/mint",
+  "name": "@gac/shared",
   "version": "1.0.0",
-  "description": "The mint page for GAC",
+  "description": "All shared UI components for GAC",
   "main": "index.js",
   "license": "MIT",
   "private": true,
+  "typings": "lib/index.d.ts",
+  "typescript": {
+    "definition": "lib/index.d.ts"
+  },
   "scripts": {
-    "build": "webpack",
-    "build:prod": "webpack --mode production",
-    "build:watch": "webpack --watch"
+    "build": "tsc"
   },
   "peerDependencies": {
     "js-big-decimal": "^1.3.4",
-    "axios": "^0.24.0",
     "@fluentui/react": "^8.37.6",
     "@web3-react/core": "8.0.10-beta.0",
     "@web3-react/eip1193": "8.0.5-beta.0",
@@ -41,17 +42,18 @@
     "@ethersproject/units": "^5.4.0"
   },
   "dependencies": {
-    "@gac/shared": "^1.0.0",
-    "buffer": "^6.0.3",
-    "crypto-browserify": "^3.12.0",
-    "process": "^0.11.10",
-    "react-transition-group": "^4.4.2",
-    "url": "^0.11.0"
+    "react-transition-group": "^4.4.2"
   },
   "prettier": {
     "trailingComma": "es5",
     "tabWidth": 4,
     "semi": true,
     "singleQuote": true
+  },
+  "files": [
+    "lib"
+  ],
+  "directories": {
+    "lib": "lib"
   }
 }
