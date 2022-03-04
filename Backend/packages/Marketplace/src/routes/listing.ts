@@ -14,6 +14,7 @@ import {
 interface GetRequest extends Record<string, string | undefined> {
     pageSize?: string;
     offset?: string;
+    showDisabled?: string;
 }
 
 interface GetResponse extends BaseResponse {
@@ -27,6 +28,11 @@ type PostResponse = Partial<Listing> & BaseResponse;
 type PutBody = UpdatedListing;
 type PutResponse = PostResponse;
 
+interface GetByIdParams {
+    listingId: string;
+}
+type GetByIdReponse = Partial<Listing> & BaseResponse;
+
 export const getListingRouter = (
     client: DiscordOauth2,
     guildId: string,
@@ -39,7 +45,11 @@ export const getListingRouter = (
         cors(),
         async (req, res) => {
             const { query } = req;
-            const { offset: offsetStr, pageSize: pageSizeStr } = query;
+            const {
+                offset: offsetStr,
+                pageSize: pageSizeStr,
+                showDisabled,
+            } = query;
 
             const offset = Number(offsetStr || 0);
             const limit = Number(pageSizeStr || 0);
@@ -47,9 +57,11 @@ export const getListingRouter = (
             const { count, rows } = await StoredListing.findAndCountAll({
                 offset,
                 limit,
-                where: {
-                    disabled: false,
-                },
+                ...(showDisabled !== 'true' && {
+                    where: {
+                        disabled: false,
+                    },
+                }),
             });
 
             res.status(200).send({
@@ -58,6 +70,25 @@ export const getListingRouter = (
             });
         }
     );
+
+    ListingRouter.get<
+        string,
+        GetByIdParams,
+        GetByIdReponse,
+        never,
+        never,
+        never
+    >('/:listingId', cors(), async (req, res) => {
+        const { params } = req;
+        const { listingId } = params;
+
+        const listing = await StoredListing.findByPk(listingId);
+
+        if (!listing)
+            return res.status(404).send({ error: 'Listing not found' });
+
+        return res.status(200).send(listing.get());
+    });
 
     ListingRouter.post<
         string,
