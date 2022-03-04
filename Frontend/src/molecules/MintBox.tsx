@@ -35,7 +35,7 @@ const SelectMintBox = ({
 
     const currentTime = useCurrentTime();
 
-    const { data: mintTimeData, isLoading: mintTimeLoading } = useMintTimes(60);
+    const { data: mintTimeData, isLoading: mintTimeLoading } = useMintTimes(0);
     const { data: whitelistData, isLoading: whitelistLoading } = useWhitelisted(
         accounts?.[0]
     );
@@ -64,11 +64,16 @@ const SelectMintBox = ({
                     privateEnd <= currentTime
                 }
                 className={css({ margin: '2px' })}
-                innerclass={css({ minHeight: '70px', padding: '10px' })}
+                innerclass={css({ minHeight: '70px', padding: '20px' })}
                 onClick={(): void => setMintType(MintType.Private)}
             >
                 <div>
-                    <div className={css({ fontSize: '30px' })}>
+                    <div
+                        className={css({
+                            fontSize: '30px',
+                            fontFamily: theme.fonts.buttons,
+                        })}
+                    >
                         Whitelist Mint
                     </div>
                     {privateStart > currentTime && (
@@ -113,12 +118,19 @@ const SelectMintBox = ({
             </GlowButton>
             <GlowButton
                 className={css({ margin: '2px' })}
-                disabled={!publicStart || publicStart >= currentTime}
-                innerclass={css({ minHeight: '70px', padding: '10px' })}
+                disabled={publicStart >= currentTime}
+                innerclass={css({ minHeight: '70px', padding: '20px' })}
                 onClick={(): void => setMintType(MintType.Public)}
             >
                 <div>
-                    <div className={css({ fontSize: '30px' })}>Public Mint</div>
+                    <div
+                        className={css({
+                            fontSize: '30px',
+                            fontFamily: theme.fonts.buttons,
+                        })}
+                    >
+                        Public Mint
+                    </div>
                     {publicStart > currentTime && (
                         <div
                             className={css({
@@ -150,7 +162,7 @@ const ActiveMintBox = ({
 
     // requests
     const { data: mintTimeData, isLoading: mintTimeDataLoading } =
-        useMintTimes(60);
+        useMintTimes(0);
     const { data: mintData, isLoading: mintDataLoading } = useMintData();
     const { data: numMinted, isLoading: numMintedLoading } = useNumberMinted(
         mintType,
@@ -234,7 +246,7 @@ const ActiveMintBox = ({
             <div className={css({ margin: '10px' })}>
                 <div
                     className={css({
-                        fontFamily: theme.fonts.title,
+                        fontFamily: theme.fonts.headers,
                         fontSize: '35px',
                         textAlign: 'center',
                     })}
@@ -270,7 +282,11 @@ const ActiveMintBox = ({
             >
                 <GlowButton
                     onClick={onBack}
-                    className={css({ minHeight: '60px' })}
+                    className={css({
+                        minHeight: '60px',
+                        fontSize: '20px',
+                        fontFamily: theme.fonts.buttons,
+                    })}
                 >
                     Back
                 </GlowButton>
@@ -307,6 +323,7 @@ const ActiveMintBox = ({
                             flex: '1',
                             minHeight: '60px !important',
                             fontSize: '20px !important',
+                            fontFamily: theme.fonts.buttons,
                         })}
                     >
                         Mint {amount} ({roundAndDisplay(transactionCost)} ETH)
@@ -329,6 +346,7 @@ const ActiveMintBox = ({
                             flex: '1',
                             minHeight: '60px !important',
                             fontSize: '20px !important',
+                            fontFamily: theme.fonts.buttons,
                         })}
                         bypassError={(err): boolean => {
                             const errString = err.message;
@@ -364,6 +382,8 @@ export const MintBox = (): JSX.Element => {
     const [mintType, setMintType] = React.useState<MintType>();
     const [showMintStuffs, setShowMintStuffs] = React.useState(false);
 
+    const { web3 } = useProvider();
+
     return (
         <div
             className={css({
@@ -382,26 +402,34 @@ export const MintBox = (): JSX.Element => {
                 },
             })}
         >
-            <FadeInOut
-                visible={mintType === undefined}
-                onExited={(): void => setShowMintStuffs(true)}
-                onEnter={(): void => setShowMintStuffs(false)}
-            >
-                <SelectMintBox setMintType={setMintType} mintType={mintType} />
-            </FadeInOut>
-            <FadeInOut
-                visible={showMintStuffs && mintType !== undefined}
-                onExited={(): void => {
-                    setShowMintStuffs(false);
-                    setMintType(undefined);
-                }}
-            >
-                <ActiveMintBox
-                    setMintType={setMintType}
-                    mintType={mintType as MintType}
-                    onBack={(): void => setShowMintStuffs(false)}
-                />
-            </FadeInOut>
+            {!web3 && <Spinner size={SpinnerSize.large} />}
+            {web3 && (
+                <>
+                    <FadeInOut
+                        visible={mintType === undefined}
+                        onExited={(): void => setShowMintStuffs(true)}
+                        onEnter={(): void => setShowMintStuffs(false)}
+                    >
+                        <SelectMintBox
+                            setMintType={setMintType}
+                            mintType={mintType}
+                        />
+                    </FadeInOut>
+                    <FadeInOut
+                        visible={showMintStuffs && mintType !== undefined}
+                        onExited={(): void => {
+                            setShowMintStuffs(false);
+                            setMintType(undefined);
+                        }}
+                    >
+                        <ActiveMintBox
+                            setMintType={setMintType}
+                            mintType={mintType as MintType}
+                            onBack={(): void => setShowMintStuffs(false)}
+                        />
+                    </FadeInOut>
+                </>
+            )}
         </div>
     );
 };

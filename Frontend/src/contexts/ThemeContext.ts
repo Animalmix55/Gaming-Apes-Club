@@ -4,6 +4,8 @@ import RGBA, { rgba } from '../utilties/Colors';
 interface Fonts {
     title: string;
     body: string;
+    buttons: string;
+    headers: string;
 }
 
 interface FontColors {
@@ -35,6 +37,8 @@ export interface ThemeContextType {
 export const DefaultTheme: ThemeContextType = {
     fonts: {
         title: 'RapierZero',
+        buttons: 'WorkSans',
+        headers: 'BowlbyOne',
         body: `ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"`,
     },
     fontColors: {

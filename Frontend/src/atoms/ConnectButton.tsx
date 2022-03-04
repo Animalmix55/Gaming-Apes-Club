@@ -10,12 +10,14 @@ import { GlowButton } from './GlowButton';
 import { getAddChainParameters } from '../Chains';
 import { useGamingApeContext } from '../contexts/GamingApeClubContext';
 
-import MetaMaskLogo from '../assets/svg/metamask-fox.svg';
+import MetaMaskLogo from '../assets/png/Metamask.png';
 import WalletLinkLogo from '../assets/png/coinbase-wallet.png';
-import WalletConnectLogo from '../assets/svg/walletconnect-square-white.svg';
+import WalletConnectLogo from '../assets/png/walletconnect.png';
 import { metaMask, hooks as MMHooks } from '../connectors/Metamask';
 import { walletConnect, hooks as WCHooks } from '../connectors/WalletConnect';
 import { walletLink, hooks as WLHooks } from '../connectors/WalletLink';
+import ClassNameBuilder from '../utilties/ClassNameBuilder';
+import { useThemeContext } from '../contexts/ThemeContext';
 
 interface ConnectButtonProps<
     TConnector extends MetaMask | WalletConnect | WalletLink =
@@ -57,6 +59,7 @@ export const ConnectButton = (
 
     const [css] = useStyletron();
     const usingWalletConnect = isWalletConnect(connector);
+    const theme = useThemeContext();
 
     const onClick = (): void => {
         if ((isActive && !invalidChain) || isActivating) {
@@ -77,7 +80,18 @@ export const ConnectButton = (
 
     if (!isActive)
         return (
-            <GlowButton type="button" className={className} onClick={onClick}>
+            <GlowButton
+                type="button"
+                className={ClassNameBuilder(
+                    className,
+                    css({
+                        height: '150px',
+                        width: '150px',
+                        fontFamily: `${theme.fonts.buttons} !important`,
+                    })
+                )}
+                onClick={onClick}
+            >
                 {children}
                 {isActivating && (
                     <Spinner
@@ -97,7 +111,14 @@ export const ConnectButton = (
 
     return (
         <GlowButton
-            className={className}
+            className={ClassNameBuilder(
+                className,
+                css({
+                    height: '150px',
+                    width: '150px',
+                    fontFamily: `${theme.fonts.buttons} !important`,
+                })
+            )}
             type="button"
             forceglow={isActive}
             onClick={onClick}
@@ -132,7 +153,11 @@ export const MetaMaskButton = (props: ButtonProps): JSX.Element => {
             <div className={css({ padding: '5px' })}>
                 <div>
                     <img
-                        className={css({ height: '70px', width: 'auto' })}
+                        className={css({
+                            height: '55px',
+                            width: 'auto',
+                            margin: '8px',
+                        })}
                         src={MetaMaskLogo}
                         alt={
                             isActive
@@ -141,7 +166,7 @@ export const MetaMaskButton = (props: ButtonProps): JSX.Element => {
                         }
                     />
                 </div>
-                <div className={css({ fontSize: '15px' })}>MetaMask</div>
+                <div className={css({ fontSize: '17px' })}>MetaMask Wallet</div>
             </div>
         </ConnectButton>
     );
@@ -167,7 +192,11 @@ export const WalletLinkButton = (props: ButtonProps): JSX.Element => {
             <div className={css({ padding: '5px' })}>
                 <div>
                     <img
-                        className={css({ height: '70px', width: 'auto' })}
+                        className={css({
+                            height: '55px',
+                            width: 'auto',
+                            margin: '8px',
+                        })}
                         src={WalletLinkLogo}
                         alt={
                             isActive
@@ -176,8 +205,7 @@ export const WalletLinkButton = (props: ButtonProps): JSX.Element => {
                         }
                     />
                 </div>
-                <div className={css({ fontSize: '15px' })}>Coinbase</div>
-                <div className={css({ fontSize: '15px' })}>Wallet</div>
+                <div className={css({ fontSize: '17px' })}>Coinbase Wallet</div>
             </div>
         </ConnectButton>
     );
@@ -203,7 +231,11 @@ export const WalletConnectButton = (props: ButtonProps): JSX.Element => {
             <div className={css({ padding: '5px' })}>
                 <div>
                     <img
-                        className={css({ height: '48px', width: 'auto' })}
+                        className={css({
+                            height: '55px',
+                            width: 'auto',
+                            margin: '8px',
+                        })}
                         src={WalletConnectLogo}
                         alt={
                             isActive
@@ -212,8 +244,7 @@ export const WalletConnectButton = (props: ButtonProps): JSX.Element => {
                         }
                     />
                 </div>
-                <div className={css({ fontSize: '15px' })}>Wallet</div>
-                <div className={css({ fontSize: '15px' })}>Connect</div>
+                <div className={css({ fontSize: '17px' })}>Wallet Connect</div>
             </div>
         </ConnectButton>
     );

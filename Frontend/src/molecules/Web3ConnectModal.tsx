@@ -41,8 +41,9 @@ const Web3ConnectModalInner = (): JSX.Element => {
             )}
             <div
                 className={css({
-                    fontFamily: theme.fonts.title,
-                    fontSize: '40px',
+                    fontFamily: theme.fonts.headers,
+                    fontSize: '42px',
+                    marginBottom: '10px',
                     color: theme.fontColors.light.toRgbaString(1),
                 })}
             >
@@ -57,11 +58,11 @@ const Web3ConnectModalInner = (): JSX.Element => {
                 })}
             >
                 <MetaMaskButton
-                    className={css({ margin: '5px' })}
+                    className={css({ margin: '1px' })}
                     invalidChain={invalidChain}
                 />
-                <WalletConnectButton className={css({ margin: '5px' })} />
-                <WalletLinkButton className={css({ margin: '5px' })} />
+                <WalletConnectButton className={css({ margin: '1px' })} />
+                <WalletLinkButton className={css({ margin: '1px' })} />
             </div>
         </div>
     );
@@ -85,7 +86,7 @@ export const Web3ConnectModal = (): JSX.Element => {
                     background: theme.backgroundGradients.purpleBlue,
                     display: 'flex',
                 },
-                scrollableContent: { height: '100%', padding: '20px' },
+                scrollableContent: { height: '100%', padding: '15px' },
             }}
         >
             <Web3ConnectModalInner />

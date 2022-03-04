@@ -42,7 +42,7 @@ export const getLoginRouter = (
     LoginRouter.get<string, never, GetResponse, never, never>(
         '/',
         cors(),
-        async (req, res) => {
+        async (_, res) => {
             try {
                 const oauthUrl = generatureOath2Url(client, SCOPE);
 

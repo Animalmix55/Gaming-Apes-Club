@@ -51,6 +51,11 @@ export const InitializeListingModel = (instance: Sequelize): void => {
                 allowNull: false,
                 defaultValue: false,
             },
+            disabled: {
+                type: DataTypes.BOOLEAN,
+                allowNull: false,
+                defaultValue: false,
+            },
         },
         {
             sequelize: instance,

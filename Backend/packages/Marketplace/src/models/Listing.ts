@@ -6,6 +6,7 @@ export interface NewListing {
     supply?: number;
     maxPerUser?: number;
     requiresHoldership?: boolean;
+    disabled?: boolean;
 }
 
 export interface UpdatedListing extends NewListing {
@@ -33,9 +34,11 @@ export const sanitizeAndValidateListing: Sanitizer = (model, add) => {
         maxPerUser,
         id,
         requiresHoldership,
+        disabled,
     } = model as UpdatedListing;
 
     if (!add && !id) throw new Error('Missing id');
+    if (add && disabled) throw new Error('Cannot create a disabled record');
     if (typeof title !== 'string' || !title.trim())
         throw new Error('Invalid title');
     if (typeof description !== 'string' || !description.trim())
@@ -57,6 +60,6 @@ export const sanitizeAndValidateListing: Sanitizer = (model, add) => {
         supply,
         maxPerUser,
         requiresHoldership,
-        ...(!add && { id }),
+        ...(!add && { id, disabled }),
     } as never;
 };

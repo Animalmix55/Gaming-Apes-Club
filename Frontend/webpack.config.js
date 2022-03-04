@@ -11,7 +11,7 @@ module.exports = (env) => ({
     entry: './src/index.tsx',
     output: {
         path: path.resolve(__dirname, 'dist'),
-        filename: 'bundle-02112022-2.js',
+        filename: 'bundle-03032022-2.js',
     },
     devtool: 'inline-source-map',
     mode: 'development',

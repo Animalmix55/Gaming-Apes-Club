@@ -22,6 +22,7 @@ export const Header = (props: Props): JSX.Element => {
                 css({
                     height: '40px',
                     position: 'absolute',
+                    zIndex: '1000001', // above layer
                     top: 0,
                     left: 0,
                     right: 0,
