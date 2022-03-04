@@ -34,6 +34,12 @@ interface PostRequest {
      */
     signableMessageToken?: string;
     signature?: string;
+    /**
+     * Not necessarily the address that signs the message...
+     * Just the address that the user wishes to have recorded into the
+     * transaction for whitelist spots or what have you.
+     */
+    address?: string;
 }
 
 interface GetRequest {
@@ -182,7 +188,13 @@ export const getTransactionRouter = (
         if (!user)
             return res.status(401).send({ error: 'No authorization provided' });
 
-        const { listingId, quantity, signature, signableMessageToken } = body;
+        const {
+            listingId,
+            quantity,
+            signature,
+            signableMessageToken,
+            address: recordableAddress,
+        } = body;
         const { id } = user;
 
         const listing = await StoredListing.findByPk(listingId);
@@ -201,8 +213,18 @@ export const getTransactionRouter = (
             0
         );
 
-        let address: string;
-        const { maxPerUser, price, requiresHoldership } = listing.get();
+        let address: string | undefined;
+        const {
+            maxPerUser,
+            price,
+            requiresHoldership,
+            requiresLinkedAddress,
+            disabled,
+        } = listing.get();
+
+        if (disabled)
+            return res.status(403).send({ error: 'Listing is disabled' });
+
         if (requiresHoldership) {
             if (!signature || !signableMessageToken) {
                 const signableMessage = generateLoginMessage();
@@ -256,6 +278,12 @@ export const getTransactionRouter = (
         }
 
         if (
+            requiresLinkedAddress &&
+            (!recordableAddress || !Web3.utils.isAddress(recordableAddress))
+        )
+            return res.status(500).send({ error: 'Invalid linked address' });
+
+        if (
             maxPerUser !== undefined &&
             quantity + quantityAlreadyPurchased > maxPerUser
         )
@@ -286,6 +314,7 @@ export const getTransactionRouter = (
             listingId,
             user: id,
             quantity,
+            address: requiresLinkedAddress ? recordableAddress : address,
         } as Transaction);
 
         const { total: newBalance } = await getBalance(client, guildId, id);

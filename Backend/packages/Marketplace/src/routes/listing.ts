@@ -52,7 +52,7 @@ export const getListingRouter = (
             } = query;
 
             const offset = Number(offsetStr || 0);
-            const limit = Number(pageSizeStr || 0);
+            const limit = Number(pageSizeStr || 1000);
 
             const { count, rows } = await StoredListing.findAndCountAll({
                 offset,

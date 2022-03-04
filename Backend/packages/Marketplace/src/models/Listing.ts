@@ -6,6 +6,7 @@ export interface NewListing {
     supply?: number;
     maxPerUser?: number;
     requiresHoldership?: boolean;
+    requiresLinkedAddress?: boolean;
     disabled?: boolean;
 }
 
@@ -34,10 +35,12 @@ export const sanitizeAndValidateListing: Sanitizer = (model, add) => {
         maxPerUser,
         id,
         requiresHoldership,
+        requiresLinkedAddress,
         disabled,
     } = model as UpdatedListing;
 
     if (!add && !id) throw new Error('Missing id');
+    if (add && id) throw new Error('New records cannot contain an id');
     if (add && disabled) throw new Error('Cannot create a disabled record');
     if (typeof title !== 'string' || !title.trim())
         throw new Error('Invalid title');
@@ -51,6 +54,8 @@ export const sanitizeAndValidateListing: Sanitizer = (model, add) => {
         throw new Error('Invalid user maximum');
     if (requiresHoldership && typeof requiresHoldership !== 'boolean')
         throw new Error('Invalid holdership requirement flag');
+    if (requiresLinkedAddress && typeof requiresLinkedAddress !== 'boolean')
+        throw new Error('Invalid linked address requirement flag');
 
     return {
         title,
@@ -60,6 +65,7 @@ export const sanitizeAndValidateListing: Sanitizer = (model, add) => {
         supply,
         maxPerUser,
         requiresHoldership,
+        requiresLinkedAddress,
         ...(!add && { id, disabled }),
     } as never;
 };

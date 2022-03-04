@@ -56,6 +56,11 @@ export const InitializeListingModel = (instance: Sequelize): void => {
                 allowNull: false,
                 defaultValue: false,
             },
+            requiresLinkedAddress: {
+                type: DataTypes.BOOLEAN,
+                allowNull: false,
+                defaultValue: false,
+            },
         },
         {
             sequelize: instance,

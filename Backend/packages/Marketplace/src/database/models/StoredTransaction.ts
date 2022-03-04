@@ -30,6 +30,10 @@ export const InitializeTransactionModel = (instance: Sequelize): void => {
                 type: DataTypes.INTEGER,
                 allowNull: true,
             },
+            address: {
+                type: DataTypes.STRING,
+                allowNull: true,
+            },
         },
         {
             sequelize: instance,
