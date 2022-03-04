@@ -6,6 +6,7 @@ import { useStyletron } from 'styletron-react';
 interface Props {
     url: string;
     autoplay?: boolean;
+    loop?: boolean;
     className?: string;
     /**
      * width / height of the video
@@ -14,7 +15,7 @@ interface Props {
 }
 
 export const CoverVideo = (props: Props): JSX.Element => {
-    const { url, autoplay, className, aspectRatio } = props;
+    const { url, autoplay, className, aspectRatio, loop } = props;
 
     const [height, setHeight] = React.useState(0);
     const [width, setWidth] = React.useState(0);
@@ -64,6 +65,7 @@ export const CoverVideo = (props: Props): JSX.Element => {
         >
             <div style={{ height, width }}>
                 <ReactPlayer
+                    loop={loop}
                     url={url}
                     playing={autoplay}
                     width="100%"

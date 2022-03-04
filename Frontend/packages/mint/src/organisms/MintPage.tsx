@@ -40,6 +40,7 @@ export const MintPage = ({
                 aspectRatio={1.777777}
                 className={css({ zIndex: -1 })}
                 autoplay
+                loop
             />
             <DisconnectButton
                 className={css({
