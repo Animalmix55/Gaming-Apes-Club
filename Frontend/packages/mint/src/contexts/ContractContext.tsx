@@ -1,7 +1,7 @@
 import React from 'react';
+import { useProvider } from '@gac/shared';
 import { GamingApeClub } from '../models/GamingApeClub';
 import { useGamingApeContext } from './GamingApeClubContext';
-import { useProvider } from './ProviderContext';
 import tokenAbi from '../assets/web3/TokenABI.json';
 
 export interface ContractContextType {

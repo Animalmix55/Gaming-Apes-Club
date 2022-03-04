@@ -5,6 +5,8 @@ import {
     BASE,
     roundAndDisplay,
     MOBILE,
+    useProvider,
+    useThemeContext,
 } from '@gac/shared';
 import BigDecimal from 'js-big-decimal';
 import React from 'react';
@@ -16,8 +18,6 @@ import { FadeInOut } from '../atoms/FadeInOut';
 import { GlowButton } from '../atoms/GlowButton';
 import { TransactionButton } from '../atoms/TransactionButton';
 import { useContractContext } from '../contexts/ContractContext';
-import { useProvider } from '../contexts/ProviderContext';
-import { useThemeContext } from '../contexts/ThemeContext';
 import { useCurrentTime } from '../hooks/useCurrentTime';
 import { useMintData } from '../hooks/useMintData';
 import { useMintTimes } from '../hooks/useMintTimes';

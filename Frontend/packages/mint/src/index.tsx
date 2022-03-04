@@ -11,10 +11,9 @@ import {
     GamingApeClubContextType,
     GamingApeContextProvider,
 } from './contexts/GamingApeClubContext';
-import { DefaultTheme, ThemeContextProvider } from './contexts/ThemeContext';
+import { DefaultTheme, ThemeContextProvider, ProviderContextProvider } from '@gac/shared';
 import { MintPage } from './organisms/MintPage';
 import { ContractContextProvider } from './contexts/ContractContext';
-import { ProviderContextProvider } from './contexts/ProviderContext';
 
 initializeIcons();
 

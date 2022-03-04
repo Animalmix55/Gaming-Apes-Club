@@ -6,17 +6,26 @@ import { WalletLink } from '@web3-react/walletlink';
 import React from 'react';
 import { useStyletron } from 'styletron-react';
 import { Spinner, SpinnerSize } from '@fluentui/react';
-import { ClassNameBuilder, getAddChainParameters } from '@gac/shared';
+import {
+    ClassNameBuilder,
+    getAddChainParameters,
+    useThemeContext,
+} from '@gac/shared';
+import {
+    MetaMask as MMConnector,
+    WalletConnect as WCConnector,
+    WalletLink as WLConnector,
+} from '@gac/shared/lib/connectors';
 import { GlowButton } from './GlowButton';
-import { useGamingApeContext } from '../contexts/GamingApeClubContext';
 
 import MetaMaskLogo from '../assets/png/Metamask.png';
 import WalletLinkLogo from '../assets/png/coinbase-wallet.png';
 import WalletConnectLogo from '../assets/png/walletconnect.png';
-import { metaMask, hooks as MMHooks } from '../connectors/Metamask';
-import { walletConnect, hooks as WCHooks } from '../connectors/WalletConnect';
-import { walletLink, hooks as WLHooks } from '../connectors/WalletLink';
-import { useThemeContext } from '../contexts/ThemeContext';
+import { Chain } from '../models/Chain';
+
+const { hooks: MMHooks, metaMask } = MMConnector;
+const { hooks: WCHooks, walletConnect } = WCConnector;
+const { hooks: WLHooks, walletLink } = WLConnector;
 
 interface ConnectButtonProps<
     TConnector extends MetaMask | WalletConnect | WalletLink =
@@ -31,6 +40,7 @@ interface ConnectButtonProps<
     error: ReturnType<Web3ReactHooks['useError']>;
     isActive: ReturnType<Web3ReactHooks['useIsActive']>;
     invalidChain?: boolean;
+    requiredChainId?: Chain;
 }
 
 export const isWalletConnect = (
@@ -46,7 +56,6 @@ export const isWalletLink = (
 export const ConnectButton = (
     props: ConnectButtonProps & { children: React.ReactNode }
 ): JSX.Element => {
-    const { chainId: requiredChainId } = useGamingApeContext();
     const {
         connector,
         isActivating,
@@ -54,6 +63,7 @@ export const ConnectButton = (
         children,
         className,
         invalidChain,
+        requiredChainId,
     } = props;
 
     const [css] = useStyletron();
@@ -130,10 +140,11 @@ export const ConnectButton = (
 interface ButtonProps {
     className?: string;
     invalidChain?: boolean;
+    requiredChainId?: Chain;
 }
 
 export const MetaMaskButton = (props: ButtonProps): JSX.Element => {
-    const { className, invalidChain } = props;
+    const { className, invalidChain, requiredChainId } = props;
 
     const [css] = useStyletron();
     const isActive = MMHooks.useIsActive();
@@ -148,6 +159,7 @@ export const MetaMaskButton = (props: ButtonProps): JSX.Element => {
             error={error}
             invalidChain={invalidChain}
             className={className}
+            requiredChainId={requiredChainId}
         >
             <div className={css({ padding: '5px' })}>
                 <div>
@@ -172,7 +184,7 @@ export const MetaMaskButton = (props: ButtonProps): JSX.Element => {
 };
 
 export const WalletLinkButton = (props: ButtonProps): JSX.Element => {
-    const { className, invalidChain } = props;
+    const { className, invalidChain, requiredChainId } = props;
 
     const [css] = useStyletron();
     const isActive = WLHooks.useIsActive();
@@ -186,6 +198,7 @@ export const WalletLinkButton = (props: ButtonProps): JSX.Element => {
             isActive={isActive}
             error={error}
             invalidChain={invalidChain}
+            requiredChainId={requiredChainId}
             className={className}
         >
             <div className={css({ padding: '5px' })}>
@@ -211,7 +224,7 @@ export const WalletLinkButton = (props: ButtonProps): JSX.Element => {
 };
 
 export const WalletConnectButton = (props: ButtonProps): JSX.Element => {
-    const { className, invalidChain } = props;
+    const { className, invalidChain, requiredChainId } = props;
 
     const [css] = useStyletron();
     const isActive = WCHooks.useIsActive();
@@ -225,6 +238,7 @@ export const WalletConnectButton = (props: ButtonProps): JSX.Element => {
             isActive={isActive}
             error={error}
             invalidChain={invalidChain}
+            requiredChainId={requiredChainId}
             className={className}
         >
             <div className={css({ padding: '5px' })}>

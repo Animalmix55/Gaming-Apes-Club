@@ -2,15 +2,13 @@
 import { MessageBar, Modal } from '@fluentui/react';
 import React from 'react';
 import { useStyletron } from 'styletron-react';
-import { CHAINS } from '@gac/shared';
+import { CHAINS, useProvider, useThemeContext } from '@gac/shared';
 import {
     MetaMaskButton,
     WalletConnectButton,
     WalletLinkButton,
 } from '../atoms/ConnectButton';
 import { useGamingApeContext } from '../contexts/GamingApeClubContext';
-import { useProvider } from '../contexts/ProviderContext';
-import { useThemeContext } from '../contexts/ThemeContext';
 
 const Web3ConnectModalInner = (): JSX.Element => {
     const [css] = useStyletron();
@@ -60,9 +58,18 @@ const Web3ConnectModalInner = (): JSX.Element => {
                 <MetaMaskButton
                     className={css({ margin: '1px' })}
                     invalidChain={invalidChain}
+                    requiredChainId={expectedChainId}
                 />
-                <WalletConnectButton className={css({ margin: '1px' })} />
-                <WalletLinkButton className={css({ margin: '1px' })} />
+                <WalletConnectButton
+                    className={css({ margin: '1px' })}
+                    invalidChain={invalidChain}
+                    requiredChainId={expectedChainId}
+                />
+                <WalletLinkButton
+                    className={css({ margin: '1px' })}
+                    invalidChain={invalidChain}
+                    requiredChainId={expectedChainId}
+                />
             </div>
         </div>
     );
