@@ -1,5 +1,5 @@
+import { Chain } from '@gac/shared';
 import React from 'react';
-import { Chain } from '../models/Chain';
 
 export interface GamingApeClubContextType {
     tokenAddress?: string;

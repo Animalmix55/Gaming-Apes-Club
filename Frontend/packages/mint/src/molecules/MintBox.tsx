@@ -7,6 +7,7 @@ import {
     MOBILE,
     useProvider,
     useThemeContext,
+    GlowButton,
 } from '@gac/shared';
 import BigDecimal from 'js-big-decimal';
 import React from 'react';
@@ -15,7 +16,6 @@ import { toast } from 'react-toastify';
 import { useStyletron } from 'styletron-react';
 import { useProofGetter } from '../api/hooks/useProofGetter';
 import { FadeInOut } from '../atoms/FadeInOut';
-import { GlowButton } from '../atoms/GlowButton';
 import { TransactionButton } from '../atoms/TransactionButton';
 import { useContractContext } from '../contexts/ContractContext';
 import { useCurrentTime } from '../hooks/useCurrentTime';

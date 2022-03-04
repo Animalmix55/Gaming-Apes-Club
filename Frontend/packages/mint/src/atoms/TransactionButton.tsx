@@ -4,9 +4,13 @@ import React from 'react';
 import { toast } from 'react-toastify';
 import { useStyletron } from 'styletron-react';
 import { PromiEvent, TransactionReceipt } from 'web3-core';
+import { GlowButtonProps, GlowButton } from '@gac/shared';
+import {
+    BaseContract,
+    NonPayableTx,
+    PayableTx,
+} from '@gac/shared/lib/models/types';
 import { useGamingApeContext } from '../contexts/GamingApeClubContext';
-import { BaseContract, NonPayableTx, PayableTx } from '../models/types';
-import { GlowButtonProps, GlowButton } from './GlowButton';
 
 export interface TransactionButtonProps<
     T extends BaseContract,

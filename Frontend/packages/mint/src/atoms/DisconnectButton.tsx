@@ -1,7 +1,6 @@
 import React from 'react';
 import { useStyletron } from 'styletron-react';
-import { useProvider } from '@gac/shared';
-import { GlowButton } from './GlowButton';
+import { GlowButton, useProvider } from '@gac/shared';
 
 export const DisconnectButton = ({
     className,

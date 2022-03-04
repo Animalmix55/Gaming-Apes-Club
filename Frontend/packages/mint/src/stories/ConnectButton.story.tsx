@@ -4,7 +4,7 @@ import {
     MetaMaskButton,
     WalletConnectButton,
     WalletLinkButton,
-} from '../atoms/ConnectButton';
+} from '@gac/shared';
 
 export default {
     title: 'Atoms/ConnectButton',

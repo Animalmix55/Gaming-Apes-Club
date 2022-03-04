@@ -7,21 +7,19 @@ import React from 'react';
 import { useStyletron } from 'styletron-react';
 import { Spinner, SpinnerSize } from '@fluentui/react';
 import {
-    ClassNameBuilder,
-    getAddChainParameters,
-    useThemeContext,
-} from '@gac/shared';
-import {
     MetaMask as MMConnector,
     WalletConnect as WCConnector,
     WalletLink as WLConnector,
-} from '@gac/shared/lib/connectors';
-import { GlowButton } from './GlowButton';
+} from '../connectors';
 
 import MetaMaskLogo from '../assets/png/Metamask.png';
 import WalletLinkLogo from '../assets/png/coinbase-wallet.png';
 import WalletConnectLogo from '../assets/png/walletconnect.png';
 import { Chain } from '../models/Chain';
+import { useThemeContext } from '../contexts/ThemeContext';
+import { getAddChainParameters } from '../Chains';
+import { ClassNameBuilder } from '../utilties';
+import { GlowButton } from './GlowButton';
 
 const { hooks: MMHooks, metaMask } = MMConnector;
 const { hooks: WCHooks, walletConnect } = WCConnector;

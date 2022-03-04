@@ -1,7 +1,6 @@
 import { Spinner } from '@fluentui/react';
-import { useProvider } from '@gac/shared';
+import { useProvider, MetaMaskButton } from '@gac/shared';
 import React from 'react';
-import { MetaMaskButton } from '../atoms/ConnectButton';
 import { useWhitelisted } from '../hooks/useWhitelisted';
 
 export default {

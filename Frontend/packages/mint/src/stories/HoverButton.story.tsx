@@ -1,5 +1,5 @@
 import React from 'react';
-import { GlowButton } from '../atoms/GlowButton';
+import { GlowButton } from '@gac/shared';
 
 export default {
     title: 'Atoms/HoverButton',

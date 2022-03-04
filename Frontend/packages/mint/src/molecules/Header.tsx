@@ -1,10 +1,9 @@
 import React from 'react';
 import { useStyletron } from 'styletron-react';
-import { ClassNameBuilder } from '@gac/shared';
+import { ClassNameBuilder, GlowButton } from '@gac/shared';
 
-import Logo from '../assets/png/Text Logo.png';
+import Logo from '@gac/shared/lib/assets/png/Text Logo.png';
 import { useGamingApeContext } from '../contexts/GamingApeClubContext';
-import { GlowButton } from '../atoms/GlowButton';
 
 interface Props {
     className?: string;

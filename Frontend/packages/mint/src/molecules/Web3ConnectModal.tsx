@@ -2,12 +2,14 @@
 import { MessageBar, Modal } from '@fluentui/react';
 import React from 'react';
 import { useStyletron } from 'styletron-react';
-import { CHAINS, useProvider, useThemeContext } from '@gac/shared';
 import {
+    CHAINS,
     MetaMaskButton,
+    useProvider,
+    useThemeContext,
     WalletConnectButton,
     WalletLinkButton,
-} from '../atoms/ConnectButton';
+} from '@gac/shared';
 import { useGamingApeContext } from '../contexts/GamingApeClubContext';
 
 const Web3ConnectModalInner = (): JSX.Element => {

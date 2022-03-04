@@ -1,7 +1,8 @@
 import React from 'react';
 import { StyleObject, useStyletron } from 'styletron-react';
-import { ClassNameBuilder, useThemeContext } from '@gac/shared';
+import { useThemeContext } from '../contexts/ThemeContext';
 import { useHover } from '../hooks/useHover';
+import { ClassNameBuilder } from '../utilties';
 
 export interface GlowButtonProps
     extends React.ButtonHTMLAttributes<HTMLButtonElement> {
