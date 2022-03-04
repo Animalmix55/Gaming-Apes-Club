@@ -1,10 +1,13 @@
 import { ClassNameBuilder, useProvider, useThemeContext } from '@gac/shared';
 import React from 'react';
 import { useStyletron } from 'styletron-react';
+import ReactPlayer from 'react-player';
 import { DisconnectButton } from '../atoms/DisconnectButton';
 import { Header } from '../molecules/Header';
 import { MintBox } from '../molecules/MintBox';
 import { Web3ConnectModal } from '../molecules/Web3ConnectModal';
+import BackgroundVideo from '../assets/webm/ComputerLights.webm';
+import CoverVideo from '../atoms/CoverVideo';
 
 export const MintPage = ({
     className,
@@ -21,7 +24,8 @@ export const MintPage = ({
             className={ClassNameBuilder(
                 className,
                 css({
-                    backgroundColor: theme.backgroundColor.dark.toRgbaString(),
+                    backgroundColor:
+                        theme.backgroundColor.dark.toRgbaString(0.8),
                     overflow: 'hidden',
                     display: 'flex',
                     flexDirection: 'column',
@@ -31,6 +35,12 @@ export const MintPage = ({
                 })
             )}
         >
+            <CoverVideo
+                url={BackgroundVideo}
+                aspectRatio={1.777777}
+                className={css({ zIndex: -1 })}
+                autoplay
+            />
             <DisconnectButton
                 className={css({
                     position: 'absolute',

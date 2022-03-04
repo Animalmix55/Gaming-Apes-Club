@@ -2,9 +2,13 @@
   "name": "@gac/mint",
   "version": "1.0.0",
   "description": "The mint page for GAC",
-  "main": "index.js",
+  "main": "index.tsx",
   "license": "MIT",
   "private": true,
+  "files": [
+    "dist"
+  ],
+  "module": "src/index.tsx",
   "scripts": {
     "build": "webpack",
     "build:prod": "webpack --mode production",
@@ -41,6 +45,7 @@
     "@ethersproject/units": "^5.4.0"
   },
   "dependencies": {
+    "react-player": "^2.9.0",
     "@gac/shared": "^1.0.0",
     "buffer": "^6.0.3",
     "crypto-browserify": "^3.12.0",

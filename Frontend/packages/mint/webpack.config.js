@@ -37,7 +37,7 @@ module.exports = (env) => ({
                 exclude: /node_modules/,
             },
             {
-                test: /\.(png|jpg|jpeg|gif)$/i,
+                test: /\.(png|jpg|jpeg|gif|webm)$/i,
                 type: 'asset/resource',
             },
             {

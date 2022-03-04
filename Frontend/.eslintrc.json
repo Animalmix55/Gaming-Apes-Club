@@ -81,5 +81,5 @@
     "globals": {
         "NodeJS": true
     },
-     "ignorePatterns": ["**/dist-server/","**/lib/", "**/node_modules/"]
+    "ignorePatterns": ["**/dist-server/","**/lib/", "**/node_modules/"]
 }
