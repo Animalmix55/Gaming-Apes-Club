@@ -1,7 +1,6 @@
 import BigDecimal from 'js-big-decimal';
 import React from 'react';
-import { BASE } from '@gac/shared';
-import { RequestResult, useRequest } from '../api/hooks/useRequest';
+import { BASE, RequestResult, useRequest } from '@gac/shared';
 import { useContractContext } from '../contexts/ContractContext';
 
 interface ReturnType {

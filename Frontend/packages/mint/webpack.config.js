@@ -4,14 +4,13 @@
 const path = require('path');
 const webpack = require('webpack');
 const ImageMinimizerPlugin = require('image-minimizer-webpack-plugin');
-const { extendDefaultPlugins } = require('svgo');
 const Dotenv = require('dotenv-webpack');
 
 module.exports = (env) => ({
     entry: './src/index.tsx',
     output: {
         path: path.resolve(__dirname, 'dist'),
-        filename: 'bundle-03032022-2.js',
+        filename: 'bundle-03042022-3.js',
     },
     devtool: 'inline-source-map',
     mode: 'development',
@@ -79,28 +78,6 @@ module.exports = (env) => ({
                     ['gifsicle', { interlaced: true }],
                     ['jpegtran', { progressive: true }],
                     ['optipng', { optimizationLevel: 5 }],
-                    // Svgo configuration here https://github.com/svg/svgo#configuration
-                    [
-                        'svgo',
-                        {
-                            plugins: extendDefaultPlugins([
-                                {
-                                    name: 'removeViewBox',
-                                    active: false,
-                                },
-                                {
-                                    name: 'addAttributesToSVGElement',
-                                    params: {
-                                        attributes: [
-                                            {
-                                                xmlns: 'http://www.w3.org/2000/svg',
-                                            },
-                                        ],
-                                    },
-                                },
-                            ]),
-                        },
-                    ],
                 ],
             },
         }),

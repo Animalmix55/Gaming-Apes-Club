@@ -1,5 +1,5 @@
 import React from 'react';
-import { RequestResult, useRequest } from '../api/hooks/useRequest';
+import { RequestResult, useRequest } from '@gac/shared';
 import { getProof } from '../api/Requests';
 import { useGamingApeContext } from '../contexts/GamingApeClubContext';
 

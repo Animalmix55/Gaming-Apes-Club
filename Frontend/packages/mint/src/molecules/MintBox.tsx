@@ -8,6 +8,8 @@ import {
     useProvider,
     useThemeContext,
     GlowButton,
+    useCurrentTime,
+    FadeInOut,
 } from '@gac/shared';
 import BigDecimal from 'js-big-decimal';
 import React from 'react';
@@ -15,10 +17,8 @@ import { useQueryClient } from 'react-query';
 import { toast } from 'react-toastify';
 import { useStyletron } from 'styletron-react';
 import { useProofGetter } from '../api/hooks/useProofGetter';
-import { FadeInOut } from '../atoms/FadeInOut';
 import { TransactionButton } from '../atoms/TransactionButton';
 import { useContractContext } from '../contexts/ContractContext';
-import { useCurrentTime } from '../hooks/useCurrentTime';
 import { useMintData } from '../hooks/useMintData';
 import { useMintTimes } from '../hooks/useMintTimes';
 import { useNumberMinted } from '../hooks/useNumberMinted';

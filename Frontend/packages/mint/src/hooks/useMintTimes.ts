@@ -1,5 +1,5 @@
+import { RequestResult, useRequest } from '@gac/shared';
 import React from 'react';
-import { RequestResult, useRequest } from '../api/hooks/useRequest';
 import { useContractContext } from '../contexts/ContractContext';
 
 interface ReturnType {

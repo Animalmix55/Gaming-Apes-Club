@@ -1,13 +1,10 @@
-import { ClassNameBuilder, useProvider, useThemeContext } from '@gac/shared';
+import { ClassNameBuilder, CoverVideo, DisconnectButton, Header, useProvider, useThemeContext } from '@gac/shared';
 import React from 'react';
 import { useStyletron } from 'styletron-react';
-import ReactPlayer from 'react-player';
-import { DisconnectButton } from '../atoms/DisconnectButton';
-import { Header } from '../molecules/Header';
 import { MintBox } from '../molecules/MintBox';
 import { Web3ConnectModal } from '../molecules/Web3ConnectModal';
 import BackgroundVideo from '../assets/webm/ComputerLights.webm';
-import CoverVideo from '../atoms/CoverVideo';
+import { useGamingApeContext } from '../contexts/GamingApeClubContext';
 
 export const MintPage = ({
     className,
@@ -15,6 +12,7 @@ export const MintPage = ({
     className?: string;
 }): JSX.Element => {
     const { accounts } = useProvider();
+    const { homeUrl } = useGamingApeContext();
 
     const theme = useThemeContext();
     const [css] = useStyletron();
@@ -50,7 +48,7 @@ export const MintPage = ({
                 })}
             />
             <Web3ConnectModal />
-            <Header />
+            <Header homeUrl={homeUrl} />
             <div
                 className={css({
                     flex: '1',

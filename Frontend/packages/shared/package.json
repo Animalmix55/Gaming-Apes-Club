@@ -4,7 +4,7 @@
   "description": "All shared UI components for GAC",
   "main": "lib/index.js",
   "scripts": {
-    "build": "tsc && cpx \"src/assets/**/*\" \"lib/assets\""
+    "build": "tsc && cpx \"src/assets/**/*\" \"lib/assets\" && cpx \"src/styles/**/*\" \"lib/styles\""
   },
   "typings": "lib/index.d.ts",
   "typescript": {
@@ -41,6 +41,7 @@
     "@ethersproject/units": "^5.4.0"
   },
   "dependencies": {
+    "react-player": "^2.9.0",
     "react-transition-group": "^4.4.2"
   },
   "prettier": {

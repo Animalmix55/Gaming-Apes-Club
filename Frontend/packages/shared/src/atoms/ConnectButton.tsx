@@ -25,7 +25,7 @@ const { hooks: MMHooks, metaMask } = MMConnector;
 const { hooks: WCHooks, walletConnect } = WCConnector;
 const { hooks: WLHooks, walletLink } = WLConnector;
 
-interface ConnectButtonProps<
+export interface ConnectButtonProps<
     TConnector extends MetaMask | WalletConnect | WalletLink =
         | MetaMask
         | WalletConnect

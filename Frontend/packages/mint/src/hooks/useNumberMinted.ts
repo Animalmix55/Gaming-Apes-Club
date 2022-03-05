@@ -1,5 +1,5 @@
 import React from 'react';
-import { RequestResult, useRequest } from '../api/hooks/useRequest';
+import { RequestResult, useRequest } from '@gac/shared';
 import { useContractContext } from '../contexts/ContractContext';
 import { MintType } from '../models/MintType';
 
