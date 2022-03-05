@@ -1,4 +1,11 @@
-import { ClassNameBuilder, CoverVideo, DisconnectButton, Header, useProvider, useThemeContext } from '@gac/shared';
+import {
+    ClassNameBuilder,
+    CoverVideo,
+    DisconnectButton,
+    Header,
+    useProvider,
+    useThemeContext,
+} from '@gac/shared';
 import React from 'react';
 import { useStyletron } from 'styletron-react';
 import { MintBox } from '../molecules/MintBox';
