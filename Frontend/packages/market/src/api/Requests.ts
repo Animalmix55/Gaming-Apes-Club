@@ -26,7 +26,7 @@ export const Balance = {
     },
 };
 
-interface LoginPostResponse extends BaseResponse, Partial<User> {
+export interface LoginPostResponse extends BaseResponse, Partial<User> {
     token?: string;
     guildMember?: Member;
 }
@@ -57,7 +57,7 @@ export const Login = {
     },
 };
 
-interface GetListingResponse extends BaseResponse {
+export interface GetListingResponse extends BaseResponse {
     records?: ListingModel[];
     numRecords?: number;
 }
@@ -72,7 +72,7 @@ type ListingPutResponse = ListingPostResponse;
  * All functions associated with pushing/pulling listings
  */
 export const Listing = {
-    async getListings(
+    async getBulk(
         api: string,
         pageSize = 1000,
         offset = 0,
@@ -86,17 +86,14 @@ export const Listing = {
         return data as GetListingResponse;
     },
 
-    async getListingById(
-        api: string,
-        id: string
-    ): Promise<GetListingByIdReponse> {
+    async getById(api: string, id: string): Promise<GetListingByIdReponse> {
         const url = `${api}/listing/${id}`;
 
         const { data } = await axios.get(url);
         return data as GetListingByIdReponse;
     },
 
-    async createListing(
+    async create(
         api: string,
         token: string,
         listing: NewListing
@@ -111,7 +108,7 @@ export const Listing = {
         return data as ListingPostResponse;
     },
 
-    async updateListing(
+    async update(
         api: string,
         token: string,
         listing: UpdatedListing
@@ -127,18 +124,18 @@ export const Listing = {
     },
 };
 
-interface TransactionGetResponse extends BaseResponse {
+export interface TransactionGetResponse extends BaseResponse {
     results?: TransactionModel[];
     numRecords?: number;
 }
 
-interface TransactionGetSignableMessageResponse extends BaseResponse {
+export interface TransactionGetSignableMessageResponse extends BaseResponse {
     signableMessage?: string;
     signableMessageToken?: string;
 }
 
-interface TransactionSendResponse
-    extends BaseResponse,
+export interface TransactionSendResponse
+    extends TransactionGetSignableMessageResponse,
         Partial<TransactionModel> {
     newBalance?: number;
 }
@@ -191,7 +188,7 @@ export const Transaction = {
         return data as TransactionGetResponse;
     },
 
-    async getTransactionSignableMessage(
+    async getSignableMessage(
         api: string,
         token: string,
         listingId: string,
@@ -210,14 +207,14 @@ export const Transaction = {
         return data as TransactionGetSignableMessageResponse;
     },
 
-    async sendTransaction(
+    async send(
         api: string,
         token: string,
         listingId: string,
-        signableMessageToken: string,
-        signature: string,
-        address: string,
-        quantity = 1
+        quantity = 1,
+        signableMessageToken?: string,
+        signature?: string,
+        address?: string
     ): Promise<TransactionSendResponse> {
         const url = `${api}/transaction`;
 

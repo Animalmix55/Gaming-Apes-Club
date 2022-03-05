@@ -8,10 +8,14 @@ import 'react-toastify/dist/ReactToastify.css';
 import './styles/global.css';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import {
+    DefaultTheme,
+    ThemeContextProvider,
+    ProviderContextProvider,
+} from '@gac/shared';
+import {
     GamingApeClubContextType,
     GamingApeContextProvider,
 } from './contexts/GamingApeClubContext';
-import { DefaultTheme, ThemeContextProvider, ProviderContextProvider } from '@gac/shared';
 import { MintPage } from './organisms/MintPage';
 import { ContractContextProvider } from './contexts/ContractContext';
 
