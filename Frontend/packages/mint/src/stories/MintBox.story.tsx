@@ -2,7 +2,7 @@ import React from 'react';
 import { MintBox } from '../molecules/MintBox';
 
 export default {
-    title: 'Molecules/MintBox',
+    title: 'Mint/Molecules/MintBox',
     component: MintBox,
 };
 

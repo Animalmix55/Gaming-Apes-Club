@@ -2,7 +2,7 @@ import React from 'react';
 import { MintPage } from '../organisms/MintPage';
 
 export default {
-    title: 'Organisms/MintPage',
+    title: 'Mint/Organisms/MintPage',
     component: MintPage,
 };
 

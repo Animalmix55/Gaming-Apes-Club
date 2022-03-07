@@ -3,7 +3,7 @@ import React from 'react';
 import { useMintTimes } from '../hooks/useMintTimes';
 
 export default {
-    title: 'Hooks/UseMintTimes',
+    title: 'Mint/Hooks/UseMintTimes',
 };
 
 export const StandAlone = (): JSX.Element => {

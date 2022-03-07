@@ -36,7 +36,7 @@ const Web3ConnectModalInner = (): JSX.Element => {
             {invalidChain && (
                 <MessageBar>
                     You are connected to the wrong chain. Connect to{' '}
-                    {CHAINS[expectedChainId].name}
+                    {CHAINS[expectedChainId]?.name || 'Unknown'}
                 </MessageBar>
             )}
             <div

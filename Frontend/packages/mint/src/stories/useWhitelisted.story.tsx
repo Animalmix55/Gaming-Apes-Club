@@ -4,7 +4,7 @@ import React from 'react';
 import { useWhitelisted } from '../hooks/useWhitelisted';
 
 export default {
-    title: 'Hooks/UseWhitelisted',
+    title: 'Mint/Hooks/UseWhitelisted',
 };
 
 export const WithConnector = (): JSX.Element => {
