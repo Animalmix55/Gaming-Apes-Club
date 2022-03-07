@@ -18,7 +18,7 @@ const getHeaders = (token: string): AxiosRequestHeaders => {
 
 export const Balance = {
     async getBalance(api: string, discordId: string): Promise<number> {
-        const url = `${api}/balance`;
+        const url = `${api}/balance?discordId=${discordId}`;
 
         const { data } = await axios.get(url);
         const { balance } = data;
@@ -61,12 +61,12 @@ export interface GetListingResponse extends BaseResponse {
     records?: ListingModel[];
     numRecords?: number;
 }
-type GetListingByIdReponse = Partial<ListingModel> & BaseResponse;
-type ListingPostBody = NewListing;
-type ListingPostResponse = Partial<ListingModel> & BaseResponse;
+export type GetListingByIdReponse = Partial<ListingModel> & BaseResponse;
+export type ListingPostBody = NewListing;
+export type ListingPostResponse = Partial<ListingModel> & BaseResponse;
 
-type ListingPutBody = UpdatedListing;
-type ListingPutResponse = ListingPostResponse;
+export type ListingPutBody = UpdatedListing;
+export type ListingPutResponse = ListingPostResponse;
 
 /**
  * All functions associated with pushing/pulling listings

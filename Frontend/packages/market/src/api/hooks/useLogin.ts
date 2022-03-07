@@ -1,0 +1,41 @@
+import React from 'react';
+import { useAuthorizationContext } from '../../contexts/AuthorizationContext';
+import { useGamingApeContext } from '../../contexts/GamingApeClubContext';
+import { Login } from '../Requests';
+
+interface UseLoginReturn {
+    login: () => Promise<void>;
+    isLoggingIn: boolean;
+}
+
+export const useLogin = (): UseLoginReturn => {
+    const { api } = useGamingApeContext();
+    const { onLogin } = useAuthorizationContext();
+
+    const [loginPending, setLoginPending] = React.useState(false);
+
+    React.useEffect(() => {
+        const urlParams = new URLSearchParams(window.location.search);
+
+        const code = urlParams.get('code');
+        if (!code) return;
+        if (!api) throw new Error('Cannot login due to missing api');
+
+        Login.getSessionToken(api, code).then(onLogin);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [api]);
+
+    const login = React.useCallback(async () => {
+        if (!api) throw new Error('Cannot login due to missing api');
+        setLoginPending(true);
+
+        const url = await Login.getLoginUrl(api);
+        window.location.href = url;
+
+        setLoginPending(false);
+    }, [api]);
+
+    return { login, isLoggingIn: loginPending };
+};
+
+export default useLogin;

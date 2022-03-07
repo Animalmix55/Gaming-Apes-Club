@@ -1,11 +1,12 @@
 import axios from 'axios';
 import React from 'react';
 import { useMutation } from '@gac/shared';
-import { UseMutationResult } from 'react-query';
+import { UseMutationResult, useQueryClient } from 'react-query';
 import { useAuthorizationContext } from '../../contexts/AuthorizationContext';
 import { useGamingApeContext } from '../../contexts/GamingApeClubContext';
 import { Transaction, TransactionSendResponse } from '../Requests';
 import { TransactionsKey } from './useTransactions';
+import { BalanceKey } from './useBalance';
 
 export const useTransactionSubmitter = (
     onRequestSignature: (message: string) => Promise<string>
@@ -17,6 +18,8 @@ export const useTransactionSubmitter = (
 > => {
     const { token } = useAuthorizationContext();
     const { api } = useGamingApeContext();
+
+    const queryClient = useQueryClient();
 
     const query = React.useCallback(
         async (listingId: string, quantity?: number, address?: string) => {
@@ -67,7 +70,19 @@ export const useTransactionSubmitter = (
         [api, onRequestSignature, token]
     );
 
-    return useMutation(query, [TransactionsKey], false);
+    return useMutation(query, {
+        onSuccess: (): void => {
+            queryClient.invalidateQueries({
+                queryKey: [TransactionsKey],
+                exact: false,
+            });
+
+            queryClient.invalidateQueries({
+                queryKey: [BalanceKey],
+                exact: false,
+            });
+        },
+    });
 };
 
 export default useTransactionSubmitter;

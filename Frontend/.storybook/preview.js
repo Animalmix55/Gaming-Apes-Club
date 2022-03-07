@@ -1,4 +1,5 @@
-import '../src/styles/global.css';
+import '@gac/mint/src/styles/global.css';
+import '@gac/market/src/styles/global.css';
 import ContractContextDecorator from './ContractContextDecorator';
 import GamingApeClubDecorator from './GamingApeClubDecorator';
 import ProviderDecorator from './ProviderDecorator';

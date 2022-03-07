@@ -1,3 +1,3 @@
-import { ProviderContextProvider } from '../src/contexts/ProviderContext';
+import { ProviderContextProvider } from '@gac/shared';
 
 export default (story) => <ProviderContextProvider>{story()}</ProviderContextProvider> 
