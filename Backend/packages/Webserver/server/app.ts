@@ -10,6 +10,7 @@ import {
     StartDatabase,
 } from '@gac/marketplace';
 import Web3 from 'web3';
+import cors from 'cors';
 
 const {
     MYSQL_HOST,
@@ -50,6 +51,7 @@ app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
+app.use(cors({ origin: '*', optionsSuccessStatus: 200 }));
 // app.use(express.static(path.join(__dirname, '../public')));
 app.use('/proof', ProofRouter);
 app.use('/balance', getBalanceRouter(UNB_TOKEN, GUILD_ID));

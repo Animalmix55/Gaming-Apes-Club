@@ -16,3 +16,4 @@ export * from './hooks/useCurrentTime';
 export * from './hooks/useRequestGetter';
 export * from './hooks/useMutator';
 export * from './atoms/CoverVideo';
+export * from './molecules/Web3ConnectModalManual';

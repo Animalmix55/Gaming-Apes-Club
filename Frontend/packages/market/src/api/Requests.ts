@@ -2,6 +2,7 @@ import axios, { AxiosRequestHeaders } from 'axios';
 import { BaseResponse } from './Models/BaseResponse';
 import {
     Listing as ListingModel,
+    ListingWithCount,
     NewListing,
     UpdatedListing,
 } from './Models/Listing';
@@ -58,7 +59,7 @@ export const Login = {
 };
 
 export interface GetListingResponse extends BaseResponse {
-    records?: ListingModel[];
+    records?: ListingWithCount[];
     numRecords?: number;
 }
 export type GetListingByIdReponse = Partial<ListingModel> & BaseResponse;

@@ -1,5 +1,4 @@
 import express from 'express';
-import cors from 'cors';
 import {
     BaseResponse,
     createJWT,
@@ -74,7 +73,7 @@ export const getTransactionRouter = (
         never,
         GetRequest,
         AuthLocals
-    >('/user/:userId', cors(), async (req, res) => {
+    >('/user/:userId', async (req, res) => {
         const { query, params } = req;
         const { locals } = res;
         const { isAdmin, user } = locals;
@@ -113,7 +112,7 @@ export const getTransactionRouter = (
         never,
         GetRequest,
         AuthLocals
-    >('/listing/:listingId', cors(), async (req, res) => {
+    >('/listing/:listingId', async (req, res) => {
         const { query, params } = req;
         const { locals } = res;
         const { isAdmin } = locals;
@@ -148,7 +147,7 @@ export const getTransactionRouter = (
         never,
         GetRequest,
         AuthLocals
-    >('/', cors(), async (req, res) => {
+    >('/', async (req, res) => {
         const { query } = req;
         const { locals } = res;
         const { isAdmin } = locals;
@@ -181,7 +180,7 @@ export const getTransactionRouter = (
         PostRequest,
         never,
         AuthLocals
-    >('/', cors(), async (req, res) => {
+    >('/', async (req, res) => {
         const { body } = req;
         const { user, isAdmin } = res.locals;
 

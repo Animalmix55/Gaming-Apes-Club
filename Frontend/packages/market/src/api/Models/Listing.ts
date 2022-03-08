@@ -19,3 +19,7 @@ export interface Listing extends NewListing {
     createdBy: string;
     createdOn: Date;
 }
+
+export interface ListingWithCount extends Listing {
+    totalPurchased: number;
+}

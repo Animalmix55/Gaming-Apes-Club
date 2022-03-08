@@ -8,13 +8,15 @@ interface UseLoginReturn {
     isLoggingIn: boolean;
 }
 
-export const useLogin = (): UseLoginReturn => {
+export const useLogin = (suppressListener?: boolean): UseLoginReturn => {
     const { api } = useGamingApeContext();
     const { onLogin } = useAuthorizationContext();
 
     const [loginPending, setLoginPending] = React.useState(false);
 
     React.useEffect(() => {
+        if (suppressListener) return;
+
         const urlParams = new URLSearchParams(window.location.search);
 
         const code = urlParams.get('code');

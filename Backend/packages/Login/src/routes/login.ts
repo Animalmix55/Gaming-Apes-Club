@@ -1,5 +1,4 @@
 import express from 'express';
-import cors from 'cors';
 import { BaseResponse } from '@gac/shared';
 import { Member, User } from 'discord-oauth2';
 import {
@@ -41,7 +40,6 @@ export const getLoginRouter = (
 
     LoginRouter.get<string, never, GetResponse, never, never>(
         '/',
-        cors(),
         async (_, res) => {
             try {
                 const oauthUrl = generatureOath2Url(client, SCOPE);
@@ -56,7 +54,6 @@ export const getLoginRouter = (
 
     LoginRouter.post<string, never, PostResponse, PostRequest, never>(
         '/',
-        cors(),
         async (req, res) => {
             const { body } = req;
             const { code } = body;

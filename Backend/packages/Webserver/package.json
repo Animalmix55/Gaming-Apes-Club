@@ -13,7 +13,6 @@
     "server": "node ./dist-server/bin/www",
     "dev": "cross-env NODE_ENV=development yarn build && yarn server",
     "prod": "cross-env NODE_ENV=production yarn build && yarn server",
-    "watch:dev": "nodemon",
     "test": "jest"
   },
   "jest": {

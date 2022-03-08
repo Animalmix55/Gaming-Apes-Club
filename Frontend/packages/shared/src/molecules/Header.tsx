@@ -8,10 +8,13 @@ import { ClassNameBuilder } from '../utilties';
 export interface Props {
     className?: string;
     homeUrl?: string;
+    openseaUrl?: string;
+    twitterUrl?: string;
+    discordUrl?: string;
 }
 
 export const Header = (props: Props): JSX.Element => {
-    const { className, homeUrl } = props;
+    const { className, homeUrl, openseaUrl, twitterUrl, discordUrl } = props;
     const [css] = useStyletron();
 
     return (
@@ -27,12 +30,18 @@ export const Header = (props: Props): JSX.Element => {
                     right: 0,
                     margin: '42px 42px 0px 42px',
                     display: 'flex',
+                    flexWrap: 'wrap',
                 })
             )}
         >
             <a
                 href={homeUrl}
-                className={css({ height: '100%', marginRight: 'auto' })}
+                className={css({
+                    height: '100%',
+                    marginRight: 'auto',
+                    marginBottom: '10px',
+                    marginTop: '10px',
+                })}
             >
                 <img
                     className={css({ height: '100%', width: 'auto' })}
@@ -40,23 +49,83 @@ export const Header = (props: Props): JSX.Element => {
                     alt="Gaming Ape Club"
                 />
             </a>
-            {homeUrl && (
-                <div
-                    className={css({
-                        fontSize: '0.875rem !important',
-                        zIndex: 10,
-                    })}
-                >
-                    <GlowButton
-                        onClick={(): void => {
-                            window.location.href = homeUrl;
-                        }}
-                        className={css({ height: '28px' })}
+            <div
+                className={css({
+                    display: 'flex',
+                    flexWrap: 'wrap',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                })}
+            >
+                {homeUrl && (
+                    <div
+                        className={css({
+                            fontSize: '0.875rem !important',
+                            zIndex: 10,
+                        })}
                     >
-                        HOME
-                    </GlowButton>
-                </div>
-            )}
+                        <GlowButton
+                            onClick={(): void => {
+                                window.location.href = homeUrl;
+                            }}
+                            className={css({ height: '28px' })}
+                        >
+                            HOME
+                        </GlowButton>
+                    </div>
+                )}
+                {openseaUrl && (
+                    <div
+                        className={css({
+                            fontSize: '0.875rem !important',
+                            zIndex: 10,
+                        })}
+                    >
+                        <GlowButton
+                            onClick={(): void => {
+                                window.location.href = openseaUrl;
+                            }}
+                            className={css({ height: '28px' })}
+                        >
+                            OPENSEA
+                        </GlowButton>
+                    </div>
+                )}
+                {twitterUrl && (
+                    <div
+                        className={css({
+                            fontSize: '0.875rem !important',
+                            zIndex: 10,
+                        })}
+                    >
+                        <GlowButton
+                            onClick={(): void => {
+                                window.location.href = twitterUrl;
+                            }}
+                            className={css({ height: '28px' })}
+                        >
+                            TWITTER
+                        </GlowButton>
+                    </div>
+                )}
+                {discordUrl && (
+                    <div
+                        className={css({
+                            fontSize: '0.875rem !important',
+                            zIndex: 10,
+                        })}
+                    >
+                        <GlowButton
+                            onClick={(): void => {
+                                window.location.href = discordUrl;
+                            }}
+                            className={css({ height: '28px' })}
+                        >
+                            DISCORD
+                        </GlowButton>
+                    </div>
+                )}
+            </div>
         </div>
     );
 };

@@ -1,5 +1,4 @@
 import express from 'express';
-import cors from 'cors';
 import { BaseResponse } from '@gac/shared';
 import { getBalance, getUNBClient } from '../helpers/Unbelieveaboat';
 
@@ -22,7 +21,6 @@ export const getBalanceRouter = (apiToken?: string, guildId?: string) => {
 
     BalanceRouter.get<string, never, Response, never, GetRequest>(
         '/',
-        cors(),
         async (req, res) => {
             const { query } = req;
             const { discordId } = query;

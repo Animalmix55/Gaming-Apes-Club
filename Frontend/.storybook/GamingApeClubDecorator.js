@@ -7,12 +7,18 @@ export default (story) =>
             homeUrl: 'https://gamingapeclub.com',
             api: 'http://localhost:3000',
             tokenAddress: '0xb05dd03C025e12294f144d0897c50eBB37Cbd7E9',
-            chainId: 4
+            chainId: 4,
+            openseaUrl: 'test',
+            twitterUrl: 'test',
+            discordUrl: 'test'
         }}>
             <MarketContextProvider
                 value={{
                     homeUrl: 'https://gamingapeclub.com',
                     api: 'http://localhost:3000',
+                    openseaUrl: 'test',
+                    twitterUrl: 'test',
+                    discordUrl: 'test'
                 }}
             >
                 {story()}

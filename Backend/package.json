@@ -13,7 +13,8 @@
     "url": "git+https://github.com/Animalmix55/FreeFlow.git"
   },
   "scripts": {
-    "start:fresh": "lerna run build --stream && lerna run start:fresh --stream",
+    "start:dev": "nodemon --exec \"yarn start:fresh\"",
+    "start:fresh": "lerna run build --stream && lerna run start:fresh --stream && 1",
     "start": "lerna run build --stream && lerna run start --stream",
     "transpile": "lerna run transpile",
     "clean": "lerna run clean",

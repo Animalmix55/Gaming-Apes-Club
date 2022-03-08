@@ -5,11 +5,12 @@ import { Balance } from '../Requests';
 
 export const BalanceKey = 'BALANCE';
 
-export const useListings = (discordId: string): RequestResult<number> => {
+export const useBalance = (discordId?: string): RequestResult<number> => {
     const { api } = useGamingApeContext();
 
     const queryFn = React.useCallback(
-        (discordId: string) => {
+        async (discordId: string) => {
+            if (!discordId) return 0;
             if (!api) throw new Error('Missing api');
 
             return Balance.getBalance(api, discordId);

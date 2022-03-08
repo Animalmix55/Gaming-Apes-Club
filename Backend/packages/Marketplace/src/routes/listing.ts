@@ -1,8 +1,8 @@
 import express from 'express';
-import cors from 'cors';
 import { BaseResponse } from '@gac/shared';
 import { discordAuthMiddleware, DiscordOauth2 } from '@gac/login';
 import AuthLocals from '@gac/login/lib/models/AuthLocals';
+import { Sequelize } from 'sequelize';
 import StoredListing from '../database/models/StoredListing';
 import {
     Listing,
@@ -11,6 +11,10 @@ import {
     UpdatedListing,
 } from '../models/Listing';
 
+interface ListingWithCount extends Listing {
+    totalPurchased: number;
+}
+
 interface GetRequest extends Record<string, string | undefined> {
     pageSize?: string;
     offset?: string;
@@ -18,7 +22,7 @@ interface GetRequest extends Record<string, string | undefined> {
 }
 
 interface GetResponse extends BaseResponse {
-    records?: Listing[];
+    records?: ListingWithCount[];
     numRecords?: number;
 }
 
@@ -42,7 +46,6 @@ export const getListingRouter = (
 
     ListingRouter.get<string, never, GetResponse, never, GetRequest, never>(
         '/',
-        cors(),
         async (req, res) => {
             const { query } = req;
             const {
@@ -57,6 +60,16 @@ export const getListingRouter = (
             const { count, rows } = await StoredListing.findAndCountAll({
                 offset,
                 limit,
+                attributes: {
+                    include: [
+                        [
+                            Sequelize.literal(
+                                '(SELECT SUM(Transactions.quantity) FROM Transactions WHERE Transactions.listingId = Listing.id)'
+                            ),
+                            'totalPurchased',
+                        ],
+                    ],
+                },
                 ...(showDisabled !== 'true' && {
                     where: {
                         disabled: false,
@@ -65,7 +78,7 @@ export const getListingRouter = (
             });
 
             res.status(200).send({
-                records: rows.map((r) => r.get()),
+                records: rows.map((r) => r.get() as ListingWithCount),
                 numRecords: count,
             });
         }
@@ -78,7 +91,7 @@ export const getListingRouter = (
         never,
         never,
         never
-    >('/:listingId', cors(), async (req, res) => {
+    >('/:listingId', async (req, res) => {
         const { params } = req;
         const { listingId } = params;
 
@@ -99,7 +112,6 @@ export const getListingRouter = (
         AuthLocals
     >(
         '/',
-        cors(),
         discordAuthMiddleware(client, guildId, adminRoles),
         async (req, res) => {
             const { body } = req;
@@ -122,7 +134,6 @@ export const getListingRouter = (
 
     ListingRouter.put<string, never, PutResponse, PutBody, never, AuthLocals>(
         '/',
-        cors(),
         discordAuthMiddleware(client, guildId, adminRoles),
         async (req, res) => {
             const { body } = req;

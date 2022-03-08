@@ -1,4 +1,5 @@
 import { Web3Provider } from '@ethersproject/providers';
+import { Connector } from '@web3-react/types';
 import React from 'react';
 import Web3 from 'web3';
 
@@ -11,6 +12,7 @@ export interface ProviderContextType {
     web3?: Web3;
     accounts?: string[];
     disconnect?: () => void;
+    connector?: Connector;
     chainId?: number;
 }
 

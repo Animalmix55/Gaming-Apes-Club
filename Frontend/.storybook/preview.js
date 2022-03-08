@@ -7,6 +7,7 @@ import QueryClientDecorator from './QueryClientDecorator';
 import StyletronDecorator from "./StyletronDecorator";
 import ThemeDecorator from './ThemeDecorator';
 import ToastDecorator from './ToastDecorator';
+import AuthorizationContextDecorator from './AuthorizationContextDecorator';
 
 export const parameters = {
   actions: { argTypesRegex: "^on[A-Z].*" },
@@ -18,4 +19,4 @@ export const parameters = {
   },
 }
 
-export const decorators = [QueryClientDecorator, ContractContextDecorator, StyletronDecorator, ThemeDecorator, ProviderDecorator, GamingApeClubDecorator, ToastDecorator];
+export const decorators = [QueryClientDecorator, ContractContextDecorator, StyletronDecorator, ThemeDecorator, ProviderDecorator, AuthorizationContextDecorator, GamingApeClubDecorator, ToastDecorator];

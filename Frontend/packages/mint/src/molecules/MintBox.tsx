@@ -207,7 +207,8 @@ const ActiveMintBox = ({
                 className={css({
                     display: 'flex',
                     flexDirection: 'column',
-                    alignItems: 'stretch',
+                    alignItems: 'center',
+                    justifyContent: 'center',
                     flex: '1',
                     width: '100%',
                 })}
@@ -222,7 +223,8 @@ const ActiveMintBox = ({
                 className={css({
                     display: 'flex',
                     flexDirection: 'column',
-                    alignItems: 'stretch',
+                    alignItems: 'center',
+                    justifyContent: 'center',
                     flex: '1',
                     width: '100%',
                 })}

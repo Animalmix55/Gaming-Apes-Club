@@ -5,7 +5,7 @@ import { Listing, TransactionGetResponse } from '../Requests';
 
 export const ListingKey = 'LISTING';
 
-export const useListings = (
+export const useListing = (
     id: string
 ): RequestResult<TransactionGetResponse> => {
     const { api } = useGamingApeContext();

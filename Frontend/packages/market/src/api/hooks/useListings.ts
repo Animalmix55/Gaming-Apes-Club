@@ -1,7 +1,7 @@
 import React from 'react';
 import { RequestResult, useRequest } from '@gac/shared';
 import { useGamingApeContext } from '../../contexts/GamingApeClubContext';
-import { Listing, TransactionGetResponse } from '../Requests';
+import { Listing, GetListingResponse } from '../Requests';
 
 export const ListingsKey = 'LISTINGS';
 
@@ -9,7 +9,7 @@ export const useListings = (
     offset?: number,
     pageSize?: number,
     showDisabled?: boolean
-): RequestResult<TransactionGetResponse> => {
+): RequestResult<GetListingResponse> => {
     const { api } = useGamingApeContext();
 
     const queryFn = React.useCallback(

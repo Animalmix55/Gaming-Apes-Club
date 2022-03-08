@@ -16,6 +16,7 @@ import {
     GamingApeClubContextType,
     GamingApeContextProvider,
 } from './contexts/GamingApeClubContext';
+import { AuthorizationContextProvider } from './contexts/AuthorizationContext';
 
 initializeIcons();
 
@@ -32,19 +33,21 @@ const Root = (): JSX.Element => {
             <QueryClientProvider client={queryClient}>
                 <ThemeContextProvider value={DefaultTheme}>
                     <ProviderContextProvider>
-                        <GamingApeContextProvider
-                            value={{
-                                api,
-                                homeUrl,
-                                discordUrl,
-                                twitterUrl,
-                                openseaUrl,
-                            }}
-                        >
-                            <>
-                                <ToastContainer position="bottom-left" />
-                            </>
-                        </GamingApeContextProvider>
+                        <AuthorizationContextProvider>
+                            <GamingApeContextProvider
+                                value={{
+                                    api,
+                                    homeUrl,
+                                    discordUrl,
+                                    twitterUrl,
+                                    openseaUrl,
+                                }}
+                            >
+                                <>
+                                    <ToastContainer position="bottom-left" />
+                                </>
+                            </GamingApeContextProvider>
+                        </AuthorizationContextProvider>
                     </ProviderContextProvider>
                 </ThemeContextProvider>
             </QueryClientProvider>

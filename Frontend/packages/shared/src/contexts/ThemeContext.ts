@@ -12,6 +12,7 @@ interface Fonts {
 interface FontColors {
     light: RGBA;
     dark: RGBA;
+    accent: RGBA;
 }
 
 interface BackgroundGradients {
@@ -21,10 +22,13 @@ interface BackgroundGradients {
 
 interface Pallette {
     purple: RGBA;
+    discordBlue: RGBA;
+    metamaskOrange: RGBA;
 }
 
 interface BackgroundColors {
     dark: RGBA;
+    light: RGBA;
 }
 
 export interface ThemeContextType {
@@ -45,9 +49,12 @@ export const DefaultTheme: ThemeContextType = {
     fontColors: {
         light: rgba(255, 255, 255),
         dark: rgba(0, 0, 0),
+        accent: rgba(255, 207, 75),
     },
     pallette: {
         purple: rgba(136, 74, 187),
+        discordBlue: rgba(88, 101, 242),
+        metamaskOrange: rgba(255, 127, 0),
     },
     backgroundGradients: {
         purpleBlue: 'linear-gradient(90deg, #623fe2, #238df3)',
@@ -55,6 +62,7 @@ export const DefaultTheme: ThemeContextType = {
     },
     backgroundColor: {
         dark: rgba(0, 0, 0),
+        light: rgba(255, 255, 255),
     },
 };
 

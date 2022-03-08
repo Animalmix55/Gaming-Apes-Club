@@ -19,7 +19,8 @@ export const MintPage = ({
     className?: string;
 }): JSX.Element => {
     const { accounts } = useProvider();
-    const { homeUrl } = useGamingApeContext();
+    const { homeUrl, openseaUrl, twitterUrl, discordUrl } =
+        useGamingApeContext();
 
     const theme = useThemeContext();
     const [css] = useStyletron();
@@ -55,7 +56,12 @@ export const MintPage = ({
                 })}
             />
             <Web3ConnectModal />
-            <Header homeUrl={homeUrl} />
+            <Header
+                homeUrl={homeUrl}
+                openseaUrl={openseaUrl}
+                twitterUrl={twitterUrl}
+                discordUrl={discordUrl}
+            />
             <div
                 className={css({
                     flex: '1',
