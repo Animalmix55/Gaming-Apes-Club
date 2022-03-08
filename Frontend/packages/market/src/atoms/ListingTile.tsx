@@ -30,7 +30,6 @@ export const ListingTile = (props: ListingTileProps): JSX.Element => {
                 className,
                 css({
                     background: 'unset',
-                    outline: 'unset',
                     border: 'unset',
                     cursor: 'pointer',
                     zIndex: 1,

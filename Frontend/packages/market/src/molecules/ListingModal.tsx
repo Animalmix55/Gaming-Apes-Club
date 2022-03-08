@@ -40,7 +40,6 @@ export const ListingModal = (props: Props): JSX.Element => {
         isLoading,
         isSuccess,
         error,
-        reset,
     } = useTransactionSubmitter(onRequestSignature);
 
     const errorMessage = React.useMemo(() => {
@@ -53,11 +52,6 @@ export const ListingModal = (props: Props): JSX.Element => {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         return (error as any).message;
     }, [error]);
-
-    React.useEffect(() => {
-        reset();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [listing]);
 
     const {
         id: listingId,
@@ -154,7 +148,7 @@ export const ListingModal = (props: Props): JSX.Element => {
                         </div>
                     )}
 
-                    {requiresHoldership && (
+                    {!!requiresHoldership && (
                         <div
                             className={css({
                                 padding: '5px',
@@ -177,7 +171,7 @@ export const ListingModal = (props: Props): JSX.Element => {
                         </div>
                     )}
 
-                    {requiresLinkedAddress && (
+                    {!!requiresLinkedAddress && (
                         <div
                             className={css({
                                 padding: '5px',

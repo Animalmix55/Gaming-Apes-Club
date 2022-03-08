@@ -48,7 +48,7 @@ export const MarketplacePage = (): JSX.Element => {
 
             setSelectedIndex(index);
         },
-        [accounts, discordId, listings?.records, login, selectedIndex]
+        [accounts, discordId, listings, login, selectedIndex]
     );
     const theme = useThemeContext();
 
