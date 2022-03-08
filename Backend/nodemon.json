@@ -1,5 +1,5 @@
 {
     "verbose": true,
     "ignore": ["**/lib/**", "**/dist-server/**"],
-    "ext": "js,json,ts,tsx,jsx"
+    "ext": "js,json,ts,tsx,jsx,env"
 }

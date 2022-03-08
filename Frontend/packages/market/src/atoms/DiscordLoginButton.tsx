@@ -11,7 +11,7 @@ export const DiscordLoginButton = ({
 }: {
     className?: string;
 }): JSX.Element => {
-    const { login, isLoggingIn } = useLogin(true);
+    const { login, isLoggingIn } = useLogin();
     const { token } = useAuthorizationContext();
 
     const [css] = useStyletron();
@@ -65,6 +65,7 @@ export const DiscordLoginButton = ({
                     fontSize: '18px',
                     cursor: 'pointer',
                     minWidth: '120px',
+                    minHeight: '28px',
                     display: 'flex',
                     justifyContent: 'center',
                     alignItems: 'center',

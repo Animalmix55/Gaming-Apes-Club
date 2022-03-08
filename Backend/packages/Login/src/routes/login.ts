@@ -8,6 +8,7 @@ import {
     getTokenFromCode,
     getUser,
 } from '../helpers/DisordOauth2';
+import { createUserJWT } from '../helpers/JWT';
 
 interface GetResponse extends BaseResponse {
     loginUrl?: string;
@@ -19,22 +20,18 @@ interface PostRequest {
 
 interface PostResponse extends BaseResponse, Partial<User> {
     token?: string;
-    guildMember?: Member;
+    member?: Member;
 }
 
 const SCOPE = ['email', 'identify', 'guilds.members.read'];
 
 export const getLoginRouter = (
-    clientId?: string,
-    clientSecret?: string,
-    redirectUrl?: string,
-    guildId?: string
+    clientId: string,
+    clientSecret: string,
+    redirectUrl: string,
+    guildId: string,
+    jwtSecret: string
 ) => {
-    if (!clientId || !clientSecret || !redirectUrl || !guildId) {
-        console.error('Missing client id, redirect uri, guild id, or secret');
-        process.exit(1);
-    }
-
     const LoginRouter = express.Router();
     const client = getOauth2Client(clientId, clientSecret, redirectUrl);
 
@@ -72,16 +69,18 @@ export const getLoginRouter = (
                 );
 
                 const user = await getUser(client, access_token);
-                const guildMember = await getGuildMember(
+                const member = await getGuildMember(
                     client,
                     access_token,
                     guildId
                 );
 
+                const claims = { ...user, member };
+                const token = createUserJWT(claims, jwtSecret);
+
                 res.status(200).send({
-                    token: access_token,
-                    ...user,
-                    guildMember,
+                    token,
+                    ...claims,
                 });
                 return;
             } catch (e) {

@@ -44,12 +44,14 @@ export const ListingTile = (props: ListingTileProps): JSX.Element => {
                     padding: '10px',
                     boxSizing: 'border-box',
                     transition: 'background-color 500ms',
-                    [HOVERABLE]: {
-                        ':hover': {
-                            background:
-                                theme.backgroundGradients.purpleBlueButton,
+                    ...(onClick && {
+                        [HOVERABLE]: {
+                            ':hover': {
+                                background:
+                                    theme.backgroundGradients.purpleBlueButton,
+                            },
                         },
-                    },
+                    }),
                     [MOBILE]: {
                         width: '90%',
                     },

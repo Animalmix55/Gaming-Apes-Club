@@ -43,12 +43,14 @@ export const useTransactions = (
         [api, token]
     );
 
-    const result = useRequest(queryFn, TransactionsKey, [
-        userId,
-        listingId,
-        offset,
-        pageSize,
-    ]);
+    const result = useRequest(
+        queryFn,
+        TransactionsKey,
+        [userId, listingId, offset, pageSize],
+        {
+            staleTime: Infinity,
+        }
+    );
 
     return result;
 };

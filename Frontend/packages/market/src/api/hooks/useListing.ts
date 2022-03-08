@@ -1,13 +1,13 @@
 import React from 'react';
 import { RequestResult, useRequest } from '@gac/shared';
 import { useGamingApeContext } from '../../contexts/GamingApeClubContext';
-import { Listing, TransactionGetResponse } from '../Requests';
+import { Listing, GetListingByIdReponse } from '../Requests';
 
 export const ListingKey = 'LISTING';
 
 export const useListing = (
     id: string
-): RequestResult<TransactionGetResponse> => {
+): RequestResult<GetListingByIdReponse> => {
     const { api } = useGamingApeContext();
 
     const queryFn = React.useCallback(
@@ -19,7 +19,9 @@ export const useListing = (
         [api]
     );
 
-    const result = useRequest(queryFn, ListingKey, [id]);
+    const result = useRequest(queryFn, ListingKey, [id], {
+        staleTime: Infinity,
+    });
 
     return result;
 };

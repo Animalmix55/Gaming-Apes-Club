@@ -21,11 +21,14 @@ export const useListings = (
         [api]
     );
 
-    const result = useRequest(queryFn, ListingsKey, [
-        offset,
-        pageSize,
-        showDisabled,
-    ]);
+    const result = useRequest(
+        queryFn,
+        ListingsKey,
+        [offset, pageSize, showDisabled],
+        {
+            staleTime: Infinity,
+        }
+    );
 
     return result;
 };

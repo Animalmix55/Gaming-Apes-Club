@@ -1,9 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import DiscordOauth2, { Member } from 'discord-oauth2';
 import crypto from 'crypto';
-import { RequestHandler } from 'express';
-import { BaseResponse } from '@gac/shared';
-import AuthLocals from '../models/AuthLocals';
 
 export const getOauth2Client = (
     clientId: string,
@@ -68,40 +65,7 @@ export const generatureOath2Url = (client: DiscordOauth2, scope: string[]) => {
     });
 };
 
-const isAdmin = (member: Member, adminRoles?: string[]) => {
+export const isAdmin = (member: Member, adminRoles?: string[]) => {
     if (!adminRoles) return false;
     return member.roles.some((r) => adminRoles.includes(r));
 };
-
-export const discordAuthMiddleware: <
-    P = { [x: string]: string },
-    ResBody extends BaseResponse = BaseResponse,
-    ReqBody = any,
-    ReqQuery = qs.ParsedQs,
-    Locals extends AuthLocals = AuthLocals
->(
-    client: DiscordOauth2,
-    guildId: string,
-    adminRoles: string[]
-) => RequestHandler<P, ResBody, ReqBody, ReqQuery, Locals> =
-    (client, guildId, adminRoles) => async (req, res, next) => {
-        const { authorization } = req.headers;
-
-        if (!authorization) {
-            res.status(403).send({ error: 'No credentials sent' } as never);
-            return;
-        }
-
-        try {
-            const token = authorization.replace('Bearer ', '');
-            const user = await getUser(client, token);
-            const member = await getGuildMember(client, token, guildId);
-            const admin = isAdmin(member, adminRoles);
-            res.locals.user = { ...user, member };
-            res.locals.isAdmin = admin;
-
-            next();
-        } catch (e) {
-            res.status(401).send({ error: `Bad authorization: ${e}` } as never);
-        }
-    };

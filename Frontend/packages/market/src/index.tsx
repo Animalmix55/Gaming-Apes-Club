@@ -17,6 +17,7 @@ import {
     GamingApeContextProvider,
 } from './contexts/GamingApeClubContext';
 import { AuthorizationContextProvider } from './contexts/AuthorizationContext';
+import { MarketplacePage } from './organisms/MarketplacePage';
 
 initializeIcons();
 
@@ -44,6 +45,7 @@ const Root = (): JSX.Element => {
                                 }}
                             >
                                 <>
+                                    <MarketplacePage />
                                     <ToastContainer position="bottom-left" />
                                 </>
                             </GamingApeContextProvider>

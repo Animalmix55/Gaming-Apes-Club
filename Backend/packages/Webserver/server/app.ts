@@ -3,7 +3,7 @@ import cookieParser from 'cookie-parser';
 import logger from 'morgan';
 import { ProofRouter } from '@gac/whitelist';
 import { getBalanceRouter } from '@gac/token';
-import { getLoginRouter, discordAuthMiddleware } from '@gac/login';
+import { getLoginRouter, authMiddleware } from '@gac/login';
 import {
     getListingRouter,
     getTransactionRouter,
@@ -43,6 +43,9 @@ if (!UNB_TOKEN) throw new Error('Missing UNB Token');
 if (!WEB3_PROVIDER) throw new Error('Missing Web3 provider');
 if (!TOKEN_ADDRESS) throw new Error('Missing token address');
 if (!JWT_PRIVATE) throw new Error('Missing JWT private');
+if (!OAUTH_CLIENT_ID) throw new Error('Missing OAUTH client id');
+if (!OAUTH_SECRET) throw new Error('Missing OAUTH client private');
+if (!OAUTH_REDIRECT_URL) throw new Error('Missing OAUTH redirect url');
 
 const web3 = new Web3(WEB3_PROVIDER);
 
@@ -56,18 +59,19 @@ app.use(cors({ origin: '*', optionsSuccessStatus: 200 }));
 app.use('/proof', ProofRouter);
 app.use('/balance', getBalanceRouter(UNB_TOKEN, GUILD_ID));
 
-const { LoginRouter, client: Oauth2Client } = getLoginRouter(
+const { LoginRouter } = getLoginRouter(
     OAUTH_CLIENT_ID,
     OAUTH_SECRET,
     OAUTH_REDIRECT_URL,
-    GUILD_ID
+    GUILD_ID,
+    JWT_PRIVATE
 );
 
 app.use('/login', LoginRouter);
-app.use('/listing', getListingRouter(Oauth2Client, GUILD_ID, adminRoles));
+app.use('/listing', getListingRouter(JWT_PRIVATE, adminRoles));
 
 // ALL AUTHENTICATED ROUTES
-app.use(discordAuthMiddleware(Oauth2Client, GUILD_ID, adminRoles));
+app.use(authMiddleware(JWT_PRIVATE, adminRoles));
 
 app.use(
     '/transaction',

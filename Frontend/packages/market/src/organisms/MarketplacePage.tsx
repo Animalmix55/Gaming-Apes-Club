@@ -1,40 +1,56 @@
 import { Header, useProvider, useThemeContext } from '@gac/shared';
 import React from 'react';
 import { useStyletron } from 'styletron-react';
-import useLogin from '../api/hooks/useLogin';
-import { ListingWithCount } from '../api/Models/Listing';
-import BalanceWidget from '../atoms/BalanceWidget';
-import DiscordLoginButton from '../atoms/DiscordLoginButton';
-import Web3ConnectButton from '../atoms/Web3ConnectButton';
+import { useListings } from '../api/hooks/useListings';
+import { useLogin } from '../api/hooks/useLogin';
+import { BalanceWidget } from '../atoms/BalanceWidget';
+import { DiscordLoginButton } from '../atoms/DiscordLoginButton';
+import { Web3ConnectButton } from '../atoms/Web3ConnectButton';
 import { useAuthorizationContext } from '../contexts/AuthorizationContext';
 import { useGamingApeContext } from '../contexts/GamingApeClubContext';
-import ListingGrid from '../molecules/ListingGrid';
+import { ListingGrid } from '../molecules/ListingGrid';
+import { ListingModal } from '../molecules/ListingModal';
 
 export const MarketplacePage = (): JSX.Element => {
     const [css] = useStyletron();
-    const theme = useThemeContext();
-    const { login } = useLogin();
+    const { login } = useLogin(true);
     const { id: discordId } = useAuthorizationContext();
     const { homeUrl, discordUrl, openseaUrl, twitterUrl } =
         useGamingApeContext();
     const [modalOpen, setModalOpen] = React.useState(false);
     const { accounts } = useProvider();
 
-    const [selectedListing, setSelectedListing] =
-        React.useState<ListingWithCount>();
+    const listingRequest = useListings();
+    const { data: listings } = listingRequest;
+
+    const [selectedIndex, setSelectedIndex] = React.useState<number>();
+    const selectedListing =
+        selectedIndex !== undefined
+            ? listings?.records?.[selectedIndex]
+            : undefined;
 
     const onItemSelect = React.useCallback(
-        (item?: ListingWithCount) => {
+        (index?: number) => {
             if (!discordId) {
                 login();
+                return;
             }
+
+            const item =
+                selectedIndex !== undefined
+                    ? listings?.records?.[selectedIndex]
+                    : undefined;
+
             if (item?.requiresHoldership && !accounts) {
                 setModalOpen(true);
+                return;
             }
-            setSelectedListing(item);
+
+            setSelectedIndex(index);
         },
-        [accounts, discordId, login]
+        [accounts, discordId, listings?.records, login, selectedIndex]
     );
+    const theme = useThemeContext();
 
     return (
         <div
@@ -43,8 +59,15 @@ export const MarketplacePage = (): JSX.Element => {
                 flexDirection: 'column',
                 overflow: 'hidden',
                 height: '100%',
+                backgroundColor: theme.backgroundColor.dark.toRgbaString(),
             })}
         >
+            {selectedListing && (
+                <ListingModal
+                    listing={selectedListing}
+                    onClose={(): void => setSelectedIndex(undefined)}
+                />
+            )}
             <Header
                 homeUrl={homeUrl}
                 discordUrl={discordUrl}
@@ -74,6 +97,7 @@ export const MarketplacePage = (): JSX.Element => {
             <ListingGrid
                 className={css({ flex: 1, overflow: 'auto' })}
                 onSelect={onItemSelect}
+                request={listingRequest}
             />
         </div>
     );

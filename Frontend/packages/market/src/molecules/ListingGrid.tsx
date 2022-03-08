@@ -1,19 +1,19 @@
 import { Spinner, SpinnerSize } from '@fluentui/react';
-import { ClassNameBuilder } from '@gac/shared';
+import { ClassNameBuilder, RequestResult } from '@gac/shared';
 import React from 'react';
 import { useStyletron } from 'styletron-react';
-import { useListings } from '../api/hooks/useListings';
-import { ListingWithCount } from '../api/Models/Listing';
+import { GetListingResponse } from '../api/Requests';
 import { ListingTile } from '../atoms/ListingTile';
 
 interface Props {
-    onSelect?: (listing: ListingWithCount) => void;
+    request: RequestResult<GetListingResponse>;
+    onSelect?: (listingIndex: number) => void;
     className?: string;
 }
 
 export const ListingGrid = (props: Props): JSX.Element => {
-    const { onSelect, className } = props;
-    const { data: listings, isError, isLoading } = useListings();
+    const { onSelect, className, request } = props;
+    const { data: listings, isError, isLoading } = request;
 
     const [css] = useStyletron();
 
@@ -33,11 +33,11 @@ export const ListingGrid = (props: Props): JSX.Element => {
             {isError && <div>Error Loading</div>}
             {isLoading && <Spinner size={SpinnerSize.large} />}
             {listings?.records &&
-                listings.records.map((r) => (
+                listings.records.map((r, i) => (
                     <ListingTile
                         key={r.id}
                         listing={r}
-                        onClick={onSelect}
+                        onClick={(): void => onSelect?.(i)}
                         className={css({ margin: '10px' })}
                     />
                 ))}

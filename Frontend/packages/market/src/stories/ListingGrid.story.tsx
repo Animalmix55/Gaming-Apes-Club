@@ -1,5 +1,6 @@
 import React from 'react';
 import { useStyletron } from 'styletron-react';
+import { useListings } from '../api/hooks/useListings';
 import { ListingGrid } from '../molecules/ListingGrid';
 
 export default {
@@ -9,10 +10,11 @@ export default {
 
 export const StandAlone = (): JSX.Element => {
     const [css] = useStyletron();
+    const listings = useListings();
 
     return (
         <div className={css({ backgroundColor: 'black' })}>
-            <ListingGrid />
+            <ListingGrid request={listings} />
         </div>
     );
 };

@@ -1,6 +1,6 @@
 import express from 'express';
 import { BaseResponse } from '@gac/shared';
-import { discordAuthMiddleware, DiscordOauth2 } from '@gac/login';
+import { authMiddleware } from '@gac/login';
 import AuthLocals from '@gac/login/lib/models/AuthLocals';
 import { Sequelize } from 'sequelize';
 import StoredListing from '../database/models/StoredListing';
@@ -37,11 +37,7 @@ interface GetByIdParams {
 }
 type GetByIdReponse = Partial<Listing> & BaseResponse;
 
-export const getListingRouter = (
-    client: DiscordOauth2,
-    guildId: string,
-    adminRoles: string[]
-) => {
+export const getListingRouter = (jwtSecret: string, adminRoles: string[]) => {
     const ListingRouter = express.Router();
 
     ListingRouter.get<string, never, GetResponse, never, GetRequest, never>(
@@ -110,31 +106,27 @@ export const getListingRouter = (
         PostBody,
         never,
         AuthLocals
-    >(
-        '/',
-        discordAuthMiddleware(client, guildId, adminRoles),
-        async (req, res) => {
-            const { body } = req;
-            const { isAdmin, user } = res.locals;
+    >('/', authMiddleware(jwtSecret, adminRoles), async (req, res) => {
+        const { body } = req;
+        const { isAdmin, user } = res.locals;
 
-            if (!isAdmin) return res.status(403).send({ error: 'Not admin' });
+        if (!isAdmin) return res.status(403).send({ error: 'Not admin' });
 
-            try {
-                const listing = sanitizeAndValidateListing(body, true);
-                const dbListing = await StoredListing.create({
-                    ...listing,
-                    createdBy: user.id,
-                } as Listing);
-                return res.status(200).send(dbListing.get());
-            } catch (e) {
-                return res.status(500).send({ error: `Error: ${e}` });
-            }
+        try {
+            const listing = sanitizeAndValidateListing(body, true);
+            const dbListing = await StoredListing.create({
+                ...listing,
+                createdBy: user.id,
+            } as Listing);
+            return res.status(200).send(dbListing.get());
+        } catch (e) {
+            return res.status(500).send({ error: `Error: ${e}` });
         }
-    );
+    });
 
     ListingRouter.put<string, never, PutResponse, PutBody, never, AuthLocals>(
         '/',
-        discordAuthMiddleware(client, guildId, adminRoles),
+        authMiddleware(jwtSecret, adminRoles),
         async (req, res) => {
             const { body } = req;
             const { isAdmin } = res.locals;

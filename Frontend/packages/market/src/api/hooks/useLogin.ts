@@ -22,8 +22,11 @@ export const useLogin = (suppressListener?: boolean): UseLoginReturn => {
         const code = urlParams.get('code');
         if (!code) return;
         if (!api) throw new Error('Cannot login due to missing api');
+        setLoginPending(true);
 
-        Login.getSessionToken(api, code).then(onLogin);
+        Login.getSessionToken(api, code)
+            .then(onLogin)
+            .finally(() => setLoginPending(false));
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [api]);
 

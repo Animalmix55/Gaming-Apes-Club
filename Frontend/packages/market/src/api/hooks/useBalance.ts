@@ -18,7 +18,9 @@ export const useBalance = (discordId?: string): RequestResult<number> => {
         [api]
     );
 
-    const result = useRequest(queryFn, BalanceKey, [discordId]);
+    const result = useRequest(queryFn, BalanceKey, [discordId], {
+        staleTime: Infinity,
+    });
 
     return result;
 };

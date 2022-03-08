@@ -1,3 +1,3 @@
 export * from './routes/login';
-export { discordAuthMiddleware } from './helpers/DisordOauth2';
+export { authMiddleware } from './helpers/JWT';
 export * from './models/Oauth';
