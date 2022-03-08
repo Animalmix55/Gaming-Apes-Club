@@ -84,14 +84,18 @@ const Web3ConnectModalInner = ({
 export const Web3ConnectModalManual = ({
     isOpen,
     expectedChainId,
+    onClose,
 }: {
     expectedChainId?: Chain;
     isOpen: boolean;
+    onClose?: () => void;
 }): JSX.Element => {
     const theme = useThemeContext();
 
     return (
         <Modal
+            onDismiss={onClose}
+            closeButtonAriaLabel="Close"
             isOpen={isOpen}
             styles={{
                 main: {

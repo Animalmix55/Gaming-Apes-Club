@@ -1,4 +1,4 @@
-import { Header, useProvider, useThemeContext } from '@gac/shared';
+import { Header, MOBILE, useProvider, useThemeContext } from '@gac/shared';
 import React from 'react';
 import { useStyletron } from 'styletron-react';
 import { useListings } from '../api/hooks/useListings';
@@ -74,6 +74,9 @@ export const MarketplacePage = (): JSX.Element => {
                 openseaUrl={openseaUrl}
                 twitterUrl={twitterUrl}
                 className={css({
+                    [MOBILE]: {
+                        zIndex: 999999,
+                    },
                     position: 'relative !important' as never,
                     marginBottom: '20px !important',
                 })}

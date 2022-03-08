@@ -65,6 +65,7 @@ export const ListingModal = (props: Props): JSX.Element => {
         totalPurchased,
         supply,
         requiresLinkedAddress,
+        requiresHoldership,
     } = listing;
     const remaining = Math.max(0, (supply ?? Infinity) - totalPurchased);
 
@@ -73,6 +74,9 @@ export const ListingModal = (props: Props): JSX.Element => {
             isOpen
             onDismiss={onClose}
             styles={{
+                scrollableContent: {
+                    maxHeight: 'unset',
+                },
                 main: {
                     background: theme.backgroundGradients.purpleBlue,
                 },
@@ -81,10 +85,12 @@ export const ListingModal = (props: Props): JSX.Element => {
             <div
                 className={css({
                     display: 'flex',
+                    justifyContent: 'center',
                     padding: '20px',
                     overflow: 'hidden',
                     minWidth: 'fit-content',
                     [MOBILE]: {
+                        alignItems: 'center',
                         flexWrap: 'wrap',
                     },
                 })}
@@ -144,6 +150,29 @@ export const ListingModal = (props: Props): JSX.Element => {
                                 })}
                             >
                                 {remaining}
+                            </div>
+                        </div>
+                    )}
+
+                    {requiresHoldership && (
+                        <div
+                            className={css({
+                                padding: '5px',
+                            })}
+                        >
+                            <div
+                                className={css({
+                                    fontFamily: theme.fonts.headers,
+                                })}
+                            >
+                                Requires NFT Ownership
+                            </div>
+                            <div
+                                className={css({
+                                    fontFamily: theme.fonts.body,
+                                })}
+                            >
+                                Yes
                             </div>
                         </div>
                     )}

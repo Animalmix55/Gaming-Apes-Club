@@ -96,6 +96,7 @@ export const Web3ConnectButton = ({
                     />
                 )}
                 <Web3ConnectModalManual
+                    onClose={(): void => setConnectModalOpen(false)}
                     isOpen={!!connectModalOpen}
                     expectedChainId={Chain.Mainnet}
                 />
