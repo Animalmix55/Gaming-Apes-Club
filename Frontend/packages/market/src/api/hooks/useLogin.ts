@@ -25,7 +25,11 @@ export const useLogin = (suppressListener?: boolean): UseLoginReturn => {
         setLoginPending(true);
 
         Login.getSessionToken(api, code)
-            .then(onLogin)
+            .then((v) => {
+                onLogin(v);
+                const url = window.location.href.split('?', 2)[0];
+                window.history.replaceState('', '', url);
+            })
             .finally(() => setLoginPending(false));
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [api]);

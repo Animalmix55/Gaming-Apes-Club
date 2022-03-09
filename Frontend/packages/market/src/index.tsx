@@ -21,7 +21,7 @@ import { MarketplacePage } from './organisms/MarketplacePage';
 
 initializeIcons();
 
-const { api, homeUrl, discordUrl, twitterUrl, openseaUrl } = {
+const { api, homeUrl, discordUrl, twitterUrl, openseaUrl, adminRoles } = {
     ...window,
 } as unknown as GamingApeClubContextType;
 
@@ -42,6 +42,7 @@ const Root = (): JSX.Element => {
                                     discordUrl,
                                     twitterUrl,
                                     openseaUrl,
+                                    adminRoles,
                                 }}
                             >
                                 <>

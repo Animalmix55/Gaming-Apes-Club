@@ -6,12 +6,13 @@ import { Listing, GetListingByIdReponse } from '../Requests';
 export const ListingKey = 'LISTING';
 
 export const useListing = (
-    id: string
+    id?: string
 ): RequestResult<GetListingByIdReponse> => {
     const { api } = useGamingApeContext();
 
     const queryFn = React.useCallback(
-        (id: string) => {
+        async (id?: string) => {
+            if (!id) return {};
             if (!api) throw new Error('Missing api');
 
             return Listing.getById(api, id);

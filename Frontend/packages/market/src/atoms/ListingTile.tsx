@@ -7,13 +7,13 @@ import {
 } from '@gac/shared';
 import React from 'react';
 import { useStyletron } from 'styletron-react';
-import { ListingWithCount } from '../api/Models/Listing';
+import { Listing } from '../api/Models/Listing';
 import XPIcon from '../assets/png/GAC_XP_ICON.png';
 
 interface ListingTileProps {
-    listing: ListingWithCount;
+    listing: Listing;
     className?: string;
-    onClick?: (listing: ListingWithCount) => void;
+    onClick?: (listing: Listing) => void;
 }
 
 export const ListingTile = (props: ListingTileProps): JSX.Element => {

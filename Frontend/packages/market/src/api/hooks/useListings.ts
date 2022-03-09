@@ -16,7 +16,7 @@ export const useListings = (
         (offset?: number, pageSize?: number, showDisabled?: boolean) => {
             if (!api) throw new Error('Missing api');
 
-            return Listing.getBulk(api, offset, pageSize, showDisabled);
+            return Listing.getBulk(api, pageSize, offset, showDisabled);
         },
         [api]
     );

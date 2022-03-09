@@ -29,7 +29,7 @@ export const Balance = {
 
 export interface LoginPostResponse extends BaseResponse, Partial<User> {
     token?: string;
-    guildMember?: Member;
+    member?: Member;
 }
 
 /**

@@ -1,12 +1,12 @@
 import { Modal, Spinner, TextField } from '@fluentui/react';
 import { GlowButton, MOBILE, useProvider, useThemeContext } from '@gac/shared';
-import axios from 'axios';
 import React from 'react';
 import { useStyletron } from 'styletron-react';
 import Web3 from 'web3';
 import { useTransactionSubmitter } from '../api/hooks/useTransactionSubmitter';
 import { ListingWithCount } from '../api/Models/Listing';
 import { ListingTile } from '../atoms/ListingTile';
+import { ExtractErrorMessageFromError } from '../utils/ErrorMessage';
 
 interface Props {
     listing: ListingWithCount;
@@ -42,16 +42,10 @@ export const ListingModal = (props: Props): JSX.Element => {
         error,
     } = useTransactionSubmitter(onRequestSignature);
 
-    const errorMessage = React.useMemo(() => {
-        if (!error) return undefined;
-        if (axios.isAxiosError(error)) {
-            if (error.response?.data.error) return error.response?.data.error;
-            return error.message;
-        }
-
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        return (error as any).message;
-    }, [error]);
+    const errorMessage = React.useMemo(
+        () => ExtractErrorMessageFromError(error),
+        [error]
+    );
 
     const {
         id: listingId,

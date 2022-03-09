@@ -1,6 +1,9 @@
 import '../styles/global.css';
 import React from 'react';
+import { initializeIcons } from '@fluentui/react';
 import { RGBA, rgba } from '../utilties/Colors';
+
+initializeIcons();
 
 interface Fonts {
     title: string;

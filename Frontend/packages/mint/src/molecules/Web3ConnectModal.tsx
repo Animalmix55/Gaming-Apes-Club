@@ -11,7 +11,12 @@ export const Web3ConnectModal = (): JSX.Element => {
         chainId !== undefined &&
         chainId !== expectedChainId;
 
-    return <Web3ConnectModalManual isOpen={!web3 || invalidChain} />;
+    return (
+        <Web3ConnectModalManual
+            isOpen={!web3 || invalidChain}
+            expectedChainId={expectedChainId}
+        />
+    );
 };
 
 export default Web3ConnectModal;

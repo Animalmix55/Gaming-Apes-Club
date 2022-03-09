@@ -2,7 +2,6 @@ import express from 'express';
 import { BaseResponse } from '@gac/shared';
 import { authMiddleware } from '@gac/login';
 import AuthLocals from '@gac/login/lib/models/AuthLocals';
-import { Sequelize } from 'sequelize';
 import StoredListing from '../database/models/StoredListing';
 import {
     Listing,
@@ -10,10 +9,7 @@ import {
     sanitizeAndValidateListing,
     UpdatedListing,
 } from '../models/Listing';
-
-interface ListingWithCount extends Listing {
-    totalPurchased: number;
-}
+import { getListingsWithCounts, ListingWithCount } from '../utils/ListingUtils';
 
 interface GetRequest extends Record<string, string | undefined> {
     pageSize?: string;
@@ -53,28 +49,14 @@ export const getListingRouter = (jwtSecret: string, adminRoles: string[]) => {
             const offset = Number(offsetStr || 0);
             const limit = Number(pageSizeStr || 1000);
 
-            const { count, rows } = await StoredListing.findAndCountAll({
+            const { count, rows } = await getListingsWithCounts(
                 offset,
                 limit,
-                attributes: {
-                    include: [
-                        [
-                            Sequelize.literal(
-                                '(SELECT SUM(Transactions.quantity) FROM Transactions WHERE Transactions.listingId = Listing.id)'
-                            ),
-                            'totalPurchased',
-                        ],
-                    ],
-                },
-                ...(showDisabled !== 'true' && {
-                    where: {
-                        disabled: false,
-                    },
-                }),
-            });
+                showDisabled === 'true'
+            );
 
             res.status(200).send({
-                records: rows.map((r) => r.get() as ListingWithCount),
+                records: rows,
                 numRecords: count,
             });
         }
@@ -120,7 +102,9 @@ export const getListingRouter = (jwtSecret: string, adminRoles: string[]) => {
             } as Listing);
             return res.status(200).send(dbListing.get());
         } catch (e) {
-            return res.status(500).send({ error: `Error: ${e}` });
+            return res
+                .status(500)
+                .send({ error: (e as { message: string })?.message });
         }
     });
 

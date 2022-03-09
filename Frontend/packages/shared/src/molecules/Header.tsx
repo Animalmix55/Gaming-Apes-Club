@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-props-no-spreading */
 import React from 'react';
 import { useStyletron } from 'styletron-react';
 
@@ -5,16 +6,47 @@ import Logo from '../assets/png/Text Logo.png';
 import { GlowButton } from '../atoms/GlowButton';
 import { ClassNameBuilder } from '../utilties';
 
+export interface HeaderButtonProps {
+    displayText: string;
+    onClick: () => void;
+}
+
 export interface Props {
     className?: string;
     homeUrl?: string;
     openseaUrl?: string;
     twitterUrl?: string;
     discordUrl?: string;
+    additionalButtons?: HeaderButtonProps[];
 }
 
+const HeaderButton = (props: HeaderButtonProps): JSX.Element => {
+    const { onClick, displayText } = props;
+    const [css] = useStyletron();
+
+    return (
+        <div
+            className={css({
+                fontSize: '0.875rem !important',
+                zIndex: 10,
+            })}
+        >
+            <GlowButton onClick={onClick} className={css({ height: '28px' })}>
+                {displayText}
+            </GlowButton>
+        </div>
+    );
+};
+
 export const Header = (props: Props): JSX.Element => {
-    const { className, homeUrl, openseaUrl, twitterUrl, discordUrl } = props;
+    const {
+        className,
+        homeUrl,
+        openseaUrl,
+        twitterUrl,
+        discordUrl,
+        additionalButtons,
+    } = props;
     const [css] = useStyletron();
 
     return (
@@ -22,7 +54,6 @@ export const Header = (props: Props): JSX.Element => {
             className={ClassNameBuilder(
                 className,
                 css({
-                    height: '40px',
                     position: 'absolute',
                     zIndex: '1000001', // above layer
                     top: 0,
@@ -31,13 +62,14 @@ export const Header = (props: Props): JSX.Element => {
                     margin: '42px 42px 0px 42px',
                     display: 'flex',
                     flexWrap: 'wrap',
+                    justifyContent: 'center',
                 })
             )}
         >
             <a
                 href={homeUrl}
                 className={css({
-                    height: '100%',
+                    height: '40px',
                     marginRight: 'auto',
                     marginBottom: '10px',
                     marginTop: '10px',
@@ -58,73 +90,41 @@ export const Header = (props: Props): JSX.Element => {
                 })}
             >
                 {homeUrl && (
-                    <div
-                        className={css({
-                            fontSize: '0.875rem !important',
-                            zIndex: 10,
-                        })}
-                    >
-                        <GlowButton
-                            onClick={(): void => {
-                                window.location.href = homeUrl;
-                            }}
-                            className={css({ height: '28px' })}
-                        >
-                            HOME
-                        </GlowButton>
-                    </div>
+                    <HeaderButton
+                        onClick={(): void => {
+                            window.location.href = homeUrl;
+                        }}
+                        displayText="HOME"
+                    />
                 )}
                 {openseaUrl && (
-                    <div
-                        className={css({
-                            fontSize: '0.875rem !important',
-                            zIndex: 10,
-                        })}
-                    >
-                        <GlowButton
-                            onClick={(): void => {
-                                window.location.href = openseaUrl;
-                            }}
-                            className={css({ height: '28px' })}
-                        >
-                            OPENSEA
-                        </GlowButton>
-                    </div>
+                    <HeaderButton
+                        onClick={(): void => {
+                            window.location.href = openseaUrl;
+                        }}
+                        displayText="OPENSEA"
+                    />
                 )}
                 {twitterUrl && (
-                    <div
-                        className={css({
-                            fontSize: '0.875rem !important',
-                            zIndex: 10,
-                        })}
-                    >
-                        <GlowButton
-                            onClick={(): void => {
-                                window.location.href = twitterUrl;
-                            }}
-                            className={css({ height: '28px' })}
-                        >
-                            TWITTER
-                        </GlowButton>
-                    </div>
+                    <HeaderButton
+                        onClick={(): void => {
+                            window.location.href = twitterUrl;
+                        }}
+                        displayText="TWITTER"
+                    />
                 )}
                 {discordUrl && (
-                    <div
-                        className={css({
-                            fontSize: '0.875rem !important',
-                            zIndex: 10,
-                        })}
-                    >
-                        <GlowButton
-                            onClick={(): void => {
-                                window.location.href = discordUrl;
-                            }}
-                            className={css({ height: '28px' })}
-                        >
-                            DISCORD
-                        </GlowButton>
-                    </div>
+                    <HeaderButton
+                        onClick={(): void => {
+                            window.location.href = discordUrl;
+                        }}
+                        displayText="DISCORD"
+                    />
                 )}
+                {!!additionalButtons &&
+                    additionalButtons.map((b) => (
+                        <HeaderButton key={b.displayText} {...b} />
+                    ))}
             </div>
         </div>
     );

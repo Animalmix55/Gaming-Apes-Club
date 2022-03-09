@@ -1,8 +1,8 @@
 export interface Transaction {
-    id?: string;
+    id: string | null;
     listingId: string;
     user: string;
-    address?: string;
+    address: string | null;
     date: Date;
     quantity: number;
 }

@@ -18,7 +18,7 @@ export const InitializeListingModel = (instance: Sequelize): void => {
                 allowNull: false,
             },
             description: {
-                type: DataTypes.STRING,
+                type: DataTypes.STRING(1024),
                 allowNull: false,
             },
             createdBy: {
@@ -31,7 +31,7 @@ export const InitializeListingModel = (instance: Sequelize): void => {
                 defaultValue: DataTypes.NOW,
             },
             image: {
-                type: DataTypes.STRING,
+                type: DataTypes.STRING(1024),
                 allowNull: false,
             },
             price: {

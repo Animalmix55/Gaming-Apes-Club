@@ -6,6 +6,7 @@ export interface GamingApeClubContextType {
     openseaUrl?: string;
     homeUrl?: string;
     api?: string;
+    adminRoles?: string[];
 }
 
 export const GamingApeClubContext =

@@ -10,9 +10,9 @@ import {
 import AuthLocals from '@gac/login/lib/models/AuthLocals';
 import { getBalance, getUNBClient, spend } from '@gac/token';
 import Web3 from 'web3';
-import StoredListing from '../database/models/StoredListing';
 import StoredTransaction from '../database/models/StoredTransaction';
 import Transaction from '../models/Transaction';
+import { getListingWithCount } from '../utils/ListingUtils';
 
 interface TransactionJWTPayload {
     user: string;
@@ -196,7 +196,7 @@ export const getTransactionRouter = (
         } = body;
         const { id } = user;
 
-        const listing = await StoredListing.findByPk(listingId);
+        const listing = await getListingWithCount(listingId);
         if (!listing)
             return res.status(404).send({ error: 'Listing not found' });
 
@@ -219,7 +219,9 @@ export const getTransactionRouter = (
             requiresHoldership,
             requiresLinkedAddress,
             disabled,
-        } = listing.get();
+            supply,
+            totalPurchased,
+        } = listing;
 
         if (disabled)
             return res.status(403).send({ error: 'Listing is disabled' });
@@ -283,10 +285,14 @@ export const getTransactionRouter = (
             return res.status(500).send({ error: 'Invalid linked address' });
 
         if (
-            maxPerUser !== undefined &&
+            maxPerUser !== null &&
             quantity + quantityAlreadyPurchased > maxPerUser
         )
             return res.status(400).send({ error: 'Exceeds allowed quantity' });
+
+        if (supply !== null && quantity + totalPurchased > supply) {
+            return res.status(400).send({ error: 'Exceeds available supply' });
+        }
 
         const client = getUNBClient(unbToken);
         const { total: balance } = await getBalance(client, guildId, id);
