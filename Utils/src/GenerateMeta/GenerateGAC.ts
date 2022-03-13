@@ -1,3 +1,4 @@
+/* eslint-disable no-lone-blocks */
 import fs from 'fs';
 import { Blend } from 'sharp';
 import { compileNFT } from './GenerateImage';
@@ -24,10 +25,10 @@ const LayerOrder = [
     GACLayer.Neckwear,
     GACLayer.Clothing,
     GACLayer.Earring,
+    GACLayer.Tattoo,
     GACLayer.Headwear,
     GACLayer.Eyewear,
     GACLayer.Lasers,
-    GACLayer.Tattoo,
 ];
 
 const LayerRequirements: Record<Layer, boolean> = {
@@ -45,6 +46,24 @@ const LayerRequirements: Record<Layer, boolean> = {
     [GACLayer.Lasers]: false,
     [GACLayer.Tattoo]: false,
 };
+
+type RequiresScreen = Record<
+    Layer,
+    Record<string, boolean | undefined> | boolean | undefined
+>;
+
+/**
+ * Layers/Values that specifically need to be composited with the screen flag
+ */
+const ScreenRequirements: RequiresScreen = {
+    [GACLayer.Headwear]: {
+        'Dark Blue Halo': true,
+        'Light Blue Halo': true,
+        'Orange Halo': true,
+        'RGB Halo': true,
+    },
+    [GACLayer.Lasers]: true,
+} as never;
 
 export const getInitialUsedTraits = (
     rarityFile: string,
@@ -126,36 +145,6 @@ export const getInitialUsedTraits = (
     return usedTraits;
 };
 
-type RequiresScreen = Record<
-    Layer,
-    Record<string, boolean | undefined> | boolean | undefined
->;
-
-/**
- * Layers/Values that specifically need to be composited with the screen flag
- */
-const ScreenRequirements: RequiresScreen = {
-    [GACLayer.Headwear]: {
-        'Dark Blue Halo': true,
-        'Light Blue Halo': true,
-        'Orange Halo': true,
-        'RGB Halo': true,
-    },
-    [GACLayer.Lasers]: true,
-    [GACLayer.Neckwear]: {
-        'Gold Controller': true,
-        'Gold Double Cuban': true,
-        'Gold GAC': true,
-        'Gold Iron': true,
-        'Gold Single Cuban': true,
-        'Silver Controller': true,
-        'Silver Double Cuban': true,
-        'Silver GAC': true,
-        'Silver Iron': true,
-        'Silver Single Cuban': true,
-    },
-} as never;
-
 const transformNFT = (
     meta: ERC721MetaWithImagePath<GACLayer>,
     _: ERC721MetaWithImagePath<GACLayer>[],
@@ -164,6 +153,7 @@ const transformNFT = (
     const teeth = getAttributeByLayer(meta, GACLayer.Teeth);
     const headwear = getAttributeByLayer(meta, GACLayer.Headwear);
     const body = getAttributeByLayer(meta, GACLayer['Body & Eyes']);
+    const fur = getAttributeByLayer(meta, GACLayer.Fur);
     const eyewear = getAttributeByLayer(meta, GACLayer.Eyewear);
     const clothes = getAttributeByLayer(meta, GACLayer.Clothing);
     const neckwear = getAttributeByLayer(meta, GACLayer.Neckwear);
@@ -175,9 +165,31 @@ const transformNFT = (
     };
 
     if (!body) throw new Error('Missing body');
+    if (!fur) throw new Error('Missing body');
 
-    // no eyewear and headphones/headsets
-    if (headwear && eyewear && headwear.value.includes('Head'))
+    // no chains on light fur
+    if (neckwear) {
+        const validFur = [
+            'Black Leopard',
+            'Black',
+            'Brown',
+            'Camo',
+            'Dark Red',
+        ];
+
+        if (!validFur.includes(fur.value)) {
+            newMeta = {
+                ...newMeta,
+                attributes: newMeta.attributes.filter(
+                    (a) => a.trait_type !== GACLayer.Neckwear
+                ),
+            };
+        }
+    }
+
+    const badHeadwearForEyewear = ['Camo Buckethat', 'Cap'];
+    // no eyewear and certain headwear
+    if (headwear && eyewear && badHeadwearForEyewear.includes(headwear.value))
         newMeta = {
             ...newMeta,
             attributes: newMeta.attributes.filter(
@@ -323,6 +335,34 @@ export const generateGACMetadata = (
     return result;
 };
 
+const imageLayerOrderComparator = (
+    layer1: ERC721Attribute<GACLayer>,
+    layer2: ERC721Attribute<GACLayer>
+): 0 | 1 | -1 => {
+    {
+        // move eyepatch to back, certain hats/headsets to front
+        if (
+            layer1.trait_type === GACLayer.Headwear &&
+            layer2.trait_type === GACLayer.Eyewear
+        ) {
+            if (layer2.value === 'Eye Patch') return 1;
+
+            if (layer2.value.includes('Head')) return 1;
+        }
+
+        if (
+            layer2.trait_type === GACLayer.Headwear &&
+            layer1.trait_type === GACLayer.Eyewear
+        ) {
+            if (layer1.value === 'Eye Patch') return -1;
+
+            if (layer2.value.includes('Head')) return -1;
+        }
+    }
+
+    return 0;
+};
+
 export const generateGACImages = async (
     metadata: ERC721MetaWithImagePath<GACLayer>[],
     targetDir: string
@@ -344,7 +384,12 @@ export const generateGACImages = async (
         metadata.map(async (nft, i) => {
             console.log(`Generating image for ${i}`);
 
-            const nftImage = compileNFT(nft, (): 0 => 0, undefined, getBlend);
+            const nftImage = compileNFT(
+                nft,
+                imageLayerOrderComparator,
+                undefined,
+                getBlend
+            );
             await nftImage.webp().toFile(`${targetDir}/${i}.webp`);
 
             console.log(`Generated image for ${i}`);
