@@ -7,7 +7,7 @@ export default {
 };
 
 export const StandAlone = (): JSX.Element => {
-    const { data: mintTimes } = useMintTimes(0);
+    const { data: mintTimes } = useMintTimes();
 
     if (!mintTimes) return <Spinner />;
 

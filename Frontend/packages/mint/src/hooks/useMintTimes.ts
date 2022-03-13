@@ -8,6 +8,7 @@ interface ReturnType {
     };
     private: {
         start: number;
+        reset: number;
         end: number;
     };
 }
@@ -18,7 +19,7 @@ export const MINT_TIME_KEY = 'MINT_TIME';
  * @param offset The offset in seconds to return, for tolerating delays
  * @returns the mints times
  */
-export const useMintTimes = (offset: number): RequestResult<ReturnType> => {
+export const useMintTimes = (): RequestResult<ReturnType> => {
     const { tokenContract } = useContractContext();
 
     const query = React.useCallback(async () => {
@@ -30,6 +31,9 @@ export const useMintTimes = (offset: number): RequestResult<ReturnType> => {
         const privateStart = Number(
             await tokenContract.methods.whitelistStart().call()
         );
+        const privateReset = Number(
+            await tokenContract.methods.whitelistReset().call()
+        );
         const privateEnd = Number(
             await tokenContract.methods.whitelistEnd().call()
         );
@@ -37,6 +41,7 @@ export const useMintTimes = (offset: number): RequestResult<ReturnType> => {
         return {
             private: {
                 start: privateStart,
+                reset: privateReset,
                 end: privateEnd,
             },
             public: {
@@ -51,27 +56,7 @@ export const useMintTimes = (offset: number): RequestResult<ReturnType> => {
         staleTime: 1000 * 60 * 5, // 5 mins
     });
 
-    return React.useMemo<RequestResult<ReturnType>>(() => {
-        const { data } = result;
-        if (data) {
-            const { public: publicTimes, private: privateTimes } = data;
-
-            return {
-                ...result,
-                data: {
-                    private: {
-                        start: privateTimes.start + offset,
-                        end: privateTimes.end,
-                    },
-                    public: {
-                        start: publicTimes.start + offset,
-                    },
-                },
-            };
-        }
-
-        return result;
-    }, [offset, result]);
+    return result;
 };
 
 export default useMintTimes;

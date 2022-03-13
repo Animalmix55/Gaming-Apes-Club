@@ -28,6 +28,11 @@
             },
             {
                 "internalType": "uint256",
+                "name": "presaleResetTime",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
                 "name": "presaleMintEnd",
                 "type": "uint256"
             },
@@ -68,6 +73,11 @@
     {
         "inputs": [],
         "name": "BalanceQueryForZeroAddress",
+        "type": "error"
+    },
+    {
+        "inputs": [],
+        "name": "MintIdOutOfRange",
         "type": "error"
     },
     {
@@ -722,6 +732,19 @@
     },
     {
         "inputs": [],
+        "name": "whitelistReset",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
         "name": "whitelistStart",
         "outputs": [
             {
@@ -816,6 +839,11 @@
             },
             {
                 "internalType": "uint256",
+                "name": "wlResetDate",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
                 "name": "wlEndDate",
                 "type": "uint256"
             },
@@ -843,6 +871,11 @@
                 "internalType": "address",
                 "name": "user",
                 "type": "address"
+            },
+            {
+                "internalType": "bool",
+                "name": "postReset",
+                "type": "bool"
             }
         ],
         "name": "getPresaleMints",

@@ -39,7 +39,7 @@ const SelectMintBox = ({
 
     const currentTime = useCurrentTime();
 
-    const { data: mintTimeData, isLoading: mintTimeLoading } = useMintTimes(0);
+    const { data: mintTimeData, isLoading: mintTimeLoading } = useMintTimes();
     const { data: whitelistData, isLoading: whitelistLoading } = useWhitelisted(
         accounts?.[0]
     );
@@ -51,7 +51,11 @@ const SelectMintBox = ({
 
     const { private: privateMint, public: publicMint } = mintTimeData;
     const { start: publicStart } = publicMint;
-    const { start: privateStart, end: privateEnd } = privateMint;
+    const {
+        start: privateStart,
+        end: privateEnd,
+        reset: privateReset,
+    } = privateMint;
 
     return (
         <div
@@ -93,21 +97,38 @@ const SelectMintBox = ({
                                 : 'Not Eligible'}
                         </div>
                     )}
-                    {privateEnd > currentTime && privateStart <= currentTime && (
+                    {privateStart <= currentTime && privateReset > currentTime && (
                         <div
                             className={css({
                                 fontFamily: theme.fonts.body,
-                                lineHeight: 'normal',
                                 fontSize: '10px',
+                                lineHeight: 'normal',
                             })}
                         >
                             {whitelistData?.isWhitelisted
                                 ? `${FormatTimeOffset(
-                                      privateEnd - currentTime
-                                  )} Remaining`
+                                      privateReset - currentTime
+                                  )} Until Reset`
                                 : 'Not Eligible'}
                         </div>
                     )}
+                    {privateEnd > currentTime &&
+                        privateStart <= currentTime &&
+                        privateReset < currentTime && (
+                            <div
+                                className={css({
+                                    fontFamily: theme.fonts.body,
+                                    lineHeight: 'normal',
+                                    fontSize: '10px',
+                                })}
+                            >
+                                {whitelistData?.isWhitelisted
+                                    ? `${FormatTimeOffset(
+                                          privateEnd - currentTime
+                                      )} Remaining`
+                                    : 'Not Eligible'}
+                            </div>
+                        )}
                     {privateEnd < currentTime && (
                         <div
                             className={css({
@@ -166,7 +187,7 @@ const ActiveMintBox = ({
 
     // requests
     const { data: mintTimeData, isLoading: mintTimeDataLoading } =
-        useMintTimes(0);
+        useMintTimes();
     const { data: mintData, isLoading: mintDataLoading } = useMintData();
     const { data: numMinted, isLoading: numMintedLoading } = useNumberMinted(
         mintType,
@@ -234,7 +255,11 @@ const ActiveMintBox = ({
         );
 
     const { private: privateMint, public: publicMint } = mintTimeData;
-    const { end: privateEnd, start: privateStart } = privateMint;
+    const {
+        end: privateEnd,
+        start: privateStart,
+        reset: privateReset,
+    } = privateMint;
     const { start: publicStart } = publicMint;
 
     const { maxPerWallet } = mintData;
@@ -268,12 +293,21 @@ const ActiveMintBox = ({
                         fontSize: '12px',
                     })}
                 >
-                    {mintType === MintType.Private && privateEnd && (
-                        <div>
-                            {FormatTimeOffset(privateEnd - currentTime)}{' '}
-                            Remaining
-                        </div>
-                    )}
+                    {mintType === MintType.Private &&
+                        privateReset <= currentTime &&
+                        privateEnd > currentTime && (
+                            <div>
+                                {FormatTimeOffset(privateEnd - currentTime)}{' '}
+                                Remaining
+                            </div>
+                        )}
+                    {mintType === MintType.Private &&
+                        privateReset > currentTime && (
+                            <div>
+                                {FormatTimeOffset(privateReset - currentTime)}{' '}
+                                Until Reset
+                            </div>
+                        )}
                     <div>
                         Max {maxPerWallet} Per Wallet | You&apos;ve Minted{' '}
                         {numMinted}

@@ -233,6 +233,8 @@ export interface GamingApeClub extends BaseContract {
 
     whitelistEnd(): NonPayableTransactionObject<string>;
 
+    whitelistReset(): NonPayableTransactionObject<string>;
+
     whitelistStart(): NonPayableTransactionObject<string>;
 
     /**
@@ -278,10 +280,12 @@ export interface GamingApeClub extends BaseContract {
      * Updates the mint dates.
      * @param pubStartDate - the start date for public in UNIX seconds.
      * @param wlEndDate - the end date for whitelist in UNIX seconds.
+     * @param wlResetDate - the reset date for whitelist in UNIX seconds.
      * @param wlStartDate - the start date for whitelist in UNIX seconds.
      */
     setMintDates(
       wlStartDate: number | string | BN,
+      wlResetDate: number | string | BN,
       wlEndDate: number | string | BN,
       pubStartDate: number | string | BN
     ): NonPayableTransactionObject<void>;
@@ -293,9 +297,13 @@ export interface GamingApeClub extends BaseContract {
 
     /**
      * A handy getter to retrieve the number of private mints conducted by a user.
+     * @param postReset - retrieves the number of mints after the whitelist reset.
      * @param user - the user to query for.
      */
-    getPresaleMints(user: string): NonPayableTransactionObject<string>;
+    getPresaleMints(
+      user: string,
+      postReset: boolean
+    ): NonPayableTransactionObject<string>;
 
     /**
      * A handy getter to retrieve the number of public mints conducted by a user.
