@@ -100,7 +100,7 @@ export const Header = (props: Props): JSX.Element => {
                 {openseaUrl && (
                     <HeaderButton
                         onClick={(): void => {
-                            window.location.href = openseaUrl;
+                            window.open(openseaUrl, '_blank');
                         }}
                         displayText="OPENSEA"
                     />
@@ -108,7 +108,7 @@ export const Header = (props: Props): JSX.Element => {
                 {twitterUrl && (
                     <HeaderButton
                         onClick={(): void => {
-                            window.location.href = twitterUrl;
+                            window.open(twitterUrl, '_blank');
                         }}
                         displayText="TWITTER"
                     />
@@ -116,7 +116,7 @@ export const Header = (props: Props): JSX.Element => {
                 {discordUrl && (
                     <HeaderButton
                         onClick={(): void => {
-                            window.location.href = discordUrl;
+                            window.open(discordUrl, '_blank');
                         }}
                         displayText="DISCORD"
                     />
