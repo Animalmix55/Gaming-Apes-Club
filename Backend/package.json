@@ -15,10 +15,10 @@
   "scripts": {
     "start:dev": "nodemon --exec \"yarn start:fresh\"",
     "start:fresh": "lerna run build --stream && lerna run start:fresh --stream && 1",
-    "start": "lerna run build --stream && lerna run start --stream",
+    "start": "lerna run start --stream",
     "transpile": "lerna run transpile",
     "clean": "lerna run clean",
-    "build": "lerna run build",
+    "build": "lerna run build --stream",
     "server": "lerna run server",
     "dev": "lerna run dev",
     "prod": "lerna run prod",
