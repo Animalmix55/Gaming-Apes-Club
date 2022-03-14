@@ -29,6 +29,7 @@ export const getListingsWithCounts = async (
     const { count, rows } = await StoredListing.findAndCountAll({
         offset,
         limit,
+        order: [['price', 'ASC']],
         attributes: {
             include,
         },
