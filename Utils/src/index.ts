@@ -3,6 +3,11 @@ import {
     generateGACImages,
     generateGACMetadata,
 } from './GenerateMeta/GenerateGAC';
+import {
+    ERC721MetaWithImagePath,
+    GACLayer,
+    UsedTraits,
+} from './GenerateMeta/Models';
 
 const OUTPUT_BASE =
     'C:/Users/Cory/source/repos/Gaming-Apes-Club/Utils/src/Assets/Outputs';
@@ -28,12 +33,28 @@ const getNextOutputDir = (): string => {
 
 const outputDir = getNextOutputDir();
 
-const meta = generateGACMetadata(
-    500,
-    'Gaming Ape Club',
-    'C:/Users/Cory/source/repos/Gaming-Apes-Club/Utils/src/Assets/Art',
-    'C:/Users/Cory/source/repos/Gaming-Apes-Club/Utils/src/Assets/Rarities.csv'
-);
+let meta: {
+    metadata: ERC721MetaWithImagePath<GACLayer>[];
+    usedTraits: UsedTraits<GACLayer>;
+};
+
+while (true) {
+    try {
+        meta = generateGACMetadata(
+            6500,
+            'Gaming Ape Club',
+            'C:/Users/Cory/source/repos/Gaming-Apes-Club/Utils/src/Assets/Art',
+            'C:/Users/Cory/source/repos/Gaming-Apes-Club/Utils/src/Assets/Rarities.csv',
+            undefined,
+            'https://www.gamingapeclub.com/'
+        );
+    } catch (e) {
+        // eslint-disable-next-line no-continue
+        continue;
+    }
+
+    break;
+}
 
 fs.mkdirSync(outputDir);
 

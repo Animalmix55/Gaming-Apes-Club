@@ -156,12 +156,15 @@ export const generateMetadata = <T extends Layer>(
 
     for (let i = 0; i < totalSupply; i++) {
         let NFT: ERC721MetaWithImagePath<T> | undefined;
+        let attempts = 0;
         while (
             !NFT ||
             !isValid(NFT, outputNFTS, initialUsedTraits) ||
             (!allowDuplicates &&
                 getDuplicateIndexes([...outputNFTS, NFT]).length > 0)
         ) {
+            if (attempts > 500) throw new Error('Failed to generate');
+            attempts += 1;
             NFT = {
                 name: `${collectionName} #${i}`,
                 description,
@@ -174,7 +177,7 @@ export const generateMetadata = <T extends Layer>(
                 const value = pickRandomAttribute(
                     usedTraits,
                     layer,
-                    totalSupply,
+                    totalSupply + 100,
                     i
                 );
 
