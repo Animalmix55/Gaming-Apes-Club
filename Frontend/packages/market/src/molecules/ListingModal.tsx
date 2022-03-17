@@ -1,5 +1,12 @@
 import { Modal, Spinner, TextField } from '@fluentui/react';
-import { GlowButton, MOBILE, useProvider, useThemeContext } from '@gac/shared';
+import {
+    GlowButton,
+    isURL,
+    MOBILE,
+    UrlRegex,
+    useProvider,
+    useThemeContext,
+} from '@gac/shared';
 import React from 'react';
 import { useStyletron } from 'styletron-react';
 import Web3 from 'web3';
@@ -12,6 +19,16 @@ interface Props {
     listing: ListingWithCount;
     onClose: () => void;
 }
+
+const descriptionToHtml = (description: string, className?: string): string => {
+    return description.replace(new RegExp(UrlRegex, 'g'), (word) => {
+        if (isURL(word))
+            return `<a href="${word}" target="_blank" ${
+                className ? `class="${className}" ` : ' '
+            }rel="noreferrer">${word}</a>`;
+        return word;
+    });
+};
 
 export const ListingModal = (props: Props): JSX.Element => {
     const { listing, onClose } = props;
@@ -115,9 +132,16 @@ export const ListingModal = (props: Props): JSX.Element => {
                                 overflow: 'auto',
                                 minHeight: '0px',
                             })}
-                        >
-                            {description}
-                        </div>
+                            // eslint-disable-next-line react/no-danger
+                            dangerouslySetInnerHTML={{
+                                __html: descriptionToHtml(
+                                    description,
+                                    css({
+                                        color: theme.fontColors.accent.toRgbaString(),
+                                    })
+                                ),
+                            }}
+                        />
                     </div>
 
                     {supply !== undefined && (
