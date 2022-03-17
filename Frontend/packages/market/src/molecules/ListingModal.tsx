@@ -104,6 +104,7 @@ export const ListingModal = (props: Props): JSX.Element => {
                         <div
                             className={css({
                                 fontFamily: theme.fonts.headers,
+                                fontWeight: '900',
                             })}
                         >
                             Description
@@ -128,6 +129,7 @@ export const ListingModal = (props: Props): JSX.Element => {
                             <div
                                 className={css({
                                     fontFamily: theme.fonts.headers,
+                                    fontWeight: '900',
                                 })}
                             >
                                 Remaining
@@ -151,6 +153,7 @@ export const ListingModal = (props: Props): JSX.Element => {
                             <div
                                 className={css({
                                     fontFamily: theme.fonts.headers,
+                                    fontWeight: '900',
                                 })}
                             >
                                 Requires NFT Ownership
@@ -174,6 +177,7 @@ export const ListingModal = (props: Props): JSX.Element => {
                             <div
                                 className={css({
                                     fontFamily: theme.fonts.headers,
+                                    fontWeight: '900',
                                 })}
                             >
                                 Address
@@ -190,6 +194,7 @@ export const ListingModal = (props: Props): JSX.Element => {
                                     styles={{
                                         errorMessage: {
                                             fontFamily: theme.fonts.headers,
+                                            fontWeight: '900',
                                         },
                                     }}
                                     errorMessage={

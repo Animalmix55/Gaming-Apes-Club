@@ -46,7 +46,8 @@ export const DefaultTheme: ThemeContextType = {
     fonts: {
         title: 'RapierZero',
         buttons: 'WorkSans',
-        headers: 'BowlbyOne',
+        // eslint-disable-next-line quotes
+        headers: "'Montserrat', sans-serif",
         body: `ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"`,
     },
     fontColors: {

@@ -47,6 +47,7 @@ const Web3ConnectModalInner = ({
                 className={css({
                     fontFamily: theme.fonts.headers,
                     fontSize: '42px',
+                    fontWeight: '900',
                     marginBottom: '10px',
                     color: theme.fontColors.light.toRgbaString(1),
                 })}

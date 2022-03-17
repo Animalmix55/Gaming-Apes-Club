@@ -279,6 +279,7 @@ const ActiveMintBox = ({
                     className={css({
                         fontFamily: theme.fonts.headers,
                         fontSize: '35px',
+                        fontWeight: '900',
                         textAlign: 'center',
                     })}
                 >

@@ -24,8 +24,8 @@ export const CoverVideo = (props: Props): JSX.Element => {
 
     React.useEffect(() => {
         const onResize = (): void => {
-            const windowWidth = window.outerWidth;
-            const windowHeight = window.outerHeight;
+            const windowWidth = window.innerWidth;
+            const windowHeight = window.innerHeight;
 
             const windowAspectRatio = windowWidth / windowHeight;
 

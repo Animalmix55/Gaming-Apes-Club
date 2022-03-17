@@ -43,6 +43,7 @@ export const Web3ConnectButton = ({
             <div
                 className={css({
                     fontFamily: theme.fonts.headers,
+                    fontWeight: '900',
                     color: theme.fontColors.light.toRgbaString(),
                     display: 'flex',
                     justifyContent: 'center',
@@ -69,6 +70,7 @@ export const Web3ConnectButton = ({
                     borderRadius: '2px',
                     color: theme.fontColors.light.toRgbaString(),
                     fontFamily: theme.fonts.headers,
+                    fontWeight: '900',
                     padding: '0px 8px 0px 8px',
                     fontSize: '18px',
                     cursor: 'pointer',

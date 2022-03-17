@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@900&display=swap');
+
 @font-face {
     font-family: "RapierZero";
     src: local("RapierZero"),
@@ -14,10 +16,4 @@
     font-family: "WorkSans";
     src: local("WorkSans"),
         url(../assets/fonts/WorkSans-ExtraBold.ttf) format("truetype");
-}
-
-@font-face {
-    font-family: "BowlbyOne";
-    src: local("BowlbyOne"),
-        url(../assets/fonts/BowlbyOneSC-Regular.ttf) format("truetype");
 }

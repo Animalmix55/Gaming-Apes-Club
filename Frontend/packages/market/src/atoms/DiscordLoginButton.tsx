@@ -32,6 +32,7 @@ export const DiscordLoginButton = ({
             <div
                 className={css({
                     fontFamily: theme.fonts.headers,
+                    fontWeight: '900',
                     color: theme.fontColors.light.toRgbaString(),
                     display: 'flex',
                     justifyContent: 'center',
@@ -61,6 +62,7 @@ export const DiscordLoginButton = ({
                         !token ? 1 : 0.6
                     ),
                     fontFamily: theme.fonts.headers,
+                    fontWeight: '900',
                     padding: '0px 8px 0px 8px',
                     fontSize: '18px',
                     cursor: 'pointer',

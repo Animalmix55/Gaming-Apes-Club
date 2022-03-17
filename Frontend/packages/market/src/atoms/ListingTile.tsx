@@ -88,6 +88,7 @@ export const ListingTile = (props: ListingTileProps): JSX.Element => {
             <div
                 className={css({
                     fontFamily: theme.fonts.headers,
+                    fontWeight: '900',
                     color: theme.fontColors.light.toRgbaString(),
                     textOverflow: 'ellipsis',
                     whiteSpace: 'nowrap',
@@ -119,6 +120,7 @@ export const ListingTile = (props: ListingTileProps): JSX.Element => {
                 <div
                     className={css({
                         fontFamily: theme.fonts.headers,
+                        fontWeight: '900',
                         color: theme.fontColors.accent.toRgbaString(),
                         textOverflow: 'ellipsis',
                         whiteSpace: 'nowrap',

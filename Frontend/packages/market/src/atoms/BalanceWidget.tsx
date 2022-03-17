@@ -23,6 +23,7 @@ export const BalanceWidget = ({
                 css({
                     border: `4px solid ${theme.fontColors.light.toRgbaString()}`,
                     fontFamily: theme.fonts.headers,
+                    fontWeight: '900',
                     color: theme.fontColors.light.toRgbaString(),
                     padding: '8px',
                     fontSize: '20px',
