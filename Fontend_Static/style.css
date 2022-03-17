@@ -1,0 +1,104 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-family: "RapierZero";
+  src: local("RapierZero"),
+    url(./assets/fonts/RapierZero-325M.ttf) format("truetype");
+}
+
+@font-face {
+  font-family: "RubberStamp";
+  src: local("RubberStamp"),
+    url(./assets/fonts/RubberStampStd.ttf) format("truetype");
+}
+
+a {
+  text-decoration: none !important;
+}
+
+.gradient-me {
+  background-image: linear-gradient(to left top, #01cbff, rgb(197 0 255));
+}
+
+.glower,
+.glower_hr {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.glower::before,
+.glower_hr::before {
+  content: "";
+  position: absolute;
+  top: -2px;
+  bottom: -2px;
+  left: -2px;
+  right: -2px;
+  z-index: -1;
+  opacity: 0;
+  transition: 0.5s ease;
+}
+
+.glower:after,
+.glower_hr:after {
+  content: "";
+  position: absolute;
+  top: -2px;
+  bottom: -2px;
+  left: -2px;
+  right: -2px;
+  z-index: -1;
+  opacity: 0;
+  transition: 0.5s ease;
+}
+
+.glower:hover:before,
+.glower:hover:after {
+  opacity: 1;
+}
+.glower_hr:hover::before,
+.glower_hr:hover:after {
+  opacity: 1;
+}
+
+.glower::before,
+.glower:after {
+  background: linear-gradient(235deg, #a200ff, #060c21, #00bcd4);
+  border-radius: 4px;
+}
+.glower_hr::before,
+.glower_hr::after {
+  background: linear-gradient(235deg, #a200ff, #060c21, #00bcd4);
+  border-radius: 66px;
+}
+
+.scroller-my {
+  overflow-y: scroll;
+}
+
+.scroller-my::-webkit-scrollbar {
+  width: 10px;
+}
+.scroller-my::-webkit-scrollbar-track {
+  background: black;
+}
+.scroller-my::-webkit-scrollbar-thumb {
+  background: #333;
+  border-radius: 10px;
+}
+
+.gameplan-box {
+  background: linear-gradient(90deg, #623fe2, #238df3);
+}
+
+.nav-mob {
+  display: none;
+}
+
+.gameplan-wrap {
+  height: 250px;
+}

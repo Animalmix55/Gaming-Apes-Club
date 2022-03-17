@@ -1,0 +1,4 @@
+RewriteEngine On
+
+RewriteCond %{HTTP_HOST} ^gamingapeclub.com [NC]
+RewriteRule ^(.*)$ https://www.gamingapeclub.com/$1 [L,R=301]
