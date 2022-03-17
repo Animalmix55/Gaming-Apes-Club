@@ -105,6 +105,10 @@ export const getTransactionRouter = (
         listingId: string;
     }
 
+    interface FulfillmentParams {
+        transactionId: string;
+    }
+
     TransactionRouter.get<
         string,
         ListingParams,
@@ -325,6 +329,44 @@ export const getTransactionRouter = (
         const { total: newBalance } = await getBalance(client, guildId, id);
 
         return res.status(200).send({ ...tx.get(), newBalance });
+    });
+
+    // POST
+
+    TransactionRouter.post<
+        string,
+        FulfillmentParams,
+        BaseResponse & Partial<Transaction>,
+        never,
+        never,
+        AuthLocals
+    >('/:transactionId/fulfill', async (req, res) => {
+        const { user, isAdmin } = res.locals;
+        const { params } = req;
+        const { transactionId } = params;
+
+        if (!user)
+            return res.status(401).send({ error: 'No authorization provided' });
+
+        if (!isAdmin) return res.status(403).send({ error: 'Not admin' });
+
+        const transaction = await StoredTransaction.findByPk(transactionId);
+        if (!transaction)
+            return res.status(404).send({ error: 'Transaction not found' });
+
+        if (transaction.get().fulfilled)
+            return res.status(500).send({ error: 'Already fulfilled' });
+
+        transaction.set('fulfilled', true);
+        transaction.set('fulfilledBy', user.id);
+        transaction.set('fulfillmentDate', new Date());
+
+        try {
+            const result = await transaction.save();
+            return res.status(200).send(result.get());
+        } catch (e) {
+            return res.status(500).send({ error: 'Failed to save to db' });
+        }
     });
 
     return TransactionRouter;

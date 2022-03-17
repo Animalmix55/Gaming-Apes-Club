@@ -5,6 +5,9 @@ export interface Transaction {
     address: string | null;
     date: Date;
     quantity: number;
+    fulfilled: boolean;
+    fulfilledBy?: string;
+    fulfillmentDate?: Date;
 }
 
 export default Transaction;

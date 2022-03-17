@@ -5,4 +5,7 @@ export interface Transaction {
     address?: string;
     date: Date;
     quantity: number;
+    fulfilled: boolean;
+    fulfilledBy?: string;
+    fulfillmentDate?: Date;
 }

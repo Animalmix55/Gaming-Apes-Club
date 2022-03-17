@@ -34,6 +34,19 @@ export const InitializeTransactionModel = (instance: Sequelize): void => {
                 type: DataTypes.STRING,
                 allowNull: true,
             },
+            fulfilled: {
+                type: DataTypes.BOOLEAN,
+                allowNull: false,
+                defaultValue: false,
+            },
+            fulfilledBy: {
+                type: DataTypes.STRING,
+                allowNull: true,
+            },
+            fulfillmentDate: {
+                type: DataTypes.DATE,
+                allowNull: true,
+            },
         },
         {
             sequelize: instance,

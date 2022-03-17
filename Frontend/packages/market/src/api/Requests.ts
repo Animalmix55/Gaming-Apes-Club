@@ -232,6 +232,20 @@ export const Transaction = {
 
         return data as TransactionSendResponse;
     },
+
+    async fulfill(
+        api: string,
+        token: string,
+        transactionId: string
+    ): Promise<TransactionModel> {
+        const url = `${api}/transaction/${transactionId}/fulfill`;
+
+        const headers = getHeaders(token);
+
+        const { data } = await axios.post(url, undefined, { headers });
+
+        return data;
+    },
 };
 
 export default {};

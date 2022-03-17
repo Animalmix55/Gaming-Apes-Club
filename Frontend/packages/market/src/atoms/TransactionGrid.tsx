@@ -9,8 +9,10 @@ import '@ag-grid-community/core/dist/styles/ag-grid.css';
 import '@ag-grid-community/core/dist/styles/ag-theme-alpine.css';
 import React from 'react';
 import { useStyletron } from 'styletron-react';
-import { IconButton } from '@fluentui/react';
+import { Checkbox, Icon, IconButton, Spinner } from '@fluentui/react';
 import { useTransactionsGetter } from '../api/hooks/useTransactionsGetter';
+import { useFulfiller } from '../api/hooks/useFulfiller';
+import { Transaction } from '../api/Models/Transaction';
 
 /**
  * listingId: string;
@@ -40,6 +42,43 @@ const TextCellRenderer = (props: {
             })}
         >
             {value}
+        </div>
+    );
+};
+
+export const FulfillmentRenderer = (props: {
+    params: ICellRendererParams;
+}): JSX.Element => {
+    const { params } = props;
+    const { node, value, data } = params;
+
+    const [css] = useStyletron();
+    const { isLoading, isError, mutateAsync: fulfill } = useFulfiller();
+
+    const onChange = React.useCallback(() => {
+        const { id } = data as Transaction;
+        if (!value) fulfill([id || '']).then((r) => node.setData(r));
+    }, [data, fulfill, node, value]);
+
+    if (!data) return <></>;
+
+    if (isLoading) return <Spinner />;
+
+    return (
+        <div
+            className={css({
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-evenly',
+                height: '100%',
+            })}
+        >
+            {isError && <Icon iconName="ErrorBadge" />}
+            <Checkbox
+                checked={!!value}
+                disabled={!!value}
+                onChange={onChange}
+            />
         </div>
     );
 };
@@ -84,6 +123,36 @@ const colDefs: ColDef[] = [
     },
     {
         field: 'address',
+        type: 'text',
+        resizable: true,
+        editable: false,
+        initialWidth: 400,
+        cellRenderer: (params: ICellRendererParams) => (
+            <TextCellRenderer params={params} />
+        ),
+    },
+    {
+        field: 'fulfilled',
+        type: 'text',
+        resizable: true,
+        editable: false,
+        initialWidth: 400,
+        cellRenderer: (params: ICellRendererParams) => (
+            <FulfillmentRenderer params={params} />
+        ),
+    },
+    {
+        field: 'fulfilledBy',
+        type: 'text',
+        resizable: true,
+        editable: false,
+        initialWidth: 400,
+        cellRenderer: (params: ICellRendererParams) => (
+            <TextCellRenderer params={params} />
+        ),
+    },
+    {
+        field: 'fulfillmentDate',
         type: 'text',
         resizable: true,
         editable: false,
