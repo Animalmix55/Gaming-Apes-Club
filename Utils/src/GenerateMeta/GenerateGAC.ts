@@ -25,7 +25,6 @@ const LayerOrder = [
     GACLayer.Neckwear,
     GACLayer.Clothing,
     GACLayer.Earring,
-    GACLayer.Tattoo,
     GACLayer.Headwear,
     GACLayer.Eyewear,
     GACLayer.Lasers,
@@ -44,7 +43,6 @@ const LayerRequirements: Record<Layer, boolean> = {
     [GACLayer.Headwear]: false,
     [GACLayer.Eyewear]: false,
     [GACLayer.Lasers]: false,
-    [GACLayer.Tattoo]: false,
 };
 
 type RequiresScreen = Record<
@@ -81,6 +79,7 @@ export const getInitialUsedTraits = (
             actualX += 1;
 
             const name = cell;
+            if (!attributes[actualX]) attributes[actualX] = {};
 
             if (
                 !name ||
@@ -96,7 +95,6 @@ export const getInitialUsedTraits = (
                     })`
                 );
 
-            if (!attributes[actualX]) attributes[actualX] = {};
             attributes[actualX][name] = rarity;
         });
     });
@@ -122,9 +120,6 @@ export const getInitialUsedTraits = (
                     value.toLowerCase().replace(/[^a-z]/g, '')
             );
             if (!matchingFile) {
-                // throw new Error(
-                //     `Could not find art for layer ${layer}, value ${value}`
-                // );
                 missing.push(`${layer} - ${value}`);
                 return;
             }
@@ -141,7 +136,11 @@ export const getInitialUsedTraits = (
         });
     });
 
-    console.log(missing);
+    if (missing.length) {
+        console.error('Missing:', missing);
+        process.exit(1);
+    }
+
     return usedTraits;
 };
 
@@ -277,6 +276,7 @@ const isValidCombination = (
     const fur = getAttributeByLayer(meta, GACLayer.Fur);
     const teeth = getAttributeByLayer(meta, GACLayer.Teeth);
     const backbling = getAttributeByLayer(meta, GACLayer.Backbling);
+    const headwear = getAttributeByLayer(meta, GACLayer.Headwear);
 
     if (!fur) throw new Error('Missing fur');
     if (!body) throw new Error('Missing body');
@@ -285,6 +285,15 @@ const isValidCombination = (
         if (LayerRequirements[layer] && !exists)
             throw new Error(`Missing ${layer}`);
     });
+
+    if (
+        eyewear &&
+        headwear &&
+        eyewear.value.includes('VR') &&
+        (headwear.value.includes('Headset') ||
+            headwear.value.includes('Headphones'))
+    )
+        return false;
 
     // no eyewear and lasers
     if (eyewear && lasers) return false;

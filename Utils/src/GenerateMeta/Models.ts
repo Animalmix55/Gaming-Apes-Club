@@ -11,7 +11,6 @@ export enum GACLayer {
     Headwear = 'Headwear',
     Eyewear = 'Eyewear',
     Lasers = 'Lasers',
-    Tattoo = 'Tattoo',
 }
 
 export type Layer = GACLayer;

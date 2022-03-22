@@ -177,7 +177,7 @@ export const generateMetadata = <T extends Layer>(
                 const value = pickRandomAttribute(
                     usedTraits,
                     layer,
-                    totalSupply + 100,
+                    totalSupply + 250,
                     i
                 );
 

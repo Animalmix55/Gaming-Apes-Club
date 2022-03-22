@@ -8,12 +8,17 @@ export const compileImages = (
 ) => {
     const base = baseLayer ?? sharp(paths[0]);
 
-    base.composite(
-        paths.slice(baseLayer ? 0 : 1).map((f, i) => ({
-            input: f,
-            blend: blends?.[baseLayer ? i : i + 1],
-        }))
-    );
+    try {
+        base.composite(
+            paths.slice(baseLayer ? 0 : 1).map((f, i) => ({
+                input: f,
+                blend: blends?.[baseLayer ? i : i + 1],
+            }))
+        );
+    } catch (e) {
+        console.error(e, paths);
+        process.exit(1);
+    }
 
     return base;
 };
