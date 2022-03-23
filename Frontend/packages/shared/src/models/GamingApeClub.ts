@@ -101,6 +101,8 @@ export interface GamingApeClub extends BaseContract {
 
     maxPerWallet(): NonPayableTransactionObject<string>;
 
+    maxWhitelistSupply(): NonPayableTransactionObject<string>;
+
     maximumSupply(): NonPayableTransactionObject<string>;
 
     mintPrice(): NonPayableTransactionObject<string>;
@@ -275,6 +277,13 @@ export interface GamingApeClub extends BaseContract {
      * @param root - the new merkle root
      */
     setMerkleRoot(root: string | number[]): NonPayableTransactionObject<void>;
+
+    /**
+     * Updates the supply cap on whitelist. If a given transaction will cause the supply to increase beyond this number, it will fail.
+     */
+    setWhitelistMaxSupply(
+      max: number | string | BN
+    ): NonPayableTransactionObject<void>;
 
     /**
      * Updates the mint dates.

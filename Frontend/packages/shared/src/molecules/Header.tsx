@@ -17,6 +17,7 @@ export interface Props {
     openseaUrl?: string;
     twitterUrl?: string;
     discordUrl?: string;
+    supressHomeButton?: boolean;
     additionalButtons?: HeaderButtonProps[];
 }
 
@@ -46,6 +47,7 @@ export const Header = (props: Props): JSX.Element => {
         twitterUrl,
         discordUrl,
         additionalButtons,
+        supressHomeButton,
     } = props;
     const [css] = useStyletron();
 
@@ -89,7 +91,7 @@ export const Header = (props: Props): JSX.Element => {
                     alignItems: 'center',
                 })}
             >
-                {homeUrl && (
+                {homeUrl && !supressHomeButton && (
                     <HeaderButton
                         onClick={(): void => {
                             window.location.href = homeUrl;

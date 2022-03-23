@@ -17,6 +17,11 @@
                 "type": "uint16"
             },
             {
+                "internalType": "uint16",
+                "name": "whitelistMax",
+                "type": "uint16"
+            },
+            {
                 "internalType": "uint256",
                 "name": "price",
                 "type": "uint256"
@@ -355,6 +360,19 @@
     {
         "inputs": [],
         "name": "maxPerWallet",
+        "outputs": [
+            {
+                "internalType": "uint16",
+                "name": "",
+                "type": "uint16"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "maxWhitelistSupply",
         "outputs": [
             {
                 "internalType": "uint16",
@@ -826,6 +844,19 @@
             }
         ],
         "name": "setMerkleRoot",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "uint16",
+                "name": "max",
+                "type": "uint16"
+            }
+        ],
+        "name": "setWhitelistMaxSupply",
         "outputs": [],
         "stateMutability": "nonpayable",
         "type": "function"

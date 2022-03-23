@@ -57,6 +57,7 @@ export const MintPage = ({
             />
             <Web3ConnectModal />
             <Header
+                supressHomeButton
                 homeUrl={homeUrl}
                 openseaUrl={openseaUrl}
                 twitterUrl={twitterUrl}

@@ -81,7 +81,7 @@ Array.from(new Array(6550)).forEach((_, i) => {
         name: `Gaming Ape #${i}`,
         external_url: 'https://www.gamingapeclub.com/',
         attributes: [],
-        image: '',
+        image: 'https://cc_nftstore.mypinata.cloud/ipfs/QmQoLhFnRPAiDmeb1HZBv6PF3QMQuX6s6gYJxzg8Zbu1i5',
     };
 
     fs.writeFileSync(
