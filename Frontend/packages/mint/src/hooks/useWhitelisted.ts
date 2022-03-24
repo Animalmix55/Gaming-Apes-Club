@@ -1,5 +1,6 @@
 import React from 'react';
 import { RequestResult, useRequest } from '@gac/shared';
+import Web3 from 'web3';
 import { getProof } from '../api/Requests';
 import { useGamingApeContext } from '../contexts/GamingApeClubContext';
 
@@ -17,7 +18,8 @@ export const useWhitelisted = (
 
     const query = React.useCallback(
         async (account?: string): Promise<WhitelistResponse> => {
-            if (!account || !api) return { isWhitelisted: false };
+            if (!account || !api || !Web3.utils.isAddress(account))
+                return { isWhitelisted: false };
 
             try {
                 const proof = await getProof(api, account);

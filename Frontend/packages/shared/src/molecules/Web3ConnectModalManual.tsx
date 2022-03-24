@@ -13,11 +13,18 @@ import { useProvider } from '../contexts/ProviderContext';
 import { useThemeContext } from '../contexts/ThemeContext';
 import { Chain } from '../models/Chain';
 
+interface BaseProps {
+    expectedChainId?: Chain;
+    /**
+     * Renders below all buttons
+     */
+    children?: React.ReactNode;
+}
+
 const Web3ConnectModalInner = ({
     expectedChainId,
-}: {
-    expectedChainId?: Chain;
-}): JSX.Element => {
+    children,
+}: BaseProps): JSX.Element => {
     const [css] = useStyletron();
     const theme = useThemeContext();
     const { chainId } = useProvider();
@@ -78,19 +85,22 @@ const Web3ConnectModalInner = ({
                     requiredChainId={expectedChainId}
                 />
             </div>
+            {children}
         </div>
     );
 };
+
+interface OuterProps extends BaseProps {
+    isOpen: boolean;
+    onClose?: () => void;
+}
 
 export const Web3ConnectModalManual = ({
     isOpen,
     expectedChainId,
     onClose,
-}: {
-    expectedChainId?: Chain;
-    isOpen: boolean;
-    onClose?: () => void;
-}): JSX.Element => {
+    children,
+}: OuterProps): JSX.Element => {
     const theme = useThemeContext();
 
     return (
@@ -106,7 +116,9 @@ export const Web3ConnectModalManual = ({
                 scrollableContent: { height: '100%', padding: '15px' },
             }}
         >
-            <Web3ConnectModalInner expectedChainId={expectedChainId} />
+            <Web3ConnectModalInner expectedChainId={expectedChainId}>
+                {children}
+            </Web3ConnectModalInner>
         </Modal>
     );
 };
