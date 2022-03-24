@@ -7,8 +7,11 @@ import { config } from 'dotenv';
 
 config();
 
+import throng from 'throng';
 import http from 'http';
-import app from '../app';
+import startWorker from '../app';
+
+const WORKERS = process.env.WEB_CONCURRENCY || 1;
 
 /**
  * Normalize a port into a number, string, or false.
@@ -29,45 +32,60 @@ function normalizePort(val: string): string | number | boolean {
     return false;
 }
 
-/**
- * Get port from environment and store in Express.
- */
-const port = normalizePort(process.env.PORT || '3000');
+const startServer: throng.WorkerCallback = (id, disconnect) => {
+    console.log(`Starting worker ${id}`);
 
-/**
- * Event listener for HTTP server "error" event.
- */
-function onError(error: NodeJS.ErrnoException): void {
-    if (error.syscall !== 'listen') {
-        throw error;
-    }
+    /**
+     * Get port from environment and store in Express.
+     */
+    const port = normalizePort(process.env.PORT || '3000');
 
-    const bind = typeof port === 'string' ? `Pipe ${port}` : `Port ${port}`;
-
-    // handle specific listen errors with friendly messages
-    switch (error.code) {
-        case 'EACCES':
-            console.error(`${bind} requires elevated privileges`);
-            process.exit(1);
-            break;
-        case 'EADDRINUSE':
-            console.error(`${bind} is already in use`);
-            process.exit(1);
-            break;
-        default:
+    /**
+     * Event listener for HTTP server "error" event.
+     */
+    function onError(error: NodeJS.ErrnoException): void {
+        if (error.syscall !== 'listen') {
             throw error;
+        }
+
+        const bind = typeof port === 'string' ? `Pipe ${port}` : `Port ${port}`;
+
+        // handle specific listen errors with friendly messages
+        switch (error.code) {
+            case 'EACCES':
+                console.error(`${bind} requires elevated privileges`);
+                process.exit(1);
+                break;
+            case 'EADDRINUSE':
+                console.error(`${bind} is already in use`);
+                process.exit(1);
+                break;
+            default:
+                throw error;
+        }
     }
-}
 
-app.set('port', port);
+    const app = startWorker();
+    app.set('port', port);
 
-/**
- * Create HTTP server.
- */
-const server = http.createServer(app);
+    /**
+     * Create HTTP server.
+     */
+    const server = http.createServer(app);
 
-/**
- * Listen on provided port, on all network interfaces.
- */
-server.listen(port);
-server.on('error', onError);
+    /**
+     * Listen on provided port, on all network interfaces.
+     */
+    server.listen(port);
+    server.on('error', onError);
+
+    function shutdown() {
+        console.log(`Worker ${id} cleanup.`);
+        disconnect();
+    }
+
+    process.once('SIGTERM', shutdown);
+    process.once('SIGINT', shutdown);
+};
+
+throng({ workers: WORKERS, lifetime: Infinity, start: startServer });

@@ -36,6 +36,7 @@ export const TroubleConnectingModal = ({
                     background: theme.backgroundGradients.purpleBlue,
                     display: 'flex',
                     color: theme.fontColors.light.toRgbaString(),
+                    maxHeight: '50vh',
                 },
                 scrollableContent: { padding: '15px' },
             }}

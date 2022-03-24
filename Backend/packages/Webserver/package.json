@@ -6,7 +6,7 @@
   "license": "ISC",
   "scripts": {
     "start:fresh": "npx kill-port 3000 && yarn start",
-    "start": "yarn prod",
+    "start": "npx kill-port 3000 && yarn prod",
     "transpile": "yarn tsc",
     "clean": "rimraf dist-server",
     "build": "yarn clean && yarn transpile",
@@ -29,6 +29,7 @@
     "@types/sharp": "^0.28.5",
     "@types/uuid": "^8.3.1",
     "@types/cors": "^2.8.12",
+    "@types/throng": "^5.0.3",
     "jest": "^27.0.6"
   },
   "dependencies": {
@@ -54,6 +55,7 @@
     "mysql2": "^2.3.0",
     "node-rsa": "^1.1.1",
     "nodemon": "^2.0.12",
+    "throng": "^5.0.0",
     "typescript": "^4.3.5",
     "uuid": "^8.3.2",
     "web3": "^1.6.0"
