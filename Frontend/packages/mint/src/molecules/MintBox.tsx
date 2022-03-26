@@ -340,9 +340,7 @@ const ActiveMintBox = ({
 
                             // an inactive error within the first 2 minutes is probably a fluke...
                             if (
-                                errString
-                                    .toLowerCase()
-                                    .includes('revert inactive') &&
+                                errString.toLowerCase().includes('inactive') &&
                                 Math.abs(currentTime - publicStart) <= 120
                             ) {
                                 toast(
@@ -394,9 +392,7 @@ const ActiveMintBox = ({
 
                             // an inactive error within the first 2 minutes is probably a fluke...
                             if (
-                                errString
-                                    .toLowerCase()
-                                    .includes('revert inactive') &&
+                                errString.toLowerCase().includes('inactive') &&
                                 Math.abs(currentTime - privateStart) <= 120
                             ) {
                                 toast(

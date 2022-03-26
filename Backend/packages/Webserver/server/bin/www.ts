@@ -32,7 +32,7 @@ function normalizePort(val: string): string | number | boolean {
     return false;
 }
 
-const startServer: throng.WorkerCallback = (id, disconnect) => {
+const startServer: throng.WorkerCallback = async (id, disconnect) => {
     console.log(`Starting worker ${id}`);
 
     /**
@@ -65,7 +65,7 @@ const startServer: throng.WorkerCallback = (id, disconnect) => {
         }
     }
 
-    const app = startWorker();
+    const app = await startWorker();
     app.set('port', port);
 
     /**

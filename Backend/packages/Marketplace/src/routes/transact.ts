@@ -3,6 +3,7 @@ import {
     BaseResponse,
     createJWT,
     generateLoginMessage,
+    getClient,
     getGamingApeClubContract,
     verifyJWT,
     verifySignature,
@@ -13,6 +14,7 @@ import Web3 from 'web3';
 import StoredTransaction from '../database/models/StoredTransaction';
 import Transaction from '../models/Transaction';
 import { getListingWithCount } from '../utils/ListingUtils';
+import { sendTransactionMessage } from '../utils/Discord';
 
 interface TransactionJWTPayload {
     user: string;
@@ -51,14 +53,18 @@ interface GetResponse extends BaseResponse {
     numRecords?: number;
 }
 
-export const getTransactionRouter = (
+export const getTransactionRouter = async (
     unbToken: string,
     guildId: string,
     jwtPrivate: string,
     web3: Web3,
-    gamingApeClubAddress: string
+    gamingApeClubAddress: string,
+    discordBotToken: string,
+    discordTransactionChannelId: string
 ) => {
     const TransactionRouter = express.Router();
+
+    const discordClient = await getClient(discordBotToken, []);
 
     // GET
 
@@ -328,6 +334,15 @@ export const getTransactionRouter = (
 
         const { total: newBalance } = await getBalance(client, guildId, id);
 
+        sendTransactionMessage(
+            discordClient,
+            discordTransactionChannelId,
+            user,
+            listing
+        ).catch((e) =>
+            console.error(`Failed to post transaction message: ${e}`)
+        );
+
         return res.status(200).send({ ...tx.get(), newBalance });
     });
 
@@ -363,7 +378,9 @@ export const getTransactionRouter = (
 
         try {
             const result = await transaction.save();
-            return res.status(200).send(result.get());
+            const resultTx = result.get();
+
+            return res.status(200).send(resultTx);
         } catch (e) {
             return res.status(500).send({ error: 'Failed to save to db' });
         }

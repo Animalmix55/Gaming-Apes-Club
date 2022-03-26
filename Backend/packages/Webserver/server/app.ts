@@ -1,7 +1,7 @@
 import express from 'express';
 import cookieParser from 'cookie-parser';
 import logger from 'morgan';
-import { ProofRouter } from '@gac/whitelist';
+// import { ProofRouter } from '@gac/whitelist';
 import { getBalanceRouter } from '@gac/token';
 import { getLoginRouter, authMiddleware } from '@gac/login';
 import {
@@ -12,7 +12,7 @@ import {
 import Web3 from 'web3';
 import cors from 'cors';
 
-const start = () => {
+const start = async () => {
     const {
         MYSQL_HOST,
         MYSQL_PORT,
@@ -28,6 +28,8 @@ const start = () => {
         WEB3_PROVIDER,
         TOKEN_ADDRESS,
         JWT_PRIVATE,
+        DISCORD_BOT_TOKEN,
+        TRANSACTION_CHANNEL,
     } = process.env;
 
     StartDatabase(
@@ -47,6 +49,9 @@ const start = () => {
     if (!OAUTH_CLIENT_ID) throw new Error('Missing OAUTH client id');
     if (!OAUTH_SECRET) throw new Error('Missing OAUTH client private');
     if (!OAUTH_REDIRECT_URL) throw new Error('Missing OAUTH redirect url');
+    if (!DISCORD_BOT_TOKEN) throw new Error('Missing Discord bot token');
+    if (!TRANSACTION_CHANNEL)
+        throw new Error('Missing Discord transaction channel');
 
     const web3 = new Web3(WEB3_PROVIDER);
 
@@ -56,8 +61,8 @@ const start = () => {
     app.use(express.urlencoded({ extended: false }));
     app.use(cookieParser());
     app.use(cors({ origin: '*', optionsSuccessStatus: 200 }));
-    // app.use(express.static(path.join(__dirname, '../public')));
-    app.use('/proof', ProofRouter);
+
+    // app.use('/proof', ProofRouter); // no more whitelist for now...
     app.use('/balance', getBalanceRouter(UNB_TOKEN, GUILD_ID));
 
     const { LoginRouter } = getLoginRouter(
@@ -76,12 +81,14 @@ const start = () => {
 
     app.use(
         '/transaction',
-        getTransactionRouter(
+        await getTransactionRouter(
             UNB_TOKEN,
             GUILD_ID,
             JWT_PRIVATE,
             web3,
-            TOKEN_ADDRESS
+            TOKEN_ADDRESS,
+            DISCORD_BOT_TOKEN,
+            TRANSACTION_CHANNEL
         )
     );
 
