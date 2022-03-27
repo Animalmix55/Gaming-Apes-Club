@@ -7,20 +7,26 @@ import {
 } from '@gac/shared';
 import React from 'react';
 import { useStyletron } from 'styletron-react';
-import { Listing } from '../api/Models/Listing';
+import { Listing, ListingWithCount } from '../api/Models/Listing';
 import XPIcon from '../assets/png/GAC_XP_ICON.png';
 
 interface ListingTileProps {
-    listing: Listing;
+    listing: ListingWithCount | Listing;
     className?: string;
     onClick?: (listing: Listing) => void;
 }
 
 export const ListingTile = (props: ListingTileProps): JSX.Element => {
     const { listing, className, onClick } = props;
-    const { image, title, price } = listing;
+    const { image, title, price, supply } = listing;
     const [css] = useStyletron();
     const theme = useThemeContext();
+
+    const remaining = Math.max(
+        (supply ?? Infinity) -
+            ((listing as ListingWithCount).totalPurchased ?? 0),
+        0
+    );
 
     return (
         <button
@@ -106,6 +112,38 @@ export const ListingTile = (props: ListingTileProps): JSX.Element => {
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
+                    fontFamily: theme.fonts.headers,
+                    fontWeight: '900',
+                    fontSize: '50%',
+                    color: theme.fontColors.light.toRgbaString(),
+                    textOverflow: 'ellipsis',
+                    whiteSpace: 'nowrap',
+                    maxWidth: '100%',
+                    overflow: 'hidden',
+                    [MOBILE]: {
+                        fontSize: '6vw',
+                    },
+                })}
+            >
+                {remaining !== Infinity && supply !== undefined
+                    ? `${remaining}/${supply} Remaining`
+                    : '∞ Remaining'}
+            </div>
+            <div
+                className={css({
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    fontFamily: theme.fonts.headers,
+                    fontWeight: '900',
+                    color: theme.fontColors.accent.toRgbaString(),
+                    textOverflow: 'ellipsis',
+                    whiteSpace: 'nowrap',
+                    maxWidth: '100%',
+                    overflow: 'hidden',
+                    [MOBILE]: {
+                        fontSize: '6vw',
+                    },
                 })}
             >
                 <img
@@ -117,20 +155,7 @@ export const ListingTile = (props: ListingTileProps): JSX.Element => {
                         marginRight: '10px',
                     })}
                 />
-                <div
-                    className={css({
-                        fontFamily: theme.fonts.headers,
-                        fontWeight: '900',
-                        color: theme.fontColors.accent.toRgbaString(),
-                        textOverflow: 'ellipsis',
-                        whiteSpace: 'nowrap',
-                        maxWidth: '100%',
-                        overflow: 'hidden',
-                        [MOBILE]: {
-                            fontSize: '6vw',
-                        },
-                    })}
-                >
+                <div>
                     <TooltipHost content={`${price.toLocaleString()} XP`}>
                         {price.toLocaleString()}
                     </TooltipHost>
