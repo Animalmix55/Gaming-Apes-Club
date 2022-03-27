@@ -27,6 +27,16 @@ export const Balance = {
     },
 };
 
+export const Roles = {
+    async getRoles(api: string): Promise<Record<string, string>> {
+        const url = `${api}/roles`;
+
+        const { data } = await axios.get(url);
+        const { results } = data;
+        return results as Record<string, string>;
+    },
+};
+
 export interface LoginPostResponse extends BaseResponse, Partial<User> {
     token?: string;
     member?: Member;

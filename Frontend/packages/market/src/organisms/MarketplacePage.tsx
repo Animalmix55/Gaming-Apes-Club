@@ -131,9 +131,7 @@ export const MarketplacePage = (): JSX.Element => {
                     openseaUrl={openseaUrl}
                     twitterUrl={twitterUrl}
                     className={css({
-                        [MOBILE]: {
-                            zIndex: 999999,
-                        },
+                        zIndex: '1 !important',
                         position: 'relative !important' as never,
                         marginBottom: '20px !important',
                     })}

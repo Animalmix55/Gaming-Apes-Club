@@ -8,6 +8,7 @@ export interface NewListing {
     requiresHoldership?: boolean;
     requiresLinkedAddress?: boolean;
     disabled?: boolean;
+    roles: string[];
 }
 
 export interface UpdatedListing extends NewListing {

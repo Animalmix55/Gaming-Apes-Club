@@ -6,6 +6,7 @@ import { getBalanceRouter } from '@gac/token';
 import { getLoginRouter, authMiddleware } from '@gac/login';
 import {
     getListingRouter,
+    getRolesRouter,
     getTransactionRouter,
     StartDatabase,
 } from '@gac/marketplace';
@@ -32,7 +33,7 @@ const start = async () => {
         TRANSACTION_CHANNEL,
     } = process.env;
 
-    StartDatabase(
+    const sequelize = await StartDatabase(
         String(MYSQL_HOST),
         Number(MYSQL_PORT),
         String(MYSQL_DATABASE),
@@ -74,7 +75,8 @@ const start = async () => {
     );
 
     app.use('/login', LoginRouter);
-    app.use('/listing', getListingRouter(JWT_PRIVATE, adminRoles));
+    app.use('/roles', await getRolesRouter(DISCORD_BOT_TOKEN, GUILD_ID));
+    app.use('/listing', getListingRouter(JWT_PRIVATE, adminRoles, sequelize));
 
     // ALL AUTHENTICATED ROUTES
     app.use(authMiddleware(JWT_PRIVATE, adminRoles));

@@ -1,3 +1,5 @@
+import { HasRoleIds } from './ListingRole';
+
 export interface NewListing {
     title: string;
     description: string;
@@ -21,8 +23,14 @@ export interface Listing extends NewListing {
 }
 
 interface Sanitizer {
-    (model: NewListing, add: true): NewListing;
-    (model: UpdatedListing, add?: false): UpdatedListing;
+    (model: NewListing & Partial<HasRoleIds>, add: true): {
+        listing: NewListing;
+        roles: HasRoleIds['roles'];
+    };
+    (model: UpdatedListing & Partial<HasRoleIds>, add?: false): {
+        listing: UpdatedListing;
+        roles: HasRoleIds['roles'];
+    };
 }
 
 export const sanitizeAndValidateListing: Sanitizer = (model, add) => {
@@ -37,7 +45,8 @@ export const sanitizeAndValidateListing: Sanitizer = (model, add) => {
         requiresHoldership,
         requiresLinkedAddress,
         disabled,
-    } = model as UpdatedListing;
+        roles,
+    } = model as UpdatedListing & Partial<HasRoleIds>;
 
     if (!add && !id) throw new Error('Missing id');
     if (add && id) throw new Error('New records cannot contain an id');
@@ -58,14 +67,17 @@ export const sanitizeAndValidateListing: Sanitizer = (model, add) => {
         throw new Error('Invalid linked address requirement flag');
 
     return {
-        title,
-        description,
-        image,
-        price,
-        supply,
-        maxPerUser,
-        requiresHoldership,
-        requiresLinkedAddress,
-        ...(!add && { id, disabled }),
+        listing: {
+            title,
+            description,
+            image,
+            price,
+            supply,
+            maxPerUser,
+            requiresHoldership,
+            requiresLinkedAddress,
+            ...(!add && { id, disabled }),
+        },
+        roles: roles || [],
     } as never;
 };

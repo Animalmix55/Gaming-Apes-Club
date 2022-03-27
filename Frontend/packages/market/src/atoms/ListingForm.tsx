@@ -15,6 +15,7 @@ import { useListingUpdater } from '../api/hooks/useListingUpdater';
 import { NewListing } from '../api/Models/Listing';
 import { ExtractErrorMessageFromError } from '../utils/ErrorMessage';
 import { ListingTile } from './ListingTile';
+import { RolesDropdown } from './RolesDropdown';
 
 /**
  * title: string;
@@ -52,6 +53,7 @@ export const convertToListing = (
         requiresHoldership: !!partialListing.requiresHoldership,
         requiresLinkedAddress: !!partialListing.requiresLinkedAddress,
         disabled: !!partialListing.disabled,
+        roles: partialListing.roles || [],
     };
 };
 
@@ -226,6 +228,15 @@ export const ListingForm = (props: Props): JSX.Element => {
                                     maxPerUser: v ? Number(v) : undefined,
                                 })
                             }
+                        />
+                        <RolesDropdown
+                            label="Applicable Roles (none for all)"
+                            onSelect={(v): void =>
+                                onChange({ ...listing, roles: v })
+                            }
+                            selectedKeys={listing.roles}
+                            disabled={formDisabled}
+                            className={fieldClass}
                         />
                         <Checkbox
                             disabled={formDisabled}

@@ -2,6 +2,7 @@ import express from 'express';
 import { BaseResponse } from '@gac/shared';
 import { authMiddleware } from '@gac/login';
 import AuthLocals from '@gac/login/lib/models/AuthLocals';
+import { Sequelize } from 'sequelize';
 import StoredListing from '../database/models/StoredListing';
 import {
     Listing,
@@ -9,7 +10,13 @@ import {
     sanitizeAndValidateListing,
     UpdatedListing,
 } from '../models/Listing';
-import { getListingsWithCounts, ListingWithCount } from '../utils/ListingUtils';
+import {
+    getListingsWithCounts,
+    getListingWithCount,
+    ListingWithCount,
+} from '../utils/ListingUtils';
+import { HasRoleIds, mapToRoleId, mapToRoleIds } from '../models/ListingRole';
+import ListingRole from '../database/models/ListingRole';
 
 interface GetRequest extends Record<string, string | undefined> {
     pageSize?: string;
@@ -18,22 +25,26 @@ interface GetRequest extends Record<string, string | undefined> {
 }
 
 interface GetResponse extends BaseResponse {
-    records?: ListingWithCount[];
+    records?: (ListingWithCount & HasRoleIds)[];
     numRecords?: number;
 }
 
-type PostBody = NewListing;
-type PostResponse = Partial<Listing> & BaseResponse;
+type PostBody = NewListing & Partial<HasRoleIds>;
+type PostResponse = Partial<Listing & HasRoleIds> & BaseResponse;
 
-type PutBody = UpdatedListing;
+type PutBody = UpdatedListing & Partial<HasRoleIds>;
 type PutResponse = PostResponse;
 
 interface GetByIdParams {
     listingId: string;
 }
-type GetByIdReponse = Partial<Listing> & BaseResponse;
+type GetByIdReponse = Partial<Listing & HasRoleIds> & BaseResponse;
 
-export const getListingRouter = (jwtSecret: string, adminRoles: string[]) => {
+export const getListingRouter = (
+    jwtSecret: string,
+    adminRoles: string[],
+    sequelize: Sequelize
+) => {
     const ListingRouter = express.Router();
 
     ListingRouter.get<string, never, GetResponse, never, GetRequest, never>(
@@ -56,7 +67,7 @@ export const getListingRouter = (jwtSecret: string, adminRoles: string[]) => {
             );
 
             res.status(200).send({
-                records: rows,
+                records: mapToRoleIds(rows),
                 numRecords: count,
             });
         }
@@ -73,12 +84,12 @@ export const getListingRouter = (jwtSecret: string, adminRoles: string[]) => {
         const { params } = req;
         const { listingId } = params;
 
-        const listing = await StoredListing.findByPk(listingId);
+        const listing = await getListingWithCount(listingId);
 
         if (!listing)
             return res.status(404).send({ error: 'Listing not found' });
 
-        return res.status(200).send(listing.get());
+        return res.status(200).send(mapToRoleId<ListingWithCount>(listing));
     });
 
     ListingRouter.post<
@@ -94,13 +105,43 @@ export const getListingRouter = (jwtSecret: string, adminRoles: string[]) => {
 
         if (!isAdmin) return res.status(403).send({ error: 'Not admin' });
 
+        let dbListing: StoredListing;
         try {
-            const listing = sanitizeAndValidateListing(body, true);
-            const dbListing = await StoredListing.create({
-                ...listing,
-                createdBy: user.id,
-            } as Listing);
-            return res.status(200).send(dbListing.get());
+            const { listing, roles } = sanitizeAndValidateListing(body, true);
+
+            const tx = await sequelize.transaction();
+
+            try {
+                dbListing = await StoredListing.create(
+                    {
+                        ...listing,
+                        createdBy: user.id,
+                    } as Listing,
+                    { transaction: tx }
+                );
+
+                await Promise.all(
+                    roles.map(async (r) => {
+                        ListingRole.create(
+                            {
+                                roleId: r,
+                                listingId: dbListing.get().id,
+                            },
+                            { transaction: tx }
+                        );
+                    })
+                );
+
+                await tx.commit();
+            } catch (e) {
+                await tx.rollback();
+                throw e;
+            }
+
+            const response = await getListingWithCount(dbListing.get().id);
+            if (!response) throw new Error('Could not refetch new record');
+
+            return res.status(200).send(mapToRoleId(response));
         } catch (e) {
             return res
                 .status(500)
@@ -117,27 +158,67 @@ export const getListingRouter = (jwtSecret: string, adminRoles: string[]) => {
 
             if (!isAdmin) return res.status(403).send({ error: 'Not admin' });
 
+            const NOT_FOUND = 'Record not found';
+
             try {
-                const listing = sanitizeAndValidateListing(body, false);
-                const [numAffected] = await StoredListing.update(listing, {
-                    where: {
-                        id: listing.id,
-                        disabled: false,
-                    },
-                });
+                const { listing, roles } = sanitizeAndValidateListing(
+                    body,
+                    false
+                );
 
-                if (numAffected === 0)
-                    return res.status(404).send({ error: 'Record not found' });
+                const tx = await sequelize.transaction();
 
-                const updatedListing = await StoredListing.findByPk(listing.id);
+                try {
+                    const [numAffected] = await StoredListing.update(listing, {
+                        where: {
+                            id: listing.id,
+                            disabled: false,
+                        },
+                        transaction: tx,
+                    });
+
+                    if (numAffected === 0) throw new Error(NOT_FOUND);
+
+                    await ListingRole.destroy({
+                        where: {
+                            listingId: listing.id,
+                        },
+                        transaction: tx,
+                    });
+
+                    await Promise.all(
+                        roles.map(async (r) => {
+                            await ListingRole.create(
+                                {
+                                    roleId: r,
+                                    listingId: listing.id,
+                                },
+                                { transaction: tx }
+                            );
+                        })
+                    );
+
+                    await tx.commit();
+                } catch (e) {
+                    await tx.rollback();
+                    if ((e as Error).message === NOT_FOUND)
+                        return res
+                            .status(404)
+                            .send({ error: 'Record not found' });
+                    throw e;
+                }
+
+                const updatedListing = await getListingWithCount(listing.id);
                 if (!updatedListing)
                     return res.status(500).send({
                         error: 'Updated listing could not be retrieved',
                     });
 
-                return res.status(200).send(updatedListing.get());
+                return res.status(200).send(mapToRoleId(updatedListing));
             } catch (e) {
-                return res.status(500).send({ error: `Error: ${e}` });
+                return res
+                    .status(500)
+                    .send({ error: `Error: ${(e as Error).message}` });
             }
         }
     );

@@ -10,9 +10,11 @@ import {
 import React from 'react';
 import { useStyletron } from 'styletron-react';
 import Web3 from 'web3';
+import { useRoleNames } from '../api/hooks/useRoleNames';
 import { useTransactionSubmitter } from '../api/hooks/useTransactionSubmitter';
 import { ListingWithCount } from '../api/Models/Listing';
 import { ListingTile } from '../atoms/ListingTile';
+import { useAuthorizationContext } from '../contexts/AuthorizationContext';
 import { ExtractErrorMessageFromError } from '../utils/ErrorMessage';
 
 interface Props {
@@ -64,6 +66,9 @@ export const ListingModal = (props: Props): JSX.Element => {
         [error]
     );
 
+    const { member } = useAuthorizationContext();
+    const userRoles = member?.roles;
+
     const {
         id: listingId,
         description,
@@ -71,7 +76,19 @@ export const ListingModal = (props: Props): JSX.Element => {
         supply,
         requiresLinkedAddress,
         requiresHoldership,
+        roles,
     } = listing;
+
+    const hasRole = React.useMemo(() => {
+        if (roles.length === 0) return true;
+
+        if (!userRoles) return false;
+        return userRoles.some((r) => roles.includes(r));
+    }, [roles, userRoles]);
+
+    const { data: roleNames, isLoading: roleNamesLoading } =
+        useRoleNames(roles);
+
     const remaining = Math.max(0, (supply ?? Infinity) - totalPurchased);
 
     return (
@@ -143,6 +160,33 @@ export const ListingModal = (props: Props): JSX.Element => {
                             }}
                         />
                     </div>
+
+                    {!!roles.length && (
+                        <div
+                            className={css({
+                                padding: '5px',
+                            })}
+                        >
+                            <div
+                                className={css({
+                                    fontFamily: theme.fonts.headers,
+                                    fontWeight: '900',
+                                })}
+                            >
+                                Applicable Roles
+                            </div>
+                            <div
+                                className={css({
+                                    fontFamily: theme.fonts.body,
+                                })}
+                            >
+                                {roleNamesLoading && <Spinner />}
+                                {!roleNamesLoading &&
+                                    !!roleNames &&
+                                    roleNames.join(', ')}
+                            </div>
+                        </div>
+                    )}
 
                     {supply !== undefined && (
                         <div
@@ -233,7 +277,7 @@ export const ListingModal = (props: Props): JSX.Element => {
                     )}
                     <div className={css({ margin: '5px 5px auto 5px' })}>
                         <GlowButton
-                            disabled={remaining === 0}
+                            disabled={remaining === 0 || !hasRole}
                             onClick={(): void =>
                                 sendTransaction([
                                     listingId,
@@ -251,10 +295,14 @@ export const ListingModal = (props: Props): JSX.Element => {
                         >
                             {isLoading && <Spinner />}
                             {isSuccess && 'Success'}
+                            {!hasRole && 'Missing required role'}
+                            {remaining === 0 && 'Sold out'}
                             {errorMessage && errorMessage}
                             {!errorMessage &&
+                                hasRole &&
                                 !isLoading &&
                                 !isSuccess &&
+                                remaining !== 0 &&
                                 'Purchase'}
                         </GlowButton>
                     </div>

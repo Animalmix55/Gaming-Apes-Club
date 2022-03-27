@@ -14,4 +14,17 @@ export const sendTransactionMessage = async (
     await sendMessage(client, channelId, message);
 };
 
-export default {};
+export const getRolesById = async (client: Client, guildId: string) => {
+    const guild = await client.guilds.fetch(guildId);
+    const roles = await guild.roles.fetch();
+
+    const rolesById = Array.from(roles.keys()).reduce((prev, cur) => {
+        const role = roles.get(cur);
+
+        if (!role) return prev;
+
+        return { ...prev, [role.id]: role.name };
+    }, {} as Record<string, string>);
+
+    return rolesById;
+};

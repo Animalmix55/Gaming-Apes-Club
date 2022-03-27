@@ -204,7 +204,8 @@ export const getTransactionRouter = async (
             signableMessageToken,
             address: recordableAddress,
         } = body;
-        const { id } = user;
+        const { id, member } = user;
+        const { roles: userRoles } = member;
 
         const listing = await getListingWithCount(listingId);
         if (!listing)
@@ -231,10 +232,19 @@ export const getTransactionRouter = async (
             disabled,
             supply,
             totalPurchased,
+            roles: allowedRoles,
         } = listing;
 
         if (disabled)
             return res.status(403).send({ error: 'Listing is disabled' });
+
+        if (
+            allowedRoles.length > 0 &&
+            !allowedRoles.some((allowedRole) =>
+                userRoles.includes(allowedRole.roleId)
+            )
+        )
+            return res.status(403).send({ error: 'Required role missing' });
 
         if (requiresHoldership) {
             if (!signature || !signableMessageToken) {
@@ -289,12 +299,6 @@ export const getTransactionRouter = async (
         }
 
         if (
-            requiresLinkedAddress &&
-            (!recordableAddress || !Web3.utils.isAddress(recordableAddress))
-        )
-            return res.status(500).send({ error: 'Invalid linked address' });
-
-        if (
             maxPerUser !== null &&
             quantity + quantityAlreadyPurchased > maxPerUser
         )
@@ -303,6 +307,12 @@ export const getTransactionRouter = async (
         if (supply !== null && quantity + totalPurchased > supply) {
             return res.status(400).send({ error: 'Exceeds available supply' });
         }
+
+        if (
+            requiresLinkedAddress &&
+            (!recordableAddress || !Web3.utils.isAddress(recordableAddress))
+        )
+            return res.status(500).send({ error: 'Invalid linked address' });
 
         const client = getUNBClient(unbToken);
         const { total: balance } = await getBalance(client, guildId, id);

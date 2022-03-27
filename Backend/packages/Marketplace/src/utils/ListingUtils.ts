@@ -1,8 +1,10 @@
 import { Sequelize } from 'sequelize';
 // eslint-disable-next-line import/no-unresolved
 import { Literal } from 'sequelize/types/utils';
+import ListingRole from '../database/models/ListingRole';
 import StoredListing from '../database/models/StoredListing';
 import { Listing } from '../models/Listing';
+import { HasListingRoles } from '../models/ListingRole';
 
 interface ListingWithStringCount extends Listing {
     totalPurchased: string;
@@ -38,6 +40,12 @@ export const getListingsWithCounts = async (
                 disabled: false,
             },
         }),
+        include: [
+            {
+                model: ListingRole,
+                as: 'roles',
+            },
+        ],
     });
 
     return {
@@ -47,7 +55,7 @@ export const getListingsWithCounts = async (
             return {
                 ...retrievedResult,
                 totalPurchased: Number(retrievedResult.totalPurchased),
-            } as ListingWithCount;
+            } as ListingWithCount & HasListingRoles;
         }),
     };
 };
@@ -57,6 +65,12 @@ export const getListingWithCount = async (listingId: string) => {
         attributes: {
             include,
         },
+        include: [
+            {
+                model: ListingRole,
+                as: 'roles',
+            },
+        ],
     });
 
     if (!result) return undefined;
@@ -65,7 +79,7 @@ export const getListingWithCount = async (listingId: string) => {
     return {
         ...retrievedResult,
         totalPurchased: Number(retrievedResult.totalPurchased),
-    } as ListingWithCount;
+    } as ListingWithCount & HasListingRoles;
 };
 
 export default {};
