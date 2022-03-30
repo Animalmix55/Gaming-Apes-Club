@@ -66,8 +66,8 @@ export const ListingModal = (props: Props): JSX.Element => {
         [error]
     );
 
-    const { member } = useAuthorizationContext();
-    const userRoles = member?.roles;
+    const { claims } = useAuthorizationContext();
+    const userRoles = claims?.member?.roles;
 
     const {
         id: listingId,

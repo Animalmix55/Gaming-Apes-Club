@@ -13,7 +13,9 @@ export const BalanceWidget = ({
 }): JSX.Element => {
     const [css] = useStyletron();
     const theme = useThemeContext();
-    const { id: discordId } = useAuthorizationContext();
+    const { claims } = useAuthorizationContext();
+    const discordId = claims?.id;
+
     const { data: balance, isLoading } = useBalance(discordId);
 
     return (

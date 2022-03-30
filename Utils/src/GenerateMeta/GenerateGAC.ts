@@ -45,6 +45,13 @@ const LayerRequirements: Record<Layer, boolean> = {
     [GACLayer.Lasers]: false,
 };
 
+export const sortByLayerOrder = (
+    a: ERC721Attribute<GACLayer>,
+    b: ERC721Attribute<GACLayer>
+): number => {
+    return LayerOrder.indexOf(a.trait_type) - LayerOrder.indexOf(b.trait_type);
+};
+
 type RequiresScreen = Record<
     Layer,
     Record<string, boolean | undefined> | boolean | undefined
@@ -277,6 +284,7 @@ const isValidCombination = (
     const teeth = getAttributeByLayer(meta, GACLayer.Teeth);
     const backbling = getAttributeByLayer(meta, GACLayer.Backbling);
     const headwear = getAttributeByLayer(meta, GACLayer.Headwear);
+    const earring = getAttributeByLayer(meta, GACLayer.Earring);
 
     if (!fur) throw new Error('Missing fur');
     if (!body) throw new Error('Missing body');
@@ -291,7 +299,24 @@ const isValidCombination = (
         headwear &&
         eyewear.value.includes('VR') &&
         (headwear.value.includes('Headset') ||
-            headwear.value.includes('Headphones'))
+            headwear.value.includes('Headphones') ||
+            headwear.value.includes('Sailor'))
+    )
+        return false;
+
+    if (
+        eyewear &&
+        headwear &&
+        eyewear.value.includes('Eye Patch') &&
+        headwear.value.includes('Beanie')
+    )
+        return false;
+
+    if (
+        earring &&
+        headwear &&
+        earring.value.includes('Secret Agent') &&
+        headwear.value.includes('Beanie')
     )
         return false;
 
@@ -326,7 +351,8 @@ export const generateGACMetadata = (
     artDir: string,
     rarityPath: string,
     description?: string,
-    externalUrl?: string
+    externalUrl?: string,
+    seedMeta?: ERC721MetaWithImagePath<GACLayer>[]
 ) => {
     const initialUsedTraits = getInitialUsedTraits(rarityPath, artDir);
     const result = generateMetadata(
@@ -338,7 +364,8 @@ export const generateGACMetadata = (
         collectionName,
         false,
         description,
-        externalUrl
+        externalUrl,
+        seedMeta
     );
 
     return result;
@@ -349,6 +376,21 @@ const imageLayerOrderComparator = (
     layer2: ERC721Attribute<GACLayer>
 ): 0 | 1 | -1 => {
     {
+        // move eyepatch to back, earrings to front
+        if (
+            layer1.trait_type === GACLayer.Earring &&
+            layer2.trait_type === GACLayer.Eyewear
+        ) {
+            if (layer2.value === 'Eye Patch') return 1;
+        }
+
+        if (
+            layer2.trait_type === GACLayer.Earring &&
+            layer1.trait_type === GACLayer.Eyewear
+        ) {
+            if (layer1.value === 'Eye Patch') return -1;
+        }
+
         // move eyepatch to back, certain hats/headsets to front
         if (
             layer1.trait_type === GACLayer.Headwear &&
@@ -374,7 +416,8 @@ const imageLayerOrderComparator = (
 
 export const generateGACImages = async (
     metadata: ERC721MetaWithImagePath<GACLayer>[],
-    targetDir: string
+    targetDir: string,
+    start?: number
 ) => {
     const getBlend = (
         metadata: ERC721Attribute<GACLayer>
@@ -391,6 +434,8 @@ export const generateGACImages = async (
     console.log('Starting image generation');
     await Promise.all(
         metadata.map(async (nft, i) => {
+            if (start !== undefined && i < start) return;
+
             console.log(`Generating image for ${i}`);
 
             const nftImage = compileNFT(

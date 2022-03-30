@@ -143,20 +143,33 @@ export const generateMetadata = <T extends Layer>(
     collectionName: string,
     allowDuplicates = false,
     description?: string,
-    externalUrl?: string
+    externalUrl?: string,
+    seedMeta?: ERC721MetaWithImagePath<T>[]
 ): { metadata: ERC721MetaWithImagePath<T>[]; usedTraits: UsedTraits<T> } => {
-    const outputNFTS: ERC721MetaWithImagePath<T>[] = [];
+    const outputNFTS: ERC721MetaWithImagePath<T>[] = [...(seedMeta || [])];
 
     // copy in initial traits to used traits
     let usedTraits = { ...initialUsedTraits };
+
     (Object.keys(initialUsedTraits) as T[]).forEach((layer) => {
         usedTraits[layer] = { ...initialUsedTraits[layer] };
     });
     const layers = Object.keys(initialUsedTraits) as T[];
 
-    for (let i = 0; i < totalSupply; i++) {
+    outputNFTS.forEach((NFT) => {
+        NFT.attributes.forEach((attr) => {
+            usedTraits = updateUsedTraits(
+                usedTraits,
+                attr.trait_type,
+                attr.value
+            );
+        });
+    });
+
+    for (let i = seedMeta?.length || 0; i < totalSupply; i++) {
         let NFT: ERC721MetaWithImagePath<T> | undefined;
         let attempts = 0;
+
         while (
             !NFT ||
             !isValid(NFT, outputNFTS, initialUsedTraits) ||

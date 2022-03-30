@@ -26,7 +26,7 @@ export const useLogin = (suppressListener?: boolean): UseLoginReturn => {
 
         Login.getSessionToken(api, code)
             .then((v) => {
-                onLogin(v);
+                onLogin(v.token);
                 const url = window.location.href.split('?', 2)[0];
                 window.history.replaceState('', '', url);
             })

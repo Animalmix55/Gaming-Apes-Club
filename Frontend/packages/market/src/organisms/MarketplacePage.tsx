@@ -24,7 +24,7 @@ export const MarketplacePage = (): JSX.Element => {
     const [css] = useStyletron();
     const { login } = useLogin(true);
     const { adminRoles } = useGamingApeContext();
-    const { id: discordId, member } = useAuthorizationContext();
+    const { token, claims } = useAuthorizationContext();
     const { homeUrl, discordUrl, openseaUrl, twitterUrl } =
         useGamingApeContext();
     const [modalOpen, setModalOpen] = React.useState(false);
@@ -43,7 +43,7 @@ export const MarketplacePage = (): JSX.Element => {
 
     const onItemSelect = React.useCallback(
         (index?: number) => {
-            if (!discordId) {
+            if (!token) {
                 login();
                 return;
             }
@@ -60,12 +60,15 @@ export const MarketplacePage = (): JSX.Element => {
 
             setSelectedIndex(index);
         },
-        [accounts, discordId, listings, login, selectedIndex]
+        [accounts, listings, login, selectedIndex, token]
     );
     const theme = useThemeContext();
 
     const additionalButtons = React.useMemo((): HeaderButtonProps[] => {
+        if (!claims) return [];
+        const { member } = claims;
         if (!member) return [];
+
         if (adminPanelOpen) {
             return [
                 {
@@ -87,7 +90,7 @@ export const MarketplacePage = (): JSX.Element => {
             ];
 
         return [];
-    }, [adminPanelOpen, adminRoles, member]);
+    }, [adminPanelOpen, adminRoles, claims]);
 
     return (
         <div
