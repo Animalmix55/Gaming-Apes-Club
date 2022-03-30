@@ -5,14 +5,12 @@
   "author": "Cory Cherven",
   "license": "ISC",
   "scripts": {
-    "start:fresh": "npx kill-port 3000 && yarn start",
-    "start": "npx kill-port 3000 && yarn prod",
+    "start:fresh": "npx kill-port 3000 && yarn server",
+    "start": "yarn server",
     "transpile": "yarn tsc",
     "clean": "rimraf dist-server",
     "build": "yarn clean && yarn transpile",
     "server": "node ./dist-server/bin/www",
-    "dev": "cross-env NODE_ENV=development yarn build && yarn server",
-    "prod": "cross-env NODE_ENV=production yarn build && yarn server",
     "test": "jest"
   },
   "jest": {

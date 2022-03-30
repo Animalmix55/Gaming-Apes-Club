@@ -30,10 +30,16 @@ export const getLoginRouter = (
     clientSecret: string,
     redirectUrl: string,
     guildId: string,
-    jwtSecret: string
+    jwtSecret: string,
+    oauthTimeout?: number
 ) => {
     const LoginRouter = express.Router();
-    const client = getOauth2Client(clientId, clientSecret, redirectUrl);
+    const client = getOauth2Client(
+        clientId,
+        clientSecret,
+        redirectUrl,
+        oauthTimeout
+    );
 
     LoginRouter.get<string, never, GetResponse, never, never>(
         '/',

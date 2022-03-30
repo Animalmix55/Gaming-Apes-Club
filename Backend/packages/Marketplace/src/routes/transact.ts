@@ -11,10 +11,11 @@ import {
 import AuthLocals from '@gac/login/lib/models/AuthLocals';
 import { getBalance, getUNBClient, spend } from '@gac/token';
 import Web3 from 'web3';
+import { Intents } from 'discord.js';
 import StoredTransaction from '../database/models/StoredTransaction';
 import Transaction from '../models/Transaction';
 import { getListingWithCount } from '../utils/ListingUtils';
-import { sendTransactionMessage } from '../utils/Discord';
+import { getGuildMember, sendTransactionMessage } from '../utils/Discord';
 
 interface TransactionJWTPayload {
     user: string;
@@ -64,7 +65,10 @@ export const getTransactionRouter = async (
 ) => {
     const TransactionRouter = express.Router();
 
-    const discordClient = await getClient(discordBotToken, []);
+    const discordClient = await getClient(discordBotToken, [
+        Intents.FLAGS.GUILD_MEMBERS,
+        Intents.FLAGS.GUILDS,
+    ]);
 
     // GET
 
@@ -204,8 +208,7 @@ export const getTransactionRouter = async (
             signableMessageToken,
             address: recordableAddress,
         } = body;
-        const { id, member } = user;
-        const { roles: userRoles } = member;
+        const { id } = user;
 
         const listing = await getListingWithCount(listingId);
         if (!listing)
@@ -238,13 +241,29 @@ export const getTransactionRouter = async (
         if (disabled)
             return res.status(403).send({ error: 'Listing is disabled' });
 
-        if (
-            allowedRoles.length > 0 &&
-            !allowedRoles.some((allowedRole) =>
-                userRoles.includes(allowedRole.roleId)
-            )
-        )
-            return res.status(403).send({ error: 'Required role missing' });
+        // always fetch the newest role
+        if (allowedRoles.length > 0) {
+            const allowedRoleIds = allowedRoles.map((r) => r.roleId);
+            try {
+                const guildMember = await getGuildMember(
+                    discordClient,
+                    id,
+                    guildId
+                );
+
+                const roles = guildMember.roles.cache;
+
+                if (!roles.some((r) => allowedRoleIds.includes(r.id)))
+                    return res
+                        .status(403)
+                        .send({ error: 'Required role missing' });
+            } catch (e) {
+                console.error('Failed to fetch user role', id, e);
+                return res
+                    .status(500)
+                    .send({ error: 'Could not fetch user roles' });
+            }
+        }
 
         if (requiresHoldership) {
             if (!signature || !signableMessageToken) {

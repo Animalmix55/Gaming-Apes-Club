@@ -28,3 +28,12 @@ export const getRolesById = async (client: Client, guildId: string) => {
 
     return rolesById;
 };
+
+export const getGuildMember = async (
+    client: Client,
+    userId: string,
+    guildId: string
+) => {
+    const guild = await client.guilds.fetch(guildId);
+    return guild.members.fetch(userId);
+};

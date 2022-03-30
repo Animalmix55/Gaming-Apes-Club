@@ -26,6 +26,7 @@ const start = async () => {
         OAUTH_CLIENT_ID,
         OAUTH_SECRET,
         OAUTH_REDIRECT_URL,
+        REQUEST_TIMEOUT,
         WEB3_PROVIDER,
         TOKEN_ADDRESS,
         JWT_PRIVATE,
@@ -54,6 +55,10 @@ const start = async () => {
     if (!TRANSACTION_CHANNEL)
         throw new Error('Missing Discord transaction channel');
 
+    const REQUEST_NUMERIC_TIMEOUT = Number(REQUEST_TIMEOUT || 5000); // default 5000 ms
+    if (Number.isNaN(REQUEST_NUMERIC_TIMEOUT))
+        throw new Error(`Bad timeout: ${REQUEST_TIMEOUT}`);
+
     const web3 = new Web3(WEB3_PROVIDER);
 
     const app = express();
@@ -71,7 +76,8 @@ const start = async () => {
         OAUTH_SECRET,
         OAUTH_REDIRECT_URL,
         GUILD_ID,
-        JWT_PRIVATE
+        JWT_PRIVATE,
+        REQUEST_NUMERIC_TIMEOUT
     );
 
     app.use('/login', LoginRouter);

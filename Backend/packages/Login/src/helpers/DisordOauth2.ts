@@ -5,11 +5,13 @@ import crypto from 'crypto';
 export const getOauth2Client = (
     clientId: string,
     clientSecret: string,
-    redirectUri: string
+    redirectUri: string,
+    requestTimeout?: number
 ) => {
     return new DiscordOauth2({
         clientId,
         clientSecret,
+        requestTimeout,
         redirectUri,
     });
 };
