@@ -31,7 +31,8 @@ export const getLoginRouter = (
     redirectUrl: string,
     guildId: string,
     jwtSecret: string,
-    oauthTimeout?: number
+    oauthTimeout?: number,
+    jwtExpiry = '24h'
 ) => {
     const LoginRouter = express.Router();
     const client = getOauth2Client(
@@ -82,7 +83,7 @@ export const getLoginRouter = (
                 );
 
                 const claims = { ...user, member };
-                const token = createUserJWT(claims, jwtSecret);
+                const token = createUserJWT(claims, jwtSecret, jwtExpiry);
 
                 res.status(200).send({
                     token,

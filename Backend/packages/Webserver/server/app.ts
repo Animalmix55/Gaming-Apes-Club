@@ -32,6 +32,7 @@ const start = async () => {
         JWT_PRIVATE,
         DISCORD_BOT_TOKEN,
         TRANSACTION_CHANNEL,
+        JWT_EXPIRY,
     } = process.env;
 
     const sequelize = await StartDatabase(
@@ -77,7 +78,8 @@ const start = async () => {
         OAUTH_REDIRECT_URL,
         GUILD_ID,
         JWT_PRIVATE,
-        REQUEST_NUMERIC_TIMEOUT
+        REQUEST_NUMERIC_TIMEOUT,
+        JWT_EXPIRY // default 24h
     );
 
     app.use('/login', LoginRouter);
