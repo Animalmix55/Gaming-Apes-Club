@@ -10,6 +10,7 @@ export interface NewListing {
     requiresHoldership: boolean | null;
     requiresLinkedAddress: boolean | null;
     disabled: boolean | null;
+    discordMessage: string | null;
 }
 
 export interface UpdatedListing extends NewListing {
@@ -46,6 +47,7 @@ export const sanitizeAndValidateListing: Sanitizer = (model, add) => {
         requiresLinkedAddress,
         disabled,
         roles,
+        discordMessage,
     } = model as UpdatedListing & Partial<HasRoleIds>;
 
     if (!add && !id) throw new Error('Missing id');
@@ -65,6 +67,8 @@ export const sanitizeAndValidateListing: Sanitizer = (model, add) => {
         throw new Error('Invalid holdership requirement flag');
     if (requiresLinkedAddress && typeof requiresLinkedAddress !== 'boolean')
         throw new Error('Invalid linked address requirement flag');
+    if (discordMessage && typeof discordMessage !== 'string')
+        throw new Error('Invalid discord message');
 
     return {
         listing: {
@@ -76,6 +80,7 @@ export const sanitizeAndValidateListing: Sanitizer = (model, add) => {
             maxPerUser,
             requiresHoldership,
             requiresLinkedAddress,
+            discordMessage,
             ...(!add && { id, disabled }),
         },
         roles: roles || [],

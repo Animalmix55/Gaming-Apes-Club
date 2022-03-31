@@ -9,6 +9,7 @@ export interface NewListing {
     requiresLinkedAddress?: boolean;
     disabled?: boolean;
     roles: string[];
+    discordMessage?: string;
 }
 
 export interface UpdatedListing extends NewListing {

@@ -61,6 +61,10 @@ export const InitializeListingModel = (instance: Sequelize): void => {
                 allowNull: false,
                 defaultValue: false,
             },
+            discordMessage: {
+                type: DataTypes.STRING(1024),
+                allowNull: true,
+            },
         },
         {
             sequelize: instance,

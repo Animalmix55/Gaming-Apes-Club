@@ -9,7 +9,27 @@ export const sendTransactionMessage = async (
     user: User,
     listing: Listing
 ): Promise<void> => {
-    const message = `<@${user.id}> just spent **${listing.price} GAC XP** to purchase **${listing.title}** at the GAC Shack!`;
+    const { discordMessage } = listing;
+
+    let message =
+        discordMessage ||
+        '<@{user.id}> just spent **{listing.price} GAC XP** to purchase **{listing.title}** at the GAC Shack!';
+
+    const data = { user, listing };
+
+    message = message.replace(
+        /{([a-zA-Z]+)\.([A-Za-z]+)\}/g,
+        (match, ...args): string => {
+            const [obj, attribute] = args;
+
+            const targetObject = data[obj as keyof typeof data];
+            if (!attribute || !targetObject) return match;
+            const newVal = targetObject[attribute as keyof typeof targetObject];
+            if (typeof newVal === 'object') return match;
+
+            return String(newVal);
+        }
+    );
 
     await sendMessage(client, channelId, message);
 };

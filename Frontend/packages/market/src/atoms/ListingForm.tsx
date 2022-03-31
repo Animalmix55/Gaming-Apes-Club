@@ -13,6 +13,7 @@ import { useListing } from '../api/hooks/useListing';
 import { useListingCreator } from '../api/hooks/useListingCreator';
 import { useListingUpdater } from '../api/hooks/useListingUpdater';
 import { NewListing } from '../api/Models/Listing';
+import { DiscordMessageHelpModal } from '../molecules/DiscordMessageHelpModal';
 import { ExtractErrorMessageFromError } from '../utils/ErrorMessage';
 import { ListingTile } from './ListingTile';
 import { RolesDropdown } from './RolesDropdown';
@@ -52,6 +53,7 @@ export const convertToListing = (
         maxPerUser: partialListing.maxPerUser,
         requiresHoldership: !!partialListing.requiresHoldership,
         requiresLinkedAddress: !!partialListing.requiresLinkedAddress,
+        discordMessage: partialListing.discordMessage,
         disabled: !!partialListing.disabled,
         roles: partialListing.roles || [],
     };
@@ -79,6 +81,7 @@ export const ListingForm = (props: Props): JSX.Element => {
         requiresHoldership,
         requiresLinkedAddress,
         disabled,
+        discordMessage,
     } = listing;
 
     const [css] = useStyletron();
@@ -86,228 +89,290 @@ export const ListingForm = (props: Props): JSX.Element => {
     const fieldClass = css({ margin: '5px' });
     const styles: Partial<ITextFieldStyles> = {
         description: { color: theme.fontColors.light.toRgbaString() },
-        field: { color: theme.fontColors.dark.toRgbaString() },
+        field: {
+            color: theme.fontColors.dark.toRgbaString(disabled ? 0.5 : 1),
+        },
     };
+    const [discordHelpModalOpen, setDiscordHelpModalOpen] =
+        React.useState(false);
 
     return (
-        <ThemeProvider
-            applyTo="none"
-            theme={{
-                palette: {
-                    themePrimary: theme.fontColors.accent.toRgbaString(),
-                    neutralPrimary: theme.fontColors.light.toRgbaString(),
-                    neutralDark: theme.fontColors.light.toRgbaString(),
-                    black: theme.fontColors.dark.toRgbaString(),
-                    white: theme.fontColors.light.toRgbaString(),
-                },
-            }}
-        >
-            <div
-                className={ClassNameBuilder(
-                    className,
-                    css({
-                        display: 'flex',
-                        flexDirection: 'column',
-                        justifyContent: 'center',
-                        alignContent: 'center',
-                        background: theme.backgroundGradients.purpleBlue,
-                        padding: '10px',
-                    })
-                )}
+        <>
+            <DiscordMessageHelpModal
+                isOpen={discordHelpModalOpen}
+                value={discordMessage}
+                onClose={(): void => setDiscordHelpModalOpen(false)}
+                onValueChange={(v): void =>
+                    onChange(
+                        convertToListing({
+                            ...listing,
+                            discordMessage: v,
+                        })
+                    )
+                }
+                disabled={disabled}
+            />
+            <ThemeProvider
+                applyTo="none"
+                theme={{
+                    palette: {
+                        themePrimary: theme.fontColors.accent.toRgbaString(),
+                        neutralPrimary: theme.fontColors.light.toRgbaString(),
+                        neutralDark: theme.fontColors.light.toRgbaString(),
+                        black: theme.fontColors.dark.toRgbaString(),
+                        white: theme.fontColors.light.toRgbaString(),
+                    },
+                }}
             >
                 <div
-                    className={css({
-                        display: 'flex',
-                        flex: '1',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        overflow: 'auto',
-                        flexWrap: 'wrap',
-                    })}
+                    className={ClassNameBuilder(
+                        className,
+                        css({
+                            display: 'flex',
+                            flexDirection: 'column',
+                            justifyContent: 'center',
+                            alignContent: 'center',
+                            background: theme.backgroundGradients.purpleBlue,
+                            padding: '10px',
+                        })
+                    )}
                 >
                     <div
                         className={css({
                             display: 'flex',
-                            justifyContent: 'center',
-                        })}
-                    >
-                        <ListingTile
-                            listing={{
-                                ...convertToListing(listing),
-                                id: '',
-                                createdBy: '',
-                                createdOn: new Date(),
-                            }}
-                            className={css({
-                                background: `${theme.backgroundGradients.purpleBlue} !important`,
-                                boxShadow: 'rgba(0, 0, 0, 0.35) 0px 5px 15px',
-                                margin: '5px',
-                            })}
-                        />
-                    </div>
-                    <div className={css({ minWidth: '350px', padding: '5px' })}>
-                        <TextField
-                            disabled={formDisabled}
-                            className={fieldClass}
-                            styles={styles}
-                            label="Title"
-                            value={title}
-                            onChange={(_, v): void =>
-                                onChange(
-                                    convertToListing({ ...listing, title: v })
-                                )
-                            }
-                        />
-                        <TextField
-                            disabled={formDisabled}
-                            className={fieldClass}
-                            label="Description"
-                            value={description}
-                            styles={styles}
-                            multiline
-                            resizable={false}
-                            onChange={(_, v): void =>
-                                onChange(
-                                    convertToListing({
-                                        ...listing,
-                                        description: v,
-                                    })
-                                )
-                            }
-                        />
-                        <TextField
-                            disabled={formDisabled}
-                            className={fieldClass}
-                            label="Image Url"
-                            styles={styles}
-                            value={image}
-                            onChange={(_, v): void =>
-                                onChange(
-                                    convertToListing({ ...listing, image: v })
-                                )
-                            }
-                        />
-                        <TextField
-                            disabled={formDisabled}
-                            className={fieldClass}
-                            label="Price"
-                            type="number"
-                            styles={styles}
-                            min={0}
-                            value={String(price || 0)}
-                            onChange={(_, v): void =>
-                                onChange({ ...listing, price: Number(v || 0) })
-                            }
-                        />
-                        <TextField
-                            disabled={formDisabled}
-                            className={fieldClass}
-                            label="Maximum Supply (zero for no max)"
-                            type="number"
-                            min={0}
-                            styles={styles}
-                            value={String(supply || 0)}
-                            onChange={(_, v): void =>
-                                onChange({
-                                    ...listing,
-                                    supply: v ? Number(v) : undefined,
-                                })
-                            }
-                        />
-                        <TextField
-                            disabled={formDisabled}
-                            className={fieldClass}
-                            label="Max Per User (zero for no max)"
-                            type="number"
-                            min={0}
-                            styles={styles}
-                            value={String(maxPerUser || 0)}
-                            onChange={(_, v): void =>
-                                onChange({
-                                    ...listing,
-                                    maxPerUser: v ? Number(v) : undefined,
-                                })
-                            }
-                        />
-                        <RolesDropdown
-                            label="Applicable Roles (none for all)"
-                            onSelect={(v): void =>
-                                onChange({ ...listing, roles: v })
-                            }
-                            selectedKeys={listing.roles}
-                            disabled={formDisabled}
-                            className={fieldClass}
-                        />
-                        <Checkbox
-                            disabled={formDisabled}
-                            className={fieldClass}
-                            label="Requires NFT Ownership"
-                            styles={styles}
-                            checked={!!requiresHoldership}
-                            onChange={(_, v): void =>
-                                onChange({ ...listing, requiresHoldership: v })
-                            }
-                        />
-                        <Checkbox
-                            disabled={formDisabled}
-                            className={fieldClass}
-                            label="Requires Address Entry"
-                            styles={styles}
-                            checked={!!requiresLinkedAddress}
-                            onChange={(_, v): void =>
-                                onChange({
-                                    ...listing,
-                                    requiresLinkedAddress: v,
-                                })
-                            }
-                        />
-                        <Checkbox
-                            disabled={formDisabled}
-                            className={fieldClass}
-                            label="Disable"
-                            styles={styles}
-                            checked={!!disabled}
-                            onChange={(_, v): void =>
-                                onChange({ ...listing, disabled: v })
-                            }
-                        />
-                    </div>
-                </div>
-                {onSave && (
-                    <div
-                        className={css({
-                            display: 'flex',
-                            justifyContent: 'center',
+                            flex: '1',
                             alignItems: 'center',
-                            margin: '10px',
+                            justifyContent: 'center',
+                            overflow: 'auto',
+                            flexWrap: 'wrap',
                         })}
                     >
-                        <GlowButton
-                            disabled={formDisabled}
-                            onClick={(): void => onSave?.(listing)}
+                        <div
                             className={css({
-                                fontSize: '40px',
-                                padding: '5px',
-                                fontFamily: `${theme.fonts.buttons} !important`,
-                            })}
-                            innerclass={css({
-                                minHeight: '60px',
-                                minWidth: '150px',
+                                display: 'flex',
+                                justifyContent: 'center',
                             })}
                         >
-                            {!!error && (
-                                <span className={css({ fontSize: '15px' })}>
-                                    {error}
-                                </span>
-                            )}
-                            {isLoading && <Spinner size={SpinnerSize.medium} />}
-                            {isSuccess && 'Success'}
-                            {!error && !isLoading && !isSuccess && 'Save'}
-                        </GlowButton>
+                            <ListingTile
+                                listing={{
+                                    ...convertToListing(listing),
+                                    id: '',
+                                    createdBy: '',
+                                    createdOn: new Date(),
+                                }}
+                                className={css({
+                                    background: `${theme.backgroundGradients.purpleBlue} !important`,
+                                    boxShadow:
+                                        'rgba(0, 0, 0, 0.35) 0px 5px 15px',
+                                    margin: '5px',
+                                })}
+                            />
+                        </div>
+                        <div
+                            className={css({
+                                minWidth: '350px',
+                                padding: '5px',
+                            })}
+                        >
+                            <TextField
+                                disabled={formDisabled}
+                                className={fieldClass}
+                                styles={styles}
+                                label="Title"
+                                value={title}
+                                onChange={(_, v): void =>
+                                    onChange(
+                                        convertToListing({
+                                            ...listing,
+                                            title: v,
+                                        })
+                                    )
+                                }
+                            />
+                            <TextField
+                                disabled={formDisabled}
+                                className={fieldClass}
+                                label="Description"
+                                value={description}
+                                styles={styles}
+                                multiline
+                                resizable={false}
+                                onChange={(_, v): void =>
+                                    onChange(
+                                        convertToListing({
+                                            ...listing,
+                                            description: v,
+                                        })
+                                    )
+                                }
+                            />
+                            <TextField
+                                disabled={formDisabled}
+                                className={fieldClass}
+                                label="Discord Message"
+                                description="The message sent to the GAC Shack discord channel after the transaction completes"
+                                value={discordMessage}
+                                placeholder="<@{user.id}> just spent **{listing.price} GAC XP** to purchase **{listing.title}** at the GAC Shack!"
+                                styles={styles}
+                                multiline
+                                resizable={false}
+                                onClick={(): void =>
+                                    setDiscordHelpModalOpen(true)
+                                }
+                                onChange={(_, v): void =>
+                                    onChange(
+                                        convertToListing({
+                                            ...listing,
+                                            discordMessage: v,
+                                        })
+                                    )
+                                }
+                            />
+                            <TextField
+                                disabled={formDisabled}
+                                className={fieldClass}
+                                label="Image Url"
+                                styles={styles}
+                                value={image}
+                                onChange={(_, v): void =>
+                                    onChange(
+                                        convertToListing({
+                                            ...listing,
+                                            image: v,
+                                        })
+                                    )
+                                }
+                            />
+                            <TextField
+                                disabled={formDisabled}
+                                className={fieldClass}
+                                label="Price"
+                                type="number"
+                                styles={styles}
+                                min={0}
+                                value={String(price || 0)}
+                                onChange={(_, v): void =>
+                                    onChange({
+                                        ...listing,
+                                        price: Number(v || 0),
+                                    })
+                                }
+                            />
+                            <TextField
+                                disabled={formDisabled}
+                                className={fieldClass}
+                                label="Maximum Supply (zero for no max)"
+                                type="number"
+                                min={0}
+                                styles={styles}
+                                value={String(supply || 0)}
+                                onChange={(_, v): void =>
+                                    onChange({
+                                        ...listing,
+                                        supply: v ? Number(v) : undefined,
+                                    })
+                                }
+                            />
+                            <TextField
+                                disabled={formDisabled}
+                                className={fieldClass}
+                                label="Max Per User (zero for no max)"
+                                type="number"
+                                min={0}
+                                styles={styles}
+                                value={String(maxPerUser || 0)}
+                                onChange={(_, v): void =>
+                                    onChange({
+                                        ...listing,
+                                        maxPerUser: v ? Number(v) : undefined,
+                                    })
+                                }
+                            />
+                            <RolesDropdown
+                                label="Applicable Roles (none for all)"
+                                onSelect={(v): void =>
+                                    onChange({ ...listing, roles: v })
+                                }
+                                selectedKeys={listing.roles}
+                                disabled={formDisabled}
+                                className={fieldClass}
+                            />
+                            <Checkbox
+                                disabled={formDisabled}
+                                className={fieldClass}
+                                label="Requires NFT Ownership"
+                                styles={styles}
+                                checked={!!requiresHoldership}
+                                onChange={(_, v): void =>
+                                    onChange({
+                                        ...listing,
+                                        requiresHoldership: v,
+                                    })
+                                }
+                            />
+                            <Checkbox
+                                disabled={formDisabled}
+                                className={fieldClass}
+                                label="Requires Address Entry"
+                                styles={styles}
+                                checked={!!requiresLinkedAddress}
+                                onChange={(_, v): void =>
+                                    onChange({
+                                        ...listing,
+                                        requiresLinkedAddress: v,
+                                    })
+                                }
+                            />
+                            <Checkbox
+                                disabled={formDisabled}
+                                className={fieldClass}
+                                label="Disable"
+                                styles={styles}
+                                checked={!!disabled}
+                                onChange={(_, v): void =>
+                                    onChange({ ...listing, disabled: v })
+                                }
+                            />
+                        </div>
                     </div>
-                )}
-            </div>
-        </ThemeProvider>
+                    {onSave && (
+                        <div
+                            className={css({
+                                display: 'flex',
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                margin: '10px',
+                            })}
+                        >
+                            <GlowButton
+                                disabled={formDisabled}
+                                onClick={(): void => onSave?.(listing)}
+                                className={css({
+                                    fontSize: '40px',
+                                    padding: '5px',
+                                    fontFamily: `${theme.fonts.buttons} !important`,
+                                })}
+                                innerclass={css({
+                                    minHeight: '60px',
+                                    minWidth: '150px',
+                                })}
+                            >
+                                {!!error && (
+                                    <span className={css({ fontSize: '15px' })}>
+                                        {error}
+                                    </span>
+                                )}
+                                {isLoading && (
+                                    <Spinner size={SpinnerSize.medium} />
+                                )}
+                                {isSuccess && 'Success'}
+                                {!error && !isLoading && !isSuccess && 'Save'}
+                            </GlowButton>
+                        </div>
+                    )}
+                </div>
+            </ThemeProvider>
+        </>
     );
 };
 
