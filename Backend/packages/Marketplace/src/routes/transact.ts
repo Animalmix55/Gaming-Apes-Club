@@ -15,7 +15,11 @@ import { Intents } from 'discord.js';
 import StoredTransaction from '../database/models/StoredTransaction';
 import Transaction from '../models/Transaction';
 import { getListingWithCount } from '../utils/ListingUtils';
-import { getGuildMember, sendTransactionMessage } from '../utils/Discord';
+import {
+    applyRole,
+    getGuildMember,
+    sendTransactionMessage,
+} from '../utils/Discord';
 
 interface TransactionJWTPayload {
     user: string;
@@ -236,6 +240,7 @@ export const getTransactionRouter = async (
             supply,
             totalPurchased,
             roles: allowedRoles,
+            resultantRole,
         } = listing;
 
         if (disabled)
@@ -346,12 +351,31 @@ export const getTransactionRouter = async (
             try {
                 // spend tokens
                 await spend(client, guildId, id, quantity * price);
+                console.log(
+                    `Deducted ${quantity * price} GACXP from user ${id} for ${
+                        listing.title
+                    }`
+                );
             } catch (e) {
                 return res
                     .status(500)
                     .send({ error: 'Failed to spend tokens' });
             }
         }
+
+        if (resultantRole)
+            applyRole(discordClient, id, guildId, resultantRole)
+                .then(() =>
+                    console.log(
+                        `Gave user ${id} the role ${resultantRole} for purchasing ${listing.title}`
+                    )
+                )
+                .catch((e) => {
+                    console.error(
+                        `Failed to give user ${id} the role ${resultantRole} for purchasing ${listing.title}`,
+                        e
+                    );
+                });
 
         // generate transaction
         const tx = await StoredTransaction.create({
@@ -360,6 +384,11 @@ export const getTransactionRouter = async (
             quantity,
             address: requiresLinkedAddress ? recordableAddress : address,
         } as Transaction);
+        console.log(
+            `Generated transaction for user ${id} purchasing ${
+                listing.title
+            } with id ${tx.get().id}`
+        );
 
         const { total: newBalance } = await getBalance(client, guildId, id);
 
@@ -368,9 +397,13 @@ export const getTransactionRouter = async (
             discordTransactionChannelId,
             user,
             listing
-        ).catch((e) =>
-            console.error(`Failed to post transaction message: ${e}`)
-        );
+        )
+            .then((m) =>
+                console.log(`Successfully published transaction message: ${m}`)
+            )
+            .catch((e) =>
+                console.error(`Failed to post transaction message: ${e}`)
+            );
 
         return res.status(200).send({ ...tx.get(), newBalance });
     });

@@ -65,6 +65,10 @@ export const InitializeListingModel = (instance: Sequelize): void => {
                 type: DataTypes.STRING(1024),
                 allowNull: true,
             },
+            resultantRole: {
+                type: DataTypes.STRING,
+                allowNull: true,
+            },
         },
         {
             sequelize: instance,

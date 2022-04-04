@@ -11,6 +11,10 @@ export interface NewListing {
     requiresLinkedAddress: boolean | null;
     disabled: boolean | null;
     discordMessage: string | null;
+    /**
+     * The id of a role to apply after purchase
+     */
+    resultantRole: string | null;
 }
 
 export interface UpdatedListing extends NewListing {
@@ -48,6 +52,7 @@ export const sanitizeAndValidateListing: Sanitizer = (model, add) => {
         disabled,
         roles,
         discordMessage,
+        resultantRole,
     } = model as UpdatedListing & Partial<HasRoleIds>;
 
     if (!add && !id) throw new Error('Missing id');
@@ -69,6 +74,8 @@ export const sanitizeAndValidateListing: Sanitizer = (model, add) => {
         throw new Error('Invalid linked address requirement flag');
     if (discordMessage && typeof discordMessage !== 'string')
         throw new Error('Invalid discord message');
+    if (resultantRole && typeof resultantRole !== 'string')
+        throw new Error('Invalid resultant role');
 
     return {
         listing: {
@@ -81,6 +88,7 @@ export const sanitizeAndValidateListing: Sanitizer = (model, add) => {
             requiresHoldership,
             requiresLinkedAddress,
             discordMessage,
+            resultantRole,
             ...(!add && { id, disabled }),
         },
         roles: roles || [],

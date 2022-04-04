@@ -8,7 +8,7 @@ export const sendTransactionMessage = async (
     channelId: string,
     user: User,
     listing: Listing
-): Promise<void> => {
+): Promise<string> => {
     const { discordMessage } = listing;
 
     let message =
@@ -32,6 +32,20 @@ export const sendTransactionMessage = async (
     );
 
     await sendMessage(client, channelId, message);
+
+    return message;
+};
+
+export const applyRole = async (
+    client: Client,
+    userId: string,
+    guildId: string,
+    roleId: string
+) => {
+    const guild = await client.guilds.fetch(guildId);
+    const user = await guild.members.fetch({ user: userId });
+
+    await user.roles.add(roleId);
 };
 
 export const getRolesById = async (client: Client, guildId: string) => {

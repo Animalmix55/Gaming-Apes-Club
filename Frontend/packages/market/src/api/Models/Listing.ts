@@ -3,13 +3,14 @@ export interface NewListing {
     description: string;
     image: string;
     price: number;
-    supply?: number;
-    maxPerUser?: number;
-    requiresHoldership?: boolean;
-    requiresLinkedAddress?: boolean;
-    disabled?: boolean;
+    supply: number | null;
+    maxPerUser: number | null;
+    requiresHoldership: boolean | null;
+    requiresLinkedAddress: boolean | null;
+    disabled: boolean | null;
     roles: string[];
-    discordMessage?: string;
+    discordMessage: string | null;
+    resultantRole: string | null;
 }
 
 export interface UpdatedListing extends NewListing {

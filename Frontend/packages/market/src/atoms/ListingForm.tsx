@@ -49,13 +49,14 @@ export const convertToListing = (
         description: partialListing.description || '',
         image: partialListing.image || '',
         price: partialListing.price || 0,
-        supply: partialListing.supply,
-        maxPerUser: partialListing.maxPerUser,
+        supply: partialListing.supply ?? null,
+        maxPerUser: partialListing.maxPerUser ?? null,
         requiresHoldership: !!partialListing.requiresHoldership,
         requiresLinkedAddress: !!partialListing.requiresLinkedAddress,
-        discordMessage: partialListing.discordMessage,
+        discordMessage: partialListing.discordMessage ?? null,
         disabled: !!partialListing.disabled,
         roles: partialListing.roles || [],
+        resultantRole: partialListing.resultantRole ?? null,
     };
 };
 
@@ -100,7 +101,7 @@ export const ListingForm = (props: Props): JSX.Element => {
         <>
             <DiscordMessageHelpModal
                 isOpen={discordHelpModalOpen}
-                value={discordMessage}
+                value={discordMessage ?? undefined}
                 onClose={(): void => setDiscordHelpModalOpen(false)}
                 onValueChange={(v): void =>
                     onChange(
@@ -110,7 +111,7 @@ export const ListingForm = (props: Props): JSX.Element => {
                         })
                     )
                 }
-                disabled={disabled}
+                disabled={!!disabled}
             />
             <ThemeProvider
                 applyTo="none"
@@ -211,7 +212,7 @@ export const ListingForm = (props: Props): JSX.Element => {
                                 className={fieldClass}
                                 label="Discord Message"
                                 description="The message sent to the GAC Shack discord channel after the transaction completes"
-                                value={discordMessage}
+                                value={discordMessage ?? undefined}
                                 placeholder="<@{user.id}> just spent **{listing.price} GAC XP** to purchase **{listing.title}** at the GAC Shack!"
                                 styles={styles}
                                 multiline
@@ -269,7 +270,7 @@ export const ListingForm = (props: Props): JSX.Element => {
                                 onChange={(_, v): void =>
                                     onChange({
                                         ...listing,
-                                        supply: v ? Number(v) : undefined,
+                                        supply: v ? Number(v) : null,
                                     })
                                 }
                             />
@@ -284,7 +285,7 @@ export const ListingForm = (props: Props): JSX.Element => {
                                 onChange={(_, v): void =>
                                     onChange({
                                         ...listing,
-                                        maxPerUser: v ? Number(v) : undefined,
+                                        maxPerUser: v ? Number(v) : null,
                                     })
                                 }
                             />
@@ -294,6 +295,38 @@ export const ListingForm = (props: Props): JSX.Element => {
                                     onChange({ ...listing, roles: v })
                                 }
                                 selectedKeys={listing.roles}
+                                multiSelect
+                                disabled={formDisabled}
+                                className={fieldClass}
+                                onClear={(): void => {
+                                    onChange({
+                                        ...listing,
+                                        roles: [],
+                                    });
+                                }}
+                            />
+                            <RolesDropdown
+                                label="Resultant Role"
+                                onClear={(): void => {
+                                    onChange({
+                                        ...listing,
+                                        resultantRole: null,
+                                    });
+                                }}
+                                onSelect={(v): void =>
+                                    onChange({
+                                        ...listing,
+                                        resultantRole:
+                                            listing.resultantRole === v[0]
+                                                ? null
+                                                : v[0],
+                                    })
+                                }
+                                selectedKeys={
+                                    listing.resultantRole
+                                        ? [listing.resultantRole]
+                                        : []
+                                }
                                 disabled={formDisabled}
                                 className={fieldClass}
                             />
@@ -306,7 +339,7 @@ export const ListingForm = (props: Props): JSX.Element => {
                                 onChange={(_, v): void =>
                                     onChange({
                                         ...listing,
-                                        requiresHoldership: v,
+                                        requiresHoldership: !!v,
                                     })
                                 }
                             />
@@ -319,7 +352,7 @@ export const ListingForm = (props: Props): JSX.Element => {
                                 onChange={(_, v): void =>
                                     onChange({
                                         ...listing,
-                                        requiresLinkedAddress: v,
+                                        requiresLinkedAddress: !!v,
                                     })
                                 }
                             />
@@ -330,7 +363,7 @@ export const ListingForm = (props: Props): JSX.Element => {
                                 styles={styles}
                                 checked={!!disabled}
                                 onChange={(_, v): void =>
-                                    onChange({ ...listing, disabled: v })
+                                    onChange({ ...listing, disabled: !!v })
                                 }
                             />
                         </div>
@@ -431,7 +464,7 @@ export const ServersideListingForm = (props: ServersideProps): JSX.Element => {
 
     return (
         <ListingForm
-            disabled={listing?.disabled}
+            disabled={!!listing?.disabled}
             className={className}
             listing={updatedListing}
             onChange={setUpdatedListing}
