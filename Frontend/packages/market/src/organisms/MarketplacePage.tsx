@@ -64,6 +64,16 @@ export const MarketplacePage = (): JSX.Element => {
     );
     const theme = useThemeContext();
 
+    const showConnectWeb3Button = React.useMemo(() => {
+        const request = listingRequest.data;
+        if (!request) return false;
+        const { records } = request;
+
+        if (!records) return false;
+
+        return records.some((r) => !!r.requiresHoldership);
+    }, [listingRequest.data]);
+
     const additionalButtons = React.useMemo((): HeaderButtonProps[] => {
         if (!claims) return [];
         const { member } = claims;
@@ -149,17 +159,21 @@ export const MarketplacePage = (): JSX.Element => {
                                 marginBottom: '20px',
                             })}
                         >
-                            <Web3ConnectButton
-                                connectModalOpen={modalOpen}
-                                setConnectModalOpen={setModalOpen}
-                                className={css({
-                                    marginLeft: 'auto',
-                                    [MOBILE]: { marginRight: '5px' },
-                                })}
-                            />
+                            {showConnectWeb3Button && (
+                                <Web3ConnectButton
+                                    connectModalOpen={modalOpen}
+                                    setConnectModalOpen={setModalOpen}
+                                    className={css({
+                                        marginLeft: 'auto',
+                                        [MOBILE]: { marginRight: '5px' },
+                                    })}
+                                />
+                            )}
                             <BalanceWidget
                                 className={css({
-                                    margin: '0px 10px',
+                                    margin: showConnectWeb3Button
+                                        ? '0px 10px'
+                                        : '0px 10px 0px auto',
                                     [MOBILE]: { display: 'none' },
                                 })}
                             />
