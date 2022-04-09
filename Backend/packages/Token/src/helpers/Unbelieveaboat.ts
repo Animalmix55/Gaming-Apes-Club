@@ -1,7 +1,7 @@
 import { Balance, Client } from 'unb-api';
 
 export const getUNBClient = (token: string) => {
-    return new Client(token);
+    return new Client(token, { maxRetries: 0 });
 };
 
 export const getBalance = (client: Client, guildId: string, userId: string) =>
@@ -13,6 +13,16 @@ export const setBalance = (
     userId: string,
     amounts: Balance
 ) => client.setUserBalance(guildId, userId, amounts);
+
+/**
+ * Sepnds/adds the given amount depending on the sign of the values
+ */
+export const editBalance = (
+    client: Client,
+    guildId: string,
+    userId: string,
+    amounts: Balance
+) => client.editUserBalance(guildId, userId, amounts);
 
 interface Query {
     /**
@@ -26,26 +36,16 @@ interface Query {
 export const getLeaderboard = (client: Client, guildId: string, query: Query) =>
     client.getGuildLeaderboard(guildId, query);
 
+/**
+ * Spends the given amount of tokens, does not do balance checking
+ */
 export const spend = async (
     client: Client,
     guildId: string,
     userId: string,
     amount: number
 ) => {
-    const { total, cash, bank } = await getBalance(client, guildId, userId);
-    if (total < amount) throw new Error('Insufficient balance');
-
-    if (cash >= amount) {
-        await setBalance(client, guildId, userId, {
-            bank,
-            cash: cash - amount,
-        });
-    } else {
-        const newBankBalance = bank - amount + cash;
-
-        await setBalance(client, guildId, userId, {
-            bank: newBankBalance,
-            cash: 0,
-        });
-    }
+    await editBalance(client, guildId, userId, {
+        cash: 0 - amount,
+    });
 };

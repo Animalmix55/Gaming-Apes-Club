@@ -357,6 +357,7 @@ export const getTransactionRouter = async (
                     }`
                 );
             } catch (e) {
+                console.error('Failed to spend UNB tokens', e);
                 return res
                     .status(500)
                     .send({ error: 'Failed to spend tokens' });
@@ -390,8 +391,6 @@ export const getTransactionRouter = async (
             } with id ${tx.get().id}`
         );
 
-        const { total: newBalance } = await getBalance(client, guildId, id);
-
         sendTransactionMessage(
             discordClient,
             discordTransactionChannelId,
@@ -405,7 +404,9 @@ export const getTransactionRouter = async (
                 console.error(`Failed to post transaction message: ${e}`)
             );
 
-        return res.status(200).send({ ...tx.get(), newBalance });
+        return res
+            .status(200)
+            .send({ ...tx.get(), newBalance: balance - quantity * price });
     });
 
     // POST
