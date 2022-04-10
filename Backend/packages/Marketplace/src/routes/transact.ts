@@ -9,9 +9,10 @@ import {
     verifySignature,
 } from '@gac/shared';
 import AuthLocals from '@gac/login/lib/models/AuthLocals';
-import { getBalance, getUNBClient, spend } from '@gac/token';
+import { getBalance, getUNBClient, give, spend } from '@gac/token';
 import Web3 from 'web3';
 import { Intents } from 'discord.js';
+import { v4 } from 'uuid';
 import StoredTransaction from '../database/models/StoredTransaction';
 import Transaction from '../models/Transaction';
 import { getListingWithCount } from '../utils/ListingUtils';
@@ -213,10 +214,17 @@ export const getTransactionRouter = async (
             address: recordableAddress,
         } = body;
         const { id } = user;
+        console.log(
+            `Processing a transaction for ${id} to purchase ${quantity} of listingId ${listingId}`
+        );
 
         const listing = await getListingWithCount(listingId);
-        if (!listing)
+        if (!listing) {
+            console.log(
+                `${id} requested a transaction on non-existant listing ${listingId}`
+            );
             return res.status(404).send({ error: 'Listing not found' });
+        }
 
         const previousTransactions = await StoredTransaction.findAll({
             where: {
@@ -243,8 +251,12 @@ export const getTransactionRouter = async (
             resultantRole,
         } = listing;
 
-        if (disabled)
+        if (disabled) {
+            console.log(
+                `${id} requested a transaction on disabled listing ${listing.title} (${listingId})`
+            );
             return res.status(403).send({ error: 'Listing is disabled' });
+        }
 
         // always fetch the newest role
         if (allowedRoles.length > 0) {
@@ -258,12 +270,20 @@ export const getTransactionRouter = async (
 
                 const roles = guildMember.roles.cache;
 
-                if (!roles.some((r) => allowedRoleIds.includes(r.id)))
+                if (!roles.some((r) => allowedRoleIds.includes(r.id))) {
+                    console.log(
+                        `${id} requested a transaction for listing ${
+                            listing.title
+                        } (${listingId}) but they lacked the required roles (${allowedRoleIds.join(
+                            ', '
+                        )})`
+                    );
                     return res
                         .status(403)
                         .send({ error: 'Required role missing' });
+                }
             } catch (e) {
-                console.error('Failed to fetch user role', id, e);
+                console.error(`Failed to fetch user role for ${id}`, e);
                 return res
                     .status(500)
                     .send({ error: 'Could not fetch user roles' });
@@ -278,6 +298,9 @@ export const getTransactionRouter = async (
                     signableMessage,
                 };
                 const jwt = createJWT(payload, jwtPrivate, '3m'); // token lasts 3 minutes
+                console.log(
+                    `A signature is needed for ${id} to purchase ${listing.title} (${listingId})`
+                );
                 return res.status(449).send({
                     error: 'Requires signature',
                     signableMessage,
@@ -297,6 +320,9 @@ export const getTransactionRouter = async (
 
                 address = verifySignature(signature, signableMessage, web3);
             } catch (e) {
+                console.log(
+                    `User ${id} used an invalid message token to try to purchase ${listing.title} (${listingId})`
+                );
                 return res.status(403).send({
                     error: String(e),
                 });
@@ -311,11 +337,19 @@ export const getTransactionRouter = async (
                 const numberHeld = await contract.methods
                     .balanceOf(address)
                     .call();
-                if (numberHeld === '0')
+                if (numberHeld === '0') {
+                    console.log(
+                        `${id} does not hold the proper tokens to purchase ${listing.title} (${listingId})`
+                    );
                     return res.status(403).send({
                         error: 'You must be a token holder to transact.',
                     });
+                }
             } catch (e) {
+                console.error(
+                    `Failed to communicate with blockchain for transaction spooled by user ${id} to purchase ${listing.title} (${listingId})`,
+                    e
+                );
                 return res
                     .status(500)
                     .send({ error: 'Failed to communicate with blockchain' });
@@ -325,72 +359,157 @@ export const getTransactionRouter = async (
         if (
             maxPerUser !== null &&
             quantity + quantityAlreadyPurchased > maxPerUser
-        )
+        ) {
+            console.log(
+                `${id} tried to purchase ${listing.title} (${listingId}) but they already maxxed out per user (max: ${maxPerUser}, purchased: ${quantityAlreadyPurchased}, desired: ${quantity}).`
+            );
             return res.status(400).send({ error: 'Exceeds allowed quantity' });
+        }
 
         if (supply !== null && quantity + totalPurchased > supply) {
+            console.log(
+                `${id} tried to purchase ${
+                    listing.title
+                } (${listingId}) but it was sold out (quantity desired: ${quantity}, quantity remaining ${
+                    supply - totalPurchased
+                })`
+            );
             return res.status(400).send({ error: 'Exceeds available supply' });
         }
 
         if (
             requiresLinkedAddress &&
             (!recordableAddress || !Web3.utils.isAddress(recordableAddress))
-        )
+        ) {
+            console.log(
+                `User ${id} provided an invalid linked address ${recordableAddress} to purchase ${listing.title} (${listingId})`
+            );
             return res.status(500).send({ error: 'Invalid linked address' });
+        }
 
         const client = getUNBClient(unbToken);
         const { total: balance } = await getBalance(client, guildId, id);
 
         // free for admin
         if (!isAdmin) {
-            if (balance < quantity * price)
+            if (balance < quantity * price) {
+                console.log(
+                    `${id} has an insufficient balance of ${balance} to purchase ${quantity} of ${listing.title} (${listingId})`
+                );
                 return res.status(400).send({
                     error: `Unsufficient balance, you have a balance of ${balance}`,
                 });
+            }
 
             try {
+                console.log(
+                    `Reaching out to UNB to spend ${
+                        quantity * price
+                    } GACXP for user ${id} to purchase ${quantity} of ${
+                        listing.title
+                    } (${listingId})`
+                );
                 // spend tokens
                 await spend(client, guildId, id, quantity * price);
                 console.log(
                     `Deducted ${quantity * price} GACXP from user ${id} for ${
                         listing.title
-                    }`
+                    } (${listingId})`
                 );
             } catch (e) {
-                console.error('Failed to spend UNB tokens', e);
+                console.error(
+                    `Failed to spend UNB tokens for user ${id} ${quantity} ${listing.title} (${listingId})`,
+                    e
+                );
                 return res
                     .status(500)
                     .send({ error: 'Failed to spend tokens' });
             }
         }
 
-        if (resultantRole)
+        if (resultantRole) {
+            console.log(
+                `Attempting to give ${id} the role ${resultantRole} for purchasing ${listing.title} (${listingId})`
+            );
             applyRole(discordClient, id, guildId, resultantRole)
                 .then(() =>
                     console.log(
-                        `Gave user ${id} the role ${resultantRole} for purchasing ${listing.title}`
+                        `Gave user ${id} the role ${resultantRole} for purchasing ${listing.title} (${listingId})`
                     )
                 )
                 .catch((e) => {
                     console.error(
-                        `Failed to give user ${id} the role ${resultantRole} for purchasing ${listing.title}`,
+                        `Failed to give user ${id} the role ${resultantRole} for purchasing ${listing.title} (${listingId})`,
                         e
                     );
                 });
+        }
 
         // generate transaction
-        const tx = await StoredTransaction.create({
+        console.log(
+            `Generating transaction for user ${id} purchasing ${listing.title} (${listingId})`
+        );
+
+        const localTx = {
             listingId,
             user: id,
             quantity,
             address: requiresLinkedAddress ? recordableAddress : address,
-        } as Transaction);
-        console.log(
-            `Generated transaction for user ${id} purchasing ${
-                listing.title
-            } with id ${tx.get().id}`
-        );
+        } as Transaction;
 
+        let tx: StoredTransaction;
+        try {
+            tx = await StoredTransaction.create(localTx);
+            console.log(
+                `Generated transaction for user ${id} purchasing ${
+                    listing.title
+                } (${listingId}) with id ${tx.get().id}`
+            );
+        } catch (e) {
+            const errorId = v4();
+
+            console.error(
+                `Failed to save the following transaction for ${id} to purchase ${quantity} of ${listing.title} (${listingId}), error id: ${errorId}`,
+                localTx,
+                e
+            );
+
+            console.log(
+                `Attempting to give back ${
+                    quantity * price
+                } GACXP to user ${id} for failed transaction to purchase ${
+                    listing.title
+                } (${listingId})`
+            );
+            let tokensReturned = false;
+            try {
+                await give(client, guildId, id, quantity * price);
+                tokensReturned = true;
+            } catch (e) {
+                console.error(
+                    `[DEV INTERVENTION NEEDED] failed to return ${
+                        quantity * price
+                    } GACXP back to ${id} for their failed purchase of ${
+                        listing.title
+                    } (${listingId}), errorId: ${errorId}`,
+                    e
+                );
+            }
+
+            return res.status(500).send({
+                error: `Transaction failed, ${
+                    tokensReturned
+                        ? 'your tokens were returned.'
+                        : 'we could not return your tokens, contact support.'
+                }. Error id: ${errorId}`,
+            });
+        }
+
+        console.log(
+            `Attempting to send message to discord channel for successful transaction ${tx.getDataValue(
+                'id'
+            )}`
+        );
         sendTransactionMessage(
             discordClient,
             discordTransactionChannelId,
@@ -398,10 +517,18 @@ export const getTransactionRouter = async (
             listing
         )
             .then((m) =>
-                console.log(`Successfully published transaction message: ${m}`)
+                console.log(
+                    `Successfully published transaction message for tx ${tx.getDataValue(
+                        'id'
+                    )}: ${m}`
+                )
             )
             .catch((e) =>
-                console.error(`Failed to post transaction message: ${e}`)
+                console.error(
+                    `Failed to post transaction message for tx ${tx.getDataValue(
+                        'id'
+                    )}: ${e}`
+                )
             );
 
         return res

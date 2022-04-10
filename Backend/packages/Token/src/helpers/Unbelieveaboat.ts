@@ -49,3 +49,17 @@ export const spend = async (
         cash: 0 - amount,
     });
 };
+
+/**
+ * Gives the given amount of tokens
+ */
+export const give = async (
+    client: Client,
+    guildId: string,
+    userId: string,
+    amount: number
+) => {
+    await editBalance(client, guildId, userId, {
+        cash: amount,
+    });
+};
