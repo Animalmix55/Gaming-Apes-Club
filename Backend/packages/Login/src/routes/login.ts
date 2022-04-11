@@ -66,13 +66,19 @@ export const getLoginRouter = (
                 return res.status(400).send({ error: 'Missing code' });
             }
 
+            let access_token: string;
             console.log(`Logging in new user at ip ${req.ip}`);
-            const { access_token } = await getTokenFromCode(
-                client,
-                code,
-                SCOPE,
-                'authorization_code'
-            );
+            try {
+                ({ access_token } = await getTokenFromCode(
+                    client,
+                    code,
+                    SCOPE,
+                    'authorization_code'
+                ));
+            } catch (e) {
+                console.error(`Failed to login user at ${req.ip}`, e);
+                return res.status(400).send({ error: 'Failed to login' });
+            }
 
             console.log(
                 `User at ${req.ip} has retrieved an access token. Loading user data from discord.`
