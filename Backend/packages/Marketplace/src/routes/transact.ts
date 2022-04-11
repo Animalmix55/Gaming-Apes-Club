@@ -402,7 +402,7 @@ export const getTransactionRouter = async (
             console.log(
                 `User ${id} provided an invalid linked address ${recordableAddress} to purchase ${listing.title} (${listingId})`
             );
-            return res.status(500).send({ error: 'Invalid linked address' });
+            return res.status(400).send({ error: 'Invalid linked address' });
         }
 
         const client = getUNBClient(unbToken);
