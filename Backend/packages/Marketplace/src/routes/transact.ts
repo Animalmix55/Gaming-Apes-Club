@@ -16,12 +16,13 @@ import { v4 } from 'uuid';
 import rateLimit from 'express-rate-limit';
 import StoredTransaction from '../database/models/StoredTransaction';
 import Transaction from '../models/Transaction';
-import { getListingWithCount } from '../utils/ListingUtils';
+import { getListingWithCount, ListingWithCount } from '../utils/ListingUtils';
 import {
     applyRole,
     getGuildMember,
     sendTransactionMessage,
 } from '../utils/Discord';
+import { HasListingRoles } from '../models/ListingRole';
 
 interface TransactionJWTPayload {
     user: string;
@@ -104,13 +105,25 @@ export const getTransactionRouter = async (
         const offset = Number(offsetStr || 0);
         const limit = Number(pageSizeStr || 1000);
 
-        const { count, rows } = await StoredTransaction.findAndCountAll({
-            offset,
-            limit,
-            where: {
-                user: userId,
-            },
-        });
+        let count: number;
+        let rows: StoredTransaction[];
+        try {
+            ({ count, rows } = await StoredTransaction.findAndCountAll({
+                offset,
+                limit,
+                where: {
+                    user: userId,
+                },
+            }));
+        } catch (e) {
+            console.error(
+                `Failed to fetch transactions (user filter: ${userId})`,
+                e
+            );
+            return res
+                .status(500)
+                .send({ error: 'Failed to communicate with db' });
+        }
 
         return res
             .status(200)
@@ -147,13 +160,25 @@ export const getTransactionRouter = async (
         const offset = Number(offsetStr || 0);
         const limit = Number(pageSizeStr || 1000);
 
-        const { count, rows } = await StoredTransaction.findAndCountAll({
-            offset,
-            limit,
-            where: {
-                listingId,
-            },
-        });
+        let count: number;
+        let rows: StoredTransaction[];
+        try {
+            ({ count, rows } = await StoredTransaction.findAndCountAll({
+                offset,
+                limit,
+                where: {
+                    listingId,
+                },
+            }));
+        } catch (e) {
+            console.error(
+                `Failed to fetch transactions (lsting filter: ${listingId})`,
+                e
+            );
+            return res
+                .status(500)
+                .send({ error: 'Failed to communicate with db' });
+        }
 
         return res
             .status(200)
@@ -181,10 +206,19 @@ export const getTransactionRouter = async (
         const offset = Number(offsetStr || 0);
         const limit = Number(pageSizeStr || 1000);
 
-        const { count, rows } = await StoredTransaction.findAndCountAll({
-            offset,
-            limit,
-        });
+        let count: number;
+        let rows: StoredTransaction[];
+        try {
+            ({ count, rows } = await StoredTransaction.findAndCountAll({
+                offset,
+                limit,
+            }));
+        } catch (e) {
+            console.error(`Failed to fetch transactions`, e);
+            return res
+                .status(500)
+                .send({ error: 'Failed to communicate with db' });
+        }
 
         return res
             .status(200)
@@ -235,7 +269,19 @@ export const getTransactionRouter = async (
             `Processing a transaction for ${id} to purchase ${quantity} of listingId ${listingId} from ip address ${req.ip}`
         );
 
-        const listing = await getListingWithCount(listingId);
+        let listing: (ListingWithCount & HasListingRoles) | undefined;
+        try {
+            listing = await getListingWithCount(listingId);
+        } catch (e) {
+            console.error(
+                `Failed to fetch listing ${listingId} with counts`,
+                e
+            );
+            return res
+                .status(500)
+                .send({ error: 'Failed to communicate with db' });
+        }
+
         if (!listing) {
             console.log(
                 `${id} requested a transaction on non-existant listing ${listingId}`
@@ -243,12 +289,21 @@ export const getTransactionRouter = async (
             return res.status(404).send({ error: 'Listing not found' });
         }
 
-        const previousTransactions = await StoredTransaction.findAll({
-            where: {
-                listingId,
-                user: id,
-            },
-        });
+        let previousTransactions: StoredTransaction[];
+
+        try {
+            previousTransactions = await StoredTransaction.findAll({
+                where: {
+                    listingId,
+                    user: id,
+                },
+            });
+        } catch (e) {
+            console.error('Failed to fetch previous transactions', e);
+            return res
+                .status(500)
+                .send({ error: 'Failed to communicate with db' });
+        }
 
         const quantityAlreadyPurchased = previousTransactions.reduce(
             (prev, cur) => prev + cur.get().quantity,
@@ -484,12 +539,12 @@ export const getTransactionRouter = async (
             applyRole(discordClient, id, guildId, resultantRole)
                 .then(() =>
                     console.log(
-                        `Gave user ${id} the role ${resultantRole} for purchasing ${listing.title} (${listingId})`
+                        `Gave user ${id} the role ${resultantRole} for purchasing ${listing?.title} (${listingId})`
                     )
                 )
                 .catch((e) => {
                     console.error(
-                        `Failed to give user ${id} the role ${resultantRole} for purchasing ${listing.title} (${listingId})`,
+                        `Failed to give user ${id} the role ${resultantRole} for purchasing ${listing?.title} (${listingId})`,
                         e
                     );
                 });
@@ -603,7 +658,19 @@ export const getTransactionRouter = async (
 
         if (!isAdmin) return res.status(403).send({ error: 'Not admin' });
 
-        const transaction = await StoredTransaction.findByPk(transactionId);
+        let transaction: StoredTransaction | null;
+        try {
+            transaction = await StoredTransaction.findByPk(transactionId);
+        } catch (e) {
+            console.error(
+                `Failed to fetch transaction ${transactionId} from database`,
+                e
+            );
+            return res
+                .status(500)
+                .send({ error: 'Failed to communicate with DB' });
+        }
+
         if (!transaction)
             return res.status(404).send({ error: 'Transaction not found' });
 

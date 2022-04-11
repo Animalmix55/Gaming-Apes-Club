@@ -15,7 +15,12 @@ import {
     getListingWithCount,
     ListingWithCount,
 } from '../utils/ListingUtils';
-import { HasRoleIds, mapToRoleId, mapToRoleIds } from '../models/ListingRole';
+import {
+    HasListingRoles,
+    HasRoleIds,
+    mapToRoleId,
+    mapToRoleIds,
+} from '../models/ListingRole';
 import ListingRole from '../database/models/ListingRole';
 
 interface GetRequest extends Record<string, string | undefined> {
@@ -60,13 +65,25 @@ export const getListingRouter = (
             const offset = Number(offsetStr || 0);
             const limit = Number(pageSizeStr || 1000);
 
-            const { count, rows } = await getListingsWithCounts(
-                offset,
-                limit,
-                showDisabled === 'true'
-            );
+            let count: number;
+            let rows: (ListingWithCount & HasListingRoles)[];
+            try {
+                ({ count, rows } = await getListingsWithCounts(
+                    offset,
+                    limit,
+                    showDisabled === 'true'
+                ));
+            } catch (e) {
+                console.error(
+                    `Failed to fetch listings from db (showDisabled: ${showDisabled})`,
+                    e
+                );
+                return res
+                    .status(500)
+                    .send({ error: 'Failed to communicate with db' });
+            }
 
-            res.status(200).send({
+            return res.status(200).send({
                 records: mapToRoleIds(rows),
                 numRecords: count,
             });
@@ -84,7 +101,16 @@ export const getListingRouter = (
         const { params } = req;
         const { listingId } = params;
 
-        const listing = await getListingWithCount(listingId);
+        let listing: (ListingWithCount & HasListingRoles) | undefined;
+
+        try {
+            listing = await getListingWithCount(listingId);
+        } catch (e) {
+            console.error(`Failed to fetch listing ${listingId}`, e);
+            return res
+                .status(500)
+                .send({ error: 'Failed to communicate with db' });
+        }
 
         if (!listing)
             return res.status(404).send({ error: 'Listing not found' });

@@ -31,7 +31,8 @@ export const getBalanceRouter = (apiToken?: string, guildId?: string) => {
                 res.status(200).send({ balance: total });
                 return;
             } catch (e) {
-                res.status(500).send({ error: String(e) });
+                console.error(`Failed to fetch balance for ${discordId}`, e);
+                res.status(500).send({ error: 'Failed to retrieve balance' });
             }
         }
     );

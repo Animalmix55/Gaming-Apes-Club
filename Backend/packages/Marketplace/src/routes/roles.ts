@@ -3,7 +3,7 @@ import express from 'express';
 import { getRolesById } from '../utils/Discord';
 
 interface GetResponse extends BaseResponse {
-    results: Record<string, string>;
+    results?: Record<string, string>;
 }
 
 export const getRolesRouter = async (
@@ -42,8 +42,16 @@ export const getRolesRouter = async (
     // GET
     RolesRouter.get<string, never, GetResponse, never, never, never>(
         '/',
-        async (_, res) => {
-            return res.status(200).send({ results: await getRoles() });
+        async (req, res) => {
+            try {
+                const roles = await getRoles();
+                return res.status(200).send({ results: roles });
+            } catch (e) {
+                console.error(`Role retrieval by ${req.ip} failed`, e);
+                return res
+                    .status(500)
+                    .send({ error: 'Failed to retrieve roles' });
+            }
         }
     );
 
