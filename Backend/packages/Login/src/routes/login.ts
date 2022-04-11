@@ -63,36 +63,62 @@ export const getLoginRouter = (
             const { code } = body;
 
             if (!code) {
-                res.status(400).send({ error: 'Missing code' });
-                return;
+                return res.status(400).send({ error: 'Missing code' });
             }
 
+            console.log(`Logging in new user at ip ${req.ip}`);
+            const { access_token } = await getTokenFromCode(
+                client,
+                code,
+                SCOPE,
+                'authorization_code'
+            );
+
+            console.log(
+                `User at ${req.ip} has retrieved an access token. Loading user data from discord.`
+            );
+
+            let user: User;
             try {
-                const { access_token } = await getTokenFromCode(
-                    client,
-                    code,
-                    SCOPE,
-                    'authorization_code'
-                );
-
-                const user = await getUser(client, access_token);
-                const member = await getGuildMember(
-                    client,
-                    access_token,
-                    guildId
-                );
-
-                const claims = { ...user, member };
-                const token = createUserJWT(claims, jwtSecret, jwtExpiry);
-
-                res.status(200).send({
-                    token,
-                    ...claims,
-                });
-                return;
+                user = await getUser(client, access_token);
             } catch (e) {
-                res.status(500).send({ error: String(e) });
+                console.error(
+                    `Failed to load user data for user at ${req.ip}`,
+                    e
+                );
+                return res
+                    .status(500)
+                    .send({ error: 'Failed to load user data' });
             }
+
+            console.log(
+                `Fetched user data for ip ${req.ip}, loaded user ${user.username} (${user.id}). Loading guild membership.`
+            );
+
+            let member: Member;
+            try {
+                member = await getGuildMember(client, access_token, guildId);
+            } catch (e) {
+                console.error(
+                    `Failed to load guild membership for ${user.username} (${user.id}).`,
+                    e
+                );
+                return res
+                    .status(500)
+                    .send({ error: 'Failed to load guild membership' });
+            }
+
+            console.log(`Creating JWT for user ${user.username} (${user.id})`);
+            const claims = { ...user, member };
+            const token = createUserJWT(claims, jwtSecret, jwtExpiry);
+
+            console.log(
+                `Responding to user ${user.username} (${user.id}) with new token.`
+            );
+            return res.status(200).send({
+                token,
+                ...claims,
+            });
         }
     );
 
