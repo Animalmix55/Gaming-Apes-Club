@@ -431,6 +431,7 @@ export const getTransactionRouter = async (
 
         if (
             maxPerUser !== null &&
+            maxPerUser !== 0 &&
             quantity + quantityAlreadyPurchased > maxPerUser
         ) {
             console.log(
