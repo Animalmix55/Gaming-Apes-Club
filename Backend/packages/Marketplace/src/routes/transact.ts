@@ -9,10 +9,11 @@ import {
     verifySignature,
 } from '@gac/shared';
 import AuthLocals from '@gac/login/lib/models/AuthLocals';
-import { getBalance, getUNBClient, give, spend } from '@gac/token';
+import { getUNBClient, give, spend } from '@gac/token';
 import Web3 from 'web3';
 import { Intents } from 'discord.js';
 import { v4 } from 'uuid';
+import rateLimit from 'express-rate-limit';
 import StoredTransaction from '../database/models/StoredTransaction';
 import Transaction from '../models/Transaction';
 import { getListingWithCount } from '../utils/ListingUtils';
@@ -192,6 +193,22 @@ export const getTransactionRouter = async (
 
     // POST
 
+    const fiveSecondLimiter = rateLimit({
+        windowMs: 5 * 1000, // 5 sec
+        max: 1,
+        standardHeaders: true,
+        legacyHeaders: false,
+        message: { error: 'You have been ratelimited for 5s, sorry!' },
+    });
+
+    const minuteLimiter = rateLimit({
+        windowMs: 30 * 1000, // 30 sec
+        max: 5,
+        standardHeaders: true,
+        legacyHeaders: false,
+        message: { error: 'You have been ratelimited for 30s, sorry!' },
+    });
+
     TransactionRouter.post<
         string,
         never,
@@ -199,7 +216,7 @@ export const getTransactionRouter = async (
         PostRequest,
         never,
         AuthLocals
-    >('/', async (req, res) => {
+    >('/', fiveSecondLimiter, minuteLimiter, async (req, res) => {
         const { body } = req;
         const { user, isAdmin } = res.locals;
 
@@ -215,7 +232,7 @@ export const getTransactionRouter = async (
         } = body;
         const { id } = user;
         console.log(
-            `Processing a transaction for ${id} to purchase ${quantity} of listingId ${listingId}`
+            `Processing a transaction for ${id} to purchase ${quantity} of listingId ${listingId} from ip address ${req.ip}`
         );
 
         const listing = await getListingWithCount(listingId);
@@ -293,6 +310,7 @@ export const getTransactionRouter = async (
         if (requiresHoldership) {
             if (!signature || !signableMessageToken) {
                 const signableMessage = generateLoginMessage();
+                fiveSecondLimiter.resetKey(req.ip); // don't limit the subsequent 5s request, once.
                 const payload: TransactionJWTPayload = {
                     user: id,
                     signableMessage,
@@ -350,9 +368,9 @@ export const getTransactionRouter = async (
                     `Failed to communicate with blockchain for transaction spooled by user ${id} to purchase ${listing.title} (${listingId})`,
                     e
                 );
-                return res
-                    .status(500)
-                    .send({ error: 'Failed to communicate with blockchain' });
+                return res.status(500).send({
+                    error: 'Failed to communicate with blockchain',
+                });
             }
         }
 
@@ -388,19 +406,10 @@ export const getTransactionRouter = async (
         }
 
         const client = getUNBClient(unbToken);
-        const { total: balance } = await getBalance(client, guildId, id);
+        let newBalance: number | undefined;
 
         // free for admin
         if (!isAdmin) {
-            if (balance < quantity * price) {
-                console.log(
-                    `${id} has an insufficient balance of ${balance} to purchase ${quantity} of ${listing.title} (${listingId})`
-                );
-                return res.status(400).send({
-                    error: `Unsufficient balance, you have a balance of ${balance}`,
-                });
-            }
-
             try {
                 console.log(
                     `Reaching out to UNB to spend ${
@@ -410,7 +419,12 @@ export const getTransactionRouter = async (
                     } (${listingId})`
                 );
                 // spend tokens
-                await spend(client, guildId, id, quantity * price);
+                ({ cash: newBalance } = await spend(
+                    client,
+                    guildId,
+                    id,
+                    quantity * price
+                ));
                 console.log(
                     `Deducted ${quantity * price} GACXP from user ${id} for ${
                         listing.title
@@ -424,6 +438,40 @@ export const getTransactionRouter = async (
                 return res
                     .status(500)
                     .send({ error: 'Failed to spend tokens' });
+            }
+
+            if (newBalance < 0) {
+                console.error(
+                    `Spending ${
+                        price * quantity
+                    } tokens for user ${id} to purchase ${
+                        listing.title
+                    } (${listingId}) resulted in a negative balance. Attempting revert.`
+                );
+
+                try {
+                    ({ cash: newBalance } = await give(
+                        client,
+                        guildId,
+                        id,
+                        price * quantity
+                    ));
+                    console.log(
+                        `Successfully restored user ${id}'s balance to ${newBalance} GACXP`
+                    );
+
+                    res.status(400).send({ error: 'Insufficient balance' });
+                } catch (e) {
+                    const errorId = v4();
+
+                    console.error(
+                        `[DEV INTERVENTION NEEDED] failed to restore balance of ${id} back to its original value following a negative resultant. ErrorId: ${errorId}`
+                    );
+
+                    return res.status(500).send({
+                        error: `Transaction failed due to insufficient balance. An error occured restoring your balance, contact support. Error id: ${errorId}`,
+                    });
+                }
             }
         }
 
@@ -531,9 +579,7 @@ export const getTransactionRouter = async (
                 )
             );
 
-        return res
-            .status(200)
-            .send({ ...tx.get(), newBalance: balance - quantity * price });
+        return res.status(200).send({ ...tx.get(), newBalance });
     });
 
     // POST
@@ -560,7 +606,7 @@ export const getTransactionRouter = async (
             return res.status(404).send({ error: 'Transaction not found' });
 
         if (transaction.get().fulfilled)
-            return res.status(500).send({ error: 'Already fulfilled' });
+            return res.status(400).send({ error: 'Already fulfilled' });
 
         transaction.set('fulfilled', true);
         transaction.set('fulfilledBy', user.id);

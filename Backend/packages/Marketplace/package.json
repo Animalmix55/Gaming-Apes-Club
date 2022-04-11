@@ -22,7 +22,8 @@
     "express": "~4.16.1",
     "sequelize": "^6.17.0",
     "sequelize-cli": "^6.4.1",
-    "uuid": "^8.3.2"
+    "uuid": "^8.3.2",
+    "express-rate-limit": "^6.3.0"
   },
   "peerDependencies": {
     "typescript": "^4.3.5",

@@ -33,6 +33,7 @@ const start = async () => {
         DISCORD_BOT_TOKEN,
         TRANSACTION_CHANNEL,
         JWT_EXPIRY,
+        NUM_PROXIES,
     } = process.env;
 
     const sequelize = await StartDatabase(
@@ -55,14 +56,21 @@ const start = async () => {
     if (!DISCORD_BOT_TOKEN) throw new Error('Missing Discord bot token');
     if (!TRANSACTION_CHANNEL)
         throw new Error('Missing Discord transaction channel');
+    if (!NUM_PROXIES) throw new Error('Number of proxies not supplied');
 
     const REQUEST_NUMERIC_TIMEOUT = Number(REQUEST_TIMEOUT || 5000); // default 5000 ms
     if (Number.isNaN(REQUEST_NUMERIC_TIMEOUT))
         throw new Error(`Bad timeout: ${REQUEST_TIMEOUT}`);
 
+    const NUMERIC_NUM_PROXIES = Number(NUM_PROXIES);
+    if (Number.isNaN(NUMERIC_NUM_PROXIES))
+        throw new Error('Invalid number of proxies');
+
     const web3 = new Web3(WEB3_PROVIDER);
 
     const app = express();
+    app.set('trust proxy', NUMERIC_NUM_PROXIES);
+
     app.use(logger('dev'));
     app.use(express.json());
     app.use(express.urlencoded({ extended: false }));

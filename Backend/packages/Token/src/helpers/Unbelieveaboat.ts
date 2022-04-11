@@ -44,11 +44,10 @@ export const spend = async (
     guildId: string,
     userId: string,
     amount: number
-) => {
-    await editBalance(client, guildId, userId, {
+) =>
+    editBalance(client, guildId, userId, {
         cash: 0 - amount,
     });
-};
 
 /**
  * Gives the given amount of tokens
@@ -58,8 +57,7 @@ export const give = async (
     guildId: string,
     userId: string,
     amount: number
-) => {
-    await editBalance(client, guildId, userId, {
+) =>
+    editBalance(client, guildId, userId, {
         cash: amount,
     });
-};
