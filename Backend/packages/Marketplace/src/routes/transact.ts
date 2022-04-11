@@ -460,7 +460,9 @@ export const getTransactionRouter = async (
                         `Successfully restored user ${id}'s balance to ${newBalance} GACXP`
                     );
 
-                    res.status(400).send({ error: 'Insufficient balance' });
+                    return res
+                        .status(400)
+                        .send({ error: 'Insufficient balance' });
                 } catch (e) {
                     const errorId = v4();
 
