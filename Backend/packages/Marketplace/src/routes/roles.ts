@@ -1,6 +1,5 @@
-import { BaseResponse, getClient } from '@gac/shared';
+import { BaseResponse, getClient, getRolesById } from '@gac/shared';
 import express from 'express';
-import { getRolesById } from '../utils/Discord';
 
 interface GetResponse extends BaseResponse {
     results?: Record<string, string>;

@@ -1,14 +1,15 @@
 import express from 'express';
-import { BaseResponse } from '@gac/shared';
+import { BaseResponse, getClient, getGuildMember } from '@gac/shared';
 import { Member, User } from 'discord-oauth2';
+import { GuildMember, Intents } from 'discord.js';
 import {
     generatureOath2Url,
-    getGuildMember,
     getOauth2Client,
     getTokenFromCode,
     getUser,
 } from '../helpers/DisordOauth2';
 import { createUserJWT } from '../helpers/JWT';
+import { TokenClaims } from '../models/TokenClaims';
 
 interface GetResponse extends BaseResponse {
     loginUrl?: string;
@@ -25,12 +26,13 @@ interface PostResponse extends BaseResponse, Partial<User> {
 
 const SCOPE = ['email', 'identify', 'guilds.members.read'];
 
-export const getLoginRouter = (
+export const getLoginRouter = async (
     clientId: string,
     clientSecret: string,
     redirectUrl: string,
     guildId: string,
     jwtSecret: string,
+    discordBotToken: string,
     oauthTimeout?: number,
     jwtExpiry = '24h'
 ) => {
@@ -41,6 +43,10 @@ export const getLoginRouter = (
         redirectUrl,
         oauthTimeout
     );
+    const discordjsClient = await getClient(discordBotToken, [
+        Intents.FLAGS.GUILD_MEMBERS,
+        Intents.FLAGS.GUILDS,
+    ]);
 
     LoginRouter.get<string, never, GetResponse, never, never>(
         '/',
@@ -101,9 +107,13 @@ export const getLoginRouter = (
                 `Fetched user data for ip ${req.ip}, loaded user ${user.username} (${user.id}). Loading guild membership.`
             );
 
-            let member: Member;
+            let member: GuildMember;
             try {
-                member = await getGuildMember(client, access_token, guildId);
+                member = await getGuildMember(
+                    discordjsClient,
+                    user.id,
+                    guildId
+                );
             } catch (e) {
                 console.error(
                     `Failed to load guild membership for ${user.username} (${user.id}).`,
@@ -114,8 +124,26 @@ export const getLoginRouter = (
                     .send({ error: 'Failed to load guild membership' });
             }
 
+            const roles: string[] = [];
+            member.roles.cache.forEach((role) => {
+                roles.push(role.id);
+            });
+
             console.log(`Creating JWT for user ${user.username} (${user.id})`);
-            const claims = { ...user, member };
+            const claims: TokenClaims = {
+                ...user,
+                member: {
+                    nick: member.nickname,
+                    joined_at: member.joinedAt?.valueOf() || 0,
+                    roles,
+                    deaf: !!member.voice.deaf,
+                    mute: !!member.voice.mute,
+                    pending: member.pending,
+                    is_pending: member.pending,
+                    communication_disabled_until:
+                        member.communicationDisabledUntil?.toISOString(),
+                },
+            };
             const token = createUserJWT(claims, jwtSecret, jwtExpiry);
 
             console.log(

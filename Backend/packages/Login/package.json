@@ -18,7 +18,8 @@
     "@gac/shared": "^0.0.0",
     "cors": "^2.8.5",
     "express": "~4.16.1",
-    "discord-oauth2": "^2.9.0"
+    "discord-oauth2": "^2.9.0",
+    "discord.js": "^13.6.0"
   },
   "peerDependencies": {
     "typescript": "^4.3.5"

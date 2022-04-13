@@ -1,10 +1,12 @@
 import express from 'express';
 import {
+    applyRole,
     BaseResponse,
     createJWT,
     generateLoginMessage,
     getClient,
     getGamingApeClubContract,
+    getGuildMember,
     verifyJWT,
     verifySignature,
 } from '@gac/shared';
@@ -17,11 +19,7 @@ import rateLimit from 'express-rate-limit';
 import StoredTransaction from '../database/models/StoredTransaction';
 import Transaction from '../models/Transaction';
 import { getListingWithCount, ListingWithCount } from '../utils/ListingUtils';
-import {
-    applyRole,
-    getGuildMember,
-    sendTransactionMessage,
-} from '../utils/Discord';
+import { sendTransactionMessage } from '../utils/Discord';
 import { HasListingRoles } from '../models/ListingRole';
 
 interface TransactionJWTPayload {

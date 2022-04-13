@@ -80,12 +80,13 @@ const start = async () => {
     // app.use('/proof', ProofRouter); // no more whitelist for now...
     app.use('/balance', getBalanceRouter(UNB_TOKEN, GUILD_ID));
 
-    const { LoginRouter } = getLoginRouter(
+    const { LoginRouter } = await getLoginRouter(
         OAUTH_CLIENT_ID,
         OAUTH_SECRET,
         OAUTH_REDIRECT_URL,
         GUILD_ID,
         JWT_PRIVATE,
+        DISCORD_BOT_TOKEN,
         REQUEST_NUMERIC_TIMEOUT,
         JWT_EXPIRY // default 24h
     );
