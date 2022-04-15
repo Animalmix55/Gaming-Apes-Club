@@ -317,7 +317,7 @@ export const getTransactionRouter = async (
             disabled,
             supply,
             totalPurchased,
-            roles: allowedRoles,
+            roles: requiredRoles,
             resultantRole,
         } = listing;
 
@@ -329,8 +329,8 @@ export const getTransactionRouter = async (
         }
 
         // always fetch the newest role
-        if (allowedRoles.length > 0) {
-            const allowedRoleIds = allowedRoles.map((r) => r.roleId);
+        if (requiredRoles.length > 0) {
+            const requiredRoleIds = requiredRoles.map((r) => r.roleId);
             try {
                 const guildMember = await getGuildMember(
                     discordClient,
@@ -340,11 +340,13 @@ export const getTransactionRouter = async (
 
                 const roles = guildMember.roles.cache;
 
-                if (!roles.some((r) => allowedRoleIds.includes(r.id))) {
+                if (
+                    !requiredRoleIds.every((reqRoleId) => roles.has(reqRoleId))
+                ) {
                     console.log(
                         `${id} requested a transaction for listing ${
                             listing.title
-                        } (${listingId}) but they lacked the required roles (${allowedRoleIds.join(
+                        } (${listingId}) but they lacked the required roles (${requiredRoleIds.join(
                             ', '
                         )})`
                     );
