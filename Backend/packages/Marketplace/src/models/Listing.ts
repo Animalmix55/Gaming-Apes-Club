@@ -1,4 +1,5 @@
 import { HasRoleIds } from './ListingRole';
+import { ListingTag } from './ListingTag';
 
 export interface NewListing {
     title: string;
@@ -15,6 +16,7 @@ export interface NewListing {
      * The id of a role to apply after purchase
      */
     resultantRole: string | null;
+    tags?: ListingTag[];
 }
 
 export interface UpdatedListing extends NewListing {
@@ -31,10 +33,12 @@ interface Sanitizer {
     (model: NewListing & Partial<HasRoleIds>, add: true): {
         listing: NewListing;
         roles: HasRoleIds['roles'];
+        tags: ListingTag[];
     };
     (model: UpdatedListing & Partial<HasRoleIds>, add?: false): {
         listing: UpdatedListing;
         roles: HasRoleIds['roles'];
+        tags: ListingTag[];
     };
 }
 
@@ -53,6 +57,7 @@ export const sanitizeAndValidateListing: Sanitizer = (model, add) => {
         roles,
         discordMessage,
         resultantRole,
+        tags,
     } = model as UpdatedListing & Partial<HasRoleIds>;
 
     if (!add && !id) throw new Error('Missing id');
@@ -92,5 +97,6 @@ export const sanitizeAndValidateListing: Sanitizer = (model, add) => {
             ...(!add && { id, disabled }),
         },
         roles: roles || [],
+        tags: tags || [],
     } as never;
 };

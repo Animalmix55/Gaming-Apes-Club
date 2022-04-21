@@ -7,6 +7,7 @@ import { getLoginRouter, authMiddleware } from '@gac/login';
 import {
     getListingRouter,
     getRolesRouter,
+    getTagsRouter,
     getTransactionRouter,
     StartDatabase,
 } from '@gac/marketplace';
@@ -94,6 +95,7 @@ const start = async () => {
     app.use('/login', LoginRouter);
     app.use('/roles', await getRolesRouter(DISCORD_BOT_TOKEN, GUILD_ID));
     app.use('/listing', getListingRouter(JWT_PRIVATE, adminRoles, sequelize));
+    app.use('/tags', getTagsRouter());
 
     // ALL AUTHENTICATED ROUTES
     app.use(authMiddleware(JWT_PRIVATE, adminRoles));

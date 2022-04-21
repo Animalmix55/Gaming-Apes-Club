@@ -3,6 +3,7 @@ import { BaseResponse } from '@gac/shared';
 import { authMiddleware } from '@gac/login';
 import AuthLocals from '@gac/login/lib/models/AuthLocals';
 import { Sequelize } from 'sequelize';
+import { v4 } from 'uuid';
 import StoredListing from '../database/models/StoredListing';
 import {
     Listing,
@@ -22,6 +23,9 @@ import {
     mapToRoleIds,
 } from '../models/ListingRole';
 import ListingRole from '../database/models/ListingRole';
+import { ListingTagEntity } from '../database/models/ListingTag';
+import { ListingTagToListingEntity } from '../database/models/ListingTagToListing';
+import { ListingTagToListing } from '../models/ListingTag';
 
 interface GetRequest extends Record<string, string | undefined> {
     pageSize?: string;
@@ -133,7 +137,10 @@ export const getListingRouter = (
 
         let dbListing: StoredListing;
         try {
-            const { listing, roles } = sanitizeAndValidateListing(body, true);
+            const { listing, roles, tags } = sanitizeAndValidateListing(
+                body,
+                true
+            );
 
             const tx = await sequelize.transaction();
 
@@ -156,6 +163,32 @@ export const getListingRouter = (
                             { transaction: tx }
                         );
                     })
+                );
+
+                const dbTags = (
+                    await Promise.all(
+                        tags.map(async (r) =>
+                            ListingTagEntity.upsert(
+                                {
+                                    ...r,
+                                    id: r.id ?? v4(),
+                                },
+                                { transaction: tx }
+                            )
+                        )
+                    )
+                ).map((r) => r[0]);
+
+                await ListingTagToListingEntity.bulkCreate(
+                    dbTags.map(
+                        (t): ListingTagToListing => ({
+                            listingId: dbListing.getDataValue('id'),
+                            tagId: t.getDataValue('id') as string,
+                        })
+                    ),
+                    {
+                        transaction: tx,
+                    }
                 );
 
                 await tx.commit();
@@ -187,7 +220,7 @@ export const getListingRouter = (
             const NOT_FOUND = 'Record not found';
 
             try {
-                const { listing, roles } = sanitizeAndValidateListing(
+                const { listing, roles, tags } = sanitizeAndValidateListing(
                     body,
                     false
                 );
@@ -222,6 +255,39 @@ export const getListingRouter = (
                                 { transaction: tx }
                             );
                         })
+                    );
+
+                    const dbTags = (
+                        await Promise.all(
+                            tags.map(async (r) =>
+                                ListingTagEntity.upsert(
+                                    {
+                                        ...r,
+                                        id: r.id ?? v4(),
+                                    },
+                                    { transaction: tx }
+                                )
+                            )
+                        )
+                    ).map((r) => r[0]);
+
+                    await ListingTagToListingEntity.destroy({
+                        where: {
+                            listingId: listing.id,
+                        },
+                        transaction: tx,
+                    });
+
+                    await ListingTagToListingEntity.bulkCreate(
+                        dbTags.map(
+                            (t): ListingTagToListing => ({
+                                listingId: listing.id,
+                                tagId: t.getDataValue('id') as string,
+                            })
+                        ),
+                        {
+                            transaction: tx,
+                        }
                     );
 
                     await tx.commit();

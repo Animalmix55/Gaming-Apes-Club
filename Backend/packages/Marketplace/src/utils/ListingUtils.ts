@@ -2,6 +2,7 @@ import { Sequelize } from 'sequelize';
 // eslint-disable-next-line import/no-unresolved
 import { Literal } from 'sequelize/types/utils';
 import ListingRole from '../database/models/ListingRole';
+import { ListingTagEntity } from '../database/models/ListingTag';
 import StoredListing from '../database/models/StoredListing';
 import { Listing } from '../models/Listing';
 import { HasListingRoles } from '../models/ListingRole';
@@ -45,6 +46,10 @@ export const getListingsWithCounts = async (
                 model: ListingRole,
                 as: 'roles',
             },
+            {
+                model: ListingTagEntity,
+                as: 'tags',
+            },
         ],
     });
 
@@ -69,6 +74,10 @@ export const getListingWithCount = async (listingId: string) => {
             {
                 model: ListingRole,
                 as: 'roles',
+            },
+            {
+                model: ListingTagEntity,
+                as: 'tags',
             },
         ],
     });
