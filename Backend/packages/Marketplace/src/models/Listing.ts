@@ -1,5 +1,5 @@
 import { HasRoleIds } from './ListingRole';
-import { ListingTag } from './ListingTag';
+import { ListingTag, ListingTagToListing } from './ListingTag';
 
 export interface NewListing {
     title: string;
@@ -17,6 +17,7 @@ export interface NewListing {
      */
     resultantRole: string | null;
     tags?: ListingTag[];
+    listingToTags?: ListingTagToListing[];
 }
 
 export interface UpdatedListing extends NewListing {

@@ -31,6 +31,10 @@ interface GetRequest extends Record<string, string | undefined> {
     pageSize?: string;
     offset?: string;
     showDisabled?: string;
+    /**
+     * comma-delimited tag ids OR'ed
+     */
+    tags?: string;
 }
 
 interface GetResponse extends BaseResponse {
@@ -64,8 +68,10 @@ export const getListingRouter = (
                 offset: offsetStr,
                 pageSize: pageSizeStr,
                 showDisabled,
+                tags: tagsStr,
             } = query;
 
+            const tags = !tagsStr ? [] : tagsStr.split(',');
             const offset = Number(offsetStr || 0);
             const limit = Number(pageSizeStr || 1000);
 
@@ -75,7 +81,8 @@ export const getListingRouter = (
                 ({ count, rows } = await getListingsWithCounts(
                     offset,
                     limit,
-                    showDisabled === 'true'
+                    showDisabled === 'true',
+                    tags
                 ));
             } catch (e) {
                 console.error(

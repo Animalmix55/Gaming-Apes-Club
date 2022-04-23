@@ -6,4 +6,8 @@ export interface ListingTag {
 export interface ListingTagToListing {
     listingId: string;
     tagId: string;
+    /**
+     * Must be loaded
+     */
+    tag?: ListingTag;
 }

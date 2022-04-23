@@ -1,8 +1,9 @@
-import { Sequelize } from 'sequelize';
+import { Sequelize, Op } from 'sequelize';
 // eslint-disable-next-line import/no-unresolved
 import { Literal } from 'sequelize/types/utils';
 import ListingRole from '../database/models/ListingRole';
 import { ListingTagEntity } from '../database/models/ListingTag';
+import { ListingTagToListingEntity } from '../database/models/ListingTagToListing';
 import StoredListing from '../database/models/StoredListing';
 import { Listing } from '../models/Listing';
 import { HasListingRoles } from '../models/ListingRole';
@@ -27,25 +28,38 @@ const include = [
 export const getListingsWithCounts = async (
     offset = 0,
     limit = 1000,
-    showDisabled = false
+    showDisabled = false,
+    tags: string[] = []
 ) => {
     const { count, rows } = await StoredListing.findAndCountAll({
         offset,
         limit,
+        distinct: true,
         order: [['price', 'ASC']],
         attributes: {
             include,
         },
-        ...(!showDisabled && {
-            where: {
-                disabled: false,
-            },
-        }),
+        where: {
+            ...(!showDisabled && { disabled: false }),
+        },
         include: [
             {
                 model: ListingRole,
                 as: 'roles',
             },
+            ...(tags.length > 0
+                ? [
+                      {
+                          model: ListingTagToListingEntity,
+                          as: 'listingToTags',
+                          where: {
+                              tagId: {
+                                  [Op.in]: tags,
+                              },
+                          },
+                      },
+                  ]
+                : []),
             {
                 model: ListingTagEntity,
                 as: 'tags',
