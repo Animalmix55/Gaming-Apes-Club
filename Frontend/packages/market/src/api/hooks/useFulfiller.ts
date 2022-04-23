@@ -5,6 +5,7 @@ import { useAuthorizationContext } from '../../contexts/AuthorizationContext';
 import { useGamingApeContext } from '../../contexts/GamingApeClubContext';
 import { Transaction } from '../Requests';
 import { Transaction as TransactionModel } from '../Models/Transaction';
+import { TransactionsKey } from './useTransactions';
 
 export const useFulfiller = (): UseMutationResult<
     TransactionModel,
@@ -29,7 +30,7 @@ export const useFulfiller = (): UseMutationResult<
 
     return useMutation(query, {
         onSuccess: async (): Promise<void> => {
-            await queryClient.refetchQueries();
+            await queryClient.refetchQueries({ queryKey: [TransactionsKey] });
         },
     });
 };

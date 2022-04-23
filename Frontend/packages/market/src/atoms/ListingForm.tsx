@@ -17,6 +17,7 @@ import { DiscordMessageHelpModal } from '../molecules/DiscordMessageHelpModal';
 import { ExtractErrorMessageFromError } from '../utils/ErrorMessage';
 import { ListingTile } from './ListingTile';
 import { RolesDropdown } from './RolesDropdown';
+import { TagSelector } from './TagSelector';
 
 /**
  * title: string;
@@ -57,6 +58,7 @@ export const convertToListing = (
         disabled: !!partialListing.disabled,
         roles: partialListing.roles || [],
         resultantRole: partialListing.resultantRole ?? null,
+        tags: partialListing.tags,
     };
 };
 
@@ -329,6 +331,17 @@ export const ListingForm = (props: Props): JSX.Element => {
                                 }
                                 disabled={formDisabled}
                                 className={fieldClass}
+                            />
+                            <TagSelector
+                                className={fieldClass}
+                                disabled={formDisabled}
+                                selection={listing.tags || []}
+                                onChange={(tags): void => {
+                                    onChange({
+                                        ...listing,
+                                        tags,
+                                    });
+                                }}
                             />
                             <Checkbox
                                 disabled={formDisabled}

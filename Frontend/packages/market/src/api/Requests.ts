@@ -6,6 +6,7 @@ import {
     NewListing,
     UpdatedListing,
 } from './Models/Listing';
+import { ListingTag } from './Models/ListingTag';
 import { Member } from './Models/Member';
 import { Transaction as TransactionModel } from './Models/Transaction';
 import { User } from './Models/User';
@@ -85,13 +86,19 @@ export type ListingPutResponse = ListingPostResponse;
 export const Listing = {
     async getBulk(
         api: string,
-        pageSize = 1000,
-        offset = 0,
-        showDisabled = false
+        pageSize?: number,
+        offset?: number,
+        showDisabled?: boolean,
+        tags?: string
     ): Promise<GetListingResponse> {
-        const url = `${api}/listing?pageSize=${pageSize}&offset=${offset}&showDisabled=${String(
-            showDisabled
-        )}`;
+        const params = new URLSearchParams();
+        if (pageSize !== undefined) params.append('pageSize', String(pageSize));
+        if (offset !== undefined) params.append('offset', String(offset));
+        if (showDisabled !== undefined)
+            params.append('showDisabled', String(showDisabled));
+        if (tags !== undefined) params.append('tags', tags);
+
+        const url = `${api}/listing?${params.toString()}`;
 
         const { data } = await axios.get(url);
         return data as GetListingResponse;
@@ -253,6 +260,20 @@ export const Transaction = {
         const headers = getHeaders(token);
 
         const { data } = await axios.post(url, undefined, { headers });
+
+        return data;
+    },
+};
+
+export interface TagsGetResponse extends BaseResponse {
+    results?: ListingTag[];
+}
+
+export const TagRequests = {
+    get: async (api: string, hideUnused = false): Promise<TagsGetResponse> => {
+        const url = `${api}/tags?hideUnused=${String(hideUnused)}`;
+
+        const { data } = await axios.get<TagsGetResponse>(url);
 
         return data;
     },

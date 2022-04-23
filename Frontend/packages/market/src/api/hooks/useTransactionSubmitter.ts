@@ -5,6 +5,8 @@ import { UseMutationResult, useQueryClient } from 'react-query';
 import { useAuthorizationContext } from '../../contexts/AuthorizationContext';
 import { useGamingApeContext } from '../../contexts/GamingApeClubContext';
 import { Transaction, TransactionSendResponse } from '../Requests';
+import { TransactionsKey } from './useTransactions';
+import { BalanceKey } from './useBalance';
 
 export const useTransactionSubmitter = (
     onRequestSignature: (message: string) => Promise<string>
@@ -70,7 +72,8 @@ export const useTransactionSubmitter = (
 
     return useMutation(query, {
         onSuccess: async (): Promise<void> => {
-            await queryClient.refetchQueries();
+            await queryClient.refetchQueries({ queryKey: [TransactionsKey] });
+            await queryClient.refetchQueries({ queryKey: [BalanceKey] });
         },
     });
 };

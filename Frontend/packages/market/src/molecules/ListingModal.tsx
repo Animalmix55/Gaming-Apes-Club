@@ -77,6 +77,7 @@ export const ListingModal = (props: Props): JSX.Element => {
         requiresLinkedAddress,
         requiresHoldership,
         roles,
+        tags,
     } = listing;
 
     const hasRole = React.useMemo(() => {
@@ -160,6 +161,30 @@ export const ListingModal = (props: Props): JSX.Element => {
                             }}
                         />
                     </div>
+
+                    {!!tags?.length && (
+                        <div
+                            className={css({
+                                padding: '5px',
+                            })}
+                        >
+                            <div
+                                className={css({
+                                    fontFamily: theme.fonts.headers,
+                                    fontWeight: '900',
+                                })}
+                            >
+                                Tags
+                            </div>
+                            <div
+                                className={css({
+                                    fontFamily: theme.fonts.body,
+                                })}
+                            >
+                                {tags.map((t) => t.displayName).join(', ')}
+                            </div>
+                        </div>
+                    )}
 
                     {!!roles.length && (
                         <div

@@ -5,6 +5,8 @@ import { useAuthorizationContext } from '../../contexts/AuthorizationContext';
 import { useGamingApeContext } from '../../contexts/GamingApeClubContext';
 import { Listing, ListingPostResponse } from '../Requests';
 import { NewListing } from '../Models/Listing';
+import { ListingsKey } from './useListings';
+import { ListingKey } from './useListing';
 
 export const useListingCreator = (): UseMutationResult<
     ListingPostResponse,
@@ -28,7 +30,8 @@ export const useListingCreator = (): UseMutationResult<
 
     return useMutation(query, {
         onSuccess: async (): Promise<void> => {
-            await queryClient.refetchQueries();
+            await queryClient.refetchQueries({ queryKey: [ListingsKey] });
+            await queryClient.refetchQueries({ queryKey: [ListingKey] });
         },
     });
 };

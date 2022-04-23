@@ -8,23 +8,31 @@ export const ListingsKey = 'LISTINGS';
 export const useListings = (
     offset?: number,
     pageSize?: number,
-    showDisabled?: boolean
+    showDisabled?: boolean,
+    tags?: string[]
 ): RequestResult<GetListingResponse> => {
     const { api } = useGamingApeContext();
 
     const queryFn = React.useCallback(
-        (offset?: number, pageSize?: number, showDisabled?: boolean) => {
+        (
+            offset?: number,
+            pageSize?: number,
+            showDisabled?: boolean,
+            tags?: string
+        ) => {
             if (!api) throw new Error('Missing api');
 
-            return Listing.getBulk(api, pageSize, offset, showDisabled);
+            return Listing.getBulk(api, pageSize, offset, showDisabled, tags);
         },
         [api]
     );
 
+    const mergedTags = tags?.join(',');
+
     const result = useRequest(
         queryFn,
         ListingsKey,
-        [offset, pageSize, showDisabled],
+        [offset, pageSize, showDisabled, mergedTags],
         {
             staleTime: Infinity,
         }

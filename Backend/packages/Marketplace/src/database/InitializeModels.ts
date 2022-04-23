@@ -54,6 +54,11 @@ export const InitializeModels = (instance: Sequelize): void => {
         otherKey: 'listingId',
     });
 
+    ListingTagEntity.hasMany(ListingTagToListingEntity, {
+        as: 'listingToTags',
+        foreignKey: 'tagId',
+    });
+
     StoredListing.sync({}).then(() =>
         StoredTransaction.sync({}).then(() =>
             ListingRole.sync().then(() =>

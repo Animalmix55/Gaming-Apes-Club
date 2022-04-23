@@ -7,5 +7,9 @@ export default {
 };
 
 export const StandAlone = (): JSX.Element => {
-    return <MarketplacePage />;
+    return (
+        <div style={{ height: '100vh' }}>
+            <MarketplacePage />
+        </div>
+    );
 };

@@ -25,5 +25,5 @@ export const StandAlone = (props: { listingId: string }): JSX.Element => {
 };
 
 StandAlone.args = {
-    listingId: '1047bd86-db2f-47b1-978b-4b6a1a543c8e',
+    listingId: '09ca3384-a203-4cdd-be0d-f14c9a416d24',
 };

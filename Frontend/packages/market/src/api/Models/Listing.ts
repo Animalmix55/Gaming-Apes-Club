@@ -1,3 +1,5 @@
+import { ListingTag } from './ListingTag';
+
 export interface NewListing {
     title: string;
     description: string;
@@ -10,6 +12,7 @@ export interface NewListing {
     disabled: boolean | null;
     roles: string[];
     discordMessage: string | null;
+    tags?: ListingTag[];
     resultantRole: string | null;
 }
 

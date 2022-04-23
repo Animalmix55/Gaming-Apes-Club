@@ -19,6 +19,7 @@ import { ListingDetails } from '../molecules/ListingDetails';
 import { ListingGrid } from '../molecules/ListingGrid';
 import { ListingModal } from '../molecules/ListingModal';
 import BackgroundVideo from '../assets/webm/ComputerLights.webm';
+import { TagFilter } from '../molecules/TagFilter';
 
 export const MarketplacePage = (): JSX.Element => {
     const [css] = useStyletron();
@@ -31,8 +32,16 @@ export const MarketplacePage = (): JSX.Element => {
     const { accounts } = useProvider();
 
     const [adminPanelOpen, setAdminPanelOpen] = React.useState(false);
+    const [selectedFilterTags, setSelectedFilterTags] = React.useState<
+        string[]
+    >([]);
 
-    const listingRequest = useListings();
+    const listingRequest = useListings(
+        undefined,
+        undefined,
+        undefined,
+        selectedFilterTags
+    );
     const { data: listings } = listingRequest;
 
     const [selectedIndex, setSelectedIndex] = React.useState<number>();
@@ -157,6 +166,9 @@ export const MarketplacePage = (): JSX.Element => {
                                 justifyContent: 'center',
                                 alignItems: 'center',
                                 marginBottom: '20px',
+                                [MOBILE]: {
+                                    justifyContent: 'center',
+                                },
                             })}
                         >
                             {showConnectWeb3Button && (
@@ -180,7 +192,12 @@ export const MarketplacePage = (): JSX.Element => {
                             <DiscordLoginButton
                                 className={css({
                                     marginRight: 'auto',
-                                    [MOBILE]: { marginLeft: '5px' },
+                                    [MOBILE]: {
+                                        marginLeft: '5px',
+                                        marginRight: showConnectWeb3Button
+                                            ? 'auto'
+                                            : '0px',
+                                    },
                                 })}
                             />
                         </div>
@@ -196,15 +213,50 @@ export const MarketplacePage = (): JSX.Element => {
                                 })}
                             />
                         </div>
-                        <ListingGrid
+                        <TagFilter
                             className={css({
-                                flex: 1,
-                                overflow: 'auto',
-                                [MOBILE]: { overflow: 'unset' },
+                                margin: '10px',
+                                display: 'none',
+                                [MOBILE]: {
+                                    display: 'block',
+                                },
                             })}
-                            onSelect={onItemSelect}
-                            request={listingRequest}
+                            horizontal
+                            selectedTags={selectedFilterTags}
+                            setSelectedTags={setSelectedFilterTags}
                         />
+                        <div
+                            className={css({
+                                display: 'flex',
+                                flex: 1,
+                                overflow: 'hidden',
+                                [MOBILE]: {
+                                    overflow: 'unset',
+                                },
+                            })}
+                        >
+                            <TagFilter
+                                className={css({
+                                    maxWidth: '350px',
+                                    flex: 1,
+                                    margin: '45px',
+                                    [MOBILE]: {
+                                        display: 'none',
+                                    },
+                                })}
+                                selectedTags={selectedFilterTags}
+                                setSelectedTags={setSelectedFilterTags}
+                            />
+                            <ListingGrid
+                                className={css({
+                                    flex: 1,
+                                    overflow: 'auto',
+                                    [MOBILE]: { overflow: 'unset' },
+                                })}
+                                onSelect={onItemSelect}
+                                request={listingRequest}
+                            />
+                        </div>
                     </>
                 )}
                 {adminPanelOpen && (
