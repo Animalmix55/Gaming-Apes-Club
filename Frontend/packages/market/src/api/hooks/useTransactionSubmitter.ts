@@ -7,6 +7,8 @@ import { useGamingApeContext } from '../../contexts/GamingApeClubContext';
 import { Transaction, TransactionSendResponse } from '../Requests';
 import { TransactionsKey } from './useTransactions';
 import { BalanceKey } from './useBalance';
+import { ListingKey } from './useListing';
+import { ListingsKey } from './useListings';
 
 export const useTransactionSubmitter = (
     onRequestSignature: (message: string) => Promise<string>
@@ -73,6 +75,8 @@ export const useTransactionSubmitter = (
     return useMutation(query, {
         onSuccess: async (): Promise<void> => {
             await queryClient.refetchQueries({ queryKey: [TransactionsKey] });
+            await queryClient.refetchQueries({ queryKey: [ListingKey] });
+            await queryClient.refetchQueries({ queryKey: [ListingsKey] });
             await queryClient.refetchQueries({ queryKey: [BalanceKey] });
         },
     });
