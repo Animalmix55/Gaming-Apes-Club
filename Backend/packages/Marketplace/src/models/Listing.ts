@@ -12,6 +12,8 @@ export interface NewListing {
     requiresLinkedAddress: boolean | null;
     disabled: boolean | null;
     discordMessage: string | null;
+    startDate: Date | null;
+    endDate: Date | null;
     /**
      * The id of a role to apply after purchase
      */
@@ -59,7 +61,10 @@ export const sanitizeAndValidateListing: Sanitizer = (model, add) => {
         discordMessage,
         resultantRole,
         tags,
-    } = model as UpdatedListing & Partial<HasRoleIds>;
+        startDate,
+        endDate,
+    } = model as unknown as Omit<Omit<UpdatedListing, 'startDate'>, 'endDate'> &
+        Partial<HasRoleIds> & { startDate?: string; endDate?: string };
 
     if (!add && !id) throw new Error('Missing id');
     if (add && id) throw new Error('New records cannot contain an id');
@@ -82,6 +87,12 @@ export const sanitizeAndValidateListing: Sanitizer = (model, add) => {
         throw new Error('Invalid discord message');
     if (resultantRole && typeof resultantRole !== 'string')
         throw new Error('Invalid resultant role');
+    if (startDate && Number.isNaN(Date.parse(startDate)))
+        throw new Error('Invalid start date');
+    if (endDate && Number.isNaN(Date.parse(endDate)))
+        throw new Error('Invalid end date');
+    if (startDate && endDate && Date.parse(startDate) > Date.parse(endDate))
+        throw new Error('Start date follows end date');
 
     return {
         listing: {
@@ -95,6 +106,8 @@ export const sanitizeAndValidateListing: Sanitizer = (model, add) => {
             requiresLinkedAddress,
             discordMessage,
             resultantRole,
+            startDate: startDate ? new Date(startDate) : null,
+            endDate: endDate ? new Date(endDate) : null,
             ...(!add && { id, disabled }),
         },
         roles: roles || [],

@@ -89,6 +89,7 @@ export const Listing = {
         pageSize?: number,
         offset?: number,
         showDisabled?: boolean,
+        showInactive?: boolean,
         tags?: string
     ): Promise<GetListingResponse> {
         const params = new URLSearchParams();
@@ -97,6 +98,8 @@ export const Listing = {
         if (showDisabled !== undefined)
             params.append('showDisabled', String(showDisabled));
         if (tags !== undefined) params.append('tags', tags);
+        if (showInactive !== undefined)
+            params.append('showInactive', String(showInactive));
 
         const url = `${api}/listing?${params.toString()}`;
 

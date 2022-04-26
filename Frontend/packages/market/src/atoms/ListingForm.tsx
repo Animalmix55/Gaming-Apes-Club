@@ -1,11 +1,13 @@
 import {
     Checkbox,
     ITextFieldStyles,
+    Label,
     Spinner,
     SpinnerSize,
     TextField,
     ThemeProvider,
 } from '@fluentui/react';
+import DateTimePicker from 'react-datetime-picker';
 import { ClassNameBuilder, GlowButton, useThemeContext } from '@gac/shared';
 import React from 'react';
 import { useStyletron } from 'styletron-react';
@@ -59,6 +61,8 @@ export const convertToListing = (
         roles: partialListing.roles || [],
         resultantRole: partialListing.resultantRole ?? null,
         tags: partialListing.tags,
+        startDate: partialListing.startDate ?? null,
+        endDate: partialListing.endDate ?? null,
     };
 };
 
@@ -85,6 +89,8 @@ export const ListingForm = (props: Props): JSX.Element => {
         requiresLinkedAddress,
         disabled,
         discordMessage,
+        startDate,
+        endDate,
     } = listing;
 
     const [css] = useStyletron();
@@ -332,6 +338,93 @@ export const ListingForm = (props: Props): JSX.Element => {
                                 disabled={formDisabled}
                                 className={fieldClass}
                             />
+                            <div className={fieldClass}>
+                                <Label>Active Range</Label>
+                                <div
+                                    className={css({
+                                        display: 'flex',
+                                        justifyContent: 'center',
+                                        alignItems: 'center',
+                                    })}
+                                >
+                                    <DateTimePicker
+                                        disabled={formDisabled}
+                                        className={css({
+                                            backgroundColor: 'white',
+                                            marginRight: '5px',
+                                        })}
+                                        value={
+                                            startDate !== null
+                                                ? new Date(startDate)
+                                                : undefined
+                                        }
+                                        onChange={(v?: Date): void => {
+                                            if (
+                                                endDate !== null &&
+                                                v &&
+                                                v.valueOf() >
+                                                    Date.parse(endDate)
+                                            ) {
+                                                onChange({
+                                                    ...listing,
+                                                    startDate: endDate,
+                                                });
+
+                                                return;
+                                            }
+
+                                            onChange({
+                                                ...listing,
+                                                startDate: v
+                                                    ? v.toISOString()
+                                                    : null,
+                                            });
+                                        }}
+                                    />
+                                    <div
+                                        className={css({
+                                            color: theme.fontColors.accent.toRgbaString(),
+                                            fontWeight: 'bold',
+                                        })}
+                                    >
+                                        {' → '}
+                                    </div>
+                                    <DateTimePicker
+                                        disabled={formDisabled}
+                                        className={css({
+                                            backgroundColor: 'white',
+                                            marginLeft: '5px',
+                                        })}
+                                        value={
+                                            endDate !== null
+                                                ? new Date(endDate)
+                                                : undefined
+                                        }
+                                        onChange={(v?: Date): void => {
+                                            if (
+                                                startDate !== null &&
+                                                v &&
+                                                v.valueOf() <
+                                                    Date.parse(startDate)
+                                            ) {
+                                                onChange({
+                                                    ...listing,
+                                                    endDate: startDate,
+                                                });
+
+                                                return;
+                                            }
+
+                                            onChange({
+                                                ...listing,
+                                                endDate: v
+                                                    ? v.toISOString()
+                                                    : null,
+                                            });
+                                        }}
+                                    />
+                                </div>
+                            </div>
                             <TagSelector
                                 className={fieldClass}
                                 disabled={formDisabled}

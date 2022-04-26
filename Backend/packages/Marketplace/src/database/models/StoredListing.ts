@@ -69,6 +69,14 @@ export const InitializeListingModel = (instance: Sequelize): void => {
                 type: DataTypes.STRING,
                 allowNull: true,
             },
+            startDate: {
+                type: DataTypes.DATE,
+                allowNull: true,
+            },
+            endDate: {
+                type: DataTypes.DATE,
+                allowNull: true,
+            },
         },
         {
             sequelize: instance,

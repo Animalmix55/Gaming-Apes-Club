@@ -287,6 +287,28 @@ export const getTransactionRouter = async (
             return res.status(404).send({ error: 'Listing not found' });
         }
 
+        if (
+            listing.startDate !== null &&
+            listing.startDate.valueOf() > Date.now()
+        ) {
+            console.log(
+                `${id} requested a transaction on listing ${listingId} which has not yet begun`
+            );
+
+            return res.status(400).send({ error: 'Listing not yet started' });
+        }
+
+        if (
+            listing.endDate !== null &&
+            listing.endDate.valueOf() <= Date.now()
+        ) {
+            console.log(
+                `${id} requested a transaction on listing ${listingId} which has already ended`
+            );
+
+            return res.status(400).send({ error: 'Listing has concluded' });
+        }
+
         let previousTransactions: StoredTransaction[];
 
         try {

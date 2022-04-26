@@ -30,7 +30,8 @@ import { ListingTagToListing } from '../models/ListingTag';
 interface GetRequest extends Record<string, string | undefined> {
     pageSize?: string;
     offset?: string;
-    showDisabled?: string;
+    showDisabled?: 'true' | 'false';
+    showInactive?: 'true' | 'false';
     /**
      * comma-delimited tag ids OR'ed
      */
@@ -69,6 +70,7 @@ export const getListingRouter = (
                 pageSize: pageSizeStr,
                 showDisabled,
                 tags: tagsStr,
+                showInactive,
             } = query;
 
             const tags = !tagsStr ? [] : tagsStr.split(',');
@@ -82,6 +84,7 @@ export const getListingRouter = (
                     offset,
                     limit,
                     showDisabled === 'true',
+                    showInactive === 'true',
                     tags
                 ));
             } catch (e) {

@@ -40,6 +40,7 @@ export const MarketplacePage = (): JSX.Element => {
         undefined,
         undefined,
         undefined,
+        undefined,
         selectedFilterTags
     );
     const { data: listings } = listingRequest;
@@ -91,7 +92,7 @@ export const MarketplacePage = (): JSX.Element => {
         if (adminPanelOpen) {
             return [
                 {
-                    displayText: 'Market',
+                    displayText: 'MARKET',
                     onClick: (): void => setAdminPanelOpen(false),
                 },
             ];
@@ -103,7 +104,7 @@ export const MarketplacePage = (): JSX.Element => {
         )
             return [
                 {
-                    displayText: 'Admin',
+                    displayText: 'ADMIN',
                     onClick: (): void => setAdminPanelOpen(true),
                 },
             ];

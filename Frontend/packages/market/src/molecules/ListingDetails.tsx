@@ -42,6 +42,8 @@ export const ListingDetails = (): JSX.Element => {
                     className={css({ flex: '1' })}
                     selectedKey={selectedListing}
                     onSelect={setSelectedListing}
+                    showDisabled
+                    showInactive
                 />
                 <GlowButton
                     className={css({ fontFamily: theme.fonts.buttons })}

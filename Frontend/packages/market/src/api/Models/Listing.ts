@@ -12,6 +12,8 @@ export interface NewListing {
     disabled: boolean | null;
     roles: string[];
     discordMessage: string | null;
+    startDate: string | null;
+    endDate: string | null;
     tags?: ListingTag[];
     resultantRole: string | null;
 }

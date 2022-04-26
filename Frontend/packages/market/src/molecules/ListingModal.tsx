@@ -78,6 +78,7 @@ export const ListingModal = (props: Props): JSX.Element => {
         requiresHoldership,
         roles,
         tags,
+        endDate,
     } = listing;
 
     const hasRole = React.useMemo(() => {
@@ -161,6 +162,31 @@ export const ListingModal = (props: Props): JSX.Element => {
                             }}
                         />
                     </div>
+
+                    {!!endDate && (
+                        <div
+                            className={css({
+                                padding: '5px',
+                            })}
+                        >
+                            <div
+                                className={css({
+                                    fontFamily: theme.fonts.headers,
+                                    fontWeight: '900',
+                                })}
+                            >
+                                End Date
+                            </div>
+                            <div
+                                className={css({
+                                    fontFamily: theme.fonts.body,
+                                })}
+                            >
+                                {new Date(endDate).toLocaleDateString()}{' '}
+                                {new Date(endDate).toLocaleTimeString()}
+                            </div>
+                        </div>
+                    )}
 
                     {!!tags?.length && (
                         <div

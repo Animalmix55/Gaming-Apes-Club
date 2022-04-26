@@ -55,10 +55,12 @@
     "react-transition-group": "^4.4.2",
     "url": "^0.11.0",
     "jwt-decode": "^3.1.2",
-    "uuid": "^8.3.2"
+    "uuid": "^8.3.2",
+    "react-datetime-picker": "^3.5.0"
   },
   "devDependencies": {
-    "@types/uuid": "^8.3.4"
+    "@types/uuid": "^8.3.4",
+    "@types/react-datetime-picker": "^3.4.1"
   },
   "prettier": {
     "trailingComma": "es5",
