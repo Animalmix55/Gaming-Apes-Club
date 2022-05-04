@@ -1,4 +1,4 @@
-import { Sequelize, Op } from 'sequelize';
+import { Sequelize, Op, Transaction, FindAttributeOptions } from 'sequelize';
 // eslint-disable-next-line import/no-unresolved
 import { Literal } from 'sequelize/types/utils';
 import ListingRole from '../database/models/ListingRole';
@@ -16,7 +16,7 @@ export interface ListingWithCount extends Listing {
     totalPurchased: number;
 }
 
-const include = [
+const includeCount = [
     [
         Sequelize.literal(
             '(SELECT SUM(Transactions.quantity) FROM Transactions WHERE Transactions.listingId = Listing.id)'
@@ -38,7 +38,7 @@ export const getListingsWithCounts = async (
         distinct: true,
         order: [['price', 'ASC']],
         attributes: {
-            include,
+            include: includeCount,
         },
         where: {
             ...(!showDisabled && { disabled: false }),
@@ -94,11 +94,17 @@ export const getListingsWithCounts = async (
     };
 };
 
-export const getListingWithCount = async (listingId: string) => {
+export const getListing = async (
+    listingId: string,
+    transaction?: Transaction,
+    lock?: boolean,
+    attributes?: FindAttributeOptions
+) => {
+    if (lock && !transaction)
+        throw new Error('Cannot lock a listing without a transaction');
+
     const result = await StoredListing.findByPk(listingId, {
-        attributes: {
-            include,
-        },
+        attributes,
         include: [
             {
                 model: ListingRole,
@@ -109,15 +115,33 @@ export const getListingWithCount = async (listingId: string) => {
                 as: 'tags',
             },
         ],
+        transaction,
+        lock,
     });
 
     if (!result) return undefined;
-    const retrievedResult = result.get() as ListingWithStringCount;
+    const retrievedResult = result.get() as Listing & HasListingRoles;
 
-    return {
-        ...retrievedResult,
-        totalPurchased: Number(retrievedResult.totalPurchased),
-    } as ListingWithCount & HasListingRoles;
+    return retrievedResult;
+};
+
+export const getListingWithCount = async (
+    listingId: string,
+    transaction?: Transaction,
+    lock?: boolean
+): Promise<ListingWithCount & HasListingRoles> => {
+    const attributes = {
+        include: includeCount,
+    };
+
+    const result = (await getListing(
+        listingId,
+        transaction,
+        lock,
+        attributes
+    )) as ListingWithStringCount & HasListingRoles;
+
+    return { ...result, totalPurchased: Number(result.totalPurchased) };
 };
 
 export default {};

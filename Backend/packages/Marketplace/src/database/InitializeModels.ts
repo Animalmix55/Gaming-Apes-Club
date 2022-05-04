@@ -40,6 +40,12 @@ export const InitializeModels = (instance: Sequelize): void => {
         sourceKey: 'tagId',
     });
 
+    ListingTagToListingEntity.hasOne(StoredListing, {
+        as: 'listing',
+        foreignKey: 'id',
+        sourceKey: 'listingId',
+    });
+
     StoredListing.belongsToMany(ListingTagEntity, {
         through: ListingTagToListingEntity,
         as: 'tags',

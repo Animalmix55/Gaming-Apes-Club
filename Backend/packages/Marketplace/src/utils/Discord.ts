@@ -2,20 +2,21 @@ import { User } from '@gac/login';
 import { sendMessage } from '@gac/shared';
 import { Client } from 'discord.js';
 import { Listing } from '../models/Listing';
+import Transaction from '../models/Transaction';
 
 export const sendTransactionMessage = async (
     client: Client,
     channelId: string,
     user: User,
-    listing: Listing
+    listing: Listing,
+    transaction: Transaction,
+    defaultMessage: string
 ): Promise<string> => {
     const { discordMessage } = listing;
 
-    let message =
-        discordMessage ||
-        '<@{user.id}> just spent **{listing.price} GAC XP** to purchase **{listing.title}** at the GAC Shack!';
+    let message = discordMessage || defaultMessage;
 
-    const data = { user, listing };
+    const data = { user, listing, transaction };
 
     message = message.replace(
         /{([a-zA-Z]+)\.([A-Za-z]+)\}/g,

@@ -35,6 +35,7 @@ const start = async () => {
         TRANSACTION_CHANNEL,
         JWT_EXPIRY,
         NUM_PROXIES,
+        DEFAULT_TRANSACTION_MESSAGE,
     } = process.env;
 
     const sequelize = await StartDatabase(
@@ -47,6 +48,8 @@ const start = async () => {
 
     const adminRoles = ADMIN_ROLES?.split(' ') || [];
     if (!GUILD_ID) throw new Error('Missing guild id');
+    if (!DEFAULT_TRANSACTION_MESSAGE)
+        throw new Error('Missing default Discord transaction message');
     if (!UNB_TOKEN) throw new Error('Missing UNB Token');
     if (!WEB3_PROVIDER) throw new Error('Missing Web3 provider');
     if (!TOKEN_ADDRESS) throw new Error('Missing token address');
@@ -109,7 +112,9 @@ const start = async () => {
             web3,
             TOKEN_ADDRESS,
             DISCORD_BOT_TOKEN,
-            TRANSACTION_CHANNEL
+            TRANSACTION_CHANNEL,
+            sequelize,
+            DEFAULT_TRANSACTION_MESSAGE
         )
     );
 

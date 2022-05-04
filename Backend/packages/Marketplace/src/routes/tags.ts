@@ -1,9 +1,10 @@
 import { BaseResponse } from '@gac/shared';
-import express, { query } from 'express';
+import express from 'express';
 import { Op, Sequelize } from 'sequelize';
 
 import { ListingTagEntity } from '../database/models/ListingTag';
 import { ListingTagToListingEntity } from '../database/models/ListingTagToListing';
+import StoredListing from '../database/models/StoredListing';
 import { ListingTag } from '../models/ListingTag';
 
 interface GetResponse extends BaseResponse {
@@ -50,6 +51,39 @@ export const getTagsRouter = () => {
                             as: 'listingToTags',
                             model: ListingTagToListingEntity,
                             attributes: [],
+                            include:
+                                hideUnused === 'true'
+                                    ? [
+                                          {
+                                              model: StoredListing,
+                                              as: 'listing',
+                                              where: {
+                                                  disabled: {
+                                                      [Op.not]: true,
+                                                  },
+                                                  startDate: {
+                                                      [Op.or]: [
+                                                          { [Op.eq]: null },
+                                                          {
+                                                              [Op.lte]:
+                                                                  new Date(),
+                                                          },
+                                                      ],
+                                                  },
+                                                  endDate: {
+                                                      [Op.or]: [
+                                                          { [Op.eq]: null },
+                                                          {
+                                                              [Op.gt]:
+                                                                  new Date(),
+                                                          },
+                                                      ],
+                                                  },
+                                              },
+                                              attributes: [],
+                                          },
+                                      ]
+                                    : [],
                         },
                     ],
                     group: ['ListingTag.id'],

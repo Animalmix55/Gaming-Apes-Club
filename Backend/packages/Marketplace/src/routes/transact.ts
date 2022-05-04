@@ -16,11 +16,13 @@ import Web3 from 'web3';
 import { Intents } from 'discord.js';
 import { v4 } from 'uuid';
 import rateLimit from 'express-rate-limit';
+import { Sequelize, Transaction as SequelizeTransaction } from 'sequelize';
 import StoredTransaction from '../database/models/StoredTransaction';
 import Transaction from '../models/Transaction';
-import { getListingWithCount, ListingWithCount } from '../utils/ListingUtils';
+import { getListing, getListingWithCount } from '../utils/ListingUtils';
 import { sendTransactionMessage } from '../utils/Discord';
 import { HasListingRoles } from '../models/ListingRole';
+import { Listing } from '../models/Listing';
 
 interface TransactionJWTPayload {
     user: string;
@@ -66,7 +68,9 @@ export const getTransactionRouter = async (
     web3: Web3,
     gamingApeClubAddress: string,
     discordBotToken: string,
-    discordTransactionChannelId: string
+    discordTransactionChannelId: string,
+    sequelize: Sequelize,
+    defaultTxMessage: string
 ) => {
     const TransactionRouter = express.Router();
 
@@ -267,14 +271,11 @@ export const getTransactionRouter = async (
             `Processing a transaction for ${id} to purchase ${quantity} of listingId ${listingId} from ip address ${req.ip}`
         );
 
-        let listing: (ListingWithCount & HasListingRoles) | undefined;
+        let listing: (Listing & HasListingRoles) | undefined;
         try {
-            listing = await getListingWithCount(listingId);
+            listing = await getListing(listingId);
         } catch (e) {
-            console.error(
-                `Failed to fetch listing ${listingId} with counts`,
-                e
-            );
+            console.error(`Failed to fetch listing ${listingId}`, e);
             return res
                 .status(500)
                 .send({ error: 'Failed to communicate with db' });
@@ -309,27 +310,6 @@ export const getTransactionRouter = async (
             return res.status(400).send({ error: 'Listing has concluded' });
         }
 
-        let previousTransactions: StoredTransaction[];
-
-        try {
-            previousTransactions = await StoredTransaction.findAll({
-                where: {
-                    listingId,
-                    user: id,
-                },
-            });
-        } catch (e) {
-            console.error('Failed to fetch previous transactions', e);
-            return res
-                .status(500)
-                .send({ error: 'Failed to communicate with db' });
-        }
-
-        const quantityAlreadyPurchased = previousTransactions.reduce(
-            (prev, cur) => prev + cur.get().quantity,
-            0
-        );
-
         let address: string | undefined;
         const {
             maxPerUser,
@@ -338,7 +318,6 @@ export const getTransactionRouter = async (
             requiresLinkedAddress,
             disabled,
             supply,
-            totalPurchased,
             roles: requiredRoles,
             resultantRole,
         } = listing;
@@ -452,28 +431,6 @@ export const getTransactionRouter = async (
         }
 
         if (
-            maxPerUser !== null &&
-            maxPerUser !== 0 &&
-            quantity + quantityAlreadyPurchased > maxPerUser
-        ) {
-            console.log(
-                `${id} tried to purchase ${listing.title} (${listingId}) but they already maxxed out per user (max: ${maxPerUser}, purchased: ${quantityAlreadyPurchased}, desired: ${quantity}).`
-            );
-            return res.status(400).send({ error: 'Exceeds allowed quantity' });
-        }
-
-        if (supply !== null && quantity + totalPurchased > supply) {
-            console.log(
-                `${id} tried to purchase ${
-                    listing.title
-                } (${listingId}) but it was sold out (quantity desired: ${quantity}, quantity remaining ${
-                    supply - totalPurchased
-                })`
-            );
-            return res.status(400).send({ error: 'Exceeds available supply' });
-        }
-
-        if (
             requiresLinkedAddress &&
             (!recordableAddress || !Web3.utils.isAddress(recordableAddress))
         ) {
@@ -485,6 +442,21 @@ export const getTransactionRouter = async (
 
         const client = getUNBClient(unbToken);
         let newBalance: number | undefined;
+
+        const totalCost = price * quantity;
+
+        const refund = async (): Promise<void> => {
+            if (isAdmin) return;
+
+            const { cash: restoredBalance } = await give(
+                client,
+                guildId,
+                id,
+                totalCost
+            );
+
+            newBalance = restoredBalance;
+        };
 
         // free for admin
         if (!isAdmin) {
@@ -520,20 +492,11 @@ export const getTransactionRouter = async (
 
             if (newBalance < 0) {
                 console.error(
-                    `Spending ${
-                        price * quantity
-                    } tokens for user ${id} to purchase ${
-                        listing.title
-                    } (${listingId}) resulted in a negative balance. Attempting revert.`
+                    `Spending ${totalCost} tokens for user ${id} to purchase ${listing.title} (${listingId}) resulted in a negative balance. Attempting revert.`
                 );
 
                 try {
-                    ({ cash: newBalance } = await give(
-                        client,
-                        guildId,
-                        id,
-                        price * quantity
-                    ));
+                    await refund();
                     console.log(
                         `Successfully restored user ${id}'s balance to ${newBalance} GACXP`
                     );
@@ -555,6 +518,177 @@ export const getTransactionRouter = async (
             }
         }
 
+        let sequelizeTransaction: SequelizeTransaction;
+        try {
+            sequelizeTransaction = await sequelize.transaction();
+        } catch (e) {
+            const errorId = v4();
+
+            console.error(
+                `Failed to begin sequelize transaction for ${id} to purchase ${quantity} of ${listingId}. Error id: ${errorId}. Refunding...`
+            );
+
+            try {
+                await refund();
+
+                return res.status(500).send({
+                    error: `A fatal error occured while communicating with the database. Error id: ${errorId}`,
+                });
+            } catch (e) {
+                console.error(
+                    `[DEV INTERVENTION NEEDED] Failed to refund ${id} ${totalCost} GACXP. Error id: ${errorId}`,
+                    e
+                );
+
+                return res.status(500).send({
+                    error: `A fatal error occured while communicating with the database. An error occured restoring your balance, contact support. Error id: ${errorId}`,
+                });
+            }
+        }
+
+        let totalPurchased: number;
+        let tx: StoredTransaction;
+
+        try {
+            ({ totalPurchased } = await getListingWithCount(
+                listingId,
+                sequelizeTransaction,
+                true
+            ));
+
+            if (supply !== null && quantity + totalPurchased > supply) {
+                console.log(
+                    `${id} tried to purchase ${
+                        listing.title
+                    } (${listingId}) but it was sold out (quantity desired: ${quantity}, quantity remaining ${
+                        supply - totalPurchased
+                    }). Refunding GACXP.`
+                );
+
+                // refund
+                try {
+                    sequelizeTransaction.rollback();
+                    await refund();
+
+                    console.log(
+                        `Successfully restored user ${id}'s balance to ${newBalance} GACXP`
+                    );
+
+                    return res
+                        .status(400)
+                        .send({ error: 'Exceeds available supply' });
+                } catch (e) {
+                    const errorId = v4();
+
+                    console.error(
+                        `[DEV INTERVENTION NEEDED] failed to restore balance of ${id} back to its original value. Error id: ${errorId}`
+                    );
+
+                    return res.status(500).send({
+                        error: `Exceeds available supply. An error occured restoring your balance, contact support. Error id: ${errorId}`,
+                    });
+                }
+            }
+
+            const previousTransactions = await StoredTransaction.findAll({
+                where: {
+                    listingId,
+                    user: id,
+                },
+                transaction: sequelizeTransaction,
+            });
+
+            const quantityAlreadyPurchased = previousTransactions.reduce(
+                (prev, cur) => prev + cur.get().quantity,
+                0
+            );
+
+            if (
+                maxPerUser !== null &&
+                maxPerUser !== 0 &&
+                quantity + quantityAlreadyPurchased > maxPerUser
+            ) {
+                console.log(
+                    `${id} tried to purchase ${listing.title} (${listingId}) but they already maxxed out per user (max: ${maxPerUser}, purchased: ${quantityAlreadyPurchased}, desired: ${quantity}).`
+                );
+
+                // refund
+                try {
+                    sequelizeTransaction.rollback();
+                    await refund();
+
+                    console.log(
+                        `Successfully restored user ${id}'s balance to ${newBalance} GACXP`
+                    );
+
+                    return res.status(400).send({
+                        error: 'Exceeds available supply for this user',
+                    });
+                } catch (e) {
+                    const errorId = v4();
+
+                    console.error(
+                        `[DEV INTERVENTION NEEDED] failed to restore balance of ${id} back to its original value. Error id: ${errorId}`
+                    );
+
+                    return res.status(500).send({
+                        error: `Exceeds available supply for this user. An error occured restoring your balance, contact support. Error id: ${errorId}`,
+                    });
+                }
+            }
+
+            // generate transaction
+            console.log(
+                `Generating transaction for user ${id} purchasing ${listing.title} (${listingId})`
+            );
+
+            const localTx = {
+                listingId,
+                user: id,
+                quantity,
+                address: requiresLinkedAddress ? recordableAddress : address,
+            } as Transaction;
+
+            tx = await StoredTransaction.create(localTx, {
+                transaction: sequelizeTransaction,
+            });
+            console.log(
+                `Generated transaction for user ${id} purchasing ${
+                    listing.title
+                } (${listingId}) with id ${tx.get().id}`
+            );
+
+            await sequelizeTransaction.commit();
+        } catch (e) {
+            const errorId = v4();
+
+            console.error(
+                `Failed to complete transaction for for ${id} to purchase ${quantity} of ${listing.title} (${listingId}), restoring balance for ${id} and rolling back transaction. Error id: ${errorId}`
+            );
+            sequelizeTransaction.rollback();
+
+            try {
+                await refund();
+
+                console.log(
+                    `Successfully restored user ${id}'s balance to ${newBalance} GACXP. Error id: ${errorId}`
+                );
+
+                return res.status(500).send({
+                    error: `Failed to complete transaction. Error id: ${errorId}`,
+                });
+            } catch (e) {
+                console.error(
+                    `[DEV INTERVENTION NEEDED] Failed to refund user ${id} ${totalCost} after failure to complete transaction. Error id: ${errorId}`,
+                    e
+                );
+
+                return res.status(500).send({
+                    error: `Failed to complete transaction. An error occured restoring your balance, contact support. Error id: ${errorId}`,
+                });
+            }
+        }
+
         if (resultantRole) {
             console.log(
                 `Attempting to give ${id} the role ${resultantRole} for purchasing ${listing.title} (${listingId})`
@@ -573,66 +707,6 @@ export const getTransactionRouter = async (
                 });
         }
 
-        // generate transaction
-        console.log(
-            `Generating transaction for user ${id} purchasing ${listing.title} (${listingId})`
-        );
-
-        const localTx = {
-            listingId,
-            user: id,
-            quantity,
-            address: requiresLinkedAddress ? recordableAddress : address,
-        } as Transaction;
-
-        let tx: StoredTransaction;
-        try {
-            tx = await StoredTransaction.create(localTx);
-            console.log(
-                `Generated transaction for user ${id} purchasing ${
-                    listing.title
-                } (${listingId}) with id ${tx.get().id}`
-            );
-        } catch (e) {
-            const errorId = v4();
-
-            console.error(
-                `Failed to save the following transaction for ${id} to purchase ${quantity} of ${listing.title} (${listingId}), error id: ${errorId}`,
-                localTx,
-                e
-            );
-
-            console.log(
-                `Attempting to give back ${
-                    quantity * price
-                } GACXP to user ${id} for failed transaction to purchase ${
-                    listing.title
-                } (${listingId})`
-            );
-            let tokensReturned = false;
-            try {
-                await give(client, guildId, id, quantity * price);
-                tokensReturned = true;
-            } catch (e) {
-                console.error(
-                    `[DEV INTERVENTION NEEDED] failed to return ${
-                        quantity * price
-                    } GACXP back to ${id} for their failed purchase of ${
-                        listing.title
-                    } (${listingId}), errorId: ${errorId}`,
-                    e
-                );
-            }
-
-            return res.status(500).send({
-                error: `Transaction failed, ${
-                    tokensReturned
-                        ? 'your tokens were returned.'
-                        : 'we could not return your tokens, contact support.'
-                }. Error id: ${errorId}`,
-            });
-        }
-
         console.log(
             `Attempting to send message to discord channel for successful transaction ${tx.getDataValue(
                 'id'
@@ -642,7 +716,9 @@ export const getTransactionRouter = async (
             discordClient,
             discordTransactionChannelId,
             user,
-            listing
+            listing,
+            tx.get(),
+            defaultTxMessage
         )
             .then((m) =>
                 console.log(
