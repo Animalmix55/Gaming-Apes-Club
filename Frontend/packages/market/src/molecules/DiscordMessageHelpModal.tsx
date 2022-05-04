@@ -7,6 +7,7 @@ import {
 import { useThemeContext } from '@gac/shared';
 import React from 'react';
 import { useStyletron } from 'styletron-react';
+import { useGamingApeContext } from '../contexts/GamingApeClubContext';
 
 interface Props {
     isOpen?: boolean;
@@ -18,6 +19,7 @@ interface Props {
 
 export const DiscordMessageHelpModal = (props: Props): JSX.Element => {
     const { isOpen, onClose, value, onValueChange, disabled } = props;
+    const { defaultDiscordMessage } = useGamingApeContext();
 
     const theme = useThemeContext();
     const styles: Partial<ITextFieldStyles> = {
@@ -63,7 +65,7 @@ export const DiscordMessageHelpModal = (props: Props): JSX.Element => {
                             label="Discord Message"
                             description="The message sent to the GAC Shack discord channel after the transaction completes"
                             value={value}
-                            placeholder="<@{user.id}> just spent **{listing.price} GAC XP** to purchase **{listing.title}** at the GAC Shack!"
+                            placeholder={defaultDiscordMessage}
                             styles={styles}
                             multiline
                             resizable={false}
@@ -113,6 +115,10 @@ export const DiscordMessageHelpModal = (props: Props): JSX.Element => {
                             <span className={css({ color: 'red' })}>{'{'}</span>
                             <span className={css({ color: 'blue' })}>
                                 {'<'}user
+                            </span>
+                            <span> | </span>
+                            <span className={css({ color: 'blue' })}>
+                                transaction
                             </span>
                             <span> | </span>
                             <span className={css({ color: 'blue' })}>
@@ -172,6 +178,22 @@ export const DiscordMessageHelpModal = (props: Props): JSX.Element => {
                                 <div>requiresLinkedAddress</div>
                                 <div>disabled</div>
                                 <div>discordMessage</div>
+                            </div>
+                            <div className={css({ padding: '5px' })}>
+                                <div
+                                    className={css({
+                                        fontWeight: 'bold',
+                                        fontFamily: theme.fonts.headers,
+                                    })}
+                                >
+                                    Transaction Attributes
+                                </div>
+                                <div>id</div>
+                                <div>listingId</div>
+                                <div>user</div>
+                                <div>address</div>
+                                <div>date</div>
+                                <div>quantity</div>
                             </div>
                         </div>
                     </div>

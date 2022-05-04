@@ -14,7 +14,11 @@ const CreateListingModal = ({
     onClose: () => void;
 }): JSX.Element => {
     return (
-        <Modal isOpen onDismiss={onClose}>
+        <Modal
+            isOpen
+            onDismiss={onClose}
+            styles={{ scrollableContent: { maxHeight: 'unset' } }}
+        >
             <ServersideListingForm setListingId={onSave} />
         </Modal>
     );

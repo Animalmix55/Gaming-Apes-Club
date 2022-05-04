@@ -20,6 +20,7 @@ import { ExtractErrorMessageFromError } from '../utils/ErrorMessage';
 import { ListingTile } from './ListingTile';
 import { RolesDropdown } from './RolesDropdown';
 import { TagSelector } from './TagSelector';
+import { useGamingApeContext } from '../contexts/GamingApeClubContext';
 
 /**
  * title: string;
@@ -93,6 +94,7 @@ export const ListingForm = (props: Props): JSX.Element => {
         endDate,
     } = listing;
 
+    const { defaultDiscordMessage } = useGamingApeContext();
     const [css] = useStyletron();
     const theme = useThemeContext();
     const fieldClass = css({ margin: '5px' });
@@ -221,7 +223,7 @@ export const ListingForm = (props: Props): JSX.Element => {
                                 label="Discord Message"
                                 description="The message sent to the GAC Shack discord channel after the transaction completes"
                                 value={discordMessage ?? undefined}
-                                placeholder="<@{user.id}> just spent **{listing.price} GAC XP** to purchase **{listing.title}** at the GAC Shack!"
+                                placeholder={defaultDiscordMessage}
                                 styles={styles}
                                 multiline
                                 resizable={false}
@@ -523,6 +525,7 @@ interface ServersideProps {
 
 export const ServersideListingForm = (props: ServersideProps): JSX.Element => {
     const { listingId, className, setListingId } = props;
+    const { defaultDiscordMessage } = useGamingApeContext();
 
     const { data: listing } = useListing(listingId);
     const [updatedListing, setUpdatedListing] = React.useState(
@@ -533,8 +536,19 @@ export const ServersideListingForm = (props: ServersideProps): JSX.Element => {
     const listingCreator = useListingCreator();
 
     React.useEffect(() => {
-        if (listing) setUpdatedListing(convertToListing(listing));
-        else setUpdatedListing(convertToListing({}));
+        if (listing)
+            setUpdatedListing(
+                convertToListing({
+                    ...listing,
+                    discordMessage: !listingId
+                        ? defaultDiscordMessage
+                        : undefined,
+                })
+            );
+        else
+            setUpdatedListing(
+                convertToListing({ discordMessage: defaultDiscordMessage })
+            );
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [listing]);
 

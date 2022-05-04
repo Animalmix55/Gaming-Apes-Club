@@ -7,6 +7,7 @@ export interface GamingApeClubContextType {
     homeUrl?: string;
     api?: string;
     adminRoles?: string[];
+    defaultDiscordMessage?: string;
 }
 
 export const GamingApeClubContext =
