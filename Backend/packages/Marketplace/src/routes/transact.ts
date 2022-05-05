@@ -11,7 +11,7 @@ import {
     verifySignature,
 } from '@gac/shared';
 import AuthLocals from '@gac/login/lib/models/AuthLocals';
-import { getUNBClient, give, spend } from '@gac/token';
+import { getUNBClient, give, spend, getBalance } from '@gac/token';
 import Web3 from 'web3';
 import { Intents } from 'discord.js';
 import { v4 } from 'uuid';
@@ -441,80 +441,41 @@ export const getTransactionRouter = async (
         }
 
         const client = getUNBClient(unbToken);
-        let newBalance: number | undefined;
-
         const totalCost = price * quantity;
 
-        const refund = async (): Promise<void> => {
-            if (isAdmin) return;
-
-            const { cash: restoredBalance } = await give(
-                client,
-                guildId,
-                id,
-                totalCost
-            );
-
-            newBalance = restoredBalance;
-        };
-
-        // free for admin
+        // skip balance check for admins
         if (!isAdmin) {
+            // check user balance
             try {
                 console.log(
-                    `Reaching out to UNB to spend ${
-                        quantity * price
-                    } GACXP for user ${id} to purchase ${quantity} of ${
-                        listing.title
-                    } (${listingId})`
+                    `Fetching the current balance for ${id} prior to running the transaction.`
                 );
-                // spend tokens
-                ({ cash: newBalance } = await spend(
+                const { cash: currentBalance } = await getBalance(
                     client,
                     guildId,
-                    id,
-                    quantity * price
-                ));
+                    id
+                );
+
+                if (currentBalance < totalCost) {
+                    console.log(
+                        `User ${id} has insufficient balance (required: ${totalCost}, has: ${currentBalance}) to purchase ${quantity} of ${listing.title} (${listing.id})`
+                    );
+                    return res.status(400).send({
+                        error: `Insufficient balance (${currentBalance})`,
+                    });
+                }
+
                 console.log(
-                    `Deducted ${quantity * price} GACXP from user ${id} for ${
-                        listing.title
-                    } (${listingId})`
+                    `User ${id} has an initial balance of ${currentBalance}. Proceeding.`
                 );
             } catch (e) {
                 console.error(
-                    `Failed to spend UNB tokens for user ${id} ${quantity} ${listing.title} (${listingId})`,
+                    `Failed to get the balance of user ${id} from UNB.`,
                     e
                 );
                 return res
                     .status(500)
-                    .send({ error: 'Failed to spend tokens' });
-            }
-
-            if (newBalance < 0) {
-                console.error(
-                    `Spending ${totalCost} tokens for user ${id} to purchase ${listing.title} (${listingId}) resulted in a negative balance. Attempting revert.`
-                );
-
-                try {
-                    await refund();
-                    console.log(
-                        `Successfully restored user ${id}'s balance to ${newBalance} GACXP`
-                    );
-
-                    return res
-                        .status(400)
-                        .send({ error: 'Insufficient balance' });
-                } catch (e) {
-                    const errorId = v4();
-
-                    console.error(
-                        `[DEV INTERVENTION NEEDED] failed to restore balance of ${id} back to its original value following a negative resultant. ErrorId: ${errorId}`
-                    );
-
-                    return res.status(500).send({
-                        error: `Transaction failed due to insufficient balance. An error occured restoring your balance, contact support. Error id: ${errorId}`,
-                    });
-                }
+                    .send({ error: 'Failed to fetch user balance' });
             }
         }
 
@@ -522,28 +483,14 @@ export const getTransactionRouter = async (
         try {
             sequelizeTransaction = await sequelize.transaction();
         } catch (e) {
-            const errorId = v4();
-
             console.error(
-                `Failed to begin sequelize transaction for ${id} to purchase ${quantity} of ${listingId}. Error id: ${errorId}. Refunding...`
+                `Failed to begin sequelize transaction for ${id} to purchase ${quantity} of ${listingId}.`,
+                e
             );
 
-            try {
-                await refund();
-
-                return res.status(500).send({
-                    error: `A fatal error occured while communicating with the database. Error id: ${errorId}`,
-                });
-            } catch (e) {
-                console.error(
-                    `[DEV INTERVENTION NEEDED] Failed to refund ${id} ${totalCost} GACXP. Error id: ${errorId}`,
-                    e
-                );
-
-                return res.status(500).send({
-                    error: `A fatal error occured while communicating with the database. An error occured restoring your balance, contact support. Error id: ${errorId}`,
-                });
-            }
+            return res
+                .status(500)
+                .send({ error: 'Failed to communicate with database' });
         }
 
         let totalPurchased: number;
@@ -562,32 +509,12 @@ export const getTransactionRouter = async (
                         listing.title
                     } (${listingId}) but it was sold out (quantity desired: ${quantity}, quantity remaining ${
                         supply - totalPurchased
-                    }). Refunding GACXP.`
+                    }).`
                 );
 
-                // refund
-                try {
-                    sequelizeTransaction.rollback();
-                    await refund();
-
-                    console.log(
-                        `Successfully restored user ${id}'s balance to ${newBalance} GACXP`
-                    );
-
-                    return res
-                        .status(400)
-                        .send({ error: 'Exceeds available supply' });
-                } catch (e) {
-                    const errorId = v4();
-
-                    console.error(
-                        `[DEV INTERVENTION NEEDED] failed to restore balance of ${id} back to its original value. Error id: ${errorId}`
-                    );
-
-                    return res.status(500).send({
-                        error: `Exceeds available supply. An error occured restoring your balance, contact support. Error id: ${errorId}`,
-                    });
-                }
+                return res
+                    .status(400)
+                    .send({ error: 'Exceeds available supply' });
             }
 
             const previousTransactions = await StoredTransaction.findAll({
@@ -612,29 +539,9 @@ export const getTransactionRouter = async (
                     `${id} tried to purchase ${listing.title} (${listingId}) but they already maxxed out per user (max: ${maxPerUser}, purchased: ${quantityAlreadyPurchased}, desired: ${quantity}).`
                 );
 
-                // refund
-                try {
-                    sequelizeTransaction.rollback();
-                    await refund();
-
-                    console.log(
-                        `Successfully restored user ${id}'s balance to ${newBalance} GACXP`
-                    );
-
-                    return res.status(400).send({
-                        error: 'Exceeds available supply for this user',
-                    });
-                } catch (e) {
-                    const errorId = v4();
-
-                    console.error(
-                        `[DEV INTERVENTION NEEDED] failed to restore balance of ${id} back to its original value. Error id: ${errorId}`
-                    );
-
-                    return res.status(500).send({
-                        error: `Exceeds available supply for this user. An error occured restoring your balance, contact support. Error id: ${errorId}`,
-                    });
-                }
+                return res.status(400).send({
+                    error: 'Exceeds available supply for this user',
+                });
             }
 
             // generate transaction
@@ -667,26 +574,98 @@ export const getTransactionRouter = async (
             );
             sequelizeTransaction.rollback();
 
+            return res.status(500).send({
+                error: `Failed to complete transaction. Error id: ${errorId}`,
+            });
+        }
+
+        const newTransaction = tx.get();
+
+        console.log(
+            `Transaction ${newTransaction.id} successfully published to the database.`
+        );
+
+        // skip withdrawl for admins
+        let newBalance = 0;
+        if (!isAdmin) {
+            console.log(
+                `Sending patch request to UNB to reduce user ${id}'s balance by ${totalCost} following transaction ${newTransaction.id}`
+            );
             try {
-                await refund();
-
-                console.log(
-                    `Successfully restored user ${id}'s balance to ${newBalance} GACXP. Error id: ${errorId}`
-                );
-
-                return res.status(500).send({
-                    error: `Failed to complete transaction. Error id: ${errorId}`,
-                });
+                ({ cash: newBalance } = await spend(
+                    client,
+                    guildId,
+                    id,
+                    totalCost
+                ));
             } catch (e) {
                 console.error(
-                    `[DEV INTERVENTION NEEDED] Failed to refund user ${id} ${totalCost} after failure to complete transaction. Error id: ${errorId}`,
+                    `Failed to reduce user ${id}'s balance. Destroying transaction.`,
                     e
                 );
 
-                return res.status(500).send({
-                    error: `Failed to complete transaction. An error occured restoring your balance, contact support. Error id: ${errorId}`,
-                });
+                tx.destroy()
+                    .then(() => {
+                        console.log(
+                            `${newTransaction.id} was destroyed successfully.`
+                        );
+                    })
+                    .catch((e) => {
+                        console.error(
+                            `Failed to destroy transaction ${newTransaction.id}`,
+                            e
+                        );
+                    });
+
+                return res
+                    .status(500)
+                    .send({ error: 'Failed to reduce balance' });
             }
+
+            if (newBalance < 0) {
+                console.error(
+                    `User ${id} has a negative balance from transaction ${newTransaction.id}. Refunding ${totalCost} and destroying transaction ${newTransaction.id}.`
+                );
+
+                tx.destroy()
+                    .then(() => {
+                        console.log(
+                            `${newTransaction.id} was destroyed successfully.`
+                        );
+                    })
+                    .catch((e) => {
+                        console.error(
+                            `Failed to destroy transaction ${newTransaction.id}`,
+                            e
+                        );
+                    });
+
+                try {
+                    await give(client, guildId, id, totalCost);
+                    console.log(
+                        `Refunded user ${id} ${totalCost} GACXP successfully.`
+                    );
+
+                    return res
+                        .status(400)
+                        .send({ error: 'Insufficient balance' });
+                } catch (e) {
+                    const errorId = v4();
+
+                    console.log(
+                        `[DEVELOPER INTERVENTION NEEDED] Failed to refund user ${id} ${totalCost} GACXP after negative balance from ${newTransaction.id}. Error id: ${errorId}`,
+                        e
+                    );
+
+                    return res.status(500).send({
+                        error: `Failed due to insufficient balance. Failed to refund tokens, contant support with error id: ${errorId}`,
+                    });
+                }
+            }
+
+            console.log(
+                `User ${id}'s resultant balance is ${newBalance} after transaction ${newTransaction.id}.`
+            );
         }
 
         if (resultantRole) {
@@ -739,7 +718,6 @@ export const getTransactionRouter = async (
     });
 
     // POST
-
     TransactionRouter.post<
         string,
         FulfillmentParams,
