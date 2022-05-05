@@ -512,6 +512,8 @@ export const getTransactionRouter = async (
                     }).`
                 );
 
+                sequelizeTransaction.rollback();
+
                 return res
                     .status(400)
                     .send({ error: 'Exceeds available supply' });
@@ -538,6 +540,8 @@ export const getTransactionRouter = async (
                 console.log(
                     `${id} tried to purchase ${listing.title} (${listingId}) but they already maxxed out per user (max: ${maxPerUser}, purchased: ${quantityAlreadyPurchased}, desired: ${quantity}).`
                 );
+
+                sequelizeTransaction.rollback();
 
                 return res.status(400).send({
                     error: 'Exceeds available supply for this user',
