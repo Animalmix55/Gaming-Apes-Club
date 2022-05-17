@@ -1,3 +1,4 @@
+import { config } from 'dotenv';
 import fs from 'fs';
 import {
     generateGACImages,
@@ -12,6 +13,9 @@ import {
     GACLayer,
     UsedTraits,
 } from './GenerateMeta/Models';
+import { getOpenSeaAPI, getTokenRarities } from './OpenSea/Opensea';
+
+config();
 
 // const OUTPUT_BASE =
 //     'C:/Users/Cory/source/repos/Gaming-Apes-Club/Utils/src/Assets/Outputs';
@@ -178,35 +182,50 @@ import {
 //     JSON.stringify(withQuotients, null, 4)
 // );
 
-const splitMeta = JSON.parse(
-    fs
-        .readFileSync(
-            'C:/Users/Cory/source/repos/Gaming-Apes-Club/Utils/src/Assets/Outputs/2-28-2022-5/split_meta.json'
-        )
-        .toString()
-) as ERC721Meta<GACLayer>[];
+// const splitMeta = JSON.parse(
+//     fs
+//         .readFileSync(
+//             'C:/Users/Cory/source/repos/Gaming-Apes-Club/Utils/src/Assets/Outputs/2-28-2022-5/split_meta.json'
+//         )
+//         .toString()
+// ) as ERC721Meta<GACLayer>[];
 
-const OUTPUT_METADATA_DIR =
-    'C:/Users/Cory/source/repos/Gaming-Apes-Club/Utils/src/Assets/OutputMetadata';
+// const OUTPUT_METADATA_DIR =
+//     'C:/Users/Cory/source/repos/Gaming-Apes-Club/Utils/src/Assets/OutputMetadata';
 
-splitMeta.forEach((v, i) => {
-    const sanitized: ERC721Meta<GACLayer> = {
-        name: v.name,
-        external_url: v.external_url,
-        description: v.description,
-        image: `https://cc_nftstore.mypinata.cloud/ipfs/Qmcs5wVVKyTmVh4jRb2Zsaj5D9mrgmJyTG5Xfie5p6NPH6/${i}.webp`,
-        attributes: [],
-    };
-    v.attributes.forEach((a) => {
-        sanitized.attributes.push({
-            display_type: a.display_type,
-            trait_type: a.trait_type,
-            value: a.value,
-        });
-    });
+// splitMeta.forEach((v, i) => {
+//     const sanitized: ERC721Meta<GACLayer> = {
+//         name: v.name,
+//         external_url: v.external_url,
+//         description: v.description,
+//         image: `https://cc_nftstore.mypinata.cloud/ipfs/Qmcs5wVVKyTmVh4jRb2Zsaj5D9mrgmJyTG5Xfie5p6NPH6/${i}.webp`,
+//         attributes: [],
+//     };
+//     v.attributes.forEach((a) => {
+//         sanitized.attributes.push({
+//             display_type: a.display_type,
+//             trait_type: a.trait_type,
+//             value: a.value,
+//         });
+//     });
 
-    fs.writeFileSync(
-        `${OUTPUT_METADATA_DIR}/${i}`,
-        JSON.stringify(sanitized, null, 4)
+//     fs.writeFileSync(
+//         `${OUTPUT_METADATA_DIR}/${i}`,
+//         JSON.stringify(sanitized, null, 4)
+//     );
+// });
+
+const getRarities = async () => {
+    if (!process.env.opensea_token) throw new Error('Missing OS token');
+    const osApi = getOpenSeaAPI(process.env.opensea_token);
+    const rarities = await getTokenRarities(
+        osApi,
+        '0xac2a6706285b91143eaded25d946ff17a60a6512'
     );
-});
+    fs.writeFileSync(
+        'C:/Users/Cory/source/repos/Gaming-Apes-Club/Utils/src/Assets/Rarities.json',
+        JSON.stringify(rarities, null, 4)
+    );
+};
+
+getRarities();
