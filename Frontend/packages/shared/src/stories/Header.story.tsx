@@ -2,7 +2,7 @@ import React from 'react';
 import { Header } from '../molecules/Header';
 
 export default {
-    title: 'Shared/Molecules/Header',
+    title: 'Shared/v1/Molecules/Header',
     component: Header,
     decorators: [
         (Story: () => JSX.Element): JSX.Element => (

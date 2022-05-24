@@ -7,7 +7,7 @@ import {
 } from '../atoms/ConnectButton';
 
 export default {
-    title: 'Shared/Atoms/ConnectButton',
+    title: 'Shared/v1/Atoms/ConnectButton',
     component: ConnectButton,
 };
 

@@ -20,15 +20,11 @@ interface BackgroundPallette {
 }
 
 interface ButtonPallette {
-    /**
-     * Can be used with varying alpha channels to create varying results
-     */
-    active: RGBA;
-    /**
-     * Lighter than disabled
-     */
-    inactive: RGBA;
+    primary: RGBA;
+    secondary: RGBA;
+    hovered: RGBA;
     disabled: RGBA;
+    error: RGBA;
 }
 
 export interface ThemeContextType {
@@ -53,9 +49,11 @@ export const DefaultTheme: ThemeContextType = {
         darker: rgba(12, 17, 24, 0.6),
     },
     buttonPallette: {
-        active: rgba(115, 91, 242, 1),
-        inactive: rgba(22, 28, 45, 1),
-        disabled: rgba(255, 255, 255, 0.1),
+        primary: rgba(115, 91, 242, 1),
+        secondary: rgba(115, 91, 242, 0.2),
+        hovered: rgba(69, 55, 145, 1),
+        disabled: rgba(22, 28, 45, 1),
+        error: rgba(144, 0, 0, 1),
     },
 };
 

@@ -2,7 +2,7 @@ import React from 'react';
 import { GlowButton } from '../atoms/GlowButton';
 
 export default {
-    title: 'Shared/Atoms/HoverButton',
+    title: 'Shared/v1/Atoms/HoverButton',
     component: GlowButton,
 };
 
