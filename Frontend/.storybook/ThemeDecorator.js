@@ -1,3 +1,9 @@
 import { ThemeContextProvider, DefaultTheme } from '@gac/shared';
+import { ThemeContextProvider as ThemeContextProviderV2, DefaultTheme as DefaultThemeV2 } from '@gac/shared-v2';
 
-export default (story) => <ThemeContextProvider value={DefaultTheme}>{story()}</ThemeContextProvider> 
+export default (story) => 
+    <ThemeContextProvider value={DefaultTheme}>
+        <ThemeContextProviderV2 value={DefaultTheme}>
+            {story()}
+        </ThemeContextProviderV2>
+    </ThemeContextProvider> 
