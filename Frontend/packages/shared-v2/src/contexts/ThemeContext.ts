@@ -25,6 +25,7 @@ interface ButtonPallette {
     hovered: RGBA;
     disabled: RGBA;
     error: RGBA;
+    inactive: RGBA;
 }
 
 export interface ThemeContextType {
@@ -54,6 +55,7 @@ export const DefaultTheme: ThemeContextType = {
         hovered: rgba(69, 55, 145, 1),
         disabled: rgba(22, 28, 45, 1),
         error: rgba(144, 0, 0, 1),
+        inactive: rgba(36, 36, 36, 1),
     },
 };
 
