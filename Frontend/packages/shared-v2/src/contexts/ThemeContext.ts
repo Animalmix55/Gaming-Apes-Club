@@ -28,11 +28,16 @@ interface ButtonPallette {
     inactive: RGBA;
 }
 
+interface ShadowPallette {
+    rainbow: string;
+}
+
 export interface ThemeContextType {
     font: string;
     foregroundPallette: ForegroundPallette;
     backgroundPallette: BackgroundPallette;
     buttonPallette: ButtonPallette;
+    shadowPallette: ShadowPallette;
 }
 
 export const DefaultTheme: ThemeContextType = {
@@ -56,6 +61,10 @@ export const DefaultTheme: ThemeContextType = {
         disabled: rgba(22, 28, 45, 1),
         error: rgba(144, 0, 0, 1),
         inactive: rgba(36, 36, 36, 1),
+    },
+    shadowPallette: {
+        rainbow:
+            '-16px -16px 60px rgba(32, 129, 226, 0.3), 16px 16px 60px rgba(157, 0, 253, 0.3);',
     },
 };
 

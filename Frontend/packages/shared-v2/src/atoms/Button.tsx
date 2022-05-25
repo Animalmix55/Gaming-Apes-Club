@@ -16,6 +16,7 @@ export interface Props {
     disabled?: boolean;
     onClick?: () => void;
     className?: string;
+    iconClass?: string;
     themeType?: ButtonType;
     type?: 'button' | 'reset' | 'submit';
 }
@@ -27,6 +28,7 @@ export const Button = (props: Props): JSX.Element => {
         iconAlt,
         disabled,
         onClick,
+        iconClass,
         className,
         type,
         themeType,
@@ -103,11 +105,14 @@ export const Button = (props: Props): JSX.Element => {
                 <img
                     src={icon}
                     alt={iconAlt}
-                    className={css({
-                        height: '20px',
-                        width: 'auto',
-                        marginRight: text ? '3px' : undefined,
-                    })}
+                    className={ClassNameBuilder(
+                        iconClass,
+                        css({
+                            height: '20px',
+                            width: 'auto',
+                            marginRight: text ? '3px' : undefined,
+                        })
+                    )}
                 />
             )}
             {text && <span>{text}</span>}

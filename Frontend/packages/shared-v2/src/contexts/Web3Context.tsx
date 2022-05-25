@@ -7,7 +7,7 @@ import { hooks as MMHooks, metaMask } from '../connectors/Metamask';
 import { hooks as WCHooks, walletConnect } from '../connectors/WalletConnect';
 import { hooks as WLHooks, walletLink } from '../connectors/WalletLink';
 
-export interface ProviderContextType {
+export interface Web3ContextType {
     provider?: Web3Provider;
     web3?: Web3;
     accounts?: string[];
@@ -16,9 +16,9 @@ export interface ProviderContextType {
     chainId?: number;
 }
 
-export const ProviderContext = React.createContext<ProviderContextType>({});
+export const Web3Context = React.createContext<Web3ContextType>({});
 
-export const ProviderContextProvider = ({
+export const Web3ContextProvider = ({
     children,
 }: {
     children: React.ReactNode;
@@ -72,13 +72,12 @@ export const ProviderContextProvider = ({
     }, [provider]);
 
     return (
-        <ProviderContext.Provider
+        <Web3Context.Provider
             value={{ provider, web3, accounts, chainId, disconnect }}
         >
             {children}
-        </ProviderContext.Provider>
+        </Web3Context.Provider>
     );
 };
 
-export const useProvider = (): ProviderContextType =>
-    React.useContext(ProviderContext);
+export const useWeb3 = (): Web3ContextType => React.useContext(Web3Context);

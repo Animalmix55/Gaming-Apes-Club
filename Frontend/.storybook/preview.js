@@ -8,6 +8,7 @@ import StyletronDecorator from "./StyletronDecorator";
 import ThemeDecorator from './ThemeDecorator';
 import ToastDecorator from './ToastDecorator';
 import AuthorizationContextDecorator from './AuthorizationContextDecorator';
+import Web3ContextProviderDecorator from './Web3ContextProviderDecorator';
 
 export const parameters = {
   actions: { argTypesRegex: "^on[A-Z].*" },
@@ -19,4 +20,14 @@ export const parameters = {
   },
 }
 
-export const decorators = [QueryClientDecorator, ContractContextDecorator, StyletronDecorator, ThemeDecorator, ProviderDecorator, AuthorizationContextDecorator, GamingApeClubDecorator, ToastDecorator];
+export const decorators = [
+  QueryClientDecorator,
+  ContractContextDecorator,
+  StyletronDecorator,
+  ThemeDecorator,
+  ProviderDecorator,
+  Web3ContextProviderDecorator,
+  AuthorizationContextDecorator,
+  GamingApeClubDecorator,
+  ToastDecorator
+];

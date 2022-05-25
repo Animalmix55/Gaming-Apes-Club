@@ -1,17 +1,20 @@
 import React from 'react';
 import { useStyletron } from 'styletron-react';
 import GACLogo from '../assets/png/logo/GAC.png';
-import Button from '../atoms/Button';
+import { ButtonType, Button } from '../atoms/Button';
 import { LoginButton } from '../atoms/LoginButton';
 import { SidebarButton } from '../atoms/SidebarButton';
+import { useWeb3 } from '../contexts/Web3Context';
 import { useThemeContext } from '../contexts/ThemeContext';
 import { ClassNameBuilder } from '../utilties';
-import Icons from '../utilties/Icons';
+import { Icons } from '../utilties/Icons';
+import { WalletLoginModal } from './WalletLoginModal';
 
 export interface SidebarItem<T = never> {
     id: string;
     displayText: string;
     icon: string;
+    disabled?: boolean;
     data?: T;
 }
 
@@ -21,8 +24,6 @@ export interface SidebarProps<T = never> {
     selectedId?: string;
     expanded?: boolean;
     className?: string;
-    onLogin?: () => void;
-    loggedIn?: boolean;
     onTwitterClick?: () => void;
     onDisordClick?: () => void;
     onOpenSeaClick?: () => void;
@@ -58,8 +59,6 @@ export const Sidebar = (props: SidebarProps): JSX.Element => {
         selectedId,
         className,
         expanded,
-        onLogin,
-        loggedIn,
         onDisordClick,
         onOpenSeaClick,
         onTwitterClick,
@@ -67,6 +66,10 @@ export const Sidebar = (props: SidebarProps): JSX.Element => {
 
     const [css] = useStyletron();
     const theme = useThemeContext();
+    const { accounts } = useWeb3();
+    const address = accounts?.[0];
+
+    const [loginModalOpen, setLoginModalOpen] = React.useState(false);
 
     return (
         <div
@@ -94,19 +97,48 @@ export const Sidebar = (props: SidebarProps): JSX.Element => {
             {items.map((b) => (
                 <div key={b.id}>
                     <SidebarButton
+                        disabled={b.disabled}
                         onClick={(): void => onSelectButton?.(b)}
                         icon={b.icon}
+                        themeType={ButtonType.primary}
                         text={b.displayText}
+                        className={css({ margin: '4px' })}
                         collapsed={!expanded}
                         selected={selectedId === b.id}
                     />
                 </div>
             ))}
-            <LoginButton
-                className={css({ marginTop: 'auto' })}
-                active={!loggedIn}
-                onClick={onLogin}
-            />
+            <div
+                className={css({
+                    marginTop: 'auto',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                })}
+            >
+                <div
+                    className={css({
+                        fontFamily: theme.font,
+                        fontWeight: 600,
+                        fontSize: '14px',
+                        marginBottom: '16px',
+                        color: theme.foregroundPallette.white.toRgbaString(),
+                    })}
+                >
+                    {!!address &&
+                        `${address.slice(0, 5)}...${address.slice(
+                            address.length - 4
+                        )}`}
+                </div>
+                <LoginButton
+                    active={!address}
+                    onClick={(): void => setLoginModalOpen(true)}
+                />
+                <WalletLoginModal
+                    onClose={(): void => setLoginModalOpen(false)}
+                    isOpen={loginModalOpen}
+                />
+            </div>
             <div className={css({ display: 'flex', marginTop: '24px' })}>
                 {onTwitterClick && (
                     <SocialIconButton

@@ -1,6 +1,7 @@
 /* eslint-disable no-void */
 import React from 'react';
 import { useStyletron } from 'styletron-react';
+import { Web3ContextProvider } from '../contexts/Web3Context';
 import { Sidebar, SidebarItem } from '../molecules/Sidebar';
 import { Icons } from '../utilties/Icons';
 
@@ -44,13 +45,19 @@ const defaultItems: SidebarItem[] = [
 
 export const StandAlone = (): JSX.Element => {
     const [css] = useStyletron();
+    const [selection, setSelection] = React.useState(defaultItems[0].id);
+
     return (
-        <Sidebar
-            items={defaultItems}
-            className={css({ height: '100vh' })}
-            onTwitterClick={(): void => void 0}
-            onDisordClick={(): void => void 0}
-            onOpenSeaClick={(): void => void 0}
-        />
+        <Web3ContextProvider>
+            <Sidebar
+                items={defaultItems}
+                onSelectButton={(b): void => setSelection(b.id)}
+                selectedId={selection}
+                className={css({ height: '100vh' })}
+                onTwitterClick={(): void => void 0}
+                onDisordClick={(): void => void 0}
+                onOpenSeaClick={(): void => void 0}
+            />
+        </Web3ContextProvider>
     );
 };
