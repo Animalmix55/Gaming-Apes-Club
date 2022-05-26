@@ -15,8 +15,8 @@ export const StakedApesTableInner = (): JSX.Element => {
 
     const containerClass = css({
         display: 'flex',
-        overflowX: 'auto',
         justifyContent: 'flex-start',
+        flexWrap: 'wrap',
         alignItems: 'center',
         fontFamily: theme.font,
         color: theme.foregroundPallette.white.toRgbaString(),

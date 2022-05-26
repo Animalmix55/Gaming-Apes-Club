@@ -86,11 +86,11 @@ export const MainPage = (): JSX.Element => {
                         : undefined
                 }
             />
-            <div className={css({ overflow: 'hidden' })}>
+            <div className={css({ overflow: 'auto' })}>
                 <div className={css({ margin: '32px 48px' })}>
                     <Header />
                 </div>
-                <div className={css({ margin: '48px', overflow: 'hidden' })}>
+                <div className={css({ margin: '48px' })}>
                     <StakedApesTable />
                 </div>
             </div>

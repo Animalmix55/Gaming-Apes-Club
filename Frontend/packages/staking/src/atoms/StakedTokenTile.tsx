@@ -7,6 +7,7 @@ import {
     ButtonType,
     useGamingApeClubContract,
     useWeb3,
+    HOVERABLE,
 } from '@gac/shared-v2';
 import { IERC721Metadata } from '@gac/shared-v2/lib/models/IERC721Metadata';
 import React from 'react';
@@ -53,6 +54,11 @@ export const StakedTokenTile = (props: StakedTokenTileProps): JSX.Element => {
             boxShadow: selected ? theme.shadowPallette.rainbow : undefined,
             color: theme.foregroundPallette.white.toRgbaString(),
             fontFamily: theme.font,
+            [HOVERABLE]: {
+                ':hover': {
+                    boxShadow: theme.shadowPallette.rainbow,
+                },
+            },
         })
     );
 
