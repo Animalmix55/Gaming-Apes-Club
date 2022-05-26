@@ -2,6 +2,10 @@
     visibility: visible;
 }
 
+.staked-token-tile:hover .selected-overlay {
+    visibility: hidden;
+}
+
 /* custom scrollbar */
 ::-webkit-scrollbar {
     width: 20px;

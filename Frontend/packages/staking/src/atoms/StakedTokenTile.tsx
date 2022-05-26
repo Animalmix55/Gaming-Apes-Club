@@ -8,6 +8,7 @@ import {
     useGamingApeClubContract,
     useWeb3,
     HOVERABLE,
+    Icons,
 } from '@gac/shared-v2';
 import { IERC721Metadata } from '@gac/shared-v2/lib/models/IERC721Metadata';
 import React from 'react';
@@ -51,7 +52,6 @@ export const StakedTokenTile = (props: StakedTokenTileProps): JSX.Element => {
             padding: '16px',
             borderRadius: '20px',
             backgroundColor: theme.backgroundPallette.dark.toRgbaString(),
-            boxShadow: selected ? theme.shadowPallette.rainbow : undefined,
             color: theme.foregroundPallette.white.toRgbaString(),
             fontFamily: theme.font,
             [HOVERABLE]: {
@@ -90,6 +90,52 @@ export const StakedTokenTile = (props: StakedTokenTileProps): JSX.Element => {
                     marginBottom: '12px',
                 })}
             >
+                {selected && (
+                    <div
+                        className={ClassNameBuilder(
+                            'selected-overlay',
+                            css({
+                                visibility: 'visible',
+                                position: 'absolute',
+                                display: 'flex',
+                                flexDirection: 'column',
+                                justifyContent: 'center',
+                                zIndex: 10,
+                                borderRadius: '12px',
+                                top: '0px',
+                                bottom: '0px',
+                                right: '0px',
+                                left: '0px',
+                                boxSizing: 'border-box',
+                                padding: '16px',
+                                backgroundColor:
+                                    theme.backgroundPallette.darker.toRgbaString(),
+                                backdropFilter: 'blur(40px)',
+                            })
+                        )}
+                    >
+                        <div>
+                            <img
+                                className={css({
+                                    height: '32px',
+                                    width: 'auto',
+                                })}
+                                src={Icons.CheckmarkCircle}
+                                alt="Checkmark"
+                            />
+                        </div>
+                        <div
+                            className={css({
+                                fontFamily: theme.font,
+                                fontWeight: 700,
+                                fontSize: '14px',
+                                textAlign: 'center',
+                            })}
+                        >
+                            Selected
+                        </div>
+                    </div>
+                )}
                 <div
                     className={ClassNameBuilder(
                         'image-overlay',
