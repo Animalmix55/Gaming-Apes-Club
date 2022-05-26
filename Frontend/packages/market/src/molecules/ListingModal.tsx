@@ -338,7 +338,7 @@ export const ListingModal = (props: Props): JSX.Element => {
                             }
                             innerclass={css({
                                 minHeight: '60px',
-                                font: theme.fonts.buttons,
+                                fontFamily: theme.fonts.buttons,
                             })}
                             className={css({
                                 width: '100%',

@@ -65,7 +65,7 @@ export const Button = (props: Props): JSX.Element => {
             border: 'unset',
             color: theme.foregroundPallette.white.toRgbaString(),
             fontWeight: 700,
-            font: theme.font,
+            fontFamily: theme.font,
             cursor: disabled ? 'not-allowed' : 'pointer',
             backgroundColor: backgroundColor ?? 'unset',
             fontSize: '14px',

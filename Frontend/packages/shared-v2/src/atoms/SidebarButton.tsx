@@ -35,7 +35,6 @@ export const SidebarButton = (props: SidebarButtonProps): JSX.Element => {
 
     const buttonClassName = React.useMemo(() => {
         let hoveredBackgroundColor: string | undefined;
-        let disabledBackgroundColor: string | undefined;
         let selectedBackgroundColor: string | undefined;
 
         switch (themeType) {
@@ -44,16 +43,12 @@ export const SidebarButton = (props: SidebarButtonProps): JSX.Element => {
                     theme.buttonPallette.primary.toRgbaString();
                 selectedBackgroundColor =
                     theme.buttonPallette.hovered.toRgbaString();
-                disabledBackgroundColor =
-                    theme.buttonPallette.disabled.toRgbaString();
                 break;
             case ButtonType.secondary:
                 hoveredBackgroundColor =
                     theme.buttonPallette.secondary.toRgbaString();
                 selectedBackgroundColor =
                     theme.buttonPallette.hovered.toRgbaString();
-                disabledBackgroundColor =
-                    theme.buttonPallette.disabled.toRgbaString();
                 break;
             default:
                 break;
@@ -63,7 +58,7 @@ export const SidebarButton = (props: SidebarButtonProps): JSX.Element => {
             border: 'unset',
             color: theme.foregroundPallette.white.toRgbaString(),
             fontWeight: 700,
-            font: theme.font,
+            fontFamily: theme.font,
             cursor: disabled ? 'not-allowed' : 'pointer',
             backgroundColor: selected ? selectedBackgroundColor : 'unset',
             fontSize: '15px',
@@ -88,7 +83,6 @@ export const SidebarButton = (props: SidebarButtonProps): JSX.Element => {
         css,
         disabled,
         selected,
-        theme.buttonPallette.disabled,
         theme.buttonPallette.hovered,
         theme.buttonPallette.primary,
         theme.buttonPallette.secondary,
