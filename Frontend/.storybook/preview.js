@@ -1,5 +1,6 @@
 import '@gac/mint/src/styles/global.css';
 import '@gac/market/src/styles/global.css';
+import '@gac/staking/src/css/global.css';
 import ContractContextDecorator from './ContractContextDecorator';
 import GamingApeClubDecorator from './GamingApeClubDecorator';
 import ProviderDecorator from './ProviderDecorator';
@@ -9,6 +10,7 @@ import ThemeDecorator from './ThemeDecorator';
 import ToastDecorator from './ToastDecorator';
 import AuthorizationContextDecorator from './AuthorizationContextDecorator';
 import Web3ContextProviderDecorator from './Web3ContextProviderDecorator';
+import StakingApeConfigDecorator from './StakingApeConfigDecorator';
 
 export const parameters = {
   actions: { argTypesRegex: "^on[A-Z].*" },
@@ -29,5 +31,6 @@ export const decorators = [
   Web3ContextProviderDecorator,
   AuthorizationContextDecorator,
   GamingApeClubDecorator,
-  ToastDecorator
+  ToastDecorator,
+  StakingApeConfigDecorator,
 ];

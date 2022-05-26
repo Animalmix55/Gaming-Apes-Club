@@ -4,3 +4,4 @@ export * from './MediaQueries';
 export * from './Numbers';
 export * from './TimeFormatter';
 export * from './Url';
+export * from './Icons';

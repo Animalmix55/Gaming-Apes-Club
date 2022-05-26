@@ -3,7 +3,7 @@ import { ThemeContextProvider as ThemeContextProviderV2, DefaultTheme as Default
 
 export default (story) => 
     <ThemeContextProvider value={DefaultTheme}>
-        <ThemeContextProviderV2 value={DefaultTheme}>
+        <ThemeContextProviderV2 value={DefaultThemeV2}>
             {story()}
         </ThemeContextProviderV2>
     </ThemeContextProvider> 

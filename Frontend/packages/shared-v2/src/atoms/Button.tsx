@@ -74,11 +74,13 @@ export const Button = (props: Props): JSX.Element => {
             padding: '8px 16px 8px 16px',
             display: 'flex',
             alignItems: 'center',
-            [HOVERABLE]: {
-                ':hover': {
-                    backgroundColor: hoveredBackgroundColor,
+            ...(!disabled && {
+                [HOVERABLE]: {
+                    ':hover': {
+                        backgroundColor: hoveredBackgroundColor,
+                    },
                 },
-            },
+            }),
             ':disabled': {
                 backgroundColor: disabledBackgroundColor,
             },
@@ -99,6 +101,7 @@ export const Button = (props: Props): JSX.Element => {
         <button
             className={ClassNameBuilder(className, buttonClassName)}
             onClick={onClick}
+            disabled={disabled}
             type={type}
         >
             {icon && (
