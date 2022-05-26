@@ -83,6 +83,7 @@ export const Button = (props: Props): JSX.Element => {
             }),
             ':disabled': {
                 backgroundColor: disabledBackgroundColor,
+                opacity: 0.6,
             },
         });
     }, [

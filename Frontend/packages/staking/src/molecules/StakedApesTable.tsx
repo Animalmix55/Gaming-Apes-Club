@@ -19,6 +19,7 @@ export const StakedApesTableInner = (): JSX.Element => {
         flexWrap: 'wrap',
         alignItems: 'center',
         fontFamily: theme.font,
+        transform: 'translateX(-12px)',
         color: theme.foregroundPallette.white.toRgbaString(),
     });
 
@@ -45,10 +46,7 @@ export const StakedApesTableInner = (): JSX.Element => {
                     key={token}
                     className={css({
                         flexShrink: 0,
-                        marginRight:
-                            i !== stakedTokens.data.length - 1
-                                ? '24px'
-                                : undefined,
+                        margin: '12px',
                     })}
                 />
             ))}

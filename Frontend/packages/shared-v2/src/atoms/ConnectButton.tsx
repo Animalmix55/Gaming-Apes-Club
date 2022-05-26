@@ -92,11 +92,10 @@ export const ConnectButton = (
                 css({
                     padding: '8px 4px !important',
                     backgroundColor: isActive
-                        ? theme.buttonPallette.hovered.toRgbaString()
+                        ? `${theme.buttonPallette.hovered.toRgbaString()} !important`
                         : undefined,
                     ':hover': {
-                        backgroundColor:
-                            theme.buttonPallette.primary.toRgbaString(),
+                        backgroundColor: `${theme.buttonPallette.primary.toRgbaString()} !important`,
                     },
                 })
             )}

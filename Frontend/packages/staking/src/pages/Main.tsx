@@ -4,7 +4,7 @@ import { useStyletron } from 'styletron-react';
 import { useAppConfiguration } from '../contexts/AppConfigurationContext';
 import Background from '../assets/png/BACKGROUND.png';
 import { Header } from '../atoms/Header';
-import StakedApesTable from '../molecules/StakedApesTable';
+import { StakedApesTable } from '../molecules/StakedApesTable';
 
 const sidebarItems: SidebarItem[] = [
     {

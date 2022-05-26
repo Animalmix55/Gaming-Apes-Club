@@ -65,11 +65,7 @@ export const SidebarButton = (props: SidebarButtonProps): JSX.Element => {
             fontWeight: 700,
             font: theme.font,
             cursor: disabled ? 'not-allowed' : 'pointer',
-            backgroundColor: selected
-                ? selectedBackgroundColor
-                : disabled
-                ? theme.buttonPallette.disabled.toRgbaString()
-                : 'unset',
+            backgroundColor: selected ? selectedBackgroundColor : 'unset',
             fontSize: '15px',
             height: '48px',
             borderRadius: '12px',
@@ -84,7 +80,7 @@ export const SidebarButton = (props: SidebarButtonProps): JSX.Element => {
                 },
             }),
             ':disabled': {
-                backgroundColor: disabledBackgroundColor,
+                opacity: 0.6,
             },
         });
     }, [
@@ -106,6 +102,7 @@ export const SidebarButton = (props: SidebarButtonProps): JSX.Element => {
             className={ClassNameBuilder(className, buttonClassName)}
             onClick={onClick}
             type="button"
+            disabled={disabled}
         >
             <img
                 src={icon}
