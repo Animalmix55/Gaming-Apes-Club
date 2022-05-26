@@ -12,6 +12,7 @@ export * from './hooks/useRequest';
 export * from './hooks/useCurrentTime';
 export * from './hooks/useRequestGetter';
 export * from './hooks/useGamingApeClubTokenRarity';
+export * from './hooks/useGamingApeClubTokenRank';
 export * from './hooks/useMutator';
 export * from './hooks/useContract';
 export * from './atoms/ConnectButton';

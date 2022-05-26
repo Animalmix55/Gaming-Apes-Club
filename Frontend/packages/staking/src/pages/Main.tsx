@@ -4,6 +4,7 @@ import { useStyletron } from 'styletron-react';
 import { useAppConfiguration } from '../contexts/AppConfigurationContext';
 import Background from '../assets/png/BACKGROUND.png';
 import { Header } from '../atoms/Header';
+import StakedApesTable from '../molecules/StakedApesTable';
 
 const sidebarItems: SidebarItem[] = [
     {
@@ -85,9 +86,12 @@ export const MainPage = (): JSX.Element => {
                         : undefined
                 }
             />
-            <div>
+            <div className={css({ overflow: 'hidden' })}>
                 <div className={css({ margin: '32px 48px' })}>
                     <Header />
+                </div>
+                <div className={css({ margin: '48px', overflow: 'hidden' })}>
+                    <StakedApesTable />
                 </div>
             </div>
         </div>

@@ -2,14 +2,17 @@ import { Spinner, SpinnerSize } from '@fluentui/react';
 import {
     ClassNameBuilder,
     useThemeContext,
-    useGamingApeClubTokenRarity,
     Button,
+    useGamingApeClubTokenRank,
     ButtonType,
+    useGamingApeClubContract,
+    useWeb3,
 } from '@gac/shared-v2';
 import { IERC721Metadata } from '@gac/shared-v2/lib/models/IERC721Metadata';
 import React from 'react';
 import { useStyletron } from 'styletron-react';
 import { useMetadata } from '../api/hooks/useMetadata';
+import { useAppConfiguration } from '../contexts/AppConfigurationContext';
 import { useTokenUri } from '../web3/hooks/useTokenUri';
 
 export interface StakedTokenTileProps {
@@ -48,21 +51,23 @@ export const StakedTokenTile = (props: StakedTokenTileProps): JSX.Element => {
             borderRadius: '20px',
             backgroundColor: theme.backgroundPallette.dark.toRgbaString(),
             boxShadow: selected ? theme.shadowPallette.rainbow : undefined,
+            color: theme.foregroundPallette.white.toRgbaString(),
+            fontFamily: theme.font,
         })
     );
 
-    if (metadata.isLoading) {
+    if (metadata.isError) {
         return (
             <div className={containerClass}>
-                <Spinner size={SpinnerSize.medium} />
+                <div>No metadata found</div>
             </div>
         );
     }
 
-    if (!metadata.data) {
+    if (metadata.isLoading || !metadata.data) {
         return (
             <div className={containerClass}>
-                <div>No metadata found</div>
+                <Spinner size={SpinnerSize.medium} />
             </div>
         );
     }
@@ -116,7 +121,7 @@ export const StakedTokenTile = (props: StakedTokenTileProps): JSX.Element => {
                     <Button
                         onClick={onSelect}
                         disabled={!onSelect}
-                        text="Select"
+                        text={selected ? 'Unselect' : 'Select'}
                         className={css({
                             width: '100%',
                             justifyContent: 'center',
@@ -168,6 +173,22 @@ export const StakedTokenTile = (props: StakedTokenTileProps): JSX.Element => {
             </div>
         </div>
     );
+};
+
+export const StakedApeTile = (
+    props: Omit<Omit<StakedTokenTileProps, 'rank'>, 'contract'>
+): JSX.Element => {
+    const { tokenId } = props;
+
+    const { GamingApeClubAddress } = useAppConfiguration();
+    const { web3 } = useWeb3();
+    const contract = useGamingApeClubContract(web3, GamingApeClubAddress);
+    const rank = useGamingApeClubTokenRank(tokenId);
+
+    if (!contract) return <></>;
+
+    // eslint-disable-next-line react/jsx-props-no-spreading
+    return <StakedTokenTile {...props} contract={contract} rank={rank} />;
 };
 
 export default StakedTokenTile;

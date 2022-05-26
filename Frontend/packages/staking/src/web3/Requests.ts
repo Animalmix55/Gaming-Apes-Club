@@ -1,3 +1,4 @@
+import { GamingApeClub } from '@gac/shared-v2';
 import {
     IERC721Metadata,
     Transfer,
@@ -16,10 +17,44 @@ export const getTokensHeld = async (
     address: string
 ): Promise<string[]> => {
     const tokensIn = (await contract.getPastEvents('Transfer', {
+        fromBlock: 0,
         filter: { to: address },
     })) as never as Transfer[];
     const tokensOut = (await contract.getPastEvents('Transfer', {
+        fromBlock: 0,
         filter: { from: address },
+    })) as never as Transfer[];
+
+    const balances: Record<string, number> = {};
+    tokensIn.forEach(({ returnValues }) => {
+        const { tokenId } = returnValues;
+
+        if (!balances[tokenId]) balances[tokenId] = 0;
+        balances[tokenId]++;
+    });
+    tokensOut.forEach(({ returnValues }) => {
+        const { tokenId } = returnValues;
+
+        balances[tokenId]--;
+    });
+
+    return Object.keys(balances)
+        .map((t) => (balances[t] > 0 ? t : undefined))
+        .filter((t) => !!t) as string[];
+};
+
+export const getTokensStaked = async (
+    contract: GamingApeClub,
+    stakingContractAddress: string,
+    userAddress: string
+): Promise<string[]> => {
+    const tokensIn = (await contract.getPastEvents('Transfer', {
+        fromBlock: 0,
+        filter: { from: userAddress, to: stakingContractAddress },
+    })) as never as Transfer[];
+    const tokensOut = (await contract.getPastEvents('Transfer', {
+        fromBlock: 0,
+        filter: { to: userAddress, from: stakingContractAddress },
     })) as never as Transfer[];
 
     const balances: Record<string, number> = {};
