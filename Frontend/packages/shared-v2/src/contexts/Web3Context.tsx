@@ -20,8 +20,10 @@ export const Web3Context = React.createContext<Web3ContextType>({});
 
 export const Web3ContextProvider = ({
     children,
+    defaultProvider,
 }: {
     children: React.ReactNode;
+    defaultProvider?: string;
 }): JSX.Element => {
     const MMProvider = MMHooks.useProvider();
     const MMActive = MMHooks.useIsActive();
@@ -67,9 +69,8 @@ export const Web3ContextProvider = ({
     }, [MMActive, WCActive, WLActive]);
 
     const web3 = React.useMemo(() => {
-        if (!provider) return undefined;
-        return new Web3(provider.provider as never);
-    }, [provider]);
+        return new Web3((provider?.provider as never) ?? defaultProvider);
+    }, [defaultProvider, provider?.provider]);
 
     return (
         <Web3Context.Provider

@@ -13,6 +13,7 @@ export default (story) =>
             TwitterUrl: 'https://twitter.com/GamingApeClub',
             DiscordUrl: 'http://discord.gg/GamingApeClub',
             GamingApeClubAddress: '0xcB9dFFf3942c1A0418A8717Eae940d0d2C8399B9',
+            DefaultEthereumProvider: 'https://goerli.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161',
         }}>
             {story()}
     </AppCongfigurationContextProvider>;

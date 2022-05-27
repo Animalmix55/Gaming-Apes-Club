@@ -29,6 +29,7 @@ const {
     TwitterUrl,
     DiscordUrl,
     OpenSeaUrl,
+    DefaultEthereumProvider,
 } = { ...window } as unknown as AppConfigurationContextType;
 
 const styletron = new Client();
@@ -39,7 +40,9 @@ const Root = (): JSX.Element => {
         <Provider value={styletron}>
             <QueryClientProvider client={queryClient}>
                 <ThemeContextProvider value={DefaultTheme}>
-                    <Web3ContextProvider>
+                    <Web3ContextProvider
+                        defaultProvider={DefaultEthereumProvider}
+                    >
                         <AppCongfigurationContextProvider
                             value={{
                                 EthereumChainId,

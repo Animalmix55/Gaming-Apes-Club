@@ -7,6 +7,10 @@ export enum RPCProviderTag {
 
 export interface AppConfigurationContextType {
     PolygonProvider?: string;
+    /**
+     * For when no provider is specified by the browser.
+     */
+    DefaultEthereumProvider?: string;
     EthereumChainId?: number;
     GACXPContractAddress?: string;
     GamingApeClubAddress?: string;
