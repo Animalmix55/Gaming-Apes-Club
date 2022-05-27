@@ -5,16 +5,15 @@ import {
     ButtonType,
     ClassNameBuilder,
     Icons,
+    ThemeContextType,
+    useCurrentTime,
     useCustomRpcProvider,
-    useGACStakingChildContract,
-    useGACXPContract,
-    useGamingApeClubContract,
     useThemeContext,
     useWeb3,
     WalletLoginModal,
 } from '@gac/shared-v2';
 import React from 'react';
-import { useStyletron } from 'styletron-react';
+import { StyleObject, useStyletron } from 'styletron-react';
 import {
     RPCProviderTag,
     useAppConfiguration,
@@ -32,6 +31,14 @@ export interface DashboardItemProps {
     isLoading?: boolean;
     lowerElement: React.ReactNode;
 }
+
+const AccentTextStyles = (theme: ThemeContextType): StyleObject => ({
+    color: theme.foregroundPallette.accent.toRgbaString(),
+    fontFamily: theme.font,
+    fontWeight: 900,
+    fontSize: '14px',
+    textAlign: 'center',
+});
 
 export const DashboardItem = (props: DashboardItemProps): JSX.Element => {
     const { className, isLoading, topText, lowerElement } = props;
@@ -85,15 +92,7 @@ const Fraction = ({
     const theme = useThemeContext();
 
     return (
-        <div
-            className={css({
-                color: theme.foregroundPallette.accent.toRgbaString(),
-                fontFamily: theme.font,
-                fontWeight: 900,
-                fontSize: '14px',
-                textAlign: 'center',
-            })}
-        >
+        <div className={css(AccentTextStyles(theme))}>
             <span>{left}</span>
             <span
                 className={css({
@@ -128,7 +127,7 @@ const Divider = (): JSX.Element => {
 };
 
 const TokenDisplay = ({ amount }: { amount?: BigNumber }): JSX.Element => {
-    const number = amount?.div(10 ** 18).toNumber() ?? 0;
+    const number = amount?.div(String(1e18)).toString() ?? 0;
     const [css] = useStyletron();
     const theme = useThemeContext();
 
@@ -140,15 +139,7 @@ const TokenDisplay = ({ amount }: { amount?: BigNumber }): JSX.Element => {
                 alignItems: 'center',
             })}
         >
-            <span
-                className={css({
-                    fontFamily: theme.font,
-                    fontWeight: 900,
-                    fontSize: '14px',
-                })}
-            >
-                {number}
-            </span>
+            <span className={css(AccentTextStyles(theme))}>{number}</span>
             <img
                 src={Icons.GACXP}
                 className={css({
@@ -190,12 +181,21 @@ export const Dashboard = (props: DashboardProps): JSX.Element => {
         polygonProvider?.web3,
         GACXPContractAddress
     );
-    const nextRewardTime = useStakeLastUpdatedTime(account);
+    const lastRewardTime = useStakeLastUpdatedTime(account);
     const pendingReward = useCurrentReward(account);
     const rewardTokenSupply = useERC20Supply(
         polygonProvider?.web3,
         GACXPContractAddress
     );
+    const currentTime = useCurrentTime();
+
+    const secondsUntilNextReward = React.useMemo(() => {
+        if (lastRewardTime.isLoading) return 0;
+        if (!lastRewardTime.data) return undefined;
+
+        const dif = currentTime - lastRewardTime.data;
+        return dif;
+    }, [currentTime, lastRewardTime.data, lastRewardTime.isLoading]);
 
     const [css] = useStyletron();
     const theme = useThemeContext();
@@ -221,7 +221,7 @@ export const Dashboard = (props: DashboardProps): JSX.Element => {
                 />
                 <DashboardItem
                     topText="Total Apes Staked"
-                    isLoading={totalStaked.isLoading === undefined}
+                    isLoading={totalStaked.isLoading}
                     lowerElement={
                         <Fraction left={totalStaked.data ?? 0} right={6650} />
                     }
@@ -229,7 +229,7 @@ export const Dashboard = (props: DashboardProps): JSX.Element => {
                 <Divider />
                 <DashboardItem
                     topText="Total Rewards"
-                    isLoading={rewardTokenSupply.isLoading === undefined}
+                    isLoading={rewardTokenSupply.isLoading}
                     lowerElement={
                         <TokenDisplay amount={rewardTokenSupply.data} />
                     }
@@ -251,11 +251,80 @@ export const Dashboard = (props: DashboardProps): JSX.Element => {
                 isOpen={loginModalOpen}
                 onClose={(): void => setWalletModalOpen(false)}
             />
+            <DashboardItem
+                topText="Staked Apes"
+                isLoading={userNFTBalance.isLoading || userStake.isLoading}
+                lowerElement={
+                    <Fraction
+                        left={userStake.data?.length ?? 0}
+                        right={
+                            (userNFTBalance.data ?? 0) +
+                            (userStake.data?.length ?? 0)
+                        }
+                    />
+                }
+            />
             <Divider />
             <DashboardItem
                 topText="Reward Balance"
-                isLoading={userRewardBalance.isLoading === undefined}
+                isLoading={userRewardBalance.isLoading}
                 lowerElement={<TokenDisplay amount={userRewardBalance.data} />}
+            />
+            <Divider />
+            <DashboardItem
+                topText="Next rewards in"
+                isLoading={lastRewardTime.isLoading}
+                lowerElement={
+                    secondsUntilNextReward !== undefined ? (
+                        <div className={css({ textAlign: 'center' })}>
+                            <span className={css(AccentTextStyles(theme))}>
+                                {Math.floor(secondsUntilNextReward / 3600)}
+                            </span>
+                            <span
+                                className={css({
+                                    fontSize: '10px',
+                                    color: theme.foregroundPallette.white.toRgbaString(
+                                        0.6
+                                    ),
+                                    margin: '0px 8px 0px 4px',
+                                })}
+                            >
+                                hrs
+                            </span>
+                            <span className={css(AccentTextStyles(theme))}>
+                                {Math.floor(
+                                    (secondsUntilNextReward % 3600) / 60
+                                )}
+                            </span>
+                            <span
+                                className={css({
+                                    fontSize: '10px',
+                                    color: theme.foregroundPallette.white.toRgbaString(
+                                        0.6
+                                    ),
+                                    margin: '0px 0px 0px 4px',
+                                })}
+                            >
+                                mins
+                            </span>
+                        </div>
+                    ) : (
+                        <div className={css(AccentTextStyles(theme))}>N/A</div>
+                    )
+                }
+            />
+            <Divider />
+            <DashboardItem
+                topText="Claimable"
+                isLoading={pendingReward.isLoading}
+                lowerElement={<TokenDisplay amount={pendingReward.data} />}
+            />
+            <Button
+                icon={Icons.ETHWhite}
+                themeType={ButtonType.primary}
+                className={css({ marginLeft: '32px' })}
+                text="Claim Reward"
+                disabled={!pendingReward.data || pendingReward.data.isZero()}
             />
         </div>
     );

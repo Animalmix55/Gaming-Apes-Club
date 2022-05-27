@@ -1,13 +1,10 @@
 /* eslint-disable react/no-unused-prop-types */
 import React from 'react';
-import { Web3ReactHooks } from '@web3-react/core';
 import Web3 from 'web3';
-import { initializeJsonRpcConnector } from '../connectors/JsonRPC';
 
 interface CustomRpcProviderContextType {
     providerTag: unknown;
     providerUrl: string;
-    hooks: Web3ReactHooks;
     web3?: Web3;
     getParent: (tag: unknown) => CustomRpcProviderContextType | undefined;
 }
@@ -26,12 +23,7 @@ export const CustomRpcProvider = (
     props: CustomRpcProviderProps
 ): JSX.Element => {
     const { providerTag, providerUrl, children } = props;
-    const [, hooks] = React.useMemo(
-        () => initializeJsonRpcConnector(providerUrl, true),
-        [providerUrl]
-    );
 
-    const provider = hooks.useProvider();
     const parent = React.useContext(CustomRpcProviderContext);
 
     const getParent = React.useCallback(
@@ -50,15 +42,14 @@ export const CustomRpcProvider = (
     );
 
     const web3 = React.useMemo((): Web3 | undefined => {
-        if (!provider) return undefined;
-        const { provider: web3Provider } = provider;
+        if (!providerUrl) return undefined;
 
-        return new Web3(web3Provider as never);
-    }, [provider]);
+        return new Web3(providerUrl);
+    }, [providerUrl]);
 
     return (
         <CustomRpcProviderContext.Provider
-            value={{ providerTag, providerUrl, hooks, web3, getParent }}
+            value={{ providerTag, providerUrl, web3, getParent }}
         >
             {children}
         </CustomRpcProviderContext.Provider>

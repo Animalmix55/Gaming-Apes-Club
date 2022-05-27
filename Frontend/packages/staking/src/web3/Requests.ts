@@ -1,6 +1,7 @@
 import { BigNumber } from '@ethersproject/bignumber';
 import { GamingApeClub } from '@gac/shared-v2';
 import { GACStakingChild } from '@gac/shared-v2/lib/models/GACStakingChild';
+
 import { IERC20 } from '@gac/shared-v2/lib/models/IERC20';
 import {
     IERC721Metadata,
@@ -11,7 +12,7 @@ export const getTokenUri = async (
     contract: IERC721Metadata,
     tokenId: string
 ): Promise<string> => {
-    const tokenUri = await contract.methods.tokenURI(tokenId).call();
+    const tokenUri = await contract.methods.tokenURI(tokenId).call({});
     return tokenUri;
 };
 
@@ -82,7 +83,7 @@ export const getReward = async (
     contract: GACStakingChild,
     user: string
 ): Promise<BigNumber> => {
-    const reward = await contract.methods.getReward(user).call();
+    const reward = await contract.methods.getReward(user).call({});
     return BigNumber.from(reward);
 };
 
@@ -90,7 +91,7 @@ export const getStakingLastUpdatedTime = async (
     contract: GACStakingChild,
     user: string
 ): Promise<number> => {
-    const { lastUpdated } = await contract.methods.stakes(user).call();
+    const { lastUpdated } = await contract.methods.stakes(user).call({});
     return Number(lastUpdated);
 };
 
@@ -98,7 +99,7 @@ export const getNFTBalance = async (
     contract: IERC721Metadata,
     address: string
 ): Promise<number> => {
-    const amount = await contract.methods.balanceOf(address).call();
+    const amount = await contract.methods.balanceOf(address).call({});
     return Number(amount);
 };
 
@@ -106,12 +107,12 @@ export const getERC20Balance = async (
     contract: IERC20,
     address: string
 ): Promise<BigNumber> => {
-    const balance = await contract.methods.balanceOf(address).call();
+    const balance = await contract.methods.balanceOf(address).call({});
     return BigNumber.from(balance);
 };
 
 export const getERC20Supply = async (contract: IERC20): Promise<BigNumber> => {
-    const supply = await contract.methods.totalSupply().call();
+    const supply = await contract.methods.totalSupply().call({});
     return BigNumber.from(supply);
 };
 
