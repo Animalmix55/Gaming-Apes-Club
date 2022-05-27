@@ -86,11 +86,17 @@ export const MainPage = (): JSX.Element => {
                         : undefined
                 }
             />
-            <div className={css({ overflow: 'auto' })}>
-                <div className={css({ margin: '32px 48px' })}>
+            <div className={css({ overflow: 'auto', width: '100%' })}>
+                <div className={css({ margin: '32px 48px 6px 48px' })}>
                     <Header />
                 </div>
-                <div className={css({ margin: '48px' })}>
+                <div
+                    className={css({
+                        padding: '48px',
+                        width: '100%',
+                        boxSizing: 'border-box',
+                    })}
+                >
                     <StakedApesTable />
                 </div>
             </div>

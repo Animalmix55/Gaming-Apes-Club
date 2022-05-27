@@ -11,7 +11,7 @@ import { useAppConfiguration } from '../../contexts/AppConfigurationContext';
 export const TOKENS_STAKED_KEY = 'TOKENS_STAKED';
 
 export const useTokensStaked = (address?: string): RequestResult<string[]> => {
-    const { GACStakingContractAddres, GamingApeClubAddress } =
+    const { GACStakingContractAddress, GamingApeClubAddress } =
         useAppConfiguration();
     const { web3 } = useWeb3();
     const gamingApeClubContract = useGamingApeClubContract(
@@ -21,18 +21,27 @@ export const useTokensStaked = (address?: string): RequestResult<string[]> => {
 
     const request = React.useCallback(
         async (address: string) => {
-            if (!gamingApeClubContract || !GACStakingContractAddres || !address)
+            if (
+                !gamingApeClubContract ||
+                !GACStakingContractAddress ||
+                !address
+            )
                 return [];
             return getTokensStaked(
                 gamingApeClubContract,
-                GACStakingContractAddres,
+                GACStakingContractAddress,
                 address
             );
         },
-        [GACStakingContractAddres, gamingApeClubContract]
+        [GACStakingContractAddress, gamingApeClubContract]
     );
 
-    return useRequest(request, TOKENS_STAKED_KEY, [address], {
-        staleTime: Infinity,
-    });
+    return useRequest(
+        request,
+        TOKENS_STAKED_KEY,
+        [address, GACStakingContractAddress, !!gamingApeClubContract],
+        {
+            staleTime: Infinity,
+        }
+    );
 };

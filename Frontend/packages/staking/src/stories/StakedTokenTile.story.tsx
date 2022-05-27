@@ -16,11 +16,7 @@ export const StandAlone = ({
     selected: boolean;
 }): JSX.Element => {
     const { GamingApeClubAddress } = useAppConfiguration();
-    const { web3 } = useWeb3();
-    const contract = useGamingApeClubContract(web3, GamingApeClubAddress);
     const [isSelected, setSelected] = React.useState(selected);
-
-    if (!contract) return <></>;
 
     return (
         <StakedTokenTile
@@ -28,7 +24,7 @@ export const StandAlone = ({
             onSelect={(): void => setSelected((s) => !s)}
             selected={isSelected}
             tokenId={tokenId}
-            contract={contract}
+            contractAddress={GamingApeClubAddress}
         />
     );
 };

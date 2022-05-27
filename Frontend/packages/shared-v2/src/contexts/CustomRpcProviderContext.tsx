@@ -5,11 +5,11 @@ import Web3 from 'web3';
 import { initializeJsonRpcConnector } from '../connectors/JsonRPC';
 
 interface CustomRpcProviderContextType {
-    providerTag: symbol;
+    providerTag: unknown;
     providerUrl: string;
     hooks: Web3ReactHooks;
     web3?: Web3;
-    getParent: (tag: symbol) => CustomRpcProviderContextType | undefined;
+    getParent: (tag: unknown) => CustomRpcProviderContextType | undefined;
 }
 
 const CustomRpcProviderContext = React.createContext<
@@ -17,9 +17,8 @@ const CustomRpcProviderContext = React.createContext<
 >(undefined);
 
 interface CustomRpcProviderProps {
-    providerTag: symbol;
+    providerTag: unknown;
     providerUrl: string;
-    web3: Web3 | undefined;
     children: React.ReactNode;
 }
 
@@ -36,7 +35,7 @@ export const CustomRpcProvider = (
     const parent = React.useContext(CustomRpcProviderContext);
 
     const getParent = React.useCallback(
-        (providerTag: symbol) => {
+        (providerTag: unknown) => {
             if (!parent) return undefined;
 
             const {
@@ -72,7 +71,7 @@ export const CustomRpcProvider = (
  * @returns the matching RPC provider.
  */
 export const useCustomRpcProvider = (
-    tag: symbol
+    tag: unknown
 ): CustomRpcProviderContextType | undefined => {
     const context = React.useContext(CustomRpcProviderContext);
 

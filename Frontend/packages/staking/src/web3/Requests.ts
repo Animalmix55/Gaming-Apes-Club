@@ -1,7 +1,7 @@
 import { BigNumber } from '@ethersproject/bignumber';
 import { GamingApeClub } from '@gac/shared-v2';
 import { GACStakingChild } from '@gac/shared-v2/lib/models/GACStakingChild';
-import { GACXP } from '@gac/shared-v2/lib/models/GACXP';
+import { IERC20 } from '@gac/shared-v2/lib/models/IERC20';
 import {
     IERC721Metadata,
     Transfer,
@@ -103,14 +103,14 @@ export const getNFTBalance = async (
 };
 
 export const getERC20Balance = async (
-    contract: GACXP,
+    contract: IERC20,
     address: string
 ): Promise<BigNumber> => {
     const balance = await contract.methods.balanceOf(address).call();
     return BigNumber.from(balance);
 };
 
-export const getERC20Supply = async (contract: GACXP): Promise<BigNumber> => {
+export const getERC20Supply = async (contract: IERC20): Promise<BigNumber> => {
     const supply = await contract.methods.totalSupply().call();
     return BigNumber.from(supply);
 };

@@ -1,18 +1,24 @@
 import React from 'react';
-import { RequestResult, useRequest } from '@gac/shared-v2';
-import { IERC721Metadata } from '@gac/shared-v2/lib/models/IERC721Metadata';
+import {
+    RequestResult,
+    useIERC721MetadataContract,
+    useRequest,
+} from '@gac/shared-v2';
+import Web3 from 'web3';
 import { getTokensHeld } from '../Requests';
 
 export const TOKENS_HELD_KEY = 'TOKENS_HELD';
 
 export const useTokensHeld = (
-    address: string,
-    contract: IERC721Metadata
+    web3?: Web3,
+    address?: string,
+    contractAddress?: string
 ): RequestResult<string[]> => {
-    const { defaultAccount } = contract;
+    const contract = useIERC721MetadataContract(web3, contractAddress);
 
     const request = React.useCallback(
-        (address: string) => {
+        async (address: string) => {
+            if (!address || !contract) return [];
             return getTokensHeld(contract, address);
         },
         [contract]
@@ -21,7 +27,7 @@ export const useTokensHeld = (
     return useRequest(
         request,
         TOKENS_HELD_KEY,
-        [address, defaultAccount ?? ''],
+        [address, contractAddress, !!contract],
         {
             staleTime: Infinity,
         }

@@ -2,6 +2,7 @@ export * from './contexts/ThemeContext';
 export * from './Chains';
 export * from './utilties';
 export * from './contexts/Web3Context';
+export * from './contexts/CustomRpcProviderContext';
 export * from './models/Chain';
 export * from './models/Meta';
 export * from './models/GamingApeClub';

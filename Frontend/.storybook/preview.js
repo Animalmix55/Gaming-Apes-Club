@@ -11,6 +11,7 @@ import ToastDecorator from './ToastDecorator';
 import AuthorizationContextDecorator from './AuthorizationContextDecorator';
 import Web3ContextProviderDecorator from './Web3ContextProviderDecorator';
 import StakingApeConfigDecorator from './StakingApeConfigDecorator';
+import StakingContextDecorator from './StakingContextDecorator';
 
 export const parameters = {
   actions: { argTypesRegex: "^on[A-Z].*" },
@@ -33,4 +34,5 @@ export const decorators = [
   GamingApeClubDecorator,
   ToastDecorator,
   StakingApeConfigDecorator,
+  StakingContextDecorator,
 ];

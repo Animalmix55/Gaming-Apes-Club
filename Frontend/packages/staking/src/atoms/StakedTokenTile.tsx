@@ -5,12 +5,10 @@ import {
     Button,
     useGamingApeClubTokenRank,
     ButtonType,
-    useGamingApeClubContract,
     useWeb3,
     HOVERABLE,
     Icons,
 } from '@gac/shared-v2';
-import { IERC721Metadata } from '@gac/shared-v2/lib/models/IERC721Metadata';
 import React from 'react';
 import { useStyletron } from 'styletron-react';
 import { useMetadata } from '../api/hooks/useMetadata';
@@ -18,7 +16,7 @@ import { useAppConfiguration } from '../contexts/AppConfigurationContext';
 import { useTokenUri } from '../web3/hooks/useTokenUri';
 
 export interface StakedTokenTileProps {
-    contract: IERC721Metadata;
+    contractAddress?: string;
     tokenId: string;
     className?: string;
     rank?: number;
@@ -29,7 +27,7 @@ export interface StakedTokenTileProps {
 
 export const StakedTokenTile = (props: StakedTokenTileProps): JSX.Element => {
     const {
-        contract,
+        contractAddress,
         tokenId,
         className,
         rank,
@@ -38,7 +36,9 @@ export const StakedTokenTile = (props: StakedTokenTileProps): JSX.Element => {
         onUnstake,
     } = props;
 
-    const tokenUri = useTokenUri(tokenId, contract);
+    const { web3 } = useWeb3();
+
+    const tokenUri = useTokenUri(web3, tokenId, contractAddress);
     const metadata = useMetadata(tokenUri.data);
 
     const [css] = useStyletron();
@@ -233,14 +233,16 @@ export const StakedApeTile = (
     const { tokenId } = props;
 
     const { GamingApeClubAddress } = useAppConfiguration();
-    const { web3 } = useWeb3();
-    const contract = useGamingApeClubContract(web3, GamingApeClubAddress);
     const rank = useGamingApeClubTokenRank(tokenId);
 
-    if (!contract) return <></>;
-
-    // eslint-disable-next-line react/jsx-props-no-spreading
-    return <StakedTokenTile {...props} contract={contract} rank={rank} />;
+    return (
+        <StakedTokenTile
+            // eslint-disable-next-line react/jsx-props-no-spreading
+            {...props}
+            contractAddress={GamingApeClubAddress}
+            rank={rank}
+        />
+    );
 };
 
 export default StakedTokenTile;
