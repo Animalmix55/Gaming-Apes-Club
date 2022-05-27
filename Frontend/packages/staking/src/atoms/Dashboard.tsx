@@ -193,8 +193,10 @@ export const Dashboard = (props: DashboardProps): JSX.Element => {
         if (lastRewardTime.isLoading) return 0;
         if (!lastRewardTime.data) return undefined;
 
-        const dif = currentTime - lastRewardTime.data;
-        return dif;
+        const secondsToCompleteData =
+            86400 - ((currentTime - lastRewardTime.data) % 86400);
+
+        return secondsToCompleteData;
     }, [currentTime, lastRewardTime.data, lastRewardTime.isLoading]);
 
     const [css] = useStyletron();
