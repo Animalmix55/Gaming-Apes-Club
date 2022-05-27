@@ -203,7 +203,7 @@ export const Dashboard = (props: DashboardProps): JSX.Element => {
         className,
         css({
             borderRadius: '20px',
-            backgroundColor: theme.backgroundPallette.dark.toRgbaString(),
+            backgroundColor: theme.backgroundPallette.light.toRgbaString(),
             color: theme.foregroundPallette.white.toRgbaString(),
             fontFamily: theme.font,
             padding: '16px',

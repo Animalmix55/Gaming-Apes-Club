@@ -51,7 +51,7 @@ export const StakedTokenTile = (props: StakedTokenTileProps): JSX.Element => {
             width: '264px',
             padding: '16px',
             borderRadius: '20px',
-            backgroundColor: theme.backgroundPallette.dark.toRgbaString(),
+            backgroundColor: theme.backgroundPallette.light.toRgbaString(),
             color: theme.foregroundPallette.white.toRgbaString(),
             fontFamily: theme.font,
             [HOVERABLE]: {
