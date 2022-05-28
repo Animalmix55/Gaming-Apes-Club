@@ -1,6 +1,6 @@
 import React from 'react';
 import { useGamingApeClubContract, useWeb3 } from '@gac/shared-v2';
-import { StakedApeTile, UnstakedTokenTile } from '../atoms/UnstakedTokenTile';
+import { UnstakedApeTile, UnstakedTokenTile } from '../atoms/UnstakedTokenTile';
 import { useAppConfiguration } from '../contexts/AppConfigurationContext';
 
 export default {
@@ -49,7 +49,7 @@ export const ApeTile = ({
     if (!contract) return <></>;
 
     return (
-        <StakedApeTile
+        <UnstakedApeTile
             onSelect={(): void => setSelected((s) => !s)}
             selected={isSelected}
             tokenId={tokenId}

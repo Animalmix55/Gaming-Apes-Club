@@ -14,7 +14,7 @@ import { useStyletron } from 'styletron-react';
 import { useMetadata } from '../api/hooks/useMetadata';
 import { useAppConfiguration } from '../contexts/AppConfigurationContext';
 import { useTokenUri } from '../web3/hooks/useTokenUri';
-import DataBadge, { AccentTextStyles, Fraction } from './DataBadge';
+import { AccentTextStyles, Fraction, DataBadge } from './DataBadge';
 import { TraitGrid } from './TraitGrid';
 
 export interface UnstakedTokenTileProps {
@@ -24,21 +24,13 @@ export interface UnstakedTokenTileProps {
     rank?: number;
     selected?: boolean;
     onSelect?: () => void;
-    onUnstake?: () => void;
 }
 
 export const UnstakedTokenTile = (
     props: UnstakedTokenTileProps
 ): JSX.Element => {
-    const {
-        contractAddress,
-        tokenId,
-        className,
-        rank,
-        selected,
-        onSelect,
-        onUnstake,
-    } = props;
+    const { contractAddress, tokenId, className, rank, selected, onSelect } =
+        props;
 
     const { web3 } = useWeb3();
 
@@ -221,7 +213,7 @@ export const UnstakedTokenTile = (
     );
 };
 
-export const StakedApeTile = (
+export const UnstakedApeTile = (
     props: Omit<Omit<UnstakedTokenTileProps, 'rank'>, 'contract'>
 ): JSX.Element => {
     const { tokenId } = props;

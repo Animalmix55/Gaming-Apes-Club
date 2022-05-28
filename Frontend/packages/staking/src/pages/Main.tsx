@@ -7,6 +7,7 @@ import { Header } from '../atoms/Header';
 import { StakedApesTable } from '../molecules/StakedApesTable';
 import { Dashboard } from '../atoms/Dashboard';
 import { Basket } from '../atoms/Basket';
+import UnstakedApesTable from '../molecules/UnstakedApesTable';
 
 const sidebarItems: SidebarItem[] = [
     {
@@ -113,6 +114,16 @@ export const MainPage = (): JSX.Element => {
                     })}
                 >
                     <StakedApesTable />
+                </div>
+                <div
+                    className={css({
+                        padding: '48px',
+                        width: '100%',
+                        boxSizing: 'border-box',
+                        marginBottom: '100px',
+                    })}
+                >
+                    <UnstakedApesTable />
                 </div>
             </div>
             <Basket
