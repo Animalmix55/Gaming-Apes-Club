@@ -14,8 +14,10 @@ import { useStyletron } from 'styletron-react';
 import { useMetadata } from '../api/hooks/useMetadata';
 import { useAppConfiguration } from '../contexts/AppConfigurationContext';
 import { useTokenUri } from '../web3/hooks/useTokenUri';
+import DataBadge, { AccentTextStyles, Fraction } from './DataBadge';
+import { TraitGrid } from './TraitGrid';
 
-export interface StakedTokenTileProps {
+export interface UnstakedTokenTileProps {
     contractAddress?: string;
     tokenId: string;
     className?: string;
@@ -25,7 +27,9 @@ export interface StakedTokenTileProps {
     onUnstake?: () => void;
 }
 
-export const StakedTokenTile = (props: StakedTokenTileProps): JSX.Element => {
+export const UnstakedTokenTile = (
+    props: UnstakedTokenTileProps
+): JSX.Element => {
     const {
         contractAddress,
         tokenId,
@@ -48,7 +52,7 @@ export const StakedTokenTile = (props: StakedTokenTileProps): JSX.Element => {
         className,
         css({
             textAlign: 'center',
-            width: '264px',
+            width: '360px',
             padding: '16px',
             borderRadius: '20px',
             backgroundColor: theme.backgroundPallette.dark.toRgbaString(),
@@ -81,13 +85,20 @@ export const StakedTokenTile = (props: StakedTokenTileProps): JSX.Element => {
     const { data } = metadata;
     const { name, image } = data;
 
+    const fractionClass = css({
+        fontFamily: theme.font,
+        fontWeight: 700,
+        fontSize: '10px',
+        color: `${theme.foregroundPallette.white.toRgbaString(0.6)} !important`,
+    });
+
     return (
         <div className={ClassNameBuilder('staked-token-tile', containerClass)}>
             <div
                 className={css({
                     position: 'relative',
                     overflow: 'hidden',
-                    marginBottom: '12px',
+                    marginBottom: '16px',
                 })}
             >
                 {selected && (
@@ -136,70 +147,6 @@ export const StakedTokenTile = (props: StakedTokenTileProps): JSX.Element => {
                         </div>
                     </div>
                 )}
-                <div
-                    className={ClassNameBuilder(
-                        'image-overlay',
-                        css({
-                            visibility: 'hidden',
-                            position: 'absolute',
-                            display: 'flex',
-                            flexDirection: 'column',
-                            justifyContent: 'center',
-                            zIndex: 10,
-                            borderRadius: '12px',
-                            top: '0px',
-                            bottom: '0px',
-                            right: '0px',
-                            left: '0px',
-                            boxSizing: 'border-box',
-                            padding: '16px',
-                            backgroundColor:
-                                theme.backgroundPallette.darker.toRgbaString(),
-                            backdropFilter: 'blur(40px)',
-                        })
-                    )}
-                >
-                    <Button
-                        text="Unstake"
-                        onClick={onUnstake}
-                        disabled={!onUnstake}
-                        className={css({
-                            width: '100%',
-                            marginBottom: '16px',
-                            justifyContent: 'center',
-                        })}
-                        themeType={ButtonType.primary}
-                    />
-                    <Button
-                        onClick={onSelect}
-                        disabled={!onSelect}
-                        text={selected ? 'Unselect' : 'Select'}
-                        className={css({
-                            width: '100%',
-                            justifyContent: 'center',
-                        })}
-                        themeType={ButtonType.primary}
-                    />
-                </div>
-                {rank !== undefined && (
-                    <div
-                        className={css({
-                            position: 'absolute',
-                            right: '16px',
-                            zIndex: 1,
-                            top: '16px',
-                            padding: '2px 8px',
-                            backgroundColor: 'rgb(79, 79, 79)',
-                            fontFamily: theme.font,
-                            color: theme.foregroundPallette.white.toRgbaString(),
-                            fontWeight: 700,
-                            fontSize: '10px',
-                            borderRadius: '8px',
-                        })}
-                    >
-                        Rank {rank}
-                    </div>
-                )}
                 <img
                     className={css({
                         width: '100%',
@@ -211,24 +158,71 @@ export const StakedTokenTile = (props: StakedTokenTileProps): JSX.Element => {
                     alt={name}
                 />
             </div>
-            <div
-                className={css({
-                    color: theme.foregroundPallette.white.toRgbaString(),
-                    fontFamily: theme.font,
-                    fontWeight: 800,
-                    fontSize: '16px',
-                    width: '100%',
-                    textAlign: 'center',
-                })}
-            >
-                {name}
+            {rank !== undefined && (
+                <div
+                    className={css({
+                        fontFamily: theme.font,
+                        color: theme.foregroundPallette.white.toRgbaString(),
+                        fontWeight: 700,
+                        fontSize: '10px',
+                        borderRadius: '12px',
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        backgroundColor:
+                            theme.backgroundPallette.light.toRgbaString(),
+                        padding: '8px',
+                        marginBottom: '24px',
+                    })}
+                >
+                    <DataBadge
+                        topText="Overall Rank"
+                        lowerElement={
+                            <Fraction
+                                left={rank}
+                                right={6550}
+                                className={fractionClass}
+                                slashClassName={fractionClass}
+                                leftClassName={css(AccentTextStyles(theme))}
+                            />
+                        }
+                    />
+                </div>
+            )}
+            <div className={css({ display: 'flex', alignItems: 'center' })}>
+                <div
+                    className={css({
+                        fontFamily: theme.font,
+                        fontWeight: 900,
+                        color: theme.foregroundPallette.white.toRgbaString(),
+                        fontSize: '24px',
+                        textAlign: 'left',
+                        marginRight: '26px',
+                    })}
+                >
+                    {name}
+                </div>
+                <Button
+                    className={css({
+                        marginLeft: 'auto',
+                        whiteSpace: 'nowrap',
+                    })}
+                    themeType={ButtonType.primary}
+                    text={selected ? 'Deselect ape' : 'Select ape'}
+                    onClick={onSelect}
+                />
             </div>
+            <TraitGrid
+                className={css({ marginTop: '8px' })}
+                maxDisplay={6}
+                traits={metadata.data.attributes}
+            />
         </div>
     );
 };
 
 export const StakedApeTile = (
-    props: Omit<Omit<StakedTokenTileProps, 'rank'>, 'contract'>
+    props: Omit<Omit<UnstakedTokenTileProps, 'rank'>, 'contract'>
 ): JSX.Element => {
     const { tokenId } = props;
 
@@ -236,7 +230,7 @@ export const StakedApeTile = (
     const rank = useGamingApeClubTokenRank(tokenId);
 
     return (
-        <StakedTokenTile
+        <UnstakedTokenTile
             // eslint-disable-next-line react/jsx-props-no-spreading
             {...props}
             contractAddress={GamingApeClubAddress}
@@ -245,4 +239,4 @@ export const StakedApeTile = (
     );
 };
 
-export default StakedTokenTile;
+export default UnstakedTokenTile;

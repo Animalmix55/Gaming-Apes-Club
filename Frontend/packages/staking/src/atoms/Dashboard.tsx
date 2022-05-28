@@ -1,11 +1,8 @@
-import { BigNumber } from '@ethersproject/bignumber';
-import { Spinner, SpinnerSize } from '@fluentui/react';
 import {
     Button,
     ButtonType,
     ClassNameBuilder,
     Icons,
-    ThemeContextType,
     useCurrentTime,
     useCustomRpcProvider,
     useThemeContext,
@@ -13,7 +10,7 @@ import {
     WalletLoginModal,
 } from '@gac/shared-v2';
 import React from 'react';
-import { StyleObject, useStyletron } from 'styletron-react';
+import { useStyletron } from 'styletron-react';
 import {
     RPCProviderTag,
     useAppConfiguration,
@@ -24,134 +21,13 @@ import { useERC20Supply } from '../web3/hooks/useERC20Supply';
 import { useNFTBalance } from '../web3/hooks/useNFTBalance';
 import { useStakeLastUpdatedTime } from '../web3/hooks/useStakeLastUpdatedTime';
 import { useTokensStaked } from '../web3/hooks/useTokensStaked';
-
-export interface DashboardItemProps {
-    className?: string;
-    topText: string;
-    isLoading?: boolean;
-    lowerElement: React.ReactNode;
-}
-
-const AccentTextStyles = (theme: ThemeContextType): StyleObject => ({
-    color: theme.foregroundPallette.accent.toRgbaString(),
-    fontFamily: theme.font,
-    fontWeight: 900,
-    fontSize: '14px',
-    textAlign: 'center',
-});
-
-export const DashboardItem = (props: DashboardItemProps): JSX.Element => {
-    const { className, isLoading, topText, lowerElement } = props;
-    const [css] = useStyletron();
-    const theme = useThemeContext();
-
-    return (
-        <div className={className}>
-            {!isLoading && (
-                <>
-                    <div
-                        className={css({
-                            fontFamily: theme.font,
-                            color: theme.foregroundPallette.white.toRgbaString(),
-                            fontWeight: 700,
-                            fontSize: '10px',
-                            textAlign: 'center',
-                            textTransform: 'uppercase',
-                        })}
-                    >
-                        {topText}
-                    </div>
-                    <div>{lowerElement}</div>
-                </>
-            )}
-            {!!isLoading && (
-                <div
-                    className={css({
-                        height: '100%',
-                        width: '100%',
-                        display: 'flex',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                    })}
-                >
-                    <Spinner size={SpinnerSize.medium} />
-                </div>
-            )}
-        </div>
-    );
-};
-
-const Fraction = ({
-    left,
-    right,
-}: {
-    left: React.ReactNode;
-    right: React.ReactNode;
-}): JSX.Element => {
-    const [css] = useStyletron();
-    const theme = useThemeContext();
-
-    return (
-        <div className={css(AccentTextStyles(theme))}>
-            <span>{left}</span>
-            <span
-                className={css({
-                    margin: '0px 8px',
-                    fontWeight: 700,
-                    fontSize: '10px',
-                    color: theme.foregroundPallette.white.toRgbaString(),
-                })}
-            >
-                /
-            </span>
-            <span>{right}</span>
-        </div>
-    );
-};
-
-const Divider = (): JSX.Element => {
-    const [css] = useStyletron();
-    const theme = useThemeContext();
-
-    return (
-        <div
-            className={css({
-                height: '100%',
-                width: '1px',
-                margin: '0px 16px',
-                backgroundColor: theme.foregroundPallette.white.toRgbaString(),
-                opacity: 0.1,
-            })}
-        />
-    );
-};
-
-const TokenDisplay = ({ amount }: { amount?: BigNumber }): JSX.Element => {
-    const number = amount?.div(String(1e18)).toString() ?? 0;
-    const [css] = useStyletron();
-    const theme = useThemeContext();
-
-    return (
-        <div
-            className={css({
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-            })}
-        >
-            <span className={css(AccentTextStyles(theme))}>{number}</span>
-            <img
-                src={Icons.GACXP}
-                className={css({
-                    height: '19px',
-                    width: 'auto',
-                    marginLeft: '4px',
-                })}
-                alt="GACXP"
-            />
-        </div>
-    );
-};
+import {
+    AccentTextStyles,
+    DataBadge,
+    Divider,
+    Fraction,
+    TokenDisplay,
+} from './DataBadge';
 
 export interface DashboardProps {
     className?: string;
@@ -221,15 +97,19 @@ export const Dashboard = (props: DashboardProps): JSX.Element => {
                     isOpen={loginModalOpen}
                     onClose={(): void => setWalletModalOpen(false)}
                 />
-                <DashboardItem
+                <DataBadge
                     topText="Total Apes Staked"
                     isLoading={totalStaked.isLoading}
                     lowerElement={
-                        <Fraction left={totalStaked.data ?? 0} right={6650} />
+                        <Fraction
+                            className={css(AccentTextStyles(theme))}
+                            left={totalStaked.data ?? 0}
+                            right={6650}
+                        />
                     }
                 />
                 <Divider />
-                <DashboardItem
+                <DataBadge
                     topText="Total Rewards"
                     isLoading={rewardTokenSupply.isLoading}
                     lowerElement={
@@ -253,11 +133,12 @@ export const Dashboard = (props: DashboardProps): JSX.Element => {
                 isOpen={loginModalOpen}
                 onClose={(): void => setWalletModalOpen(false)}
             />
-            <DashboardItem
+            <DataBadge
                 topText="Staked Apes"
                 isLoading={userNFTBalance.isLoading || userStake.isLoading}
                 lowerElement={
                     <Fraction
+                        className={css(AccentTextStyles(theme))}
                         left={userStake.data?.length ?? 0}
                         right={
                             (userNFTBalance.data ?? 0) +
@@ -267,13 +148,13 @@ export const Dashboard = (props: DashboardProps): JSX.Element => {
                 }
             />
             <Divider />
-            <DashboardItem
+            <DataBadge
                 topText="Reward Balance"
                 isLoading={userRewardBalance.isLoading}
                 lowerElement={<TokenDisplay amount={userRewardBalance.data} />}
             />
             <Divider />
-            <DashboardItem
+            <DataBadge
                 topText="Next rewards in"
                 isLoading={lastRewardTime.isLoading}
                 lowerElement={
@@ -316,7 +197,7 @@ export const Dashboard = (props: DashboardProps): JSX.Element => {
                 }
             />
             <Divider />
-            <DashboardItem
+            <DataBadge
                 topText="Claimable"
                 isLoading={pendingReward.isLoading}
                 lowerElement={<TokenDisplay amount={pendingReward.data} />}
