@@ -322,7 +322,6 @@ export const Dashboard = (props: DashboardProps): JSX.Element => {
                 lowerElement={<TokenDisplay amount={pendingReward.data} />}
             />
             <Button
-                icon={Icons.ETHWhite}
                 themeType={ButtonType.primary}
                 className={css({ marginLeft: '32px' })}
                 text="Claim Reward"

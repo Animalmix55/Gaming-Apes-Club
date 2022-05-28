@@ -7,6 +7,7 @@ import { ClassNameBuilder, HOVERABLE } from '../utilties';
 export enum ButtonType {
     primary,
     secondary,
+    error,
 }
 
 export interface Props {
@@ -57,6 +58,13 @@ export const Button = (props: Props): JSX.Element => {
                 disabledBackgroundColor =
                     theme.buttonPallette.disabled.toRgbaString();
                 break;
+            case ButtonType.error:
+                backgroundColor = theme.buttonPallette.error.toRgbaString();
+                hoveredBackgroundColor =
+                    theme.buttonPallette.error.toRgbaString();
+                disabledBackgroundColor =
+                    theme.buttonPallette.disabled.toRgbaString();
+                break;
             default:
                 break;
         }
@@ -90,6 +98,7 @@ export const Button = (props: Props): JSX.Element => {
         css,
         disabled,
         theme.buttonPallette.disabled,
+        theme.buttonPallette.error,
         theme.buttonPallette.hovered,
         theme.buttonPallette.primary,
         theme.buttonPallette.secondary,

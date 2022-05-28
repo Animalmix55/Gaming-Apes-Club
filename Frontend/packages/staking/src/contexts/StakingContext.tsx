@@ -25,6 +25,14 @@ export const StakingContextProvider = ({
         []
     );
 
+    React.useEffect(() => {
+        if (tokenIdsToUnstake.length) setTokenIdsToStake([]);
+    }, [tokenIdsToUnstake]);
+
+    React.useEffect(() => {
+        if (tokenIdsToStake.length) setTokenIdsToUnstake([]);
+    }, [tokenIdsToStake]);
+
     return (
         <StakingContext.Provider
             value={{

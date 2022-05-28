@@ -5,7 +5,8 @@ import { useAppConfiguration } from '../contexts/AppConfigurationContext';
 import Background from '../assets/png/BACKGROUND.png';
 import { Header } from '../atoms/Header';
 import { StakedApesTable } from '../molecules/StakedApesTable';
-import Dashboard from '../atoms/Dashboard';
+import { Dashboard } from '../atoms/Dashboard';
+import { Basket } from '../atoms/Basket';
 
 const sidebarItems: SidebarItem[] = [
     {
@@ -60,6 +61,7 @@ export const MainPage = (): JSX.Element => {
                 backgroundImage: `url(${Background})`,
                 backgroundPosition: 'center',
                 backgroundSize: 'cover',
+                position: 'relative',
             })}
         >
             <Sidebar
@@ -87,7 +89,12 @@ export const MainPage = (): JSX.Element => {
                         : undefined
                 }
             />
-            <div className={css({ overflow: 'auto', width: '100%' })}>
+            <div
+                className={css({
+                    overflow: 'auto',
+                    width: '100%',
+                })}
+            >
                 <div
                     className={css({
                         margin: '32px 48px 6px 48px',
@@ -108,6 +115,14 @@ export const MainPage = (): JSX.Element => {
                     <StakedApesTable />
                 </div>
             </div>
+            <Basket
+                className={css({
+                    position: 'absolute',
+                    bottom: '24px',
+                    right: '24px',
+                    left: '152px',
+                })}
+            />
         </div>
     );
 };
