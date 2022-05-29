@@ -112,32 +112,13 @@ export const TraitGrid = (props: TraitGridProps): JSX.Element => {
                     })}
                 >
                     <div>+{traits.length - maxDisplay} more traits</div>
-                    <TooltipHost
-                        content={<TraitGrid traits={traits} />}
-                        calloutProps={{
-                            styles: {
-                                calloutMain: {
-                                    borderRadius: '12px !important',
-                                    backgroundColor: `${theme.backgroundPallette.dark.toRgbaString()} !important`,
-                                },
-                                beakCurtain: {
-                                    backgroundColor: `${theme.backgroundPallette.dark.toRgbaString()} !important`,
-                                    borderRadius: '12px !important',
-                                },
-                                beak: {
-                                    backgroundColor: `${theme.backgroundPallette.dark.toRgbaString()} !important`,
-                                },
-                            },
-                        }}
-                        tooltipProps={{
-                            className: css({
-                                minWidth: ref.current?.clientWidth
-                                    ? `${ref.current.clientWidth + 10}px`
-                                    : undefined,
-                                borderRadius: '12px !important',
-                                backgroundColor: `${theme.backgroundPallette.dark.toRgbaString()} !important`,
-                            }),
-                        }}
+                    <TraitTooltip
+                        traits={traits}
+                        minWidth={
+                            ref.current?.clientWidth
+                                ? `${ref.current.clientWidth + 10}px`
+                                : undefined
+                        }
                     >
                         <img
                             src={Icons.Info}
@@ -148,9 +129,52 @@ export const TraitGrid = (props: TraitGridProps): JSX.Element => {
                                 width: 'auto',
                             })}
                         />
-                    </TooltipHost>
+                    </TraitTooltip>
                 </div>
             )}
         </div>
+    );
+};
+
+export const TraitTooltip = ({
+    children,
+    traits,
+    minWidth,
+}: {
+    children: React.ReactNode;
+    traits: ERC721Attribute[];
+    minWidth?: string;
+}): JSX.Element => {
+    const theme = useThemeContext();
+    const [css] = useStyletron();
+
+    return (
+        <TooltipHost
+            content={<TraitGrid traits={traits} />}
+            calloutProps={{
+                styles: {
+                    calloutMain: {
+                        borderRadius: '12px !important',
+                        backgroundColor: `${theme.backgroundPallette.dark.toRgbaString()} !important`,
+                    },
+                    beakCurtain: {
+                        backgroundColor: `${theme.backgroundPallette.dark.toRgbaString()} !important`,
+                        borderRadius: '12px !important',
+                    },
+                    beak: {
+                        backgroundColor: `${theme.backgroundPallette.dark.toRgbaString()} !important`,
+                    },
+                },
+            }}
+            tooltipProps={{
+                className: css({
+                    minWidth,
+                    borderRadius: '12px !important',
+                    backgroundColor: `${theme.backgroundPallette.dark.toRgbaString()} !important`,
+                }),
+            }}
+        >
+            {children}
+        </TooltipHost>
     );
 };

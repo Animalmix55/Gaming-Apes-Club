@@ -14,6 +14,7 @@ import { useStyletron } from 'styletron-react';
 import { useMetadata } from '../api/hooks/useMetadata';
 import { useAppConfiguration } from '../contexts/AppConfigurationContext';
 import { useTokenUri } from '../web3/hooks/useTokenUri';
+import { TraitTooltip } from './TraitGrid';
 
 export interface StakedTokenTileProps {
     contractAddress?: string;
@@ -136,6 +137,27 @@ export const StakedTokenTile = (props: StakedTokenTileProps): JSX.Element => {
                         </div>
                     </div>
                 )}
+                <TraitTooltip
+                    traits={metadata.data.attributes}
+                    minWidth="392px"
+                >
+                    <img
+                        src={Icons.Info}
+                        className={ClassNameBuilder(
+                            'image-overlay',
+                            css({
+                                position: 'absolute',
+                                visibility: 'hidden',
+                                zIndex: 11,
+                                top: '20px',
+                                right: '20px',
+                                height: '24px',
+                                width: 'auto',
+                            })
+                        )}
+                        alt="Traits"
+                    />
+                </TraitTooltip>
                 <div
                     className={ClassNameBuilder(
                         'image-overlay',
