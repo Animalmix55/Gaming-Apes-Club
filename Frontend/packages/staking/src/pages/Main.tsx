@@ -1,5 +1,5 @@
 import React from 'react';
-import { Sidebar, SidebarItem, Icons, MOBILE } from '@gac/shared-v2';
+import { Sidebar, SidebarItem, Icons, MOBILE, useWeb3, Footer } from '@gac/shared-v2';
 import { useStyletron } from 'styletron-react';
 import { useAppConfiguration } from '../contexts/AppConfigurationContext';
 import Background from '../assets/png/BACKGROUND.png';
@@ -8,6 +8,7 @@ import { StakedApesTable } from '../molecules/StakedApesTable';
 import { Dashboard } from '../atoms/Dashboard';
 import { Basket } from '../atoms/Basket';
 import { UnstakedApesTable } from '../molecules/UnstakedApesTable';
+import { NeedMoreModule } from '../atoms/NeedMoreModule';
 
 const sidebarItems: SidebarItem[] = [
     {
@@ -48,7 +49,10 @@ const sidebarItems: SidebarItem[] = [
 ];
 
 export const MainPage = (): JSX.Element => {
-    const { OpenSeaUrl, TwitterUrl, DiscordUrl } = useAppConfiguration();
+    const { OpenSeaUrl, TwitterUrl, DiscordUrl, EthereumChainId } =
+        useAppConfiguration();
+    const { accounts } = useWeb3(EthereumChainId);
+    const account = accounts?.[0];
 
     const [css] = useStyletron();
 
@@ -117,30 +121,61 @@ export const MainPage = (): JSX.Element => {
                     />
                     <Dashboard className={css({ marginLeft: 'auto' })} />
                 </div>
+                {account !== undefined && (
+                    <>
+                        <div
+                            className={css({
+                                padding: '48px',
+                                width: '100%',
+                                boxSizing: 'border-box',
+                                [MOBILE]: {
+                                    padding: '48px 0px 48px 24px',
+                                },
+                            })}
+                        >
+                            <StakedApesTable />
+                        </div>
+                        <div
+                            className={css({
+                                padding: '48px',
+                                width: '100%',
+                                boxSizing: 'border-box',
+                                [MOBILE]: {
+                                    padding: '48px 24px 48px 24px',
+                                },
+                            })}
+                        >
+                            <UnstakedApesTable />
+                        </div>
+                    </>
+                )}
                 <div
                     className={css({
                         padding: '48px',
-                        width: '100%',
-                        boxSizing: 'border-box',
-                        [MOBILE]: {
-                            padding: '48px 0px 48px 24px',
-                        },
-                    })}
-                >
-                    <StakedApesTable />
-                </div>
-                <div
-                    className={css({
-                        padding: '48px',
-                        width: '100%',
-                        boxSizing: 'border-box',
-                        marginBottom: '100px',
                         [MOBILE]: {
                             padding: '48px 24px 48px 24px',
                         },
                     })}
                 >
-                    <UnstakedApesTable />
+                    <NeedMoreModule
+                        onClickOpenSea={(): unknown =>
+                            window.open(OpenSeaUrl, '_blank')
+                        }
+                    />
+                </div>
+                <div
+                    className={css({
+                        padding: '48px',
+                        [MOBILE]: {
+                            padding: '48px 24px 48px 24px',
+                        },
+                    })}
+                >
+                    <Footer
+                        openSeaUrl={OpenSeaUrl}
+                        discordUrl={DiscordUrl}
+                        twitterUrl={TwitterUrl}
+                    />
                 </div>
             </div>
             <Basket

@@ -10,6 +10,7 @@ import { CURRENT_REWARD_KEY } from './useCurrentReward';
 import { TOKENS_HELD_KEY } from './useTokensHeld';
 import { ERC20_BALANCE_KEY } from './useERC20Balance';
 import { ERC20_SUPPLY_KEY } from './useERC20Supply';
+import { NFT_BALANCE_KEY } from './useNFTBalance';
 
 export const useStaker = (): UseMutationResult<
     void,
@@ -67,6 +68,14 @@ export const useStaker = (): UseMutationResult<
             });
             queryClient.invalidateQueries({
                 queryKey: [ERC20_SUPPLY_KEY, GACXPContractAddress, true],
+            });
+            queryClient.invalidateQueries({
+                queryKey: [
+                    NFT_BALANCE_KEY,
+                    account,
+                    GamingApeClubAddress,
+                    true,
+                ],
             });
         },
     });
