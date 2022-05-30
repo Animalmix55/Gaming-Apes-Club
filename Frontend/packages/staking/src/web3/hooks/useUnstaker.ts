@@ -8,6 +8,8 @@ import { STAKE_LAST_UPDATED_KEY } from './useStakeLastUpdatedTime';
 import { TOKENS_STAKED_KEY } from './useTokensStaked';
 import { CURRENT_REWARD_KEY } from './useCurrentReward';
 import { TOKENS_HELD_KEY } from './useTokensHeld';
+import { ERC20_BALANCE_KEY } from './useERC20Balance';
+import { ERC20_SUPPLY_KEY } from './useERC20Supply';
 
 export const useUnstaker = (): UseMutationResult<
     void,
@@ -15,8 +17,12 @@ export const useUnstaker = (): UseMutationResult<
     [tokens: string[]],
     unknown
 > => {
-    const { EthereumChainId, GACStakingContractAddress, GamingApeClubAddress } =
-        useAppConfiguration();
+    const {
+        EthereumChainId,
+        GACStakingContractAddress,
+        GamingApeClubAddress,
+        GACXPContractAddress,
+    } = useAppConfiguration();
     const { web3, accounts, requestNewChain } = useWeb3(EthereumChainId);
     const contract = useGACStakingContract(web3, GACStakingContractAddress);
     const account = accounts?.[0];
@@ -48,6 +54,17 @@ export const useUnstaker = (): UseMutationResult<
                     GamingApeClubAddress,
                     true,
                 ],
+            });
+            queryClient.invalidateQueries({
+                queryKey: [
+                    ERC20_BALANCE_KEY,
+                    account,
+                    GACXPContractAddress,
+                    true,
+                ],
+            });
+            queryClient.invalidateQueries({
+                queryKey: [ERC20_SUPPLY_KEY, GACXPContractAddress, true],
             });
         },
     });

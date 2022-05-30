@@ -74,7 +74,7 @@ export const UnstakedApesTableInner = (): JSX.Element => {
     );
 };
 
-export const UnstakedApesTable = (): JSX.Element => {
+export const UnstakedApesTable = (): JSX.Element | null => {
     const [css] = useStyletron();
     const theme = useThemeContext();
     const { GamingApeClubAddress, EthereumChainId } = useAppConfiguration();
@@ -88,6 +88,7 @@ export const UnstakedApesTable = (): JSX.Element => {
     );
 
     const allSelected = tokenIdsToStake.length === UnstakedTokens.data?.length;
+    if (!accounts?.length) return null;
 
     return (
         <div className={css({ width: '100%' })}>

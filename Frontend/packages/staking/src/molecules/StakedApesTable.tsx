@@ -72,7 +72,7 @@ export const StakedApesTableInner = (): JSX.Element => {
     );
 };
 
-export const StakedApesTable = (): JSX.Element => {
+export const StakedApesTable = (): JSX.Element | null => {
     const [css] = useStyletron();
     const theme = useThemeContext();
     const { EthereumChainId } = useAppConfiguration();
@@ -81,6 +81,8 @@ export const StakedApesTable = (): JSX.Element => {
     const { tokenIdsToUnstake, setTokenIdsToUnstake } = useStakingContext();
 
     const allSelected = tokenIdsToUnstake.length === stakedTokens.data?.length;
+
+    if (!accounts?.length) return null;
 
     return (
         <div className={css({ width: '100%' })}>

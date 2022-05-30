@@ -122,10 +122,11 @@ export const useWeb3 = (
             await connector.activate(expectedChain);
         };
 
-        if (chainId === undefined)
-            return { ...currentContext, readonly: true, requestNewChain };
-        if (expectedChain === undefined || expectedChain === chainId)
+        if (expectedChain === undefined || expectedChain === chainId) {
+            if (chainId === undefined)
+                return { readonly: true, requestNewChain };
             return { ...currentContext, readonly: false, requestNewChain };
+        }
         if (!defaultProviders || !defaultProviders[expectedChain])
             return { readonly: true, requestNewChain };
 
@@ -137,6 +138,7 @@ export const useWeb3 = (
             provider: undefined,
             web3,
             readonly: true,
+            chainId: expectedChain,
             requestNewChain,
         };
     }, [chainId, connector, currentContext, defaultProviders, expectedChain]);
