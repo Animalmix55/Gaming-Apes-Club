@@ -9,8 +9,10 @@ import React from 'react';
 import { useStyletron } from 'styletron-react';
 import { useAppConfiguration } from '../contexts/AppConfigurationContext';
 import { useStakingContext } from '../contexts/StakingContext';
+import { useStaker } from '../web3/hooks/useStaker';
 import { useTokensHeld } from '../web3/hooks/useTokensHeld';
 import { useTokensStaked } from '../web3/hooks/useTokensStaked';
+import { useUnstaker } from '../web3/hooks/useUnstaker';
 
 export interface BasketProps {
     className?: string;
@@ -54,15 +56,15 @@ export const NumberDisplay = ({
 export const Basket = (props: BasketProps): JSX.Element | null => {
     const { className } = props;
 
+    const { GamingApeClubAddress, EthereumChainId } = useAppConfiguration();
     const {
         setTokenIdsToUnstake,
         setTokenIdsToStake,
         tokenIdsToStake,
         tokenIdsToUnstake,
     } = useStakingContext();
-    const { accounts, web3 } = useWeb3();
+    const { accounts, web3 } = useWeb3(EthereumChainId);
     const account = accounts?.[0];
-    const { GamingApeClubAddress } = useAppConfiguration();
 
     const { data: stakedApes } = useTokensStaked(account);
     const { data: unstakedApes } = useTokensHeld(
@@ -70,6 +72,8 @@ export const Basket = (props: BasketProps): JSX.Element | null => {
         account,
         GamingApeClubAddress
     );
+    const staker = useStaker();
+    const unstaker = useUnstaker();
 
     const [css] = useStyletron();
     const theme = useThemeContext();
@@ -129,7 +133,11 @@ export const Basket = (props: BasketProps): JSX.Element | null => {
                             : (): void => setTokenIdsToStake([])
                     }
                 />
-                <Button text="Stake Apes" themeType={ButtonType.error} />
+                <Button
+                    text="Stake Apes"
+                    themeType={ButtonType.error}
+                    onClick={(): void => staker.mutate([tokenIdsToStake])}
+                />
             </div>
         );
     }
@@ -176,7 +184,11 @@ export const Basket = (props: BasketProps): JSX.Element | null => {
                             : (): void => setTokenIdsToUnstake([])
                     }
                 />
-                <Button text="Unstake Apes" themeType={ButtonType.error} />
+                <Button
+                    text="Unstake Apes"
+                    themeType={ButtonType.error}
+                    onClick={(): void => unstaker.mutate([tokenIdsToUnstake])}
+                />
             </div>
         );
     }

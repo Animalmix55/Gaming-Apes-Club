@@ -21,6 +21,8 @@ initializeIcons();
 
 const {
     EthereumChainId,
+    PolygonChainId,
+    DefaultPolygonProvider,
     EtherscanUrl,
     GACXPContractAddress,
     GACStakingChildContractAddress,
@@ -41,7 +43,14 @@ const Root = (): JSX.Element => {
             <QueryClientProvider client={queryClient}>
                 <ThemeContextProvider value={DefaultTheme}>
                     <Web3ContextProvider
-                        defaultProvider={DefaultEthereumProvider}
+                        defaultProviders={{
+                            ...(EthereumChainId !== undefined && {
+                                [EthereumChainId]: DefaultEthereumProvider,
+                            }),
+                            ...(PolygonChainId !== undefined && {
+                                [PolygonChainId]: DefaultPolygonProvider,
+                            }),
+                        }}
                     >
                         <AppCongfigurationContextProvider
                             value={{
@@ -54,6 +63,8 @@ const Root = (): JSX.Element => {
                                 TwitterUrl,
                                 DiscordUrl,
                                 OpenSeaUrl,
+                                PolygonChainId,
+                                DefaultPolygonProvider,
                             }}
                         >
                             <>

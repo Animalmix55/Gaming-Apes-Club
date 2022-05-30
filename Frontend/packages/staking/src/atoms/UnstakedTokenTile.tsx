@@ -32,7 +32,8 @@ export const UnstakedTokenTile = (
     const { contractAddress, tokenId, className, rank, selected, onSelect } =
         props;
 
-    const { web3 } = useWeb3();
+    const { EthereumChainId } = useAppConfiguration();
+    const { web3 } = useWeb3(EthereumChainId);
 
     const tokenUri = useTokenUri(web3, tokenId, contractAddress);
     const metadata = useMetadata(tokenUri.data);

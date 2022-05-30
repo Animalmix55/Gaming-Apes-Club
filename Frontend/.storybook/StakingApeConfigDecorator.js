@@ -3,7 +3,9 @@ import { AppCongfigurationContextProvider } from '@gac/staking/src/contexts/AppC
 export default (story) => 
     <AppCongfigurationContextProvider
         value={{
-            PolygonProvider: 'https://polygon-mumbai.g.alchemy.com/v2/N9z2-3yIizTLar_wuuRseVM857Kj0blW',
+            DefaultPolygonProvider: 'https://polygon-mumbai.g.alchemy.com/v2/N9z2-3yIizTLar_wuuRseVM857Kj0blW',
+            PolygonChainId: 80001,
+            DefaultEthereumProvider: 'https://goerli.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161',
             EthereumChainId: 5,
             EtherscanUrl: 'https://goerli.etherscan.io/',
             GACStakingChildContractAddress: '0x779742E4c1863ee9BE63A65f09A81Fd5C19d1c1f',
@@ -13,7 +15,6 @@ export default (story) =>
             TwitterUrl: 'https://twitter.com/GamingApeClub',
             DiscordUrl: 'http://discord.gg/GamingApeClub',
             GamingApeClubAddress: '0xcB9dFFf3942c1A0418A8717Eae940d0d2C8399B9',
-            DefaultEthereumProvider: 'https://goerli.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161',
         }}>
             {story()}
     </AppCongfigurationContextProvider>;

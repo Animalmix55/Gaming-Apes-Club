@@ -37,7 +37,8 @@ export const StakedTokenTile = (props: StakedTokenTileProps): JSX.Element => {
         onUnstake,
     } = props;
 
-    const { web3 } = useWeb3();
+    const { EthereumChainId } = useAppConfiguration();
+    const { web3 } = useWeb3(EthereumChainId);
 
     const tokenUri = useTokenUri(web3, tokenId, contractAddress);
     const metadata = useMetadata(tokenUri.data);

@@ -11,8 +11,8 @@ export default {
 };
 
 export const StandAlone = ({ tokenId }: { tokenId: string }): JSX.Element => {
-    const { GamingApeClubAddress } = useAppConfiguration();
-    const { web3 } = useWeb3();
+    const { GamingApeClubAddress, EthereumChainId } = useAppConfiguration();
+    const { web3 } = useWeb3(EthereumChainId);
 
     const uri = useTokenUri(web3, tokenId, GamingApeClubAddress);
     const meta = useMetadata(uri.data);

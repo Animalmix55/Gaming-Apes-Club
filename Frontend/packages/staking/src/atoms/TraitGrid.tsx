@@ -66,8 +66,6 @@ export const TraitGrid = (props: TraitGridProps): JSX.Element => {
         [traits, maxDisplay]
     );
 
-    const ref = React.useRef<HTMLDivElement>(null);
-
     return (
         <div
             className={ClassNameBuilder(
@@ -79,7 +77,6 @@ export const TraitGrid = (props: TraitGridProps): JSX.Element => {
             )}
         >
             <div
-                ref={ref}
                 className={css({
                     display: 'flex',
                     flexWrap: 'wrap',
@@ -101,7 +98,7 @@ export const TraitGrid = (props: TraitGridProps): JSX.Element => {
                 <div
                     className={css({
                         marginTop: '16px',
-                        font: theme.font,
+                        fontFamily: theme.font,
                         color: theme.foregroundPallette.white.toRgbaString(),
                         fontWeight: 700,
                         fontSize: '10px',
@@ -112,14 +109,7 @@ export const TraitGrid = (props: TraitGridProps): JSX.Element => {
                     })}
                 >
                     <div>+{traits.length - maxDisplay} more traits</div>
-                    <TraitTooltip
-                        traits={traits}
-                        minWidth={
-                            ref.current?.clientWidth
-                                ? `${ref.current.clientWidth + 10}px`
-                                : undefined
-                        }
-                    >
+                    <TraitTooltip traits={traits} minWidth="392px">
                         <img
                             src={Icons.Info}
                             alt="Info"

@@ -4,17 +4,14 @@ import {
     ClassNameBuilder,
     Icons,
     useCurrentTime,
-    useCustomRpcProvider,
     useThemeContext,
     useWeb3,
     WalletLoginModal,
 } from '@gac/shared-v2';
 import React from 'react';
 import { useStyletron } from 'styletron-react';
-import {
-    RPCProviderTag,
-    useAppConfiguration,
-} from '../contexts/AppConfigurationContext';
+import { useAppConfiguration } from '../contexts/AppConfigurationContext';
+import { useClaimer } from '../web3/hooks/useClaimer';
 import { useCurrentReward } from '../web3/hooks/useCurrentReward';
 import { useERC20Balance } from '../web3/hooks/useERC20Balance';
 import { useERC20Supply } from '../web3/hooks/useERC20Supply';
@@ -37,11 +34,14 @@ export const Dashboard = (props: DashboardProps): JSX.Element => {
     const { className } = props;
     const {
         GamingApeClubAddress,
+        EthereumChainId,
+        PolygonChainId,
         GACXPContractAddress,
         GACStakingContractAddress,
     } = useAppConfiguration();
-    const { accounts, web3 } = useWeb3();
-    const polygonProvider = useCustomRpcProvider(RPCProviderTag.Polygon);
+    const { accounts, web3 } = useWeb3(EthereumChainId);
+    const { web3: polygonWeb3 } = useWeb3(PolygonChainId);
+
     const account = accounts?.[0];
     const [loginModalOpen, setWalletModalOpen] = React.useState(false);
 
@@ -54,15 +54,12 @@ export const Dashboard = (props: DashboardProps): JSX.Element => {
     );
     const userRewardBalance = useERC20Balance(
         account,
-        polygonProvider?.web3,
+        polygonWeb3,
         GACXPContractAddress
     );
     const lastRewardTime = useStakeLastUpdatedTime(account);
     const pendingReward = useCurrentReward(account);
-    const rewardTokenSupply = useERC20Supply(
-        polygonProvider?.web3,
-        GACXPContractAddress
-    );
+    const rewardTokenSupply = useERC20Supply(polygonWeb3, GACXPContractAddress);
     const currentTime = useCurrentTime();
 
     const secondsUntilNextReward = React.useMemo(() => {
@@ -89,6 +86,8 @@ export const Dashboard = (props: DashboardProps): JSX.Element => {
             alignItems: 'center',
         })
     );
+
+    const claimer = useClaimer();
 
     if (!account) {
         return (
@@ -207,6 +206,7 @@ export const Dashboard = (props: DashboardProps): JSX.Element => {
                 className={css({ marginLeft: '32px' })}
                 text="Claim Reward"
                 disabled={!pendingReward.data || pendingReward.data.isZero()}
+                onClick={(): void => claimer.mutate([])}
             />
         </div>
     );

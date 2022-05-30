@@ -3,14 +3,18 @@ import { Button, ButtonType, useThemeContext, useWeb3 } from '@gac/shared-v2';
 import React from 'react';
 import { useStyletron } from 'styletron-react';
 import { StakedApeTile } from '../atoms/StakedTokenTile';
+import { useAppConfiguration } from '../contexts/AppConfigurationContext';
 import { useStakingContext } from '../contexts/StakingContext';
 import { useTokensStaked } from '../web3/hooks/useTokensStaked';
+import { useUnstaker } from '../web3/hooks/useUnstaker';
 
 export const StakedApesTableInner = (): JSX.Element => {
-    const { accounts } = useWeb3();
+    const { EthereumChainId } = useAppConfiguration();
+    const { accounts } = useWeb3(EthereumChainId);
 
     const { tokenIdsToUnstake, setTokenIdsToUnstake } = useStakingContext();
     const stakedTokens = useTokensStaked(accounts?.[0]);
+    const unstakeMutator = useUnstaker();
 
     const [css] = useStyletron();
     const theme = useThemeContext();
@@ -49,6 +53,7 @@ export const StakedApesTableInner = (): JSX.Element => {
                         tokenId={token}
                         key={token}
                         selected={selected}
+                        onUnstake={(): void => unstakeMutator.mutate([[token]])}
                         onSelect={(): void =>
                             setTokenIdsToUnstake((t) =>
                                 selected
@@ -70,7 +75,8 @@ export const StakedApesTableInner = (): JSX.Element => {
 export const StakedApesTable = (): JSX.Element => {
     const [css] = useStyletron();
     const theme = useThemeContext();
-    const { accounts } = useWeb3();
+    const { EthereumChainId } = useAppConfiguration();
+    const { accounts } = useWeb3(EthereumChainId);
     const stakedTokens = useTokensStaked(accounts?.[0]);
     const { tokenIdsToUnstake, setTokenIdsToUnstake } = useStakingContext();
 

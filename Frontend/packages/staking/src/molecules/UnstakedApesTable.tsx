@@ -8,8 +8,8 @@ import { useStakingContext } from '../contexts/StakingContext';
 import { useTokensHeld } from '../web3/hooks/useTokensHeld';
 
 export const UnstakedApesTableInner = (): JSX.Element => {
-    const { accounts, web3 } = useWeb3();
-    const { GamingApeClubAddress } = useAppConfiguration();
+    const { GamingApeClubAddress, EthereumChainId } = useAppConfiguration();
+    const { accounts, web3 } = useWeb3(EthereumChainId);
 
     const { setTokenIdsToStake, tokenIdsToStake } = useStakingContext();
     const UnstakedTokens = useTokensHeld(
@@ -77,8 +77,8 @@ export const UnstakedApesTableInner = (): JSX.Element => {
 export const UnstakedApesTable = (): JSX.Element => {
     const [css] = useStyletron();
     const theme = useThemeContext();
-    const { accounts, web3 } = useWeb3();
-    const { GamingApeClubAddress } = useAppConfiguration();
+    const { GamingApeClubAddress, EthereumChainId } = useAppConfiguration();
+    const { accounts, web3 } = useWeb3(EthereumChainId);
 
     const { setTokenIdsToStake, tokenIdsToStake } = useStakingContext();
     const UnstakedTokens = useTokensHeld(

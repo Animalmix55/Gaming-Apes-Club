@@ -1,23 +1,21 @@
 import React from 'react';
 import {
     RequestResult,
-    useCustomRpcProvider,
     useGACStakingChildContract,
     useRequest,
+    useWeb3,
 } from '@gac/shared-v2';
 import { getStakingLastUpdatedTime } from '../Requests';
-import {
-    useAppConfiguration,
-    RPCProviderTag,
-} from '../../contexts/AppConfigurationContext';
+import { useAppConfiguration } from '../../contexts/AppConfigurationContext';
 
 export const STAKE_LAST_UPDATED_KEY = 'STAKE_LAST_UPDATED';
 
 export const useStakeLastUpdatedTime = (
     user?: string
 ): RequestResult<number | undefined> => {
-    const { GACStakingChildContractAddress } = useAppConfiguration();
-    const { web3 } = useCustomRpcProvider(RPCProviderTag.Polygon) ?? {};
+    const { GACStakingChildContractAddress, PolygonChainId } =
+        useAppConfiguration();
+    const { web3 } = useWeb3(PolygonChainId);
 
     const contract = useGACStakingChildContract(
         web3,

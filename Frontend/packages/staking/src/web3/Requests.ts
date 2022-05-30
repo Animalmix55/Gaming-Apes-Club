@@ -1,5 +1,6 @@
 import { BigNumber } from '@ethersproject/bignumber';
 import { GamingApeClub } from '@gac/shared-v2';
+import { GACStaking } from '@gac/shared-v2/lib/models/GACStaking';
 import { GACStakingChild } from '@gac/shared-v2/lib/models/GACStakingChild';
 
 import { IERC20 } from '@gac/shared-v2/lib/models/IERC20';
@@ -114,6 +115,29 @@ export const getERC20Balance = async (
 export const getERC20Supply = async (contract: IERC20): Promise<BigNumber> => {
     const supply = await contract.methods.totalSupply().call({});
     return BigNumber.from(supply);
+};
+
+export const stakeTokens = async (
+    contract: GACStaking,
+    tokens: string[],
+    from: string
+): Promise<void> => {
+    await contract.methods.stake(tokens).send({ from });
+};
+
+export const unstakeTokens = async (
+    contract: GACStaking,
+    tokens: string[],
+    from: string
+): Promise<void> => {
+    await contract.methods.unstake(tokens).send({ from });
+};
+
+export const claimRewards = async (
+    contract: GACStakingChild,
+    from: string
+): Promise<void> => {
+    await contract.methods.claimReward().send({ from });
 };
 
 export default {};

@@ -7,7 +7,7 @@ import { Header } from '../atoms/Header';
 import { StakedApesTable } from '../molecules/StakedApesTable';
 import { Dashboard } from '../atoms/Dashboard';
 import { Basket } from '../atoms/Basket';
-import UnstakedApesTable from '../molecules/UnstakedApesTable';
+import { UnstakedApesTable } from '../molecules/UnstakedApesTable';
 
 const sidebarItems: SidebarItem[] = [
     {

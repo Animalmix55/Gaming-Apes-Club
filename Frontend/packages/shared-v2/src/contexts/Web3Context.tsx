@@ -6,6 +6,7 @@ import Web3 from 'web3';
 import { hooks as MMHooks, metaMask } from '../connectors/Metamask';
 import { hooks as WCHooks, walletConnect } from '../connectors/WalletConnect';
 import { hooks as WLHooks, walletLink } from '../connectors/WalletLink';
+import { Chain } from '../models/Chain';
 
 export interface Web3ContextType {
     provider?: Web3Provider;
@@ -14,16 +15,19 @@ export interface Web3ContextType {
     disconnect?: () => void;
     connector?: Connector;
     chainId?: number;
+    defaultProviders?: DefaultProviders;
 }
 
 export const Web3Context = React.createContext<Web3ContextType>({});
 
+export type DefaultProviders = { [key in Chain]?: string };
+
 export const Web3ContextProvider = ({
     children,
-    defaultProvider,
+    defaultProviders,
 }: {
     children: React.ReactNode;
-    defaultProvider?: string;
+    defaultProviders?: DefaultProviders;
 }): JSX.Element => {
     const MMProvider = MMHooks.useProvider();
     const MMActive = MMHooks.useIsActive();
@@ -39,6 +43,13 @@ export const Web3ContextProvider = ({
     const WLActive = WLHooks.useIsActive();
     const WLAccounts = WLHooks.useAccounts();
     const WLChainId = MMHooks.useChainId();
+
+    const connector = React.useMemo(() => {
+        if (MMActive) return metaMask;
+        if (WCActive) return walletConnect;
+        if (WLActive) return walletLink;
+        return undefined;
+    }, [MMActive, WCActive, WLActive]);
 
     const provider = React.useMemo(() => {
         if (MMActive && MMProvider) return MMProvider;
@@ -69,16 +80,64 @@ export const Web3ContextProvider = ({
     }, [MMActive, WCActive, WLActive]);
 
     const web3 = React.useMemo(() => {
-        return new Web3((provider?.provider as never) ?? defaultProvider);
-    }, [defaultProvider, provider?.provider]);
+        if (!provider?.provider) return undefined;
+        return new Web3(provider.provider as never);
+    }, [provider?.provider]);
 
     return (
         <Web3Context.Provider
-            value={{ provider, web3, accounts, chainId, disconnect }}
+            value={{
+                provider,
+                web3,
+                accounts,
+                chainId,
+                connector,
+                disconnect,
+                defaultProviders,
+            }}
         >
             {children}
         </Web3Context.Provider>
     );
 };
 
-export const useWeb3 = (): Web3ContextType => React.useContext(Web3Context);
+export const useWeb3 = (
+    expectedChain?: Chain
+): Web3ContextType & {
+    readonly: boolean;
+    requestNewChain: () => Promise<void>;
+} => {
+    const currentContext = React.useContext(Web3Context);
+    const { chainId, defaultProviders, connector } = currentContext;
+
+    return React.useMemo(() => {
+        const requestNewChain = async (): Promise<void> => {
+            if (
+                connector === undefined ||
+                expectedChain === undefined ||
+                expectedChain === chainId
+            )
+                return;
+
+            await connector.activate(expectedChain);
+        };
+
+        if (chainId === undefined)
+            return { ...currentContext, readonly: true, requestNewChain };
+        if (expectedChain === undefined || expectedChain === chainId)
+            return { ...currentContext, readonly: false, requestNewChain };
+        if (!defaultProviders || !defaultProviders[expectedChain])
+            return { readonly: true, requestNewChain };
+
+        const defaultProvider = defaultProviders[expectedChain] as string;
+        const web3 = new Web3(defaultProvider);
+
+        return {
+            ...currentContext,
+            provider: undefined,
+            web3,
+            readonly: true,
+            requestNewChain,
+        };
+    }, [chainId, connector, currentContext, defaultProviders, expectedChain]);
+};
