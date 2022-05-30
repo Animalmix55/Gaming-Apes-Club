@@ -8,6 +8,7 @@ import {
     useWeb3,
     HOVERABLE,
     Icons,
+    MOBILE,
 } from '@gac/shared-v2';
 import React from 'react';
 import { useStyletron } from 'styletron-react';
@@ -147,6 +148,9 @@ export const StakedTokenTile = (props: StakedTokenTileProps): JSX.Element => {
                         className={ClassNameBuilder(
                             'image-overlay',
                             css({
+                                [MOBILE]: {
+                                    display: 'none',
+                                },
                                 position: 'absolute',
                                 visibility: 'hidden',
                                 zIndex: 11,
@@ -163,6 +167,9 @@ export const StakedTokenTile = (props: StakedTokenTileProps): JSX.Element => {
                     className={ClassNameBuilder(
                         'image-overlay',
                         css({
+                            [MOBILE]: {
+                                display: 'none',
+                            },
                             visibility: 'hidden',
                             position: 'absolute',
                             display: 'flex',
@@ -245,6 +252,34 @@ export const StakedTokenTile = (props: StakedTokenTileProps): JSX.Element => {
                 })}
             >
                 {name}
+            </div>
+            <div
+                className={css({
+                    [HOVERABLE]: { display: 'none' },
+                    marginTop: '16px',
+                })}
+            >
+                <Button
+                    onClick={onSelect}
+                    disabled={!onSelect}
+                    text={selected ? 'Unselect' : 'Select'}
+                    className={css({
+                        width: '100%',
+                        justifyContent: 'center',
+                        marginBottom: '12px',
+                    })}
+                    themeType={ButtonType.primary}
+                />
+                <Button
+                    text="Unstake"
+                    onClick={onUnstake}
+                    disabled={!onUnstake}
+                    className={css({
+                        width: '100%',
+                        justifyContent: 'center',
+                    })}
+                    themeType={ButtonType.primary}
+                />
             </div>
         </div>
     );

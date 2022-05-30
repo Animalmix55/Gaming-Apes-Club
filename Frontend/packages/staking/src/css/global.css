@@ -2,8 +2,10 @@
     visibility: visible;
 }
 
-.staked-token-tile:hover .selected-overlay {
-    visibility: hidden;
+@media (hover: hover) {
+    .staked-token-tile:hover .selected-overlay {
+        visibility: hidden;
+    }
 }
 
 /* custom scrollbar */

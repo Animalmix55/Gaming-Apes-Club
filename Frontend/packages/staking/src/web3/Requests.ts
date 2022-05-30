@@ -120,24 +120,33 @@ export const getERC20Supply = async (contract: IERC20): Promise<BigNumber> => {
 export const stakeTokens = async (
     contract: GACStaking,
     tokens: string[],
-    from: string
+    from: string,
+    onTxHash?: (hash: string) => void
 ): Promise<void> => {
-    await contract.methods.stake(tokens).send({ from });
+    const result = contract.methods.stake(tokens).send({ from });
+    if (onTxHash) result.on('transactionHash', onTxHash);
+    await result;
 };
 
 export const unstakeTokens = async (
     contract: GACStaking,
     tokens: string[],
-    from: string
+    from: string,
+    onTxHash?: (hash: string) => void
 ): Promise<void> => {
-    await contract.methods.unstake(tokens).send({ from });
+    const result = contract.methods.unstake(tokens).send({ from });
+    if (onTxHash) result.on('transactionHash', onTxHash);
+    await result;
 };
 
 export const claimRewards = async (
     contract: GACStakingChild,
-    from: string
+    from: string,
+    onTxHash?: (hash: string) => void
 ): Promise<void> => {
-    await contract.methods.claimReward().send({ from });
+    const result = contract.methods.claimReward().send({ from });
+    if (onTxHash) result.on('transactionHash', onTxHash);
+    await result;
 };
 
 export default {};

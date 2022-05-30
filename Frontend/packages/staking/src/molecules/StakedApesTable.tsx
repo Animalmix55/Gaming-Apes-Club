@@ -7,6 +7,7 @@ import { useAppConfiguration } from '../contexts/AppConfigurationContext';
 import { useStakingContext } from '../contexts/StakingContext';
 import { useTokensStaked } from '../web3/hooks/useTokensStaked';
 import { useUnstaker } from '../web3/hooks/useUnstaker';
+import { UnstakingModal } from './UnstakingModal';
 
 export const StakedApesTableInner = (): JSX.Element => {
     const { EthereumChainId } = useAppConfiguration();
@@ -15,6 +16,12 @@ export const StakedApesTableInner = (): JSX.Element => {
     const { tokenIdsToUnstake, setTokenIdsToUnstake } = useStakingContext();
     const stakedTokens = useTokensStaked(accounts?.[0]);
     const unstakeMutator = useUnstaker();
+    const { txHash } = unstakeMutator;
+    const [modalOpen, setModalOpen] = React.useState(false);
+
+    React.useEffect(() => {
+        if (txHash) setModalOpen(true);
+    }, [txHash]);
 
     const [css] = useStyletron();
     const theme = useThemeContext();
@@ -49,23 +56,34 @@ export const StakedApesTableInner = (): JSX.Element => {
             {stakedTokens.data.map((token) => {
                 const selected = tokenIdsToUnstake.includes(token);
                 return (
-                    <StakedApeTile
-                        tokenId={token}
-                        key={token}
-                        selected={selected}
-                        onUnstake={(): void => unstakeMutator.mutate([[token]])}
-                        onSelect={(): void =>
-                            setTokenIdsToUnstake((t) =>
-                                selected
-                                    ? t.filter((id) => id !== token)
-                                    : [...t, token]
-                            )
-                        }
-                        className={css({
-                            flexShrink: 0,
-                            margin: '12px',
-                        })}
-                    />
+                    <>
+                        {modalOpen && txHash && (
+                            <UnstakingModal
+                                transactionHash={txHash}
+                                isOpen
+                                onClose={(): void => setModalOpen(false)}
+                            />
+                        )}
+                        <StakedApeTile
+                            tokenId={token}
+                            key={token}
+                            selected={selected}
+                            onUnstake={(): void =>
+                                unstakeMutator.mutate([[token]])
+                            }
+                            onSelect={(): void =>
+                                setTokenIdsToUnstake((t) =>
+                                    selected
+                                        ? t.filter((id) => id !== token)
+                                        : [...t, token]
+                                )
+                            }
+                            className={css({
+                                flexShrink: 0,
+                                margin: '12px',
+                            })}
+                        />
+                    </>
                 );
             })}
         </div>

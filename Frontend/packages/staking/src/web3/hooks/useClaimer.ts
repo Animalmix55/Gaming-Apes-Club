@@ -13,7 +13,9 @@ import { ERC20_BALANCE_KEY } from './useERC20Balance';
 import { ERC20_SUPPLY_KEY } from './useERC20Supply';
 import { STAKE_LAST_UPDATED_KEY } from './useStakeLastUpdatedTime';
 
-export const useClaimer = (): UseMutationResult<void, unknown, [], unknown> => {
+export const useClaimer = (): UseMutationResult<void, unknown, [], unknown> & {
+    txHash?: string;
+} => {
     const {
         PolygonChainId,
         GACStakingChildContractAddress,
@@ -27,6 +29,8 @@ export const useClaimer = (): UseMutationResult<void, unknown, [], unknown> => {
     const account = accounts?.[0];
     const queryClient = useQueryClient();
 
+    const [txHash, setTxHash] = React.useState<string>();
+
     const query = React.useCallback(async () => {
         await requestNewChain();
         if (!account) {
@@ -35,10 +39,10 @@ export const useClaimer = (): UseMutationResult<void, unknown, [], unknown> => {
         }
 
         if (!contract) return;
-        await claimRewards(contract, account);
+        await claimRewards(contract, account, setTxHash);
     }, [account, contract, requestNewChain]);
 
-    return useMutation(query, {
+    const result = useMutation(query, {
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: CURRENT_REWARD_KEY });
             queryClient.invalidateQueries({ queryKey: STAKE_LAST_UPDATED_KEY });
@@ -55,6 +59,8 @@ export const useClaimer = (): UseMutationResult<void, unknown, [], unknown> => {
             });
         },
     });
+
+    return { ...result, txHash };
 };
 
 export default useClaimer;

@@ -9,6 +9,8 @@ import React from 'react';
 import { useStyletron } from 'styletron-react';
 import { useAppConfiguration } from '../contexts/AppConfigurationContext';
 import { useStakingContext } from '../contexts/StakingContext';
+import { StakingModal } from '../molecules/StakingModal';
+import { UnstakingModal } from '../molecules/UnstakingModal';
 import { useStaker } from '../web3/hooks/useStaker';
 import { useTokensHeld } from '../web3/hooks/useTokensHeld';
 import { useTokensStaked } from '../web3/hooks/useTokensStaked';
@@ -72,8 +74,45 @@ export const Basket = (props: BasketProps): JSX.Element | null => {
         account,
         GamingApeClubAddress
     );
+
+    React.useEffect(() => {
+        setTokenIdsToStake((t) =>
+            t.filter((item) => unstakedApes?.includes(item))
+        );
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [unstakedApes]);
+
+    React.useEffect(() => {
+        setTokenIdsToUnstake((t) =>
+            t.filter((item) => stakedApes?.includes(item))
+        );
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [stakedApes]);
+
     const staker = useStaker();
+    const { txHash: stakingHash } = staker;
+
     const unstaker = useUnstaker();
+    const { txHash: unstakingHash } = unstaker;
+
+    const [showTxModal, setShowTxModal] = React.useState(false);
+    const txHash = React.useMemo((): string | undefined => {
+        if (tokenIdsToStake.length) return staker.txHash;
+        if (tokenIdsToUnstake.length) return unstaker.txHash;
+
+        return undefined;
+    }, [
+        staker.txHash,
+        tokenIdsToStake.length,
+        tokenIdsToUnstake.length,
+        unstaker.txHash,
+    ]);
+
+    React.useEffect(() => {
+        if (stakingHash || unstakingHash) {
+            setShowTxModal(true);
+        }
+    }, [stakingHash, unstakingHash]);
 
     const [css] = useStyletron();
     const theme = useThemeContext();
@@ -96,6 +135,16 @@ export const Basket = (props: BasketProps): JSX.Element | null => {
     if (tokenIdsToStake.length > 0) {
         return (
             <div className={bodyClass}>
+                {showTxModal && txHash && (
+                    <StakingModal
+                        isOpen
+                        transactionHash={txHash}
+                        onClose={(): void => {
+                            setTokenIdsToStake([]);
+                            setShowTxModal(false);
+                        }}
+                    />
+                )}
                 <NumberDisplay number={tokenIdsToStake.length} />
                 <div className={css({ margin: '0px 8px 0px 16px' })}>
                     <div
@@ -147,6 +196,16 @@ export const Basket = (props: BasketProps): JSX.Element | null => {
     if (tokenIdsToUnstake.length > 0) {
         return (
             <div className={bodyClass}>
+                {showTxModal && txHash && (
+                    <UnstakingModal
+                        transactionHash={txHash}
+                        isOpen
+                        onClose={(): void => {
+                            setTokenIdsToUnstake([]);
+                            setShowTxModal(false);
+                        }}
+                    />
+                )}
                 <NumberDisplay number={tokenIdsToUnstake.length} />
                 <div className={css({ margin: '0px 8px 0px 16px' })}>
                     <div

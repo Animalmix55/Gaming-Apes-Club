@@ -16,7 +16,7 @@ export const useUnstaker = (): UseMutationResult<
     unknown,
     [tokens: string[]],
     unknown
-> => {
+> & { txHash?: string } => {
     const {
         EthereumChainId,
         GACStakingContractAddress,
@@ -27,6 +27,7 @@ export const useUnstaker = (): UseMutationResult<
     const contract = useGACStakingContract(web3, GACStakingContractAddress);
     const account = accounts?.[0];
     const queryClient = useQueryClient();
+    const [txHash, setTxHash] = React.useState<string>();
 
     const query = React.useCallback(
         async (tokens: string[]) => {
@@ -37,12 +38,12 @@ export const useUnstaker = (): UseMutationResult<
             }
 
             if (!contract) return;
-            await unstakeTokens(contract, tokens, account);
+            await unstakeTokens(contract, tokens, account, setTxHash);
         },
         [account, contract, requestNewChain]
     );
 
-    return useMutation(query, {
+    const result = useMutation(query, {
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: STAKE_LAST_UPDATED_KEY });
             queryClient.invalidateQueries({ queryKey: TOKENS_STAKED_KEY });
@@ -68,6 +69,8 @@ export const useUnstaker = (): UseMutationResult<
             });
         },
     });
+
+    return { ...result, txHash };
 };
 
 export default useUnstaker;
