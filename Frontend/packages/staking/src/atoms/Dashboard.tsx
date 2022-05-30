@@ -4,6 +4,7 @@ import {
     ClassNameBuilder,
     Icons,
     MOBILE,
+    useConfirmationContext,
     useCurrentTime,
     useThemeContext,
     useWeb3,
@@ -72,6 +73,8 @@ export const Dashboard = (props: DashboardProps): JSX.Element => {
 
         return secondsToCompleteData;
     }, [currentTime, lastRewardTime.data, lastRewardTime.isLoading]);
+
+    const confirm = useConfirmationContext();
 
     const [css] = useStyletron();
     const theme = useThemeContext();
@@ -254,7 +257,14 @@ export const Dashboard = (props: DashboardProps): JSX.Element => {
                 })}
                 text="Claim Reward"
                 disabled={!pendingReward.data || pendingReward.data.isZero()}
-                onClick={(): void => claimer.mutate([])}
+                onClick={(): Promise<void> =>
+                    confirm(
+                        'Are you sure?',
+                        'Claiming will claim any pending rewards, resetting your daily timer.'
+                    ).then((r) => {
+                        if (r) claimer.mutate([]);
+                    })
+                }
             />
         </div>
     );

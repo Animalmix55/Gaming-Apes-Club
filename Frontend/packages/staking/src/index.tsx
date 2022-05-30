@@ -8,6 +8,7 @@ import { Provider } from 'styletron-react';
 import 'react-toastify/dist/ReactToastify.css';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import {
+    ConfirmationContextProvider,
     DefaultTheme,
     ThemeContextProvider,
     Web3ContextProvider,
@@ -52,25 +53,27 @@ const Root = (): JSX.Element => {
                             }),
                         }}
                     >
-                        <AppCongfigurationContextProvider
-                            value={{
-                                EthereumChainId,
-                                EtherscanUrl,
-                                GACXPContractAddress,
-                                GACStakingChildContractAddress,
-                                GACStakingContractAddress,
-                                GamingApeClubAddress,
-                                TwitterUrl,
-                                DiscordUrl,
-                                OpenSeaUrl,
-                                PolygonChainId,
-                                DefaultPolygonProvider,
-                            }}
-                        >
-                            <>
-                                <ToastContainer position="bottom-left" />
-                            </>
-                        </AppCongfigurationContextProvider>
+                        <ConfirmationContextProvider>
+                            <AppCongfigurationContextProvider
+                                value={{
+                                    EthereumChainId,
+                                    EtherscanUrl,
+                                    GACXPContractAddress,
+                                    GACStakingChildContractAddress,
+                                    GACStakingContractAddress,
+                                    GamingApeClubAddress,
+                                    TwitterUrl,
+                                    DiscordUrl,
+                                    OpenSeaUrl,
+                                    PolygonChainId,
+                                    DefaultPolygonProvider,
+                                }}
+                            >
+                                <>
+                                    <ToastContainer position="bottom-left" />
+                                </>
+                            </AppCongfigurationContextProvider>
+                        </ConfirmationContextProvider>
                     </Web3ContextProvider>
                 </ThemeContextProvider>
             </QueryClientProvider>

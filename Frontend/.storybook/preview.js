@@ -13,6 +13,7 @@ import AuthorizationContextDecorator from './AuthorizationContextDecorator';
 import Web3ContextProviderDecorator from './Web3ContextProviderDecorator';
 import StakingApeConfigDecorator from './StakingApeConfigDecorator';
 import StakingContextDecorator from './StakingContextDecorator';
+import ConfirmationContextDecorator from './ConfirmationContextDecorator';
 
 export const parameters = {
   actions: { argTypesRegex: "^on[A-Z].*" },
@@ -25,6 +26,7 @@ export const parameters = {
 }
 
 export const decorators = [
+  ConfirmationContextDecorator,
   QueryClientDecorator,
   ContractContextDecorator,
   StyletronDecorator,

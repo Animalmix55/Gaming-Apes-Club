@@ -3,6 +3,7 @@ import {
     ButtonType,
     ClassNameBuilder,
     MOBILE,
+    useConfirmationContext,
     useThemeContext,
     useWeb3,
 } from '@gac/shared-v2';
@@ -133,6 +134,8 @@ export const Basket = (props: BasketProps): JSX.Element | null => {
         })
     );
 
+    const confirm = useConfirmationContext();
+
     let allSelected =
         unstakedApes && unstakedApes.length === tokenIdsToStake.length;
 
@@ -216,7 +219,14 @@ export const Basket = (props: BasketProps): JSX.Element | null => {
                     <Button
                         text="Stake Apes"
                         themeType={ButtonType.error}
-                        onClick={(): void => staker.mutate([tokenIdsToStake])}
+                        onClick={(): Promise<void> =>
+                            confirm(
+                                'Are you sure?',
+                                'Staking will claim any pending rewards, resetting your daily timer.'
+                            ).then((r) => {
+                                if (r) staker.mutate([tokenIdsToStake]);
+                            })
+                        }
                     />
                 </div>
             </div>
@@ -305,8 +315,13 @@ export const Basket = (props: BasketProps): JSX.Element | null => {
                     <Button
                         text="Unstake Apes"
                         themeType={ButtonType.error}
-                        onClick={(): void =>
-                            unstaker.mutate([tokenIdsToUnstake])
+                        onClick={(): Promise<void> =>
+                            confirm(
+                                'Are you sure?',
+                                'Unstaking will claim any pending rewards, resetting your daily timer.'
+                            ).then((r) => {
+                                if (r) unstaker.mutate([tokenIdsToUnstake]);
+                            })
                         }
                     />
                 </div>

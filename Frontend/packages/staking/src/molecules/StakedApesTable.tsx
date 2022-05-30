@@ -3,6 +3,7 @@ import {
     Button,
     ButtonType,
     MOBILE,
+    useConfirmationContext,
     useThemeContext,
     useWeb3,
 } from '@gac/shared-v2';
@@ -46,6 +47,8 @@ export const StakedApesTableInner = (): JSX.Element => {
         },
     });
 
+    const confirm = useConfirmationContext();
+
     if (!stakedTokens.data || stakedTokens.isLoading)
         return (
             <div className={containerClass}>
@@ -78,8 +81,13 @@ export const StakedApesTableInner = (): JSX.Element => {
                             tokenId={token}
                             key={token}
                             selected={selected}
-                            onUnstake={(): void =>
-                                unstakeMutator.mutate([[token]])
+                            onUnstake={(): Promise<void> =>
+                                confirm(
+                                    'Are you sure?',
+                                    'Unstaking will retrieve your token and claim any pending rewards, resetting your daily timer.'
+                                ).then((r) => {
+                                    if (r) unstakeMutator.mutate([[token]]);
+                                })
                             }
                             onSelect={(): void =>
                                 setTokenIdsToUnstake((t) =>
