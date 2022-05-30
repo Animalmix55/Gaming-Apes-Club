@@ -85,7 +85,9 @@ export const Dashboard = (props: DashboardProps): JSX.Element => {
             padding: '16px',
             display: 'flex',
             alignItems: 'center',
+            boxSizing: 'border-box',
             [MOBILE]: {
+                justifyContent: 'center',
                 flexWrap: 'wrap',
             },
         })
@@ -124,7 +126,17 @@ export const Dashboard = (props: DashboardProps): JSX.Element => {
                 <Button
                     icon={Icons.ETHWhite}
                     themeType={ButtonType.primary}
-                    className={css({ marginLeft: '32px' })}
+                    className={css({
+                        marginLeft: '32px',
+                        [MOBILE]: {
+                            flex: '1',
+                            textAlign: 'center',
+                            marginLeft: 'unset',
+                            marginTop: '24px',
+                            display: 'flex',
+                            justifyContent: 'center',
+                        },
+                    })}
                     text="Connect Wallet"
                     onClick={(): void => setWalletModalOpen(true)}
                 />
