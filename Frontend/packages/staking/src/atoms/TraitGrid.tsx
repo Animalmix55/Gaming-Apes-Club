@@ -3,7 +3,6 @@ import {
     ClassNameBuilder,
     ERC721Attribute,
     Icons,
-    MOBILE,
     useThemeContext,
 } from '@gac/shared-v2';
 import React from 'react';
@@ -26,11 +25,7 @@ const TraitCell = (props: TraitCellProps): JSX.Element => {
             className={ClassNameBuilder(
                 className,
                 css({
-                    width: '93px',
-                    [MOBILE]: {
-                        flex: '1',
-                        width: 'unset',
-                    },
+                    boxSizing: 'border-box',
                     padding: '16px 8px',
                     backgroundColor:
                         theme.backgroundPallette.light.toRgbaString(),
@@ -93,11 +88,16 @@ export const TraitGrid = (props: TraitGridProps): JSX.Element => {
                 })}
             >
                 {slicedTraits.map((trait) => (
-                    <TraitCell
+                    <div
                         key={trait.trait_type}
-                        trait={trait}
-                        className={css({ margin: '8px' })}
-                    />
+                        className={css({
+                            padding: '8px',
+                            width: '33%',
+                            boxSizing: 'border-box',
+                        })}
+                    >
+                        <TraitCell trait={trait} />
+                    </div>
                 ))}
             </div>
             {maxDisplay && maxDisplay < traits.length && (

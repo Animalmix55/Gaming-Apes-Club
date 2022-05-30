@@ -111,7 +111,7 @@ export const UnstakedApesTable = (): JSX.Element | null => {
                         color: theme.foregroundPallette.white.toRgbaString(),
                     })}
                 >
-                    My Unstaked Apes
+                    Unstaked Apes
                 </div>
                 {UnstakedTokens.data && UnstakedTokens.data.length !== 0 && (
                     <div className={css({ marginLeft: 'auto' })}>

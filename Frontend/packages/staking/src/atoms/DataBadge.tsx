@@ -138,6 +138,8 @@ export const DataBadge = (props: DataBadgeProps): JSX.Element => {
                             fontSize: '10px',
                             textAlign: 'center',
                             textTransform: 'uppercase',
+                            textOverflow: 'ellipsis',
+                            overflow: 'hidden',
                         })}
                     >
                         {topText}

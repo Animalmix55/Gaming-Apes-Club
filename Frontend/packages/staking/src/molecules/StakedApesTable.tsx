@@ -133,7 +133,7 @@ export const StakedApesTable = (): JSX.Element | null => {
                         color: theme.foregroundPallette.white.toRgbaString(),
                     })}
                 >
-                    My Staked Apes
+                    Staked Apes
                 </div>
                 {stakedTokens.data && stakedTokens.data.length !== 0 && (
                     <div

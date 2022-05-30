@@ -187,10 +187,12 @@ export const Basket = (props: BasketProps): JSX.Element | null => {
                 <div
                     className={css({
                         display: 'flex',
+                        marginLeft: 'auto',
                         [MOBILE]: {
                             flexBasis: '100%',
                             marginTop: '16px',
                             justifyContent: 'center',
+                            marginLeft: 'unset',
                         },
                     })}
                 >
@@ -273,10 +275,12 @@ export const Basket = (props: BasketProps): JSX.Element | null => {
                 </div>
                 <div
                     className={css({
+                        marginLeft: 'auto',
                         display: 'flex',
                         [MOBILE]: {
                             flexBasis: '100%',
                             marginTop: '16px',
+                            marginLeft: 'unset',
                             justifyContent: 'center',
                         },
                     })}

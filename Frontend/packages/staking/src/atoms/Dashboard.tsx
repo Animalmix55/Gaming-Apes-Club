@@ -229,15 +229,14 @@ export const Dashboard = (props: DashboardProps): JSX.Element => {
                     padding: '0px 16px',
                 })}
             />
-            <Divider className={css({ marginTop: '24px' })} />
+            <Divider className={css({ [MOBILE]: { marginTop: '24px' } })} />
             <DataBadge
                 topText="Claimable"
                 isLoading={pendingReward.isLoading}
                 lowerElement={<TokenDisplay amount={pendingReward.data} />}
                 className={css({
-                    [MOBILE]: { flexBasis: '49%' },
+                    [MOBILE]: { flexBasis: '49%', marginTop: '24px' },
                     padding: '0px 16px',
-                    marginTop: '24px',
                 })}
             />
             <Button
