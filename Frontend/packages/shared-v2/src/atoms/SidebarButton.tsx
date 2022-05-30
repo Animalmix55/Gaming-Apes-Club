@@ -60,7 +60,9 @@ export const SidebarButton = (props: SidebarButtonProps): JSX.Element => {
             fontWeight: 700,
             fontFamily: theme.font,
             cursor: disabled ? 'not-allowed' : 'pointer',
-            backgroundColor: selected ? selectedBackgroundColor : 'unset',
+            backgroundColor: selected
+                ? selectedBackgroundColor ?? 'unset'
+                : 'unset',
             fontSize: '15px',
             height: '48px',
             borderRadius: '12px',

@@ -1,5 +1,11 @@
 import { Spinner, SpinnerSize } from '@fluentui/react';
-import { Button, ButtonType, useThemeContext, useWeb3 } from '@gac/shared-v2';
+import {
+    Button,
+    ButtonType,
+    MOBILE,
+    useThemeContext,
+    useWeb3,
+} from '@gac/shared-v2';
 import React from 'react';
 import { useStyletron } from 'styletron-react';
 import { StakedApeTile } from '../atoms/StakedTokenTile';
@@ -34,6 +40,10 @@ export const StakedApesTableInner = (): JSX.Element => {
         fontFamily: theme.font,
         transform: 'translateX(-12px)',
         color: theme.foregroundPallette.white.toRgbaString(),
+        [MOBILE]: {
+            flexWrap: 'nowrap',
+            overflow: 'auto',
+        },
     });
 
     if (!stakedTokens.data || stakedTokens.isLoading)
@@ -126,7 +136,14 @@ export const StakedApesTable = (): JSX.Element | null => {
                     My Staked Apes
                 </div>
                 {stakedTokens.data && stakedTokens.data.length !== 0 && (
-                    <div className={css({ marginLeft: 'auto' })}>
+                    <div
+                        className={css({
+                            marginLeft: 'auto',
+                            [MOBILE]: {
+                                marginRight: '24px',
+                            },
+                        })}
+                    >
                         <Button
                             onClick={(): void =>
                                 allSelected

@@ -1,3 +1,4 @@
+import './storybook.css';
 import '@gac/mint/src/styles/global.css';
 import '@gac/market/src/styles/global.css';
 import '@gac/staking/src/css/global.css';

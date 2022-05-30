@@ -1,5 +1,5 @@
 import React from 'react';
-import { Sidebar, SidebarItem, Icons } from '@gac/shared-v2';
+import { Sidebar, SidebarItem, Icons, MOBILE } from '@gac/shared-v2';
 import { useStyletron } from 'styletron-react';
 import { useAppConfiguration } from '../contexts/AppConfigurationContext';
 import Background from '../assets/png/BACKGROUND.png';
@@ -62,7 +62,11 @@ export const MainPage = (): JSX.Element => {
                 backgroundImage: `url(${Background})`,
                 backgroundPosition: 'center',
                 backgroundSize: 'cover',
+                boxSizing: 'border-box',
                 position: 'relative',
+                [MOBILE]: {
+                    paddingTop: '64px',
+                },
             })}
         >
             <Sidebar
@@ -92,7 +96,8 @@ export const MainPage = (): JSX.Element => {
             />
             <div
                 className={css({
-                    overflow: 'auto',
+                    overflowY: 'auto',
+                    overflowX: 'hidden',
                     width: '100%',
                 })}
             >
@@ -101,9 +106,15 @@ export const MainPage = (): JSX.Element => {
                         margin: '32px 48px 6px 48px',
                         display: 'flex',
                         alignItems: 'flex-start',
+                        [MOBILE]: {
+                            margin: '32px 24px 6px 24px',
+                            flexWrap: 'wrap',
+                        },
                     })}
                 >
-                    <Header />
+                    <Header
+                        className={css({ [MOBILE]: { marginBottom: '40px' } })}
+                    />
                     <Dashboard className={css({ marginLeft: 'auto' })} />
                 </div>
                 <div
@@ -111,6 +122,9 @@ export const MainPage = (): JSX.Element => {
                         padding: '48px',
                         width: '100%',
                         boxSizing: 'border-box',
+                        [MOBILE]: {
+                            padding: '48px 0px 48px 24px',
+                        },
                     })}
                 >
                     <StakedApesTable />
@@ -121,6 +135,9 @@ export const MainPage = (): JSX.Element => {
                         width: '100%',
                         boxSizing: 'border-box',
                         marginBottom: '100px',
+                        [MOBILE]: {
+                            padding: '48px 24px 48px 24px',
+                        },
                     })}
                 >
                     <UnstakedApesTable />
@@ -132,6 +149,10 @@ export const MainPage = (): JSX.Element => {
                     bottom: '24px',
                     right: '24px',
                     left: '152px',
+                    [MOBILE]: {
+                        left: '16px',
+                        right: '16px',
+                    },
                 })}
             />
         </div>

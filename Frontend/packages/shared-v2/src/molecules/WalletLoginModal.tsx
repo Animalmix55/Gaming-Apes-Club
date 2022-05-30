@@ -8,6 +8,7 @@ import {
 import { Modal } from '../atoms/Modal';
 import CoinInHand from '../assets/png/misc/Giving Back 1.png';
 import { useThemeContext } from '../contexts/ThemeContext';
+import { MOBILE } from '../utilties';
 
 interface WalletLoginModalProps {
     isOpen?: boolean;
@@ -37,6 +38,9 @@ export const WalletLoginModal = (props: WalletLoginModalProps): JSX.Element => {
                 <img
                     src={CoinInHand}
                     className={css({
+                        [MOBILE]: {
+                            display: 'none',
+                        },
                         left: '0px',
                         height: '80px',
                         width: 'auto',

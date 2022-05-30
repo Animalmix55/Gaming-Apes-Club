@@ -3,6 +3,7 @@ import {
     ClassNameBuilder,
     ERC721Attribute,
     Icons,
+    MOBILE,
     useThemeContext,
 } from '@gac/shared-v2';
 import React from 'react';
@@ -26,6 +27,10 @@ const TraitCell = (props: TraitCellProps): JSX.Element => {
                 className,
                 css({
                     width: '93px',
+                    [MOBILE]: {
+                        flex: '1',
+                        width: 'unset',
+                    },
                     padding: '16px 8px',
                     backgroundColor:
                         theme.backgroundPallette.light.toRgbaString(),
@@ -82,7 +87,8 @@ export const TraitGrid = (props: TraitGridProps): JSX.Element => {
                     flexWrap: 'wrap',
                     justifyContent: 'center',
                     alignItems: 'center',
-                    width: 'calc(100% + 16px)',
+                    minWidth: 'calc(100% + 16px)',
+                    maxWidth: 'calc(100% + 16px)',
                     transform: 'translateX(-8px)',
                 })}
             >

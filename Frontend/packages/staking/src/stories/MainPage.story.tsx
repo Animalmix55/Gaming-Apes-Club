@@ -10,7 +10,7 @@ export default {
 export const StandAlone = (): JSX.Element => {
     const [css] = useStyletron();
     return (
-        <div className={css({ height: '90vh', width: '90vw' })}>
+        <div className={css({ height: '100vh', width: '100vw' })}>
             <MainPage />
         </div>
     );

@@ -8,6 +8,7 @@ import {
     useWeb3,
     HOVERABLE,
     Icons,
+    MOBILE,
 } from '@gac/shared-v2';
 import React from 'react';
 import { useStyletron } from 'styletron-react';
@@ -51,10 +52,14 @@ export const UnstakedTokenTile = (
             backgroundColor: theme.backgroundPallette.dark.toRgbaString(),
             color: theme.foregroundPallette.white.toRgbaString(),
             fontFamily: theme.font,
+            boxSizing: 'border-box',
             [HOVERABLE]: {
                 ':hover': {
                     boxShadow: theme.shadowPallette.rainbow,
                 },
+            },
+            [MOBILE]: {
+                width: '100%',
             },
         })
     );
@@ -206,8 +211,19 @@ export const UnstakedTokenTile = (
                 />
             </div>
             <TraitGrid
-                className={css({ marginTop: '8px' })}
+                className={css({
+                    marginTop: '8px',
+                    [MOBILE]: { display: 'none' },
+                })}
                 maxDisplay={6}
+                traits={metadata.data.attributes}
+            />
+            <TraitGrid
+                className={css({
+                    marginTop: '8px',
+                    display: 'none',
+                    [MOBILE]: { display: 'flex' },
+                })}
                 traits={metadata.data.attributes}
             />
         </div>

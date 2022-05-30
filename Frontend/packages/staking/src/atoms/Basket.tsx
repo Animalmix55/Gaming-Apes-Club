@@ -2,6 +2,7 @@ import {
     Button,
     ButtonType,
     ClassNameBuilder,
+    MOBILE,
     useThemeContext,
     useWeb3,
 } from '@gac/shared-v2';
@@ -126,6 +127,9 @@ export const Basket = (props: BasketProps): JSX.Element | null => {
             padding: '12px',
             display: 'flex',
             alignItems: 'center',
+            [MOBILE]: {
+                flexWrap: 'wrap',
+            },
         })
     );
 
@@ -145,48 +149,74 @@ export const Basket = (props: BasketProps): JSX.Element | null => {
                         }}
                     />
                 )}
-                <NumberDisplay number={tokenIdsToStake.length} />
-                <div className={css({ margin: '0px 8px 0px 16px' })}>
-                    <div
-                        className={css({
-                            fontFamily: theme.font,
-                            fontWeight: 900,
-                            color: theme.foregroundPallette.white.toRgbaString(),
-                            fontStyle: 'italic',
-                            fontSize: '20px',
-                            textTransform: 'uppercase',
-                        })}
-                    >
-                        Apes Selected to be Staked
-                    </div>
-                    <div
-                        className={css({
-                            fontFamily: theme.font,
-                            fontWeight: 600,
-                            color: theme.foregroundPallette.white.toRgbaString(),
-                            opacity: 0.5,
-                            fontSize: '12px',
-                        })}
-                    >
-                        Select more Apes to stake all at once!
+                <div
+                    className={css({
+                        display: 'flex',
+                        [MOBILE]: {
+                            flexBasis: '100%',
+                        },
+                    })}
+                >
+                    <NumberDisplay number={tokenIdsToStake.length} />
+                    <div className={css({ margin: '0px 8px 0px 16px' })}>
+                        <div
+                            className={css({
+                                fontFamily: theme.font,
+                                fontWeight: 900,
+                                color: theme.foregroundPallette.white.toRgbaString(),
+                                fontStyle: 'italic',
+                                fontSize: '20px',
+                                textTransform: 'uppercase',
+                            })}
+                        >
+                            Apes Selected to be Staked
+                        </div>
+                        <div
+                            className={css({
+                                fontFamily: theme.font,
+                                fontWeight: 600,
+                                color: theme.foregroundPallette.white.toRgbaString(),
+                                opacity: 0.5,
+                                fontSize: '12px',
+                            })}
+                        >
+                            Select more Apes to stake all at once!
+                        </div>
                     </div>
                 </div>
-                <Button
-                    text={allSelected ? 'Deselect all' : 'Select all'}
-                    themeType={ButtonType.secondary}
-                    className={css({ marginLeft: 'auto', marginRight: '10px' })}
-                    disabled={!unstakedApes}
-                    onClick={
-                        unstakedApes && !allSelected
-                            ? (): void => setTokenIdsToStake(unstakedApes)
-                            : (): void => setTokenIdsToStake([])
-                    }
-                />
-                <Button
-                    text="Stake Apes"
-                    themeType={ButtonType.error}
-                    onClick={(): void => staker.mutate([tokenIdsToStake])}
-                />
+                <div
+                    className={css({
+                        display: 'flex',
+                        [MOBILE]: {
+                            flexBasis: '100%',
+                            marginTop: '16px',
+                            justifyContent: 'center',
+                        },
+                    })}
+                >
+                    <Button
+                        text={allSelected ? 'Deselect all' : 'Select all'}
+                        themeType={ButtonType.secondary}
+                        className={css({
+                            marginLeft: 'auto',
+                            marginRight: '10px',
+                            [MOBILE]: {
+                                marginLeft: 'unset',
+                            },
+                        })}
+                        disabled={!unstakedApes}
+                        onClick={
+                            unstakedApes && !allSelected
+                                ? (): void => setTokenIdsToStake(unstakedApes)
+                                : (): void => setTokenIdsToStake([])
+                        }
+                    />
+                    <Button
+                        text="Stake Apes"
+                        themeType={ButtonType.error}
+                        onClick={(): void => staker.mutate([tokenIdsToStake])}
+                    />
+                </div>
             </div>
         );
     }
@@ -206,48 +236,76 @@ export const Basket = (props: BasketProps): JSX.Element | null => {
                         }}
                     />
                 )}
-                <NumberDisplay number={tokenIdsToUnstake.length} />
-                <div className={css({ margin: '0px 8px 0px 16px' })}>
-                    <div
-                        className={css({
-                            fontFamily: theme.font,
-                            fontWeight: 900,
-                            color: theme.foregroundPallette.white.toRgbaString(),
-                            fontStyle: 'italic',
-                            fontSize: '20px',
-                            textTransform: 'uppercase',
-                        })}
-                    >
-                        Apes Selected to be Unstaked
-                    </div>
-                    <div
-                        className={css({
-                            fontFamily: theme.font,
-                            fontWeight: 600,
-                            color: theme.foregroundPallette.white.toRgbaString(),
-                            opacity: 0.5,
-                            fontSize: '12px',
-                        })}
-                    >
-                        Select more Apes to unstake all at once!
+                <div
+                    className={css({
+                        display: 'flex',
+                        [MOBILE]: {
+                            flexBasis: '100%',
+                        },
+                    })}
+                >
+                    <NumberDisplay number={tokenIdsToUnstake.length} />
+                    <div className={css({ margin: '0px 8px 0px 16px' })}>
+                        <div
+                            className={css({
+                                fontFamily: theme.font,
+                                fontWeight: 900,
+                                color: theme.foregroundPallette.white.toRgbaString(),
+                                fontStyle: 'italic',
+                                fontSize: '20px',
+                                textTransform: 'uppercase',
+                            })}
+                        >
+                            Apes Selected to be Unstaked
+                        </div>
+                        <div
+                            className={css({
+                                fontFamily: theme.font,
+                                fontWeight: 600,
+                                color: theme.foregroundPallette.white.toRgbaString(),
+                                opacity: 0.5,
+                                fontSize: '12px',
+                            })}
+                        >
+                            Select more Apes to unstake all at once!
+                        </div>
                     </div>
                 </div>
-                <Button
-                    text={allSelected ? 'Deselect all' : 'Select all'}
-                    themeType={ButtonType.secondary}
-                    className={css({ marginLeft: 'auto', marginRight: '10px' })}
-                    disabled={!stakedApes}
-                    onClick={
-                        stakedApes && !allSelected
-                            ? (): void => setTokenIdsToUnstake(stakedApes)
-                            : (): void => setTokenIdsToUnstake([])
-                    }
-                />
-                <Button
-                    text="Unstake Apes"
-                    themeType={ButtonType.error}
-                    onClick={(): void => unstaker.mutate([tokenIdsToUnstake])}
-                />
+                <div
+                    className={css({
+                        display: 'flex',
+                        [MOBILE]: {
+                            flexBasis: '100%',
+                            marginTop: '16px',
+                            justifyContent: 'center',
+                        },
+                    })}
+                >
+                    <Button
+                        text={allSelected ? 'Deselect all' : 'Select all'}
+                        themeType={ButtonType.secondary}
+                        className={css({
+                            marginLeft: 'auto',
+                            marginRight: '10px',
+                            [MOBILE]: {
+                                marginLeft: 'unset',
+                            },
+                        })}
+                        disabled={!stakedApes}
+                        onClick={
+                            stakedApes && !allSelected
+                                ? (): void => setTokenIdsToUnstake(stakedApes)
+                                : (): void => setTokenIdsToUnstake([])
+                        }
+                    />
+                    <Button
+                        text="Unstake Apes"
+                        themeType={ButtonType.error}
+                        onClick={(): void =>
+                            unstaker.mutate([tokenIdsToUnstake])
+                        }
+                    />
+                </div>
             </div>
         );
     }

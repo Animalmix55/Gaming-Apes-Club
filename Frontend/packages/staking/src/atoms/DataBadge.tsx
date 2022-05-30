@@ -66,19 +66,21 @@ export const Fraction = ({
     );
 };
 
-export const Divider = (): JSX.Element => {
+export const Divider = ({ className }: { className?: string }): JSX.Element => {
     const [css] = useStyletron();
     const theme = useThemeContext();
 
     return (
         <div
-            className={css({
-                height: '100%',
-                width: '1px',
-                margin: '0px 16px',
-                backgroundColor: theme.foregroundPallette.white.toRgbaString(),
-                opacity: 0.1,
-            })}
+            className={ClassNameBuilder(
+                className,
+                css({
+                    height: '32px',
+                    width: '0px',
+                    borderRight: `1px solid ${theme.foregroundPallette.white.toRgbaString()}`,
+                    opacity: 0.1,
+                })
+            )}
         />
     );
 };
@@ -120,7 +122,12 @@ export const DataBadge = (props: DataBadgeProps): JSX.Element => {
     const theme = useThemeContext();
 
     return (
-        <div className={className}>
+        <div
+            className={ClassNameBuilder(
+                css({ boxSizing: 'border-box' }),
+                className
+            )}
+        >
             {!isLoading && (
                 <>
                     <div

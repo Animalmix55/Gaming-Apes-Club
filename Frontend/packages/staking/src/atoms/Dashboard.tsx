@@ -3,6 +3,7 @@ import {
     ButtonType,
     ClassNameBuilder,
     Icons,
+    MOBILE,
     useCurrentTime,
     useThemeContext,
     useWeb3,
@@ -84,6 +85,9 @@ export const Dashboard = (props: DashboardProps): JSX.Element => {
             padding: '16px',
             display: 'flex',
             alignItems: 'center',
+            [MOBILE]: {
+                flexWrap: 'wrap',
+            },
         })
     );
 
@@ -106,6 +110,7 @@ export const Dashboard = (props: DashboardProps): JSX.Element => {
                             right={6650}
                         />
                     }
+                    className={css({ padding: '0 16px' })}
                 />
                 <Divider />
                 <DataBadge
@@ -114,6 +119,7 @@ export const Dashboard = (props: DashboardProps): JSX.Element => {
                     lowerElement={
                         <TokenDisplay amount={rewardTokenSupply.data} />
                     }
+                    className={css({ padding: '0 16px' })}
                 />
                 <Button
                     icon={Icons.ETHWhite}
@@ -145,14 +151,26 @@ export const Dashboard = (props: DashboardProps): JSX.Element => {
                         }
                     />
                 }
+                className={css({
+                    [MOBILE]: { flexBasis: '49%' },
+                    padding: '0px 16px',
+                })}
             />
             <Divider />
             <DataBadge
                 topText="Reward Balance"
                 isLoading={userRewardBalance.isLoading}
                 lowerElement={<TokenDisplay amount={userRewardBalance.data} />}
+                className={css({
+                    [MOBILE]: { flexBasis: '49%' },
+                    padding: '0px 16px',
+                })}
             />
-            <Divider />
+            <Divider
+                className={css({
+                    [MOBILE]: { display: 'none' },
+                })}
+            />
             <DataBadge
                 topText="Next rewards in"
                 isLoading={lastRewardTime.isLoading}
@@ -194,16 +212,35 @@ export const Dashboard = (props: DashboardProps): JSX.Element => {
                         <div className={css(AccentTextStyles(theme))}>N/A</div>
                     )
                 }
+                className={css({
+                    [MOBILE]: { flexBasis: '49%', marginTop: '24px' },
+                    padding: '0px 16px',
+                })}
             />
-            <Divider />
+            <Divider className={css({ marginTop: '24px' })} />
             <DataBadge
                 topText="Claimable"
                 isLoading={pendingReward.isLoading}
                 lowerElement={<TokenDisplay amount={pendingReward.data} />}
+                className={css({
+                    [MOBILE]: { flexBasis: '49%' },
+                    padding: '0px 16px',
+                    marginTop: '24px',
+                })}
             />
             <Button
                 themeType={ButtonType.primary}
-                className={css({ marginLeft: '32px' })}
+                className={css({
+                    marginLeft: '32px',
+                    [MOBILE]: {
+                        flex: '1',
+                        textAlign: 'center',
+                        marginLeft: 'unset',
+                        marginTop: '24px',
+                        display: 'flex',
+                        justifyContent: 'center',
+                    },
+                })}
                 text="Claim Reward"
                 disabled={!pendingReward.data || pendingReward.data.isZero()}
                 onClick={(): void => claimer.mutate([])}

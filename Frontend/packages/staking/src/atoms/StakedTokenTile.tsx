@@ -62,6 +62,9 @@ export const StakedTokenTile = (props: StakedTokenTileProps): JSX.Element => {
                     boxShadow: theme.shadowPallette.rainbow,
                 },
             },
+            [MOBILE]: {
+                boxShadow: 'unset !important',
+            },
         })
     );
 
@@ -148,9 +151,10 @@ export const StakedTokenTile = (props: StakedTokenTileProps): JSX.Element => {
                         className={ClassNameBuilder(
                             'image-overlay',
                             css({
-                                [MOBILE]: {
-                                    display: 'none',
+                                [HOVERABLE]: {
+                                    display: 'initial',
                                 },
+                                display: 'none',
                                 position: 'absolute',
                                 visibility: 'hidden',
                                 zIndex: 11,
@@ -167,12 +171,12 @@ export const StakedTokenTile = (props: StakedTokenTileProps): JSX.Element => {
                     className={ClassNameBuilder(
                         'image-overlay',
                         css({
-                            [MOBILE]: {
-                                display: 'none',
+                            [HOVERABLE]: {
+                                display: 'flex',
                             },
+                            display: 'none',
                             visibility: 'hidden',
                             position: 'absolute',
-                            display: 'flex',
                             flexDirection: 'column',
                             justifyContent: 'center',
                             zIndex: 10,
