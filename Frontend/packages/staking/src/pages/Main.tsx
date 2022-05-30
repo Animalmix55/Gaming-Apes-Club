@@ -1,5 +1,12 @@
 import React from 'react';
-import { Sidebar, SidebarItem, Icons, MOBILE, useWeb3, Footer } from '@gac/shared-v2';
+import {
+    Sidebar,
+    SidebarItem,
+    Icons,
+    MOBILE,
+    useWeb3,
+    Footer,
+} from '@gac/shared-v2';
 import { useStyletron } from 'styletron-react';
 import { useAppConfiguration } from '../contexts/AppConfigurationContext';
 import Background from '../assets/png/BACKGROUND.png';
