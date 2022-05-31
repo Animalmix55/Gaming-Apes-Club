@@ -13,7 +13,7 @@ import {
 import React from 'react';
 import { useStyletron } from 'styletron-react';
 import { useAppConfiguration } from '../contexts/AppConfigurationContext';
-import useRewardByAmount from '../hooks/useRewardByAmount';
+import { useRewardByAmount } from '../hooks/useRewardByAmount';
 import { useClaimer } from '../web3/hooks/useClaimer';
 import { useCurrentReward } from '../web3/hooks/useCurrentReward';
 import { useERC20Balance } from '../web3/hooks/useERC20Balance';

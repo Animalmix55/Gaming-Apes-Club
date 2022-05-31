@@ -17,12 +17,12 @@ import { Basket } from '../atoms/Basket';
 import { UnstakedApesTable } from '../molecules/UnstakedApesTable';
 import { NeedMoreModule } from '../atoms/NeedMoreModule';
 
-const sidebarItems: SidebarItem[] = [
+const sidebarItems: (SidebarItem & { url?: string })[] = [
     {
         icon: Icons.Home,
         displayText: 'Home',
         id: 'Home',
-        disabled: true,
+        url: 'https://gamingapeclub.com/',
     },
     {
         icon: Icons.Mission,
@@ -40,7 +40,7 @@ const sidebarItems: SidebarItem[] = [
         icon: Icons.Shack,
         displayText: 'Shack',
         id: 'Shack',
-        disabled: true,
+        url: 'https://shack.gamingapeclub.com/',
     },
     {
         icon: Icons.Staking,
@@ -104,6 +104,10 @@ export const MainPage = (): JSX.Element => {
                           }
                         : undefined
                 }
+                onSelectButton={(i: SidebarItem & { url?: string }): void => {
+                    if (!i.url) return;
+                    window.location.href = i.url;
+                }}
             />
             <div
                 className={css({
