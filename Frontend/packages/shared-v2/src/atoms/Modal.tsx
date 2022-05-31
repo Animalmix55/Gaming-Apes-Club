@@ -1,3 +1,5 @@
+/* eslint-disable jsx-a11y/no-static-element-interactions */
+/* eslint-disable jsx-a11y/click-events-have-key-events */
 import { Layer } from '@fluentui/react';
 import React from 'react';
 import { useStyletron } from 'styletron-react';
@@ -42,6 +44,7 @@ export const Modal = (props: ModalProps): JSX.Element | null => {
                             theme.backgroundPallette.darker.toRgbaString(),
                     })
                 )}
+                onClick={onClose}
             >
                 <div
                     className={ClassNameBuilder(
@@ -55,6 +58,7 @@ export const Modal = (props: ModalProps): JSX.Element | null => {
                             boxShadow: theme.shadowPallette.rainbow,
                         })
                     )}
+                    onClick={(e): void => e.stopPropagation()}
                 >
                     {onClose && (
                         <Button

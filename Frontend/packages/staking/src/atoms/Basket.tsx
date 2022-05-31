@@ -1,7 +1,9 @@
+import { BigNumber } from '@ethersproject/bignumber';
 import {
     Button,
     ButtonType,
     ClassNameBuilder,
+    Icons,
     MOBILE,
     useConfirmationContext,
     useThemeContext,
@@ -11,12 +13,16 @@ import React from 'react';
 import { useStyletron } from 'styletron-react';
 import { useAppConfiguration } from '../contexts/AppConfigurationContext';
 import { useStakingContext } from '../contexts/StakingContext';
+import { useRewardByAmount } from '../hooks/useRewardByAmount';
 import { StakingModal } from '../molecules/StakingModal';
+import { TiersModal } from '../molecules/TiersModal';
 import { UnstakingModal } from '../molecules/UnstakingModal';
 import { useStaker } from '../web3/hooks/useStaker';
 import { useTokensHeld } from '../web3/hooks/useTokensHeld';
 import { useTokensStaked } from '../web3/hooks/useTokensStaked';
 import { useUnstaker } from '../web3/hooks/useUnstaker';
+import { BlockchainReward } from '../web3/Requests';
+import { Divider, Fraction, TokenDisplay } from './DataBadge';
 
 export interface BasketProps {
     className?: string;
@@ -57,6 +63,83 @@ export const NumberDisplay = ({
     );
 };
 
+const PlaceholderTier: BlockchainReward = {
+    amount: 0,
+    reward: BigNumber.from(0),
+};
+
+export const TierDisplay = ({
+    tier,
+    index,
+    amount,
+}: {
+    tier?: BlockchainReward;
+    index?: number;
+    amount: number;
+}): JSX.Element => {
+    const [css] = useStyletron();
+    const theme = useThemeContext();
+
+    const fractionClass = css({
+        fontFamily: theme.font,
+        fontWeight: 700,
+        fontSize: '10px',
+        color: `${theme.foregroundPallette.white.toRgbaString(0.6)} !important`,
+    });
+
+    const resolvedTier = tier ?? PlaceholderTier;
+
+    return (
+        <div
+            className={css({
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                padding: '5px 16px',
+                borderRadius: '8px',
+                backgroundColor:
+                    amount >= resolvedTier.amount
+                        ? theme.backgroundPallette.darker.toRgbaString()
+                        : theme.backgroundPallette.dark.toRgbaString(0.4),
+            })}
+        >
+            <div
+                className={css({
+                    textTransform: 'uppercase',
+                    fontSize: '10px',
+                    fontWeight: 700,
+                })}
+            >
+                Tier {!tier || index === undefined ? 0 : index + 1}
+            </div>
+            <div>
+                {amount < resolvedTier.amount && (
+                    <Fraction
+                        left={amount}
+                        leftClassName={css({
+                            color: theme.foregroundPallette.accent.toRgbaString(),
+                            fontWeight: 900,
+                        })}
+                        right={resolvedTier.amount}
+                        slashClassName={fractionClass}
+                        rightClassName={fractionClass}
+                    />
+                )}
+                {amount >= resolvedTier.amount && (
+                    <div>
+                        <img
+                            src={Icons.CheckmarkGold}
+                            alt="Checkmark"
+                            className={css({ height: '10px' })}
+                        />
+                    </div>
+                )}
+            </div>
+        </div>
+    );
+};
+
 export const Basket = (props: BasketProps): JSX.Element | null => {
     const { className } = props;
 
@@ -76,6 +159,18 @@ export const Basket = (props: BasketProps): JSX.Element | null => {
         account,
         GamingApeClubAddress
     );
+
+    const newAmountStaked =
+        (stakedApes?.length ?? 0) +
+        tokenIdsToStake.length -
+        tokenIdsToUnstake.length;
+
+    const { tiers, currentTierIndex, currentTier, reward } =
+        useRewardByAmount(newAmountStaked);
+
+    const nextTier = tiers.data
+        ? tiers.data[(currentTierIndex ?? -1) + 1]
+        : undefined;
 
     React.useEffect(() => {
         setTokenIdsToStake((t) =>
@@ -98,6 +193,7 @@ export const Basket = (props: BasketProps): JSX.Element | null => {
     const { txHash: unstakingHash } = unstaker;
 
     const [showTxModal, setShowTxModal] = React.useState(false);
+    const [showTier, setShowTierModal] = React.useState(false);
     const txHash = React.useMemo((): string | undefined => {
         if (tokenIdsToStake.length) return staker.txHash;
         if (tokenIdsToUnstake.length) return unstaker.txHash;
@@ -139,6 +235,38 @@ export const Basket = (props: BasketProps): JSX.Element | null => {
     let allSelected =
         unstakedApes && unstakedApes.length === tokenIdsToStake.length;
 
+    const tierDisplay = (
+        <div
+            className={css({
+                display: 'flex',
+                alignItems: 'center',
+                [MOBILE]: {
+                    display: 'none',
+                },
+            })}
+        >
+            <TierDisplay
+                tier={currentTier}
+                index={currentTierIndex}
+                amount={newAmountStaked}
+            />
+            {nextTier && (
+                <>
+                    <img
+                        src={Icons.ChevronRight}
+                        alt="Chevron Right"
+                        className={css({ margin: '0px 15px' })}
+                    />
+                    <TierDisplay
+                        tier={nextTier}
+                        index={(currentTierIndex ?? -1) + 1}
+                        amount={newAmountStaked}
+                    />
+                </>
+            )}
+        </div>
+    );
+
     if (tokenIdsToStake.length > 0) {
         return (
             <div className={bodyClass}>
@@ -152,6 +280,10 @@ export const Basket = (props: BasketProps): JSX.Element | null => {
                         }}
                     />
                 )}
+                <TiersModal
+                    isOpen={showTier}
+                    onClose={(): void => setShowTierModal(false)}
+                />
                 <div
                     className={css({
                         display: 'flex',
@@ -172,21 +304,52 @@ export const Basket = (props: BasketProps): JSX.Element | null => {
                                 textTransform: 'uppercase',
                             })}
                         >
-                            Apes Selected to be Staked
+                            Apes Selected
                         </div>
                         <div
                             className={css({
                                 fontFamily: theme.font,
                                 fontWeight: 600,
-                                color: theme.foregroundPallette.white.toRgbaString(),
-                                opacity: 0.5,
+                                color: theme.foregroundPallette.white.toRgbaString(
+                                    0.5
+                                ),
                                 fontSize: '12px',
+                                display: 'flex',
+                                alignItems: 'center',
                             })}
                         >
-                            Select more Apes to stake all at once!
+                            You will yield{' '}
+                            <Fraction
+                                className={css({
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    marginLeft: '5px',
+                                })}
+                                left={<TokenDisplay amount={reward} />}
+                                right="day"
+                            />
+                            <Button
+                                icon={Icons.Info}
+                                className={css({
+                                    padding: 'unset !important',
+                                    height: 'unset !important',
+                                    marginLeft: '5px',
+                                })}
+                                onClick={(): void => setShowTierModal(true)}
+                            />
                         </div>
                     </div>
                 </div>
+                <Divider
+                    className={css({
+                        height: '48px !important',
+                        margin: '0px 20px',
+                        [MOBILE]: {
+                            display: 'none',
+                        },
+                    })}
+                />
+                {tierDisplay}
                 <div
                     className={css({
                         display: 'flex',
@@ -248,6 +411,10 @@ export const Basket = (props: BasketProps): JSX.Element | null => {
                         }}
                     />
                 )}
+                <TiersModal
+                    isOpen={showTier}
+                    onClose={(): void => setShowTierModal(false)}
+                />
                 <div
                     className={css({
                         display: 'flex',
@@ -268,21 +435,52 @@ export const Basket = (props: BasketProps): JSX.Element | null => {
                                 textTransform: 'uppercase',
                             })}
                         >
-                            Apes Selected to be Unstaked
+                            Apes Selected
                         </div>
                         <div
                             className={css({
                                 fontFamily: theme.font,
                                 fontWeight: 600,
-                                color: theme.foregroundPallette.white.toRgbaString(),
-                                opacity: 0.5,
+                                color: theme.foregroundPallette.white.toRgbaString(
+                                    0.5
+                                ),
                                 fontSize: '12px',
+                                display: 'flex',
+                                alignItems: 'center',
                             })}
                         >
-                            Select more Apes to unstake all at once!
+                            You will yield{' '}
+                            <Fraction
+                                className={css({
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    marginLeft: '5px',
+                                })}
+                                left={<TokenDisplay amount={reward} />}
+                                right="day"
+                            />
+                            <Button
+                                icon={Icons.Info}
+                                className={css({
+                                    padding: 'unset !important',
+                                    height: 'unset !important',
+                                    marginLeft: '5px',
+                                })}
+                                onClick={(): void => setShowTierModal(true)}
+                            />
                         </div>
                     </div>
                 </div>
+                <Divider
+                    className={css({
+                        height: '48px !important',
+                        margin: '0px 20px',
+                        [MOBILE]: {
+                            display: 'none',
+                        },
+                    })}
+                />
+                {tierDisplay}
                 <div
                     className={css({
                         marginLeft: 'auto',

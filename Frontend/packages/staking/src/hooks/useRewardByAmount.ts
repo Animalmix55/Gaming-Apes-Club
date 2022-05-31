@@ -17,7 +17,7 @@ export const useRewardByAmount = (
     const tiers = useCurrentTiers();
 
     return React.useMemo(() => {
-        if (!tiers.data || !amountStaked)
+        if (!tiers.data || amountStaked === undefined)
             return { reward: BigNumber.from(0), tiers };
 
         return tiers.data.reduce(

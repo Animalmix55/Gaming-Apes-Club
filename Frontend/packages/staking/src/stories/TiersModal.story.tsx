@@ -8,5 +8,5 @@ export default {
 };
 
 export const StandAlone = (): JSX.Element => {
-    return <TiersModal isOpen />;
+    return <TiersModal isOpen onClose={(): void => void 0} />;
 };

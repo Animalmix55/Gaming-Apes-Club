@@ -31,9 +31,14 @@ import EmptyCheckbox from '../assets/png/symbol/Checkbox empty.png';
 import FilledCheckbox from '../assets/png/symbol/Checkbox filled.png';
 import CheckmarkCircle from '../assets/png/symbol/Checkmark v2.png';
 import Checkmark from '../assets/png/symbol/Checkmark.png';
+import CheckmarkGold from '../assets/png/symbol/Checkmark Accent.png';
 import ETHBlack from '../assets/png/symbol/ETH Black.png';
 import ETHWhite from '../assets/png/symbol/ETH White.png';
 import GACXP from '../assets/png/symbol/XP.png';
+import ChevronLeft from '../assets/png/symbol/ChevronLeft.png';
+import ChevronUp from '../assets/png/symbol/ChevronUp.png';
+import ChevronRight from '../assets/png/symbol/ChevronRight.png';
+import ChevronDown from '../assets/png/symbol/ChevronDown.png';
 
 export const Icons = {
     Burger,
@@ -67,6 +72,11 @@ export const Icons = {
     ETHBlack,
     ETHWhite,
     GACXP,
+    CheckmarkGold,
+    ChevronDown,
+    ChevronLeft,
+    ChevronRight,
+    ChevronUp,
 };
 
 export default Icons;

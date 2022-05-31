@@ -19,6 +19,7 @@ const ROWSPERCOLUMN = 9;
 
 export interface TiersModalProps {
     isOpen?: boolean;
+    onClose?: () => void;
 }
 
 interface Tier {
@@ -55,7 +56,6 @@ const TierTile = ({
                 className,
                 css({
                     display: 'flex',
-                    width: '200px',
                     fontFamily: theme.font,
                     color: theme.foregroundPallette.white.toRgbaString(),
                     alignItems: 'center',
@@ -80,6 +80,7 @@ const TierTile = ({
                         fontWeight: 600,
                         fontSize: '12px',
                         opacity: 0.5,
+                        whiteSpace: 'nowrap',
                     })}
                 >
                     {amount}x GAC NFT
@@ -98,7 +99,7 @@ const TierTile = ({
 };
 
 export const TiersModal = (props: TiersModalProps): JSX.Element => {
-    const { isOpen } = props;
+    const { isOpen, onClose } = props;
     const [css] = useStyletron();
     const theme = useThemeContext();
     const { EthereumChainId } = useAppConfiguration();
@@ -138,10 +139,23 @@ export const TiersModal = (props: TiersModalProps): JSX.Element => {
     return (
         <Modal
             isOpen={isOpen}
+            onClose={onClose}
             modalClass={css({
                 backgroundColor: `${theme.backgroundPallette.dark.toRgbaString()} !important`,
+                maxHeight: '90vh',
+                display: 'flex',
+                flexDirection: 'column',
             })}
         >
+            <div
+                className={css({
+                    fontWeight: 900,
+                    fontSize: '18px',
+                    marginBottom: '22px',
+                })}
+            >
+                Staking Tiers
+            </div>
             {tiers.isLoading && <Spinner size={SpinnerSize.medium} />}
             {tiers.isError && <div>An error occurred</div>}
             {columns && (
@@ -150,30 +164,43 @@ export const TiersModal = (props: TiersModalProps): JSX.Element => {
                         backgroundColor:
                             theme.backgroundPallette.light.toRgbaString(),
                         borderRadius: '12px',
-                        maxHeight: '90vh',
                         overflow: 'auto',
                         padding: '12px',
-                        justifyContent: 'center',
+                        justifyContent: 'space-between',
                         display: 'flex',
                         flexWrap: 'wrap',
                         boxSizing: 'border-box',
+                        flex: 1,
                         [MOBILE]: {
+                            width: 'unset',
                             display: 'block',
                         },
                     })}
                 >
                     {columns.map((column, colIndex) => (
-                        // eslint-disable-next-line react/no-array-index-key
-                        <div key={colIndex}>
+                        <div
+                            // eslint-disable-next-line react/no-array-index-key
+                            key={colIndex}
+                            className={css({
+                                marginRight:
+                                    colIndex !== columns.length - 1
+                                        ? '25px'
+                                        : undefined,
+                            })}
+                        >
                             {column.map((tier, index) => (
                                 <TierTile
                                     key={tier.amount}
                                     tier={{
                                         tokenYield:
-                                            yieldPerTier?.[index] ??
-                                            BigNumber.from(0),
+                                            yieldPerTier?.[
+                                                colIndex * ROWSPERCOLUMN + index
+                                            ] ?? BigNumber.from(0),
                                         amount: tier.amount,
-                                        index: colIndex * ROWSPERCOLUMN + index,
+                                        index:
+                                            colIndex * ROWSPERCOLUMN +
+                                            index +
+                                            1,
                                     }}
                                     selected={tier === currentTier}
                                 />
