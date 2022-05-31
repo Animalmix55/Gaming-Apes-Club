@@ -13,6 +13,7 @@ import {
 import React from 'react';
 import { useStyletron } from 'styletron-react';
 import { useAppConfiguration } from '../contexts/AppConfigurationContext';
+import useRewardByAmount from '../hooks/useRewardByAmount';
 import { useClaimer } from '../web3/hooks/useClaimer';
 import { useCurrentReward } from '../web3/hooks/useCurrentReward';
 import { useERC20Balance } from '../web3/hooks/useERC20Balance';
@@ -97,6 +98,7 @@ export const Dashboard = (props: DashboardProps): JSX.Element => {
     );
 
     const claimer = useClaimer();
+    const { reward } = useRewardByAmount(userStake.data?.length);
 
     if (!account) {
         return (
@@ -147,6 +149,13 @@ export const Dashboard = (props: DashboardProps): JSX.Element => {
         );
     }
 
+    const fractionClass = css({
+        fontFamily: theme.font,
+        fontWeight: 700,
+        fontSize: '10px',
+        color: `${theme.foregroundPallette.white.toRgbaString(0.6)} !important`,
+    });
+
     return (
         <div className={bodyClass}>
             <WalletLoginModal
@@ -154,16 +163,18 @@ export const Dashboard = (props: DashboardProps): JSX.Element => {
                 onClose={(): void => setWalletModalOpen(false)}
             />
             <DataBadge
-                topText="Staked Apes"
+                topText="Yield Rate"
                 isLoading={userNFTBalance.isLoading || userStake.isLoading}
                 lowerElement={
                     <Fraction
-                        className={css(AccentTextStyles(theme))}
-                        left={userStake.data?.length ?? 0}
-                        right={
-                            (userNFTBalance.data ?? 0) +
-                            (userStake.data?.length ?? 0)
-                        }
+                        className={css({
+                            display: 'flex',
+                            alignItems: 'center',
+                        })}
+                        rightClassName={fractionClass}
+                        slashClassName={fractionClass}
+                        left={<TokenDisplay amount={reward} />}
+                        right="day"
                     />
                 }
                 className={css({

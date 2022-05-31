@@ -83,7 +83,7 @@ const TierTile = ({
                         whiteSpace: 'nowrap',
                     })}
                 >
-                    {amount}x GAC NFT
+                    {amount}x GAC NFT{amount > 1 ? 's' : ''}
                 </div>
             </div>
             <div className={css({ marginLeft: '20px' })}>
