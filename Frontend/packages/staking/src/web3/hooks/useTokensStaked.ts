@@ -16,7 +16,8 @@ export const useTokensStaked = (address?: string): RequestResult<string[]> => {
     const { provider } = useWeb3(EthereumChainId);
     const gamingApeClubContract = useGamingApeClubContract(
         provider,
-        GamingApeClubAddress
+        GamingApeClubAddress,
+        true
     );
 
     const request = React.useCallback(

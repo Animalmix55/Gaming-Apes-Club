@@ -10,7 +10,7 @@ export const useERC20Supply = (
     provider?: Web3Provider,
     contractAddress?: string
 ): RequestResult<BigNumber | undefined> => {
-    const contract = useIERC20Contract(provider, contractAddress);
+    const contract = useIERC20Contract(provider, contractAddress, true);
 
     const request = React.useCallback(async () => {
         if (!contract) return undefined;

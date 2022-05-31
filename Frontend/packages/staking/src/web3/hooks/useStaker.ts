@@ -24,8 +24,13 @@ export const useStaker = (): UseMutationResult<
         GamingApeClubAddress,
         GACXPContractAddress,
     } = useAppConfiguration();
-    const { provider, accounts, requestNewChain } = useWeb3(EthereumChainId);
-    const contract = useGACStakingContract(provider, GACStakingContractAddress);
+    const { provider, accounts, requestNewChain, readonly } =
+        useWeb3(EthereumChainId);
+    const contract = useGACStakingContract(
+        provider,
+        GACStakingContractAddress,
+        readonly
+    );
     const account = accounts?.[0];
     const queryClient = useQueryClient();
 

@@ -115,8 +115,8 @@ export const getERC20Balance = async (
 };
 
 export const getERC20Supply = async (contract: IERC20): Promise<BigNumber> => {
-    const supply = await contract.functions.totalSupply();
-    return BigNumber.from(supply);
+    const [supply] = await contract.functions.totalSupply();
+    return supply;
 };
 
 export const stakeTokens = async (

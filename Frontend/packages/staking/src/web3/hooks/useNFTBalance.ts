@@ -14,7 +14,11 @@ export const useNFTBalance = (
     user?: string,
     contractAddress?: string
 ): RequestResult<number | undefined> => {
-    const contract = useIERC721MetadataContract(provider, contractAddress);
+    const contract = useIERC721MetadataContract(
+        provider,
+        contractAddress,
+        true
+    );
 
     const request = React.useCallback(
         async (user: string) => {

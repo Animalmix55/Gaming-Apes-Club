@@ -12,7 +12,7 @@ export const useERC20Balance = (
     provider?: Web3Provider,
     contractAddress?: string
 ): RequestResult<BigNumber | undefined> => {
-    const contract = useIERC20Contract(provider, contractAddress);
+    const contract = useIERC20Contract(provider, contractAddress, true);
     const request = React.useCallback(
         async (user: string) => {
             if (!contract || !user) return undefined;

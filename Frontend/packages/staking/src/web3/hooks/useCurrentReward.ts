@@ -20,7 +20,8 @@ export const useCurrentReward = (
 
     const contract = useGACStakingChildContract(
         provider,
-        GACStakingChildContractAddress
+        GACStakingChildContractAddress,
+        true
     );
 
     const request = React.useCallback(

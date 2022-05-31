@@ -19,7 +19,8 @@ export const useStakeLastUpdatedTime = (
 
     const contract = useGACStakingChildContract(
         provider,
-        GACStakingChildContractAddress
+        GACStakingChildContractAddress,
+        true
     );
 
     const request = React.useCallback(

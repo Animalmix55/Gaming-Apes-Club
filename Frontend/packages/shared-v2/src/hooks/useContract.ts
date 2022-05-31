@@ -1,6 +1,6 @@
 import React from 'react';
 import { Web3Provider } from '@ethersproject/providers';
-import { BaseContract, ethers } from 'ethers';
+import { ethers } from 'ethers';
 import { GACStaking } from '../models/GACStaking';
 import GACStakingABI from '../assets/web3/GACStakingABI.json';
 import GACStakingChildABI from '../assets/web3/GACStakingChildABI.json';
@@ -17,7 +17,8 @@ import { IERC721Metadata } from '../models/IERC721Metadata';
 export const useContract = <T extends ethers.Contract>(
     provider: Web3Provider | undefined,
     abi: ethers.ContractInterface,
-    address: string | undefined
+    address: string | undefined,
+    readonly?: boolean
 ): T | undefined => {
     const [contract, _setContract] = React.useState<T>();
     React.useEffect(() => {
@@ -27,13 +28,6 @@ export const useContract = <T extends ethers.Contract>(
         }
 
         const getContract = async (): Promise<void> => {
-            let readonly = false;
-            try {
-                await provider.getSigner().getAddress();
-            } catch (e) {
-                readonly = true;
-            }
-
             const newContract = new ethers.Contract(
                 address,
                 abi,
@@ -43,51 +37,57 @@ export const useContract = <T extends ethers.Contract>(
             _setContract(newContract as never);
         };
         getContract();
-    }, [abi, address, provider]);
+    }, [abi, address, provider, readonly]);
 
     return contract as never as T;
 };
 
 export const useGACStakingContract = (
     provider?: Web3Provider,
-    address?: string
+    address?: string,
+    readonly?: boolean
 ): GACStaking | undefined => {
-    return useContract(provider, GACStakingABI, address);
+    return useContract(provider, GACStakingABI, address, readonly);
 };
 
 export const useGACStakingChildContract = (
     provider?: Web3Provider,
-    address?: string
+    address?: string,
+    readonly?: boolean
 ): GACStakingChild | undefined => {
-    return useContract(provider, GACStakingChildABI, address);
+    return useContract(provider, GACStakingChildABI, address, readonly);
 };
 
 export const useGACXPContract = (
     provider?: Web3Provider,
-    address?: string
+    address?: string,
+    readonly?: boolean
 ): GACXP | undefined => {
-    return useContract(provider, GACXPABI, address);
+    return useContract(provider, GACXPABI, address, readonly);
 };
 
 export const useGamingApeClubContract = (
     provider?: Web3Provider,
-    address?: string
+    address?: string,
+    readonly?: boolean
 ): GamingApeClub | undefined => {
-    return useContract(provider, GamingApeClubABI, address);
+    return useContract(provider, GamingApeClubABI, address, readonly);
 };
 
 export const useIERC20Contract = (
     provider?: Web3Provider,
-    address?: string
+    address?: string,
+    readonly?: boolean
 ): IERC20 | undefined => {
-    return useContract(provider, IERC20ABI, address);
+    return useContract(provider, IERC20ABI, address, readonly);
 };
 
 export const useIERC721MetadataContract = (
     provider?: Web3Provider,
-    address?: string
+    address?: string,
+    readonly?: boolean
 ): IERC721Metadata | undefined => {
-    return useContract(provider, IERC721MetadataABI, address);
+    return useContract(provider, IERC721MetadataABI, address, readonly);
 };
 
 export default useContract;

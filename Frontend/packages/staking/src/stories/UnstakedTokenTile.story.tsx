@@ -42,8 +42,12 @@ export const ApeTile = ({
     selected: boolean;
 }): JSX.Element => {
     const { GamingApeClubAddress, EthereumChainId } = useAppConfiguration();
-    const { provider } = useWeb3(EthereumChainId);
-    const contract = useGamingApeClubContract(provider, GamingApeClubAddress);
+    const { provider, readonly } = useWeb3(EthereumChainId);
+    const contract = useGamingApeClubContract(
+        provider,
+        GamingApeClubAddress,
+        readonly
+    );
     const [isSelected, setSelected] = React.useState(selected);
 
     if (!contract) return <></>;

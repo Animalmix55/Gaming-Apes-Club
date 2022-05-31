@@ -21,10 +21,12 @@ export const useClaimer = (): UseMutationResult<void, unknown, [], unknown> & {
         GACStakingChildContractAddress,
         GACXPContractAddress,
     } = useAppConfiguration();
-    const { provider, accounts, requestNewChain } = useWeb3(PolygonChainId);
+    const { provider, accounts, requestNewChain, readonly } =
+        useWeb3(PolygonChainId);
     const contract = useGACStakingChildContract(
         provider,
-        GACStakingChildContractAddress
+        GACStakingChildContractAddress,
+        readonly
     );
     const account = accounts?.[0];
     const queryClient = useQueryClient();

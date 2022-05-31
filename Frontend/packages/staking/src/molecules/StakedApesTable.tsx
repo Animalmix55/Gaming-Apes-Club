@@ -69,7 +69,7 @@ export const StakedApesTableInner = (): JSX.Element => {
             {stakedTokens.data.map((token) => {
                 const selected = tokenIdsToUnstake.includes(token);
                 return (
-                    <>
+                    <React.Fragment key={token}>
                         {modalOpen && txHash && (
                             <UnstakingModal
                                 transactionHash={txHash}
@@ -101,7 +101,7 @@ export const StakedApesTableInner = (): JSX.Element => {
                                 margin: '12px',
                             })}
                         />
-                    </>
+                    </React.Fragment>
                 );
             })}
         </div>

@@ -14,7 +14,11 @@ export const useTokensHeld = (
     address?: string,
     contractAddress?: string
 ): RequestResult<string[]> => {
-    const contract = useIERC721MetadataContract(provider, contractAddress);
+    const contract = useIERC721MetadataContract(
+        provider,
+        contractAddress,
+        true
+    );
 
     const request = React.useCallback(
         async (address: string) => {

@@ -19,7 +19,8 @@ export const useCurrentTiers = (): RequestResult<
 
     const contract = useGACStakingChildContract(
         provider,
-        GACStakingChildContractAddress
+        GACStakingChildContractAddress,
+        true
     );
 
     const request = React.useCallback(
