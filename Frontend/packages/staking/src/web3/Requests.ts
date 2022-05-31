@@ -149,4 +149,24 @@ export const claimRewards = async (
     await result;
 };
 
+export interface BlockchainReward {
+    amount: number;
+    reward: BigNumber;
+}
+
+export const getRewardTiers = async (
+    contract: GACStakingChild
+): Promise<BlockchainReward[]> => {
+    const { 0: holdingAmounts, 1: rewardAmounts } = await contract.methods
+        .dumpRewards()
+        .call();
+
+    return holdingAmounts.map(
+        (holdingAmount, i): BlockchainReward => ({
+            amount: Number(holdingAmount),
+            reward: BigNumber.from(rewardAmounts[i]),
+        })
+    );
+};
+
 export default {};
