@@ -14,14 +14,35 @@ import { GACStakingChild } from '../models/GACStakingChild';
 import { IERC20 } from '../models/IERC20';
 import { IERC721Metadata } from '../models/IERC721Metadata';
 
-export const useContract = <T extends BaseContract>(
+export const useContract = <T extends ethers.Contract>(
     provider: Web3Provider | undefined,
     abi: ethers.ContractInterface,
     address: string | undefined
 ): T | undefined => {
-    const contract = React.useMemo(() => {
-        if (!provider || !address) return undefined;
-        return new ethers.Contract(address, abi, provider);
+    const [contract, _setContract] = React.useState<T>();
+    React.useEffect(() => {
+        if (!provider || !address) {
+            _setContract(undefined);
+            return;
+        }
+
+        const getContract = async (): Promise<void> => {
+            let readonly = false;
+            try {
+                await provider.getSigner().getAddress();
+            } catch (e) {
+                readonly = true;
+            }
+
+            const newContract = new ethers.Contract(
+                address,
+                abi,
+                readonly ? provider : provider.getSigner()
+            );
+
+            _setContract(newContract as never);
+        };
+        getContract();
     }, [abi, address, provider]);
 
     return contract as never as T;
