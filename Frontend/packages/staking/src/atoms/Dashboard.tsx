@@ -42,27 +42,34 @@ export const Dashboard = (props: DashboardProps): JSX.Element => {
         GACXPContractAddress,
         GACStakingContractAddress,
     } = useAppConfiguration();
-    const { accounts, web3 } = useWeb3(EthereumChainId);
-    const { web3: polygonWeb3 } = useWeb3(PolygonChainId);
+    const { accounts, provider: ethProvider } = useWeb3(EthereumChainId);
+    const { provider: polygonProvider } = useWeb3(PolygonChainId);
 
     const account = accounts?.[0];
     const [loginModalOpen, setWalletModalOpen] = React.useState(false);
 
     const userStake = useTokensStaked(account);
-    const userNFTBalance = useNFTBalance(web3, account, GamingApeClubAddress);
+    const userNFTBalance = useNFTBalance(
+        ethProvider,
+        account,
+        GamingApeClubAddress
+    );
     const totalStaked = useNFTBalance(
-        web3,
+        ethProvider,
         GACStakingContractAddress,
         GamingApeClubAddress
     );
     const userRewardBalance = useERC20Balance(
         account,
-        polygonWeb3,
+        polygonProvider,
         GACXPContractAddress
     );
     const lastRewardTime = useStakeLastUpdatedTime(account);
     const pendingReward = useCurrentReward(account);
-    const rewardTokenSupply = useERC20Supply(polygonWeb3, GACXPContractAddress);
+    const rewardTokenSupply = useERC20Supply(
+        polygonProvider,
+        GACXPContractAddress
+    );
     const currentTime = useCurrentTime();
 
     const secondsUntilNextReward = React.useMemo(() => {
@@ -170,6 +177,7 @@ export const Dashboard = (props: DashboardProps): JSX.Element => {
                         className={css({
                             display: 'flex',
                             alignItems: 'center',
+                            justifyContent: 'center',
                         })}
                         rightClassName={fractionClass}
                         slashClassName={fractionClass}

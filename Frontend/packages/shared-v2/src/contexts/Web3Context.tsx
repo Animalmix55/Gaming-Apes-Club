@@ -1,7 +1,6 @@
-import { Web3Provider } from '@ethersproject/providers';
+import { JsonRpcProvider, Web3Provider } from '@ethersproject/providers';
 import { Connector } from '@web3-react/types';
 import React from 'react';
-import Web3 from 'web3';
 
 import { hooks as MMHooks, metaMask } from '../connectors/Metamask';
 import { hooks as WCHooks, walletConnect } from '../connectors/WalletConnect';
@@ -10,7 +9,6 @@ import { Chain } from '../models/Chain';
 
 export interface Web3ContextType {
     provider?: Web3Provider;
-    web3?: Web3;
     accounts?: string[];
     disconnect?: () => void;
     connector?: Connector;
@@ -79,16 +77,10 @@ export const Web3ContextProvider = ({
         return undefined;
     }, [MMActive, WCActive, WLActive]);
 
-    const web3 = React.useMemo(() => {
-        if (!provider?.provider) return undefined;
-        return new Web3(provider.provider as never);
-    }, [provider?.provider]);
-
     return (
         <Web3Context.Provider
             value={{
                 provider,
-                web3,
                 accounts,
                 chainId,
                 connector,
@@ -131,12 +123,11 @@ export const useWeb3 = (
             return { readonly: true, requestNewChain };
 
         const defaultProvider = defaultProviders[expectedChain] as string;
-        const web3 = new Web3(defaultProvider);
+        const provider = new JsonRpcProvider(defaultProvider) as never;
 
         return {
             ...currentContext,
-            provider: undefined,
-            web3,
+            provider,
             readonly: true,
             chainId: expectedChain,
             requestNewChain,

@@ -1,9 +1,7 @@
 import React from 'react';
-import Web3 from 'web3';
-import { AbiItem } from 'web3-utils';
+import { Web3Provider } from '@ethersproject/providers';
+import { BaseContract, ethers } from 'ethers';
 import { GACStaking } from '../models/GACStaking';
-import { BaseContract } from '../models/types';
-
 import GACStakingABI from '../assets/web3/GACStakingABI.json';
 import GACStakingChildABI from '../assets/web3/GACStakingChildABI.json';
 import GACXPABI from '../assets/web3/GACXPABI.json';
@@ -17,58 +15,58 @@ import { IERC20 } from '../models/IERC20';
 import { IERC721Metadata } from '../models/IERC721Metadata';
 
 export const useContract = <T extends BaseContract>(
-    web3: Web3 | undefined,
-    abi: AbiItem[],
+    provider: Web3Provider | undefined,
+    abi: ethers.ContractInterface,
     address: string | undefined
 ): T | undefined => {
     const contract = React.useMemo(() => {
-        if (!web3 || !address) return undefined;
-        return new web3.eth.Contract(abi, address);
-    }, [abi, address, web3]);
+        if (!provider || !address) return undefined;
+        return new ethers.Contract(address, abi, provider);
+    }, [abi, address, provider]);
 
     return contract as never as T;
 };
 
 export const useGACStakingContract = (
-    web3?: Web3,
+    provider?: Web3Provider,
     address?: string
 ): GACStaking | undefined => {
-    return useContract(web3, GACStakingABI as never, address);
+    return useContract(provider, GACStakingABI, address);
 };
 
 export const useGACStakingChildContract = (
-    web3?: Web3,
+    provider?: Web3Provider,
     address?: string
 ): GACStakingChild | undefined => {
-    return useContract(web3, GACStakingChildABI as never, address);
+    return useContract(provider, GACStakingChildABI, address);
 };
 
 export const useGACXPContract = (
-    web3?: Web3,
+    provider?: Web3Provider,
     address?: string
 ): GACXP | undefined => {
-    return useContract(web3, GACXPABI as never, address);
+    return useContract(provider, GACXPABI, address);
 };
 
 export const useGamingApeClubContract = (
-    web3?: Web3,
+    provider?: Web3Provider,
     address?: string
 ): GamingApeClub | undefined => {
-    return useContract(web3, GamingApeClubABI as never, address);
+    return useContract(provider, GamingApeClubABI, address);
 };
 
 export const useIERC20Contract = (
-    web3?: Web3,
+    provider?: Web3Provider,
     address?: string
 ): IERC20 | undefined => {
-    return useContract(web3, IERC20ABI as never, address);
+    return useContract(provider, IERC20ABI, address);
 };
 
 export const useIERC721MetadataContract = (
-    web3?: Web3,
+    provider?: Web3Provider,
     address?: string
 ): IERC721Metadata | undefined => {
-    return useContract(web3, IERC721MetadataABI as never, address);
+    return useContract(provider, IERC721MetadataABI, address);
 };
 
 export default useContract;

@@ -13,9 +13,9 @@ export const TOKENS_STAKED_KEY = 'TOKENS_STAKED';
 export const useTokensStaked = (address?: string): RequestResult<string[]> => {
     const { GACStakingContractAddress, GamingApeClubAddress, EthereumChainId } =
         useAppConfiguration();
-    const { web3 } = useWeb3(EthereumChainId);
+    const { provider } = useWeb3(EthereumChainId);
     const gamingApeClubContract = useGamingApeClubContract(
-        web3,
+        provider,
         GamingApeClubAddress
     );
 

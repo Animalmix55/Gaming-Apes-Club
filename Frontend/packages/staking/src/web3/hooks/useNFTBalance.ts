@@ -4,17 +4,17 @@ import {
     useIERC721MetadataContract,
     useRequest,
 } from '@gac/shared-v2';
-import Web3 from 'web3';
+import { Web3Provider } from '@ethersproject/providers';
 import { getNFTBalance } from '../Requests';
 
 export const NFT_BALANCE_KEY = 'NFT_BALANCE';
 
 export const useNFTBalance = (
-    web3?: Web3,
+    provider?: Web3Provider,
     user?: string,
     contractAddress?: string
 ): RequestResult<number | undefined> => {
-    const contract = useIERC721MetadataContract(web3, contractAddress);
+    const contract = useIERC721MetadataContract(provider, contractAddress);
 
     const request = React.useCallback(
         async (user: string) => {

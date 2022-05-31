@@ -15,10 +15,10 @@ export const useStakeLastUpdatedTime = (
 ): RequestResult<number | undefined> => {
     const { GACStakingChildContractAddress, PolygonChainId } =
         useAppConfiguration();
-    const { web3 } = useWeb3(PolygonChainId);
+    const { provider } = useWeb3(PolygonChainId);
 
     const contract = useGACStakingChildContract(
-        web3,
+        provider,
         GACStakingChildContractAddress
     );
 

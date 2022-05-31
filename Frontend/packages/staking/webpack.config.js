@@ -10,7 +10,7 @@ module.exports = (env) => ({
     entry: './src/index.tsx',
     output: {
         path: path.resolve(__dirname, 'dist'),
-        filename: 'bundle-03242022-3.js',
+        filename: 'bundle-05312022.js',
     },
     devtool: 'inline-source-map',
     mode: 'development',
@@ -53,7 +53,7 @@ module.exports = (env) => ({
         extensions: ['.js', '.jsx', '.ts', '.tsx', '.css', '.svg', 'json'],
         fallback: {
             os: false,
-            https: false,
+            https: require.resolve('https-browserify'),
             http: false,
             assert: false,
             stream: false,

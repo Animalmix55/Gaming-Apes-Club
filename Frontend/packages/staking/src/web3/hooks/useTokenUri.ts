@@ -1,20 +1,20 @@
 import React from 'react';
+import { Web3Provider } from '@ethersproject/providers';
 import {
     RequestResult,
     useIERC721MetadataContract,
     useRequest,
 } from '@gac/shared-v2';
-import Web3 from 'web3';
 import { getTokenUri } from '../Requests';
 
 export const TOKEN_URI_KEY = 'TOKEN_URI';
 
 export const useTokenUri = (
-    web3?: Web3,
+    provider?: Web3Provider,
     tokenId?: string,
     contractAddress?: string
 ): RequestResult<string | undefined> => {
-    const contract = useIERC721MetadataContract(web3, contractAddress);
+    const contract = useIERC721MetadataContract(provider, contractAddress);
 
     const request = React.useCallback(
         async (tokenId: string) => {

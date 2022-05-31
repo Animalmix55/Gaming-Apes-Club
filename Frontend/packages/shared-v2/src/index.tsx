@@ -9,7 +9,6 @@ export * from './models/Meta';
 export * from './models/GamingApeClub';
 export * from './atoms/Button';
 export * from './atoms/Footer';
-export * as Web3Types from './models/types';
 export * from './hooks/useHover';
 export * from './hooks/useRequest';
 export * from './hooks/useCurrentTime';

@@ -4,16 +4,13 @@ import { GACStaking } from '@gac/shared-v2/lib/models/GACStaking';
 import { GACStakingChild } from '@gac/shared-v2/lib/models/GACStakingChild';
 
 import { IERC20 } from '@gac/shared-v2/lib/models/IERC20';
-import {
-    IERC721Metadata,
-    Transfer,
-} from '@gac/shared-v2/lib/models/IERC721Metadata';
+import { IERC721Metadata } from '@gac/shared-v2/lib/models/IERC721Metadata';
 
 export const getTokenUri = async (
     contract: IERC721Metadata,
     tokenId: string
 ): Promise<string> => {
-    const tokenUri = await contract.methods.tokenURI(tokenId).call({});
+    const [tokenUri] = await contract.functions.tokenURI(tokenId);
     return tokenUri;
 };
 
@@ -21,26 +18,24 @@ export const getTokensHeld = async (
     contract: IERC721Metadata,
     address: string
 ): Promise<string[]> => {
-    const tokensIn = (await contract.getPastEvents('Transfer', {
-        fromBlock: 0,
-        filter: { to: address },
-    })) as never as Transfer[];
-    const tokensOut = (await contract.getPastEvents('Transfer', {
-        fromBlock: 0,
-        filter: { from: address },
-    })) as never as Transfer[];
+    const tokensInFilter = contract.filters.Transfer(null, address);
+    const tokensIn = await contract.queryFilter(tokensInFilter);
+
+    const tokensOutFilter = contract.filters.Transfer(address);
+    const tokensOut = await contract.queryFilter(tokensOutFilter);
 
     const balances: Record<string, number> = {};
-    tokensIn.forEach(({ returnValues }) => {
-        const { tokenId } = returnValues;
+    tokensIn.forEach(({ args }) => {
+        const { tokenId: idBN } = args;
 
+        const tokenId = idBN.toNumber();
         if (!balances[tokenId]) balances[tokenId] = 0;
         balances[tokenId]++;
     });
-    tokensOut.forEach(({ returnValues }) => {
-        const { tokenId } = returnValues;
+    tokensOut.forEach(({ args }) => {
+        const { tokenId } = args;
 
-        balances[tokenId]--;
+        balances[tokenId.toNumber()]--;
     });
 
     return Object.keys(balances)
@@ -53,24 +48,31 @@ export const getTokensStaked = async (
     stakingContractAddress: string,
     userAddress: string
 ): Promise<string[]> => {
-    const tokensIn = (await contract.getPastEvents('Transfer', {
-        fromBlock: 0,
-        filter: { from: userAddress, to: stakingContractAddress },
-    })) as never as Transfer[];
-    const tokensOut = (await contract.getPastEvents('Transfer', {
-        fromBlock: 0,
-        filter: { to: userAddress, from: stakingContractAddress },
-    })) as never as Transfer[];
+    const tokensInFilter = await contract.filters.Transfer(
+        userAddress,
+        stakingContractAddress
+    );
+    const tokensIn = await contract.queryFilter(tokensInFilter);
+
+    const tokensOutFilter = await contract.filters.Transfer(
+        stakingContractAddress,
+        userAddress
+    );
+    const tokensOut = await contract.queryFilter(tokensOutFilter);
 
     const balances: Record<string, number> = {};
-    tokensIn.forEach(({ returnValues }) => {
-        const { tokenId } = returnValues;
 
+    tokensIn.forEach(({ args }) => {
+        const { tokenId: idBN } = args;
+
+        const tokenId = idBN.toNumber();
         if (!balances[tokenId]) balances[tokenId] = 0;
         balances[tokenId]++;
     });
-    tokensOut.forEach(({ returnValues }) => {
-        const { tokenId } = returnValues;
+
+    tokensOut.forEach(({ args }) => {
+        const { tokenId: idBN } = args;
+        const tokenId = idBN.toNumber();
 
         balances[tokenId]--;
     });
@@ -84,36 +86,36 @@ export const getReward = async (
     contract: GACStakingChild,
     user: string
 ): Promise<BigNumber> => {
-    const reward = await contract.methods.getReward(user).call({});
-    return BigNumber.from(reward);
+    const [reward] = await contract.functions.getReward(user);
+    return reward;
 };
 
 export const getStakingLastUpdatedTime = async (
     contract: GACStakingChild,
     user: string
 ): Promise<number> => {
-    const { lastUpdated } = await contract.methods.stakes(user).call({});
-    return Number(lastUpdated);
+    const { lastUpdated } = await contract.functions.stakes(user);
+    return lastUpdated.toNumber();
 };
 
 export const getNFTBalance = async (
     contract: IERC721Metadata,
     address: string
 ): Promise<number> => {
-    const amount = await contract.methods.balanceOf(address).call({});
-    return Number(amount);
+    const [amount] = await contract.functions.balanceOf(address);
+    return amount.toNumber();
 };
 
 export const getERC20Balance = async (
     contract: IERC20,
     address: string
 ): Promise<BigNumber> => {
-    const balance = await contract.methods.balanceOf(address).call({});
-    return BigNumber.from(balance);
+    const [balance] = await contract.functions.balanceOf(address);
+    return balance;
 };
 
 export const getERC20Supply = async (contract: IERC20): Promise<BigNumber> => {
-    const supply = await contract.methods.totalSupply().call({});
+    const supply = await contract.functions.totalSupply();
     return BigNumber.from(supply);
 };
 
@@ -123,8 +125,9 @@ export const stakeTokens = async (
     from: string,
     onTxHash?: (hash: string) => void
 ): Promise<void> => {
-    const result = contract.methods.stake(tokens).send({ from });
-    if (onTxHash) result.on('transactionHash', onTxHash);
+    const result = await contract.functions.stake(tokens, { from });
+    if (onTxHash) onTxHash(result.hash);
+    await result.wait();
     await result;
 };
 
@@ -134,8 +137,9 @@ export const unstakeTokens = async (
     from: string,
     onTxHash?: (hash: string) => void
 ): Promise<void> => {
-    const result = contract.methods.unstake(tokens).send({ from });
-    if (onTxHash) result.on('transactionHash', onTxHash);
+    const result = await contract.functions.unstake(tokens, { from });
+    if (onTxHash) onTxHash(result.hash);
+    await result.wait();
     await result;
 };
 
@@ -144,8 +148,9 @@ export const claimRewards = async (
     from: string,
     onTxHash?: (hash: string) => void
 ): Promise<void> => {
-    const result = contract.methods.claimReward().send({ from });
-    if (onTxHash) result.on('transactionHash', onTxHash);
+    const result = await contract.functions.claimReward({ from });
+    if (onTxHash) onTxHash(result.hash);
+    await result.wait();
     await result;
 };
 
@@ -157,14 +162,13 @@ export interface BlockchainReward {
 export const getRewardTiers = async (
     contract: GACStakingChild
 ): Promise<BlockchainReward[]> => {
-    const { 0: holdingAmounts, 1: rewardAmounts } = await contract.methods
-        .dumpRewards()
-        .call();
+    const { 0: holdingAmounts, 1: rewardAmounts } =
+        await contract.functions.dumpRewards();
 
     return holdingAmounts.map(
         (holdingAmount, i): BlockchainReward => ({
-            amount: Number(holdingAmount),
-            reward: BigNumber.from(rewardAmounts[i]),
+            amount: holdingAmount.toNumber(),
+            reward: rewardAmounts[i],
         })
     );
 };

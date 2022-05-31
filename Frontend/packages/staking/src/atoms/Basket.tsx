@@ -150,12 +150,12 @@ export const Basket = (props: BasketProps): JSX.Element | null => {
         tokenIdsToStake,
         tokenIdsToUnstake,
     } = useStakingContext();
-    const { accounts, web3 } = useWeb3(EthereumChainId);
+    const { accounts, provider } = useWeb3(EthereumChainId);
     const account = accounts?.[0];
 
     const { data: stakedApes } = useTokensStaked(account);
     const { data: unstakedApes } = useTokensHeld(
-        web3,
+        provider,
         account,
         GamingApeClubAddress
     );

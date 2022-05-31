@@ -17,6 +17,8 @@ import {
     AppConfigurationContextType,
     AppCongfigurationContextProvider,
 } from './contexts/AppConfigurationContext';
+import { StakingContextProvider } from './contexts/StakingContext';
+import { MainPage } from './pages/Main';
 
 initializeIcons();
 
@@ -53,27 +55,28 @@ const Root = (): JSX.Element => {
                             }),
                         }}
                     >
-                        <ConfirmationContextProvider>
-                            <AppCongfigurationContextProvider
-                                value={{
-                                    EthereumChainId,
-                                    EtherscanUrl,
-                                    GACXPContractAddress,
-                                    GACStakingChildContractAddress,
-                                    GACStakingContractAddress,
-                                    GamingApeClubAddress,
-                                    TwitterUrl,
-                                    DiscordUrl,
-                                    OpenSeaUrl,
-                                    PolygonChainId,
-                                    DefaultPolygonProvider,
-                                }}
-                            >
-                                <>
+                        <StakingContextProvider>
+                            <ConfirmationContextProvider>
+                                <AppCongfigurationContextProvider
+                                    value={{
+                                        EthereumChainId,
+                                        EtherscanUrl,
+                                        GACXPContractAddress,
+                                        GACStakingChildContractAddress,
+                                        GACStakingContractAddress,
+                                        GamingApeClubAddress,
+                                        TwitterUrl,
+                                        DiscordUrl,
+                                        OpenSeaUrl,
+                                        PolygonChainId,
+                                        DefaultPolygonProvider,
+                                    }}
+                                >
+                                    <MainPage />
                                     <ToastContainer position="bottom-left" />
-                                </>
-                            </AppCongfigurationContextProvider>
-                        </ConfirmationContextProvider>
+                                </AppCongfigurationContextProvider>
+                            </ConfirmationContextProvider>
+                        </StakingContextProvider>
                     </Web3ContextProvider>
                 </ThemeContextProvider>
             </QueryClientProvider>

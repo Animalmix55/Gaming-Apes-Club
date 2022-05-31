@@ -24,8 +24,8 @@ export const useUnstaker = (): UseMutationResult<
         GamingApeClubAddress,
         GACXPContractAddress,
     } = useAppConfiguration();
-    const { web3, accounts, requestNewChain } = useWeb3(EthereumChainId);
-    const contract = useGACStakingContract(web3, GACStakingContractAddress);
+    const { provider, accounts, requestNewChain } = useWeb3(EthereumChainId);
+    const contract = useGACStakingContract(provider, GACStakingContractAddress);
     const account = accounts?.[0];
     const queryClient = useQueryClient();
     const [txHash, setTxHash] = React.useState<string>();
