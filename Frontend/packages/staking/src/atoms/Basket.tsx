@@ -22,6 +22,7 @@ import { useTokensHeld } from '../web3/hooks/useTokensHeld';
 import { useTokensStaked } from '../web3/hooks/useTokensStaked';
 import { useUnstaker } from '../web3/hooks/useUnstaker';
 import { BlockchainReward } from '../web3/Requests';
+import { ApprovalButton } from './ApprovalButton';
 import { Divider, Fraction, TokenDisplay } from './DataBadge';
 
 export interface BasketProps {
@@ -72,10 +73,12 @@ export const TierDisplay = ({
     tier,
     index,
     amount,
+    className,
 }: {
     tier?: BlockchainReward;
     index?: number;
     amount: number;
+    className?: string;
 }): JSX.Element => {
     const [css] = useStyletron();
     const theme = useThemeContext();
@@ -91,18 +94,21 @@ export const TierDisplay = ({
 
     return (
         <div
-            className={css({
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                justifyContent: 'center',
-                padding: '5px 16px',
-                borderRadius: '8px',
-                backgroundColor:
-                    amount >= resolvedTier.amount
-                        ? theme.backgroundPallette.darker.toRgbaString()
-                        : theme.backgroundPallette.dark.toRgbaString(0.4),
-            })}
+            className={ClassNameBuilder(
+                className,
+                css({
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    padding: '5px 16px',
+                    borderRadius: '8px',
+                    backgroundColor:
+                        amount >= resolvedTier.amount
+                            ? theme.backgroundPallette.darker.toRgbaString()
+                            : theme.backgroundPallette.dark.toRgbaString(0.4),
+                })
+            )}
         >
             <div
                 className={css({
@@ -143,7 +149,8 @@ export const TierDisplay = ({
 export const Basket = (props: BasketProps): JSX.Element | null => {
     const { className } = props;
 
-    const { GamingApeClubAddress, EthereumChainId } = useAppConfiguration();
+    const { GamingApeClubAddress, GACStakingContractAddress, EthereumChainId } =
+        useAppConfiguration();
     const {
         setTokenIdsToUnstake,
         setTokenIdsToStake,
@@ -249,6 +256,7 @@ export const Basket = (props: BasketProps): JSX.Element | null => {
                 tier={currentTier}
                 index={currentTierIndex}
                 amount={newAmountStaked}
+                className={css({ alignSelf: 'stretch' })}
             />
             {nextTier && (
                 <>
@@ -261,6 +269,7 @@ export const Basket = (props: BasketProps): JSX.Element | null => {
                         tier={nextTier}
                         index={(currentTierIndex ?? -1) + 1}
                         amount={newAmountStaked}
+                        className={css({ alignSelf: 'stretch' })}
                     />
                 </>
             )}
@@ -379,16 +388,24 @@ export const Basket = (props: BasketProps): JSX.Element | null => {
                                 : (): void => setTokenIdsToStake([])
                         }
                     />
-                    <Button
-                        text="Stake Apes"
-                        themeType={ButtonType.error}
-                        onClick={(): Promise<void> =>
-                            confirm(
-                                'Are you sure?',
-                                'Staking will claim any pending rewards, resetting your daily timer.'
-                            ).then((r) => {
-                                if (r) staker.mutate([tokenIdsToStake]);
-                            })
+                    <ApprovalButton
+                        tokenAddress={GamingApeClubAddress}
+                        operator={GACStakingContractAddress}
+                        owner={account}
+                        themeType={ButtonType.primary}
+                        whenApproved={
+                            <Button
+                                text="Stake Apes"
+                                themeType={ButtonType.error}
+                                onClick={(): Promise<void> =>
+                                    confirm(
+                                        'Are you sure?',
+                                        'Staking will claim any pending rewards, resetting your daily timer.'
+                                    ).then((r) => {
+                                        if (r) staker.mutate([tokenIdsToStake]);
+                                    })
+                                }
+                            />
                         }
                     />
                 </div>
@@ -510,16 +527,27 @@ export const Basket = (props: BasketProps): JSX.Element | null => {
                                 : (): void => setTokenIdsToUnstake([])
                         }
                     />
-                    <Button
-                        text="Unstake Apes"
-                        themeType={ButtonType.error}
-                        onClick={(): Promise<void> =>
-                            confirm(
-                                'Are you sure?',
-                                'Unstaking will claim any pending rewards, resetting your daily timer.'
-                            ).then((r) => {
-                                if (r) unstaker.mutate([tokenIdsToUnstake]);
-                            })
+                    <ApprovalButton
+                        tokenAddress={GamingApeClubAddress}
+                        operator={GACStakingContractAddress}
+                        owner={account}
+                        themeType={ButtonType.primary}
+                        whenApproved={
+                            <Button
+                                text="Unstake Apes"
+                                themeType={ButtonType.error}
+                                onClick={(): Promise<void> =>
+                                    confirm(
+                                        'Are you sure?',
+                                        'Unstaking will claim any pending rewards, resetting your daily timer.'
+                                    ).then((r) => {
+                                        if (r)
+                                            unstaker.mutate([
+                                                tokenIdsToUnstake,
+                                            ]);
+                                    })
+                                }
+                            />
                         }
                     />
                 </div>

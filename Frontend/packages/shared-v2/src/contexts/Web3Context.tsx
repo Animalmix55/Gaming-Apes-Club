@@ -64,9 +64,9 @@ export const Web3ContextProvider = ({
     }, [MMAccounts, MMActive, WCAccounts, WCActive, WLAccounts, WLActive]);
 
     const chainId = React.useMemo(() => {
-        if (MMActive) return MMChainId;
-        if (WCActive) return WCChainId;
-        if (WLActive) return WLChainId;
+        if (MMActive) return MMChainId ?? 1;
+        if (WCActive) return WCChainId ?? 1;
+        if (WLActive) return WLChainId ?? 1;
         return undefined;
     }, [MMActive, MMChainId, WCActive, WCChainId, WLActive, WLChainId]);
 

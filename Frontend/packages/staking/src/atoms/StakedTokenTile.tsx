@@ -15,6 +15,7 @@ import { useStyletron } from 'styletron-react';
 import { useMetadata } from '../api/hooks/useMetadata';
 import { useAppConfiguration } from '../contexts/AppConfigurationContext';
 import { useTokenUri } from '../web3/hooks/useTokenUri';
+import { ApprovalButton } from './ApprovalButton';
 import { TraitTooltip } from './TraitGrid';
 
 export interface StakedTokenTileProps {
@@ -38,8 +39,10 @@ export const StakedTokenTile = (props: StakedTokenTileProps): JSX.Element => {
         onUnstake,
     } = props;
 
-    const { EthereumChainId } = useAppConfiguration();
-    const { provider } = useWeb3(EthereumChainId);
+    const { EthereumChainId, GamingApeClubAddress, GACStakingContractAddress } =
+        useAppConfiguration();
+    const { provider, accounts } = useWeb3(EthereumChainId);
+    const account = accounts?.[0];
 
     const tokenUri = useTokenUri(provider, tokenId, contractAddress);
     const metadata = useMetadata(tokenUri.data);
@@ -193,16 +196,24 @@ export const StakedTokenTile = (props: StakedTokenTileProps): JSX.Element => {
                         })
                     )}
                 >
-                    <Button
-                        text="Unstake"
-                        onClick={onUnstake}
-                        disabled={!onUnstake}
-                        className={css({
-                            width: '100%',
-                            marginBottom: '16px',
-                            justifyContent: 'center',
-                        })}
+                    <ApprovalButton
+                        tokenAddress={GamingApeClubAddress}
+                        operator={GACStakingContractAddress}
+                        owner={account}
                         themeType={ButtonType.primary}
+                        whenApproved={
+                            <Button
+                                text="Unstake"
+                                onClick={onUnstake}
+                                disabled={!onUnstake}
+                                className={css({
+                                    width: '100%',
+                                    marginBottom: '16px',
+                                    justifyContent: 'center',
+                                })}
+                                themeType={ButtonType.primary}
+                            />
+                        }
                     />
                     <Button
                         onClick={onSelect}

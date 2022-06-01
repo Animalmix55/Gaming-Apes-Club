@@ -173,4 +173,30 @@ export const getRewardTiers = async (
     );
 };
 
+export const isApprovedForAll = async (
+    contract: IERC721Metadata,
+    owner: string,
+    operator: string
+): Promise<boolean> => {
+    const [isApproved] = await contract.functions.isApprovedForAll(
+        owner,
+        operator
+    );
+    return isApproved;
+};
+
+export const setApprovalForAll = async (
+    contract: GamingApeClub | IERC721Metadata,
+    operator: string,
+    approved: boolean,
+    from: string,
+    onTxHash?: (hash: string) => void
+): Promise<void> => {
+    const tx = await contract.functions.setApprovalForAll(operator, approved, {
+        from,
+    });
+    if (onTxHash) onTxHash(tx.hash);
+    await tx.wait();
+};
+
 export default {};
