@@ -25,7 +25,7 @@ export interface StakedTokenTileProps {
     rank?: number;
     selected?: boolean;
     onSelect?: () => void;
-    onUnstake?: () => void;
+    onUnstake?: () => Promise<void> | void;
 }
 
 export const StakedTokenTile = (props: StakedTokenTileProps): JSX.Element => {
@@ -49,6 +49,7 @@ export const StakedTokenTile = (props: StakedTokenTileProps): JSX.Element => {
 
     const [css] = useStyletron();
     const theme = useThemeContext();
+    const [isUnstaking, setUnstaking] = React.useState(false);
 
     const containerClass = ClassNameBuilder(
         className,
@@ -203,9 +204,18 @@ export const StakedTokenTile = (props: StakedTokenTileProps): JSX.Element => {
                         themeType={ButtonType.primary}
                         whenApproved={
                             <Button
-                                text="Unstake"
-                                onClick={onUnstake}
-                                disabled={!onUnstake}
+                                text={isUnstaking ? 'Unstaking...' : 'Unstake'}
+                                onClick={async (): Promise<void> => {
+                                    if (onUnstake) {
+                                        setUnstaking(true);
+                                        try {
+                                            await onUnstake();
+                                        } finally {
+                                            setUnstaking(false);
+                                        }
+                                    }
+                                }}
+                                disabled={!onUnstake || isUnstaking}
                                 className={css({
                                     width: '100%',
                                     marginBottom: '16px',

@@ -1,5 +1,11 @@
 import { Spinner, SpinnerSize } from '@fluentui/react';
-import { Button, ButtonType, useThemeContext, useWeb3 } from '@gac/shared-v2';
+import {
+    Button,
+    ButtonType,
+    ClassNameBuilder,
+    useThemeContext,
+    useWeb3,
+} from '@gac/shared-v2';
 import React from 'react';
 import { useStyletron } from 'styletron-react';
 import { UnstakedApeTile } from '../atoms/UnstakedTokenTile';
@@ -74,7 +80,11 @@ export const UnstakedApesTableInner = (): JSX.Element => {
     );
 };
 
-export const UnstakedApesTable = (): JSX.Element | null => {
+export const UnstakedApesTable = ({
+    className,
+}: {
+    className?: string;
+}): JSX.Element | null => {
     const [css] = useStyletron();
     const theme = useThemeContext();
     const { GamingApeClubAddress, EthereumChainId } = useAppConfiguration();
@@ -88,10 +98,14 @@ export const UnstakedApesTable = (): JSX.Element | null => {
     );
 
     const allSelected = tokenIdsToStake.length === UnstakedTokens.data?.length;
-    if (!accounts?.length) return null;
+    if (
+        !accounts?.length ||
+        (UnstakedTokens.data && !UnstakedTokens.data.length)
+    )
+        return null;
 
     return (
-        <div className={css({ width: '100%' })}>
+        <div className={ClassNameBuilder(className, css({ width: '100%' }))}>
             <div
                 className={css({
                     display: 'flex',

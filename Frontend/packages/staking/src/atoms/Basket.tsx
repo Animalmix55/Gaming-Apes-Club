@@ -194,10 +194,10 @@ export const Basket = (props: BasketProps): JSX.Element | null => {
     }, [stakedApes]);
 
     const staker = useStaker();
-    const { txHash: stakingHash } = staker;
+    const { txHash: stakingHash, isLoading: isStaking } = staker;
 
     const unstaker = useUnstaker();
-    const { txHash: unstakingHash } = unstaker;
+    const { txHash: unstakingHash, isLoading: isUnstaking } = unstaker;
 
     const [showTxModal, setShowTxModal] = React.useState(false);
     const [showTier, setShowTierModal] = React.useState(false);
@@ -395,7 +395,8 @@ export const Basket = (props: BasketProps): JSX.Element | null => {
                         themeType={ButtonType.primary}
                         whenApproved={
                             <Button
-                                text="Stake Apes"
+                                text={isStaking ? 'Staking...' : 'Stake Apes'}
+                                disabled={isStaking}
                                 themeType={ButtonType.error}
                                 onClick={(): Promise<void> =>
                                     confirm(
@@ -534,7 +535,12 @@ export const Basket = (props: BasketProps): JSX.Element | null => {
                         themeType={ButtonType.primary}
                         whenApproved={
                             <Button
-                                text="Unstake Apes"
+                                text={
+                                    isUnstaking
+                                        ? 'Unstaking...'
+                                        : 'Unstake Apes'
+                                }
+                                disabled={isUnstaking}
                                 themeType={ButtonType.error}
                                 onClick={(): Promise<void> =>
                                     confirm(

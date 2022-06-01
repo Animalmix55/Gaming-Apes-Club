@@ -136,27 +136,33 @@ export const MainPage = (): JSX.Element => {
                     <>
                         <div
                             className={css({
-                                padding: '48px',
                                 width: '100%',
-                                boxSizing: 'border-box',
-                                [MOBILE]: {
-                                    padding: '48px 0px 48px 24px',
-                                },
                             })}
                         >
-                            <StakedApesTable />
+                            <StakedApesTable
+                                className={css({
+                                    boxSizing: 'border-box',
+                                    padding: '48px',
+                                    [MOBILE]: {
+                                        padding: '48px 0px 48px 24px',
+                                    },
+                                })}
+                            />
                         </div>
                         <div
                             className={css({
-                                padding: '48px',
                                 width: '100%',
-                                boxSizing: 'border-box',
-                                [MOBILE]: {
-                                    padding: '48px 24px 48px 24px',
-                                },
                             })}
                         >
-                            <UnstakedApesTable />
+                            <UnstakedApesTable
+                                className={css({
+                                    boxSizing: 'border-box',
+                                    padding: '48px',
+                                    [MOBILE]: {
+                                        padding: '48px 0px 48px 24px',
+                                    },
+                                })}
+                            />
                         </div>
                     </>
                 )}

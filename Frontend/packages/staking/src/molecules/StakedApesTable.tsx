@@ -2,6 +2,7 @@ import { Spinner, SpinnerSize } from '@fluentui/react';
 import {
     Button,
     ButtonType,
+    ClassNameBuilder,
     MOBILE,
     useConfirmationContext,
     useThemeContext,
@@ -16,7 +17,7 @@ import { useTokensStaked } from '../web3/hooks/useTokensStaked';
 import { useUnstaker } from '../web3/hooks/useUnstaker';
 import { UnstakingModal } from './UnstakingModal';
 
-export const StakedApesTableInner = (): JSX.Element => {
+export const StakedApesTableInner = (): JSX.Element | null => {
     const { EthereumChainId } = useAppConfiguration();
     const { accounts } = useWeb3(EthereumChainId);
 
@@ -56,6 +57,8 @@ export const StakedApesTableInner = (): JSX.Element => {
             </div>
         );
 
+    if (stakedTokens.data.length === 0) return null;
+
     if (stakedTokens.isError) {
         return (
             <div className={containerClass}>
@@ -85,8 +88,11 @@ export const StakedApesTableInner = (): JSX.Element => {
                                 confirm(
                                     'Are you sure?',
                                     'Unstaking will retrieve your token and claim any pending rewards, resetting your daily timer.'
-                                ).then((r) => {
-                                    if (r) unstakeMutator.mutate([[token]]);
+                                ).then(async (r) => {
+                                    if (r)
+                                        await unstakeMutator.mutateAsync([
+                                            [token],
+                                        ]);
                                 })
                             }
                             onSelect={(): void =>
@@ -108,7 +114,11 @@ export const StakedApesTableInner = (): JSX.Element => {
     );
 };
 
-export const StakedApesTable = (): JSX.Element | null => {
+export const StakedApesTable = ({
+    className,
+}: {
+    className?: string;
+}): JSX.Element | null => {
     const [css] = useStyletron();
     const theme = useThemeContext();
     const { EthereumChainId } = useAppConfiguration();
@@ -118,10 +128,11 @@ export const StakedApesTable = (): JSX.Element | null => {
 
     const allSelected = tokenIdsToUnstake.length === stakedTokens.data?.length;
 
-    if (!accounts?.length) return null;
+    if (!accounts?.length || (stakedTokens.data && !stakedTokens.data.length))
+        return null;
 
     return (
-        <div className={css({ width: '100%' })}>
+        <div className={ClassNameBuilder(className, css({ width: '100%' }))}>
             <div
                 className={css({
                     display: 'flex',
