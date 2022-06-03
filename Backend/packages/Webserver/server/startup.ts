@@ -296,9 +296,12 @@ export const master = async () => {
         String(MYSQL_PASSWORD)
     );
 
-    const polygonWeb3 = getWeb3(POLYGON_WEB3_PROVIDER, (block) =>
-        console.log(`Received new block header: ${block.number}`)
-    );
+    const polygonWeb3 = getWeb3(POLYGON_WEB3_PROVIDER, (block) => {
+        if (block.number % 300 === 0)
+            console.log(
+                `Received new block header divisible by 300: ${block.number}`
+            );
+    });
 
     await registerListeners(
         polygonWeb3,
