@@ -10,7 +10,7 @@
     "transpile": "yarn tsc",
     "clean": "rimraf dist-server",
     "build": "yarn clean && yarn transpile",
-    "server": "node ./dist-server/bin/www",
+    "server": "node ./dist-server/index.js",
     "test": "jest"
   },
   "jest": {
@@ -32,6 +32,7 @@
   },
   "dependencies": {
     "@gac/shared": "^0.0.0",
+    "@gac/blockchain": "^0.0.0",
     "@gac/whitelist": "^0.0.0",
     "@gac/token": "^0.0.0",
     "@gac/marketplace": "^0.0.0",
@@ -56,7 +57,9 @@
     "throng": "^5.0.0",
     "typescript": "^4.3.5",
     "uuid": "^8.3.2",
-    "web3": "^1.6.0"
+    "web3": "^1.7.3",
+    "web3-core": "^1.7.3",
+    "web3-eth": "^1.7.3"
   },
   "babel": {
     "presets": [

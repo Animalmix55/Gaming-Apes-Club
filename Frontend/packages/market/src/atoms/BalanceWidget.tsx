@@ -1,3 +1,4 @@
+import { useWeb3 } from '@gac/shared-v2';
 import React from 'react';
 import { useStyletron } from 'styletron-react';
 import { useBalance } from '../api/hooks/useBalance';
@@ -10,6 +11,8 @@ export const BalanceWidget = ({
 }: {
     className?: string;
 }): JSX.Element => {
+    const { accounts } = useWeb3();
+    const account = accounts?.[0];
     const { claims } = useAuthorizationContext();
     const discordId = claims?.id;
     const [css] = useStyletron();
@@ -23,7 +26,7 @@ export const BalanceWidget = ({
             balance={balance}
             additionalContent={
                 <>
-                    {discordId && (
+                    {discordId && account && (
                         <MoveGACXPOffchainButton
                             className={css({ marginLeft: '5px' })}
                         />

@@ -1,7 +1,7 @@
 {
-  "name": "@gac/shared",
+  "name": "@gac/blockchain",
   "version": "0.0.0",
-  "description": "Shared resources for Gaming Ape Club",
+  "description": "Blockchain resources for Gaming Ape Club",
   "main": "lib/index.js",
   "scripts": {
     "build": "tsc"
@@ -11,22 +11,20 @@
     "definition": "lib/index.d.ts"
   },
   "license": "MIT",
+  "devDependencies": {
+    "@types/cors": "^2.8.12"
+  },
   "dependencies": {
-    "express": "^4.17.1",
-    "express-jwt": "^6.1.0",
-    "jsonwebtoken": "^8.5.1",
-    "node-rsa": "^1.1.1",
-    "sequelize": "^6.6.5",
-    "sharp": "^0.29.0",
-    "uuid": "^8.3.2"
+    "@gac/shared": "^0.0.0",
+    "@gac/token": "^0.0.0",
+    "js-big-decimal": "^1.3.5"
   },
   "peerDependencies": {
     "typescript": "^4.3.5",
-    "discord.js": "^13.6.0",
     "web3": "^1.7.3",
     "web3-core": "^1.7.3",
     "web3-eth": "^1.7.3",
-    "web3-eth-contract": "^1.7.3"
+    "sequelize": "^6.17.0"
   },
   "files": [
     "lib"
