@@ -1,6 +1,7 @@
 /* eslint-disable no-alert */
 import React from 'react';
 import {
+    ERC721_IS_APPROVED_FOR_ALL_KEY,
     useIERC721MetadataContract,
     useMutation,
     useWeb3,
@@ -8,7 +9,6 @@ import {
 import { UseMutationResult, useQueryClient } from 'react-query';
 import { useAppConfiguration } from '../../contexts/AppConfigurationContext';
 import { setApprovalForAll } from '../Requests';
-import { ERC721_IS_APPROVED_FOR_ALL_KEY } from './useIsApprovedForAll';
 
 export const useApproverForAll = (
     contractAddress?: string

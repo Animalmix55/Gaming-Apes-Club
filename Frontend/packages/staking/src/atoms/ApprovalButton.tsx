@@ -2,12 +2,12 @@ import {
     Button,
     ButtonType,
     useConfirmationContext,
+    useIsApprovedForAll,
     useWeb3,
 } from '@gac/shared-v2';
 import React from 'react';
 import { useAppConfiguration } from '../contexts/AppConfigurationContext';
 import { useApproverForAll } from '../web3/hooks/useApproverForAll';
-import { useIsApprovedForAll } from '../web3/hooks/useIsApprovedForAll';
 
 export interface ApprovalButtonProps {
     tokenAddress?: string;

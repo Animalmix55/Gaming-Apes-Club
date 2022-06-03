@@ -5,3 +5,4 @@ export * from './Numbers';
 export * from './TimeFormatter';
 export * from './Url';
 export * from './Icons';
+export * from './EIP2612';

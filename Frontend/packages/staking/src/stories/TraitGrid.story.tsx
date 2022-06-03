@@ -1,9 +1,8 @@
-import { useWeb3 } from '@gac/shared-v2';
+import { useTokenUri, useWeb3 } from '@gac/shared-v2';
 import React from 'react';
 import { useMetadata } from '../api/hooks/useMetadata';
 import { TraitGrid } from '../atoms/TraitGrid';
 import { useAppConfiguration } from '../contexts/AppConfigurationContext';
-import { useTokenUri } from '../web3/hooks/useTokenUri';
 
 export default {
     title: 'Staking/Atoms/TraitGrid',

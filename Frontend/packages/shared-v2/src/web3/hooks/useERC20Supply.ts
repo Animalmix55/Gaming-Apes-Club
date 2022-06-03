@@ -1,8 +1,9 @@
 import React from 'react';
-import { RequestResult, useIERC20Contract, useRequest } from '@gac/shared-v2';
 import { BigNumber } from '@ethersproject/bignumber';
 import { Web3Provider } from '@ethersproject/providers';
 import { getERC20Supply } from '../Requests';
+import { useIERC20Contract } from '../../hooks/useContract';
+import { RequestResult, useRequest } from '../../hooks/useRequest';
 
 export const ERC20_SUPPLY_KEY = 'ERC20_SUPPLY';
 

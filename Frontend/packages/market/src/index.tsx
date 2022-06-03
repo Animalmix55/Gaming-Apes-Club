@@ -12,6 +12,7 @@ import {
     ThemeContextProvider,
     ProviderContextProvider,
 } from '@gac/shared';
+import { Web3ContextProvider } from '@gac/shared-v2';
 import {
     GamingApeClubContextType,
     GamingApeContextProvider,
@@ -29,6 +30,9 @@ const {
     openseaUrl,
     adminRoles,
     defaultDiscordMessage,
+    gacStakingAncilaryAddress,
+    gacXPAddress,
+    chainId,
 } = {
     ...window,
 } as unknown as GamingApeClubContextType;
@@ -38,32 +42,37 @@ const queryClient = new QueryClient();
 
 const Root = (): JSX.Element => {
     return (
-        <Provider value={styletron}>
-            <QueryClientProvider client={queryClient}>
-                <ThemeContextProvider value={DefaultTheme}>
-                    <ProviderContextProvider>
-                        <AuthorizationContextProvider>
-                            <GamingApeContextProvider
-                                value={{
-                                    api,
-                                    homeUrl,
-                                    discordUrl,
-                                    twitterUrl,
-                                    openseaUrl,
-                                    adminRoles,
-                                    defaultDiscordMessage,
-                                }}
-                            >
-                                <>
-                                    <MarketplacePage />
-                                    <ToastContainer position="bottom-left" />
-                                </>
-                            </GamingApeContextProvider>
-                        </AuthorizationContextProvider>
-                    </ProviderContextProvider>
-                </ThemeContextProvider>
-            </QueryClientProvider>
-        </Provider>
+        <Web3ContextProvider>
+            <Provider value={styletron}>
+                <QueryClientProvider client={queryClient}>
+                    <ThemeContextProvider value={DefaultTheme}>
+                        <ProviderContextProvider>
+                            <AuthorizationContextProvider>
+                                <GamingApeContextProvider
+                                    value={{
+                                        api,
+                                        homeUrl,
+                                        discordUrl,
+                                        twitterUrl,
+                                        openseaUrl,
+                                        adminRoles,
+                                        defaultDiscordMessage,
+                                        gacStakingAncilaryAddress,
+                                        gacXPAddress,
+                                        chainId,
+                                    }}
+                                >
+                                    <>
+                                        <MarketplacePage />
+                                        <ToastContainer position="bottom-left" />
+                                    </>
+                                </GamingApeContextProvider>
+                            </AuthorizationContextProvider>
+                        </ProviderContextProvider>
+                    </ThemeContextProvider>
+                </QueryClientProvider>
+            </Provider>
+        </Web3ContextProvider>
     );
 };
 

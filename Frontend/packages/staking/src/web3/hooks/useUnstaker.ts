@@ -1,16 +1,20 @@
 /* eslint-disable no-alert */
 import React from 'react';
-import { useGACStakingContract, useMutation, useWeb3 } from '@gac/shared-v2';
+import {
+    ERC20_BALANCE_KEY,
+    ERC20_SUPPLY_KEY,
+    NFT_BALANCE_KEY,
+    TOKENS_HELD_KEY,
+    useGACStakingContract,
+    useMutation,
+    useWeb3,
+} from '@gac/shared-v2';
 import { UseMutationResult, useQueryClient } from 'react-query';
 import { useAppConfiguration } from '../../contexts/AppConfigurationContext';
 import { unstakeTokens } from '../Requests';
 import { STAKE_LAST_UPDATED_KEY } from './useStakeLastUpdatedTime';
 import { TOKENS_STAKED_KEY } from './useTokensStaked';
 import { CURRENT_REWARD_KEY } from './useCurrentReward';
-import { TOKENS_HELD_KEY } from './useTokensHeld';
-import { ERC20_BALANCE_KEY } from './useERC20Balance';
-import { ERC20_SUPPLY_KEY } from './useERC20Supply';
-import { NFT_BALANCE_KEY } from './useNFTBalance';
 
 export const useUnstaker = (): UseMutationResult<
     void,

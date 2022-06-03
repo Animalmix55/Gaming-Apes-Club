@@ -9,12 +9,12 @@ import {
     HOVERABLE,
     Icons,
     MOBILE,
+    useTokenUri,
 } from '@gac/shared-v2';
 import React from 'react';
 import { useStyletron } from 'styletron-react';
 import { useMetadata } from '../api/hooks/useMetadata';
 import { useAppConfiguration } from '../contexts/AppConfigurationContext';
-import { useTokenUri } from '../web3/hooks/useTokenUri';
 import { ApprovalButton } from './ApprovalButton';
 import { TraitTooltip } from './TraitGrid';
 

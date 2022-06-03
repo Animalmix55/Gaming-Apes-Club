@@ -40,6 +40,9 @@ import ChevronUp from '../assets/png/symbol/ChevronUp.png';
 import ChevronRight from '../assets/png/symbol/ChevronRight.png';
 import ChevronDown from '../assets/png/symbol/ChevronDown.png';
 
+// logos
+import Polygon from '../assets/svg/Polygon.svg';
+
 export const Icons = {
     Burger,
     Calendar,
@@ -77,6 +80,7 @@ export const Icons = {
     ChevronLeft,
     ChevronRight,
     ChevronUp,
+    Polygon,
 };
 
 export default Icons;

@@ -14,11 +14,12 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@1inch/permit-signed-approvals-utils": "^1.4.2",
     "@openzeppelin/contracts": "^4.3.2",
     "@rari-capital/solmate": "^6.2.0",
     "@truffle/hdwallet-provider": "^2.0.1",
-    "@typechain/truffle-v5": "^8.0.0",
     "@typechain/ethers-v5": "^10.0.0",
+    "@typechain/truffle-v5": "^8.0.0",
     "@typechain/web3-v1": "^6.0.0",
     "@types/bn.js": "^5.1.0",
     "@types/chai": "^4.2.22",

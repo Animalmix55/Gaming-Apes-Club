@@ -6,6 +6,9 @@ import {
     MOBILE,
     useConfirmationContext,
     useCurrentTime,
+    useERC20Balance,
+    useERC20Supply,
+    useNFTBalance,
     useThemeContext,
     useWeb3,
     WalletLoginModal,
@@ -16,9 +19,6 @@ import { useAppConfiguration } from '../contexts/AppConfigurationContext';
 import { useRewardByAmount } from '../hooks/useRewardByAmount';
 import { useClaimer } from '../web3/hooks/useClaimer';
 import { useCurrentReward } from '../web3/hooks/useCurrentReward';
-import { useERC20Balance } from '../web3/hooks/useERC20Balance';
-import { useERC20Supply } from '../web3/hooks/useERC20Supply';
-import { useNFTBalance } from '../web3/hooks/useNFTBalance';
 import { useStakeLastUpdatedTime } from '../web3/hooks/useStakeLastUpdatedTime';
 import { useTokensStaked } from '../web3/hooks/useTokensStaked';
 import {

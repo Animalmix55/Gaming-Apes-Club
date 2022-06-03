@@ -1,9 +1,9 @@
 import React from 'react';
-import { RequestResult, useRequest } from '@gac/shared-v2';
 import { BigNumber } from '@ethersproject/bignumber';
-import { useIERC20Contract } from '@gac/shared-v2/lib/hooks/useContract';
 import { Web3Provider } from '@ethersproject/providers';
 import { getERC20Balance } from '../Requests';
+import { useIERC20Contract } from '../../hooks/useContract';
+import { RequestResult, useRequest } from '../../hooks/useRequest';
 
 export const ERC20_BALANCE_KEY = 'ERC20_BALANCE';
 

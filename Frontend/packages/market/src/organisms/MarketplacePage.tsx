@@ -3,11 +3,11 @@ import {
     Header,
     HeaderButtonProps,
     MOBILE,
-    useProvider,
     useThemeContext,
 } from '@gac/shared';
 import React from 'react';
 import { useStyletron } from 'styletron-react';
+import { useWeb3 } from '@gac/shared-v2';
 import { useListings } from '../api/hooks/useListings';
 import { useLogin } from '../api/hooks/useLogin';
 import { BalanceWidget } from '../atoms/BalanceWidget';
@@ -20,6 +20,7 @@ import { ListingGrid } from '../molecules/ListingGrid';
 import { ListingModal } from '../molecules/ListingModal';
 import BackgroundVideo from '../assets/webm/ComputerLights.webm';
 import { TagFilter } from '../molecules/TagFilter';
+import { MoveGACXPOffchainButton } from '../molecules/MoveGACXPOffchainButton';
 
 export const MarketplacePage = (): JSX.Element => {
     const [css] = useStyletron();
@@ -29,7 +30,7 @@ export const MarketplacePage = (): JSX.Element => {
     const { homeUrl, discordUrl, openseaUrl, twitterUrl } =
         useGamingApeContext();
     const [modalOpen, setModalOpen] = React.useState(false);
-    const { accounts } = useProvider();
+    const { accounts } = useWeb3();
 
     const [adminPanelOpen, setAdminPanelOpen] = React.useState(false);
     const [selectedFilterTags, setSelectedFilterTags] = React.useState<
@@ -73,16 +74,6 @@ export const MarketplacePage = (): JSX.Element => {
         [accounts, listings, login, selectedIndex, token]
     );
     const theme = useThemeContext();
-
-    const showConnectWeb3Button = React.useMemo(() => {
-        const request = listingRequest.data;
-        if (!request) return false;
-        const { records } = request;
-
-        if (!records) return false;
-
-        return records.some((r) => !!r.requiresHoldership);
-    }, [listingRequest.data]);
 
     const additionalButtons = React.useMemo((): HeaderButtonProps[] => {
         if (!claims) return [];
@@ -172,21 +163,17 @@ export const MarketplacePage = (): JSX.Element => {
                                 },
                             })}
                         >
-                            {showConnectWeb3Button && (
-                                <Web3ConnectButton
-                                    connectModalOpen={modalOpen}
-                                    setConnectModalOpen={setModalOpen}
-                                    className={css({
-                                        marginLeft: 'auto',
-                                        [MOBILE]: { marginRight: '5px' },
-                                    })}
-                                />
-                            )}
+                            <Web3ConnectButton
+                                connectModalOpen={modalOpen}
+                                setConnectModalOpen={setModalOpen}
+                                className={css({
+                                    marginLeft: 'auto',
+                                    [MOBILE]: { marginRight: '5px' },
+                                })}
+                            />
                             <BalanceWidget
                                 className={css({
-                                    margin: showConnectWeb3Button
-                                        ? '0px 10px'
-                                        : '0px 10px 0px auto',
+                                    margin: '0px 10px',
                                     [MOBILE]: { display: 'none' },
                                 })}
                             />
@@ -195,12 +182,11 @@ export const MarketplacePage = (): JSX.Element => {
                                     marginRight: 'auto',
                                     [MOBILE]: {
                                         marginLeft: '5px',
-                                        marginRight: showConnectWeb3Button
-                                            ? 'auto'
-                                            : '0px',
+                                        marginRight: 'auto',
                                     },
                                 })}
                             />
+                            <MoveGACXPOffchainButton />
                         </div>
                         <div
                             className={css({

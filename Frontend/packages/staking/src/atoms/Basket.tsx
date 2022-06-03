@@ -7,6 +7,7 @@ import {
     MOBILE,
     useConfirmationContext,
     useThemeContext,
+    useTokensHeld,
     useWeb3,
 } from '@gac/shared-v2';
 import React from 'react';
@@ -18,7 +19,6 @@ import { StakingModal } from '../molecules/StakingModal';
 import { TiersModal } from '../molecules/TiersModal';
 import { UnstakingModal } from '../molecules/UnstakingModal';
 import { useStaker } from '../web3/hooks/useStaker';
-import { useTokensHeld } from '../web3/hooks/useTokensHeld';
 import { useTokensStaked } from '../web3/hooks/useTokensStaked';
 import { useUnstaker } from '../web3/hooks/useUnstaker';
 import { BlockchainReward } from '../web3/Requests';

@@ -5,6 +5,7 @@ import { Spinner, SpinnerSize } from '@fluentui/react';
 import { useBalance } from '../api/hooks/useBalance';
 import { useAuthorizationContext } from '../contexts/AuthorizationContext';
 import XPIcon from '../assets/png/GAC_XP_ICON.png';
+import MoveGACXPOffchainButton from '../molecules/MoveGACXPOffchainButton';
 
 export const BalanceWidget = ({
     className,
@@ -51,6 +52,7 @@ export const BalanceWidget = ({
                     {balance.toLocaleString()}
                 </div>
             )}
+            <MoveGACXPOffchainButton className={css({ marginLeft: '5px' })} />
         </div>
     );
 };

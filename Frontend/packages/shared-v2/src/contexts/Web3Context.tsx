@@ -1,4 +1,8 @@
-import { JsonRpcProvider, Web3Provider } from '@ethersproject/providers';
+import {
+    JsonRpcProvider,
+    JsonRpcSigner,
+    Web3Provider,
+} from '@ethersproject/providers';
 import { Connector } from '@web3-react/types';
 import React from 'react';
 
@@ -14,6 +18,7 @@ export interface Web3ContextType {
     connector?: Connector;
     chainId?: number;
     defaultProviders?: DefaultProviders;
+    signer?: JsonRpcSigner;
 }
 
 export const Web3Context = React.createContext<Web3ContextType>({});
@@ -77,10 +82,13 @@ export const Web3ContextProvider = ({
         return undefined;
     }, [MMActive, WCActive, WLActive]);
 
+    const signer = React.useMemo(() => provider?.getSigner(0), [provider]);
+
     return (
         <Web3Context.Provider
             value={{
                 provider,
+                signer,
                 accounts,
                 chainId,
                 connector,

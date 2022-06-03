@@ -1,3 +1,4 @@
+import { Chain } from '@gac/shared-v2';
 import React from 'react';
 
 export interface GamingApeClubContextType {
@@ -8,6 +9,9 @@ export interface GamingApeClubContextType {
     api?: string;
     adminRoles?: string[];
     defaultDiscordMessage?: string;
+    chainId?: Chain;
+    gacXPAddress?: string;
+    gacStakingAncilaryAddress?: string;
 }
 
 export const GamingApeClubContext =

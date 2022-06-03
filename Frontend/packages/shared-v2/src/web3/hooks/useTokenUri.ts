@@ -1,11 +1,8 @@
 import React from 'react';
 import { Web3Provider } from '@ethersproject/providers';
-import {
-    RequestResult,
-    useIERC721MetadataContract,
-    useRequest,
-} from '@gac/shared-v2';
 import { getTokenUri } from '../Requests';
+import { useRequest, RequestResult } from '../../hooks/useRequest';
+import { useIERC721MetadataContract } from '../../hooks/useContract';
 
 export const TOKEN_URI_KEY = 'TOKEN_URI';
 

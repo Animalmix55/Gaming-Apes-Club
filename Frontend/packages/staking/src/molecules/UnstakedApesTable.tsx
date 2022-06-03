@@ -4,6 +4,7 @@ import {
     ButtonType,
     ClassNameBuilder,
     useThemeContext,
+    useTokensHeld,
     useWeb3,
 } from '@gac/shared-v2';
 import React from 'react';
@@ -11,7 +12,6 @@ import { useStyletron } from 'styletron-react';
 import { UnstakedApeTile } from '../atoms/UnstakedTokenTile';
 import { useAppConfiguration } from '../contexts/AppConfigurationContext';
 import { useStakingContext } from '../contexts/StakingContext';
-import { useTokensHeld } from '../web3/hooks/useTokensHeld';
 
 export const UnstakedApesTableInner = (): JSX.Element => {
     const { GamingApeClubAddress, EthereumChainId } = useAppConfiguration();

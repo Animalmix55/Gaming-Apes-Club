@@ -8,11 +8,15 @@ import GACXPABI from '../assets/web3/GACXPABI.json';
 import GamingApeClubABI from '../assets/web3/GamingApeClubABI.json';
 import IERC20ABI from '../assets/web3/IERC20ABI.json';
 import IERC721MetadataABI from '../assets/web3/IERC721MetadataABI.json';
+import GACStakingAncilaryABI from '../assets/web3/GACStakingAncilaryABI.json';
+import ERC20ABI from '../assets/web3/ERC20ABI.json';
 import { GamingApeClub } from '../models/GamingApeClub';
 import { GACXP } from '../models/GACXP';
 import { GACStakingChild } from '../models/GACStakingChild';
 import { IERC20 } from '../models/IERC20';
 import { IERC721Metadata } from '../models/IERC721Metadata';
+import { GACStakingAncilary } from '../models/GACStakingAncilary';
+import { ERC20 } from '../models/ERC20';
 
 export const useContract = <T extends ethers.Contract>(
     provider: Web3Provider | undefined,
@@ -88,6 +92,22 @@ export const useIERC721MetadataContract = (
     readonly?: boolean
 ): IERC721Metadata | undefined => {
     return useContract(provider, IERC721MetadataABI, address, readonly);
+};
+
+export const useGACStakingAncilaryContract = (
+    provider?: Web3Provider,
+    address?: string,
+    readonly?: boolean
+): GACStakingAncilary | undefined => {
+    return useContract(provider, GACStakingAncilaryABI, address, readonly);
+};
+
+export const useERC20Contract = (
+    provider?: Web3Provider,
+    address?: string,
+    readonly?: boolean
+): ERC20 | undefined => {
+    return useContract(provider, ERC20ABI, address, readonly);
 };
 
 export default useContract;

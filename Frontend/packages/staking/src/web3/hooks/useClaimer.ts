@@ -1,6 +1,8 @@
 /* eslint-disable no-alert */
 import React from 'react';
 import {
+    ERC20_BALANCE_KEY,
+    ERC20_SUPPLY_KEY,
     useGACStakingChildContract,
     useMutation,
     useWeb3,
@@ -9,8 +11,6 @@ import { UseMutationResult, useQueryClient } from 'react-query';
 import { useAppConfiguration } from '../../contexts/AppConfigurationContext';
 import { claimRewards } from '../Requests';
 import { CURRENT_REWARD_KEY } from './useCurrentReward';
-import { ERC20_BALANCE_KEY } from './useERC20Balance';
-import { ERC20_SUPPLY_KEY } from './useERC20Supply';
 import { STAKE_LAST_UPDATED_KEY } from './useStakeLastUpdatedTime';
 
 export const useClaimer = (): UseMutationResult<void, unknown, [], unknown> & {

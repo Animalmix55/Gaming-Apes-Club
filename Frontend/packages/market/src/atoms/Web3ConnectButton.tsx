@@ -1,14 +1,10 @@
 import { Spinner, SpinnerSize } from '@fluentui/react';
-import {
-    Chain,
-    ClassNameBuilder,
-    useProvider,
-    useThemeContext,
-    Web3ConnectModalManual,
-} from '@gac/shared';
+import { ClassNameBuilder, useThemeContext } from '@gac/shared';
+import { useWeb3, WalletLoginModal } from '@gac/shared-v2';
 import React from 'react';
 import { useStyletron } from 'styletron-react';
 import EthLogo from '../assets/png/eth-diamond-rainbow.png';
+import { useGamingApeContext } from '../contexts/GamingApeClubContext';
 
 export const Web3ConnectButton = ({
     className,
@@ -21,7 +17,8 @@ export const Web3ConnectButton = ({
 }): JSX.Element => {
     const [css] = useStyletron();
     const theme = useThemeContext();
-    const { accounts, disconnect } = useProvider();
+    const { chainId } = useGamingApeContext();
+    const { accounts, disconnect } = useWeb3(chainId);
 
     React.useEffect(() => {
         if (connectModalOpen && accounts) setConnectModalOpen(false);
@@ -97,10 +94,9 @@ export const Web3ConnectButton = ({
                         size={SpinnerSize.small}
                     />
                 )}
-                <Web3ConnectModalManual
+                <WalletLoginModal
                     onClose={(): void => setConnectModalOpen(false)}
                     isOpen={!!connectModalOpen}
-                    expectedChainId={Chain.Mainnet}
                 />
             </button>
         </div>

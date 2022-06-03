@@ -4,12 +4,12 @@ import {
     isURL,
     MOBILE,
     UrlRegex,
-    useProvider,
     useThemeContext,
 } from '@gac/shared';
+import { useWeb3 } from '@gac/shared-v2';
+import { ethers } from 'ethers';
 import React from 'react';
 import { useStyletron } from 'styletron-react';
-import Web3 from 'web3';
 import { useRoleNames } from '../api/hooks/useRoleNames';
 import { useTransactionSubmitter } from '../api/hooks/useTransactionSubmitter';
 import { ListingWithCount } from '../api/Models/Listing';
@@ -36,7 +36,7 @@ export const ListingModal = (props: Props): JSX.Element => {
     const { listing, onClose } = props;
     const [css] = useStyletron();
     const theme = useThemeContext();
-    const { web3, accounts } = useProvider();
+    const { signer, accounts } = useWeb3();
     const [address, setAddress] = React.useState(accounts?.[0]);
 
     React.useEffect(() => {
@@ -44,13 +44,13 @@ export const ListingModal = (props: Props): JSX.Element => {
     }, [accounts]);
 
     const onRequestSignature = (message: string): Promise<string> => {
-        if (!web3 || !accounts) throw new Error('Not logged into web3');
+        if (!signer) throw new Error('Not logged into web3');
 
-        return web3.eth.personal.sign(message, accounts[0], '');
+        return signer.signMessage(message);
     };
 
     const addressValid = React.useMemo(
-        () => Web3.utils.isAddress(address || ''),
+        () => ethers.utils.isAddress(address || ''),
         [address]
     );
 
