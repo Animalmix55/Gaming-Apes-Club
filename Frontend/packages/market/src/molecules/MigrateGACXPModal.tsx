@@ -97,7 +97,7 @@ export const MigrateGACXPModal = (
                     step={1}
                     value={String(amount)}
                     placeholder="Amount to convert"
-                    disabled={!integerBalance}
+                    disabled={!integerBalance || mutator.isLoading}
                     onChange={(_, newValue): void => {
                         setAmount(Math.round(Number(newValue ?? 0)));
                     }}

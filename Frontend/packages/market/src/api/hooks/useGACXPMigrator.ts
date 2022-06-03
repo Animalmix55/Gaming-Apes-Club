@@ -1,15 +1,17 @@
 import React from 'react';
 import { useMutation } from '@gac/shared';
 import {
+    ERC20_BALANCE_KEY,
     signPermit,
     useGACStakingAncilaryContract,
     useGACXPContract,
     useWeb3,
 } from '@gac/shared-v2';
-import { UseMutationResult } from 'react-query';
+import { UseMutationResult, useQueryClient } from 'react-query';
 import { BigNumber } from 'ethers';
 import { useGamingApeContext } from '../../contexts/GamingApeClubContext';
 import { useAuthorizationContext } from '../../contexts/AuthorizationContext';
+import { BalanceKey } from './useBalance';
 
 export const useGACXPMigrator = (): UseMutationResult<
     void,
@@ -22,6 +24,8 @@ export const useGACXPMigrator = (): UseMutationResult<
     const { claims } = useAuthorizationContext();
     const { provider, readonly, accounts } = useWeb3(chainId);
     const account = accounts?.[0];
+
+    const queryClient = useQueryClient();
 
     const gacStakingAncilaryContract = useGACStakingAncilaryContract(
         provider,
@@ -54,14 +58,16 @@ export const useGACXPMigrator = (): UseMutationResult<
                 deadline
             );
 
-            await gacStakingAncilaryContract.functions.sendGACXPOffChainWithPermit(
-                id,
-                amount,
-                deadline,
-                v,
-                r,
-                s
-            );
+            const tx =
+                await gacStakingAncilaryContract.functions.sendGACXPOffChainWithPermit(
+                    id,
+                    amount,
+                    deadline,
+                    v,
+                    r,
+                    s
+                );
+            await tx.wait();
         },
         [
             provider,
@@ -75,7 +81,13 @@ export const useGACXPMigrator = (): UseMutationResult<
 
     const result = useMutation(query, {
         onSuccess: () => {
-            // stuff
+            queryClient.invalidateQueries([
+                ERC20_BALANCE_KEY,
+                account,
+                gacXPAddress,
+                true,
+            ]);
+            setTimeout(() => queryClient.invalidateQueries(BalanceKey), 2000);
         },
     });
 
