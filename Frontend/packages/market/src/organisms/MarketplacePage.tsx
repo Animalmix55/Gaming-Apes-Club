@@ -20,7 +20,6 @@ import { ListingGrid } from '../molecules/ListingGrid';
 import { ListingModal } from '../molecules/ListingModal';
 import BackgroundVideo from '../assets/webm/ComputerLights.webm';
 import { TagFilter } from '../molecules/TagFilter';
-import { MoveGACXPOffchainButton } from '../molecules/MoveGACXPOffchainButton';
 
 export const MarketplacePage = (): JSX.Element => {
     const [css] = useStyletron();
@@ -186,7 +185,6 @@ export const MarketplacePage = (): JSX.Element => {
                                     },
                                 })}
                             />
-                            <MoveGACXPOffchainButton />
                         </div>
                         <div
                             className={css({
