@@ -9,14 +9,17 @@ import { Modal } from '../atoms/Modal';
 import CoinInHand from '../assets/png/misc/Giving Back 1.png';
 import { useThemeContext } from '../contexts/ThemeContext';
 import { MOBILE } from '../utilties';
+import { Chain } from '../models/Chain';
 
 interface WalletLoginModalProps {
     isOpen?: boolean;
     onClose?: () => void;
+    chainId?: Chain;
+    invalidChain?: boolean;
 }
 
 export const WalletLoginModal = (props: WalletLoginModalProps): JSX.Element => {
-    const { isOpen, onClose } = props;
+    const { isOpen, onClose, chainId, invalidChain } = props;
 
     const [css] = useStyletron();
     const theme = useThemeContext();
@@ -81,6 +84,8 @@ export const WalletLoginModal = (props: WalletLoginModalProps): JSX.Element => {
                         justifyContent: 'flex-start !important',
                         marginBottom: '6px',
                     })}
+                    requiredChainId={chainId}
+                    invalidChain={invalidChain}
                 />
                 <WalletLinkButton
                     className={css({
@@ -88,12 +93,16 @@ export const WalletLoginModal = (props: WalletLoginModalProps): JSX.Element => {
                         justifyContent: 'flex-start !important',
                         marginBottom: '6px',
                     })}
+                    invalidChain={invalidChain}
+                    requiredChainId={chainId}
                 />
                 <WalletConnectButton
                     className={css({
                         width: '100%',
                         justifyContent: 'flex-start !important',
                     })}
+                    requiredChainId={chainId}
+                    invalidChain={invalidChain}
                 />
             </div>
         </Modal>

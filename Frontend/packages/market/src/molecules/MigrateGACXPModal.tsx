@@ -63,7 +63,7 @@ export const MigrateGACXPModal = (
                 })}
             >
                 Staking allows users to accrue GACXP on Polygon. To use on-chain
-                GACXP in the Shack it must be converted it off-chain here.
+                GACXP in the Shack it must be converted off-chain here.
             </div>
             <div
                 className={css({

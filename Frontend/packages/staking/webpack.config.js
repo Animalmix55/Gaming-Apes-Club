@@ -60,6 +60,9 @@ module.exports = (env) => ({
             crypto: require.resolve('crypto-browserify'),
         },
     },
+    optimization: {
+        minimize: false,
+    },
     plugins: [
         new Dotenv({
             path: `.env${env.file ? `.${env.file}` : ''}`,

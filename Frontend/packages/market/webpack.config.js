@@ -14,6 +14,9 @@ module.exports = (env) => ({
     },
     devtool: 'inline-source-map',
     mode: 'development',
+    optimization: {
+        minimize: false,
+    },
     module: {
         rules: [
             {
@@ -42,6 +45,11 @@ module.exports = (env) => ({
             {
                 test: /\.(woff|woff2|eot|ttf|otf|svg)$/i,
                 type: 'asset/resource',
+            },
+            {
+                test: /\.js$/,
+                enforce: 'pre',
+                use: ['source-map-loader'],
             },
         ],
     },

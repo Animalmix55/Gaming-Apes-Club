@@ -60,6 +60,14 @@ export const CHAINS: {
         ].filter((url) => url !== undefined),
         name: 'Rinkeby',
     },
+    80001: {
+        urls: ['https://rpc-mumbai.matic.today'],
+        name: 'Mumbai',
+    },
+    137: {
+        urls: ['https://polygon-rpc.com'],
+        name: 'Polygon',
+    },
 };
 
 export const URLS: { [chainId: number]: string[] } = Object.keys(

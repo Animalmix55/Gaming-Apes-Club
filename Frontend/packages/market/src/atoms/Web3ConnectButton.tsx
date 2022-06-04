@@ -17,8 +17,8 @@ export const Web3ConnectButton = ({
 }): JSX.Element => {
     const [css] = useStyletron();
     const theme = useThemeContext();
-    const { chainId } = useGamingApeContext();
-    const { accounts, disconnect } = useWeb3(chainId);
+    const { chainId: requiredChainId } = useGamingApeContext();
+    const { accounts, disconnect, chainId } = useWeb3(requiredChainId);
 
     React.useEffect(() => {
         if (connectModalOpen && accounts) setConnectModalOpen(false);
@@ -97,6 +97,11 @@ export const Web3ConnectButton = ({
                 <WalletLoginModal
                     onClose={(): void => setConnectModalOpen(false)}
                     isOpen={!!connectModalOpen}
+                    chainId={requiredChainId}
+                    invalidChain={
+                        requiredChainId !== undefined &&
+                        chainId !== requiredChainId
+                    }
                 />
             </button>
         </div>

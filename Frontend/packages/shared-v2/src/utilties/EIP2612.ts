@@ -13,7 +13,11 @@ export const signPermit = async (
     const signer = provider.getSigner();
     const owner = await signer.getAddress();
 
-    const { r, s, v } = await signERC2612Permit(
+    const {
+        r,
+        s,
+        v: initialV,
+    } = await signERC2612Permit(
         provider,
         token.address,
         owner,
@@ -21,6 +25,10 @@ export const signPermit = async (
         amount,
         deadline
     );
+
+    let v = initialV;
+    if (v === 0) v = 27;
+    if (v === 1) v = 28;
 
     return { r, s, v, deadline };
 };
