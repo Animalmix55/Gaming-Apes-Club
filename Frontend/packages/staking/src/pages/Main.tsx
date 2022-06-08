@@ -32,9 +32,9 @@ const sidebarItems: (SidebarItem & { url?: string })[] = [
     },
     {
         icon: Icons.News,
-        displayText: 'News',
-        id: 'News',
-        disabled: true,
+        displayText: 'Whitepaper',
+        id: 'Whitepaper',
+        url: 'http://docs.gamingapeclub.com/',
     },
     {
         icon: Icons.Shack,

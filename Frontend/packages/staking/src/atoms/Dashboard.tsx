@@ -121,7 +121,7 @@ export const Dashboard = (props: DashboardProps): JSX.Element => {
                         <Fraction
                             className={css(AccentTextStyles(theme))}
                             left={totalStaked.data ?? 0}
-                            right={6650}
+                            right={6550}
                         />
                     }
                     className={css({ padding: '0 16px' })}
