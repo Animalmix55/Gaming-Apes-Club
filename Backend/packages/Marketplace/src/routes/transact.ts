@@ -11,7 +11,7 @@ import {
     verifySignature,
 } from '@gac/shared';
 import AuthLocals from '@gac/login/lib/models/AuthLocals';
-import { spend, GridCraftClient } from '@gac/token';
+import { spend, GridCraftClient, getBalance } from '@gac/token';
 import Web3 from 'web3';
 import { Intents } from 'discord.js';
 import { v4 } from 'uuid';
@@ -441,6 +441,9 @@ export const getTransactionRouter = async (
         }
 
         const totalCost = price * quantity;
+        const balance = await getBalance(gridcraftClient, id);
+        if (balance < totalCost)
+            return res.status(400).send({ error: 'Insufficient balance' });
 
         let sequelizeTransaction: SequelizeTransaction;
         try {
@@ -572,7 +575,19 @@ export const getTransactionRouter = async (
                 console.log(
                     `Reverting transaction ${newTransaction.id} due to failure to deduct funds`
                 );
-                tx.destroy();
+
+                tx.destroy()
+                    .then(() => {
+                        console.log(
+                            `Transaction ${newTransaction.id} successfully destroyed.`
+                        );
+                    })
+                    .catch((e) => {
+                        console.error(
+                            `Failed to destroy failed transaction ${newTransaction.id}`,
+                            e
+                        );
+                    });
 
                 return res.status(500).send({
                     error: `Failed to deduct ${totalCost} from balance`,
