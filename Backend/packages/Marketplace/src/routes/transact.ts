@@ -15,7 +15,7 @@ import { spend, GridCraftClient, getBalance } from '@gac/token';
 import Web3 from 'web3';
 import { Intents } from 'discord.js';
 import { v4 } from 'uuid';
-import rateLimit from 'express-rate-limit';
+import rateLimit, { ValueDeterminingMiddleware } from 'express-rate-limit';
 import { Sequelize, Transaction as SequelizeTransaction } from 'sequelize';
 import StoredTransaction from '../database/models/StoredTransaction';
 import Transaction from '../models/Transaction';
@@ -229,12 +229,21 @@ export const getTransactionRouter = async (
 
     // POST
 
+    const rateLimitKeygen: ValueDeterminingMiddleware<string> = (req, res) => {
+        const { locals } = res as { locals?: Partial<AuthLocals> };
+
+        const userId = locals?.user?.id;
+        if (userId) return userId;
+        return req.ip;
+    };
+
     const fiveSecondLimiter = rateLimit({
         windowMs: 5 * 1000, // 5 sec
         max: 1,
         standardHeaders: true,
         legacyHeaders: false,
         message: { error: 'You have been ratelimited for 5s, sorry!' },
+        keyGenerator: rateLimitKeygen,
     });
 
     const minuteLimiter = rateLimit({
@@ -243,6 +252,7 @@ export const getTransactionRouter = async (
         standardHeaders: true,
         legacyHeaders: false,
         message: { error: 'You have been ratelimited for 30s, sorry!' },
+        keyGenerator: rateLimitKeygen,
     });
 
     TransactionRouter.post<
