@@ -441,9 +441,27 @@ export const getTransactionRouter = async (
         }
 
         const totalCost = price * quantity;
-        const balance = await getBalance(gridcraftClient, id);
-        if (balance < totalCost)
-            return res.status(400).send({ error: 'Insufficient balance' });
+
+        // check initial balance
+        if (!isAdmin) {
+            let balance: number;
+            try {
+                balance = await getBalance(gridcraftClient, id);
+                console.log(`User ${id} has an initial balance of ${balance}`);
+            } catch (e) {
+                console.error(`Failed to fetch balance for user ${id}`, e);
+                return res
+                    .status(500)
+                    .send({ error: 'Failed to fetch balance' });
+            }
+
+            if (balance < totalCost) {
+                console.log(
+                    `User ${id} has an insufficient balance of ${balance}, they need ${totalCost}. Transaction canceled.`
+                );
+                return res.status(400).send({ error: 'Insufficient balance' });
+            }
+        }
 
         let sequelizeTransaction: SequelizeTransaction;
         try {
