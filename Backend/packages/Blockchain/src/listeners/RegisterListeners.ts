@@ -1,4 +1,5 @@
 import { getGACStakingAncilaryContract } from '@gac/shared';
+import { GridCraftClient } from '@gac/token';
 import { Sequelize } from 'sequelize';
 import Web3 from 'web3';
 import InitializeListingRolesModel from '../database/ProcessedGACXPMigrationEntity';
@@ -7,8 +8,7 @@ import getSentOffChainListener from './SentOffChainListener';
 export const registerListeners = async (
     web3: Web3,
     gacStakingAncilaryAddress: string,
-    unbToken: string,
-    guildId: string,
+    gridcraftClient: GridCraftClient,
     sequelize: Sequelize
 ): Promise<void> => {
     const gacXp = getGACStakingAncilaryContract(
@@ -24,7 +24,7 @@ export const registerListeners = async (
         .on('connected', () =>
             console.log('Connected to blockchain listening for SentOffChain')
         )
-        .on('data', getSentOffChainListener(unbToken, guildId))
+        .on('data', getSentOffChainListener(gridcraftClient))
         .on('error', (e) =>
             console.error('The blockchain listener had an error', e)
         );

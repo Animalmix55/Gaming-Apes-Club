@@ -11,7 +11,7 @@ import {
     verifySignature,
 } from '@gac/shared';
 import AuthLocals from '@gac/login/lib/models/AuthLocals';
-import { getUNBClient, give, spend, getBalance } from '@gac/token';
+import { spend, GridCraftClient } from '@gac/token';
 import Web3 from 'web3';
 import { Intents } from 'discord.js';
 import { v4 } from 'uuid';
@@ -62,7 +62,7 @@ interface GetResponse extends BaseResponse {
 }
 
 export const getTransactionRouter = async (
-    unbToken: string,
+    gridcraftClient: GridCraftClient,
     guildId: string,
     jwtPrivate: string,
     web3: Web3,
@@ -440,42 +440,27 @@ export const getTransactionRouter = async (
             return res.status(400).send({ error: 'Invalid linked address' });
         }
 
-        const client = getUNBClient(unbToken);
         const totalCost = price * quantity;
 
-        // skip balance check for admins
+        // deduct from balance
         if (!isAdmin) {
-            // check user balance
             try {
                 console.log(
-                    `Fetching the current balance for ${id} prior to running the transaction.`
+                    `Deducting ${totalCost} from ${id} prior to running the transaction.`
                 );
-                const { cash: currentBalance } = await getBalance(
-                    client,
-                    guildId,
-                    id
-                );
-
-                if (currentBalance < totalCost) {
-                    console.log(
-                        `User ${id} has insufficient balance (required: ${totalCost}, has: ${currentBalance}) to purchase ${quantity} of ${listing.title} (${listing.id})`
-                    );
-                    return res.status(400).send({
-                        error: `Insufficient balance (${currentBalance})`,
-                    });
-                }
+                await spend(gridcraftClient, id, totalCost);
 
                 console.log(
-                    `User ${id} has an initial balance of ${currentBalance}. Proceeding.`
+                    `Successfully deducted ${totalCost} from user ${id}. Proceeding.`
                 );
             } catch (e) {
                 console.error(
-                    `Failed to get the balance of user ${id} from UNB.`,
+                    `Failed to deduct ${totalCost} from the balance of user ${id}.`,
                     e
                 );
-                return res
-                    .status(500)
-                    .send({ error: 'Failed to fetch user balance' });
+                return res.status(500).send({
+                    error: `Failed to deduct ${totalCost} from balance`,
+                });
             }
         }
 
@@ -589,89 +574,6 @@ export const getTransactionRouter = async (
             `Transaction ${newTransaction.id} successfully published to the database.`
         );
 
-        // skip withdrawl for admins
-        let newBalance = 0;
-        if (!isAdmin) {
-            console.log(
-                `Sending patch request to UNB to reduce user ${id}'s balance by ${totalCost} following transaction ${newTransaction.id}`
-            );
-            try {
-                ({ cash: newBalance } = await spend(
-                    client,
-                    guildId,
-                    id,
-                    totalCost
-                ));
-            } catch (e) {
-                console.error(
-                    `Failed to reduce user ${id}'s balance. Destroying transaction.`,
-                    e
-                );
-
-                tx.destroy()
-                    .then(() => {
-                        console.log(
-                            `${newTransaction.id} was destroyed successfully.`
-                        );
-                    })
-                    .catch((e) => {
-                        console.error(
-                            `Failed to destroy transaction ${newTransaction.id}`,
-                            e
-                        );
-                    });
-
-                return res
-                    .status(500)
-                    .send({ error: 'Failed to reduce balance' });
-            }
-
-            if (newBalance < 0) {
-                console.error(
-                    `User ${id} has a negative balance from transaction ${newTransaction.id}. Refunding ${totalCost} and destroying transaction ${newTransaction.id}.`
-                );
-
-                tx.destroy()
-                    .then(() => {
-                        console.log(
-                            `${newTransaction.id} was destroyed successfully.`
-                        );
-                    })
-                    .catch((e) => {
-                        console.error(
-                            `Failed to destroy transaction ${newTransaction.id}`,
-                            e
-                        );
-                    });
-
-                try {
-                    await give(client, guildId, id, totalCost);
-                    console.log(
-                        `Refunded user ${id} ${totalCost} GACXP successfully.`
-                    );
-
-                    return res
-                        .status(400)
-                        .send({ error: 'Insufficient balance' });
-                } catch (e) {
-                    const errorId = v4();
-
-                    console.log(
-                        `[DEVELOPER INTERVENTION NEEDED] Failed to refund user ${id} ${totalCost} GACXP after negative balance from ${newTransaction.id}. Error id: ${errorId}`,
-                        e
-                    );
-
-                    return res.status(500).send({
-                        error: `Failed due to insufficient balance. Failed to refund tokens, contant support with error id: ${errorId}`,
-                    });
-                }
-            }
-
-            console.log(
-                `User ${id}'s resultant balance is ${newBalance} after transaction ${newTransaction.id}.`
-            );
-        }
-
         if (resultantRole) {
             console.log(
                 `Attempting to give ${id} the role ${resultantRole} for purchasing ${listing.title} (${listingId})`
@@ -718,7 +620,7 @@ export const getTransactionRouter = async (
                 )
             );
 
-        return res.status(200).send({ ...tx.get(), newBalance });
+        return res.status(200).send({ ...tx.get() });
     });
 
     // POST

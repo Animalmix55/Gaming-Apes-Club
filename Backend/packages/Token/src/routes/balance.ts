@@ -1,6 +1,6 @@
 import express from 'express';
 import { BaseResponse } from '@gac/shared';
-import { getBalance, getUNBClient } from '../helpers/Unbelieveaboat';
+import { getBalance, GridCraftClient } from '../helpers/Gridcraft';
 
 interface GetRequest {
     discordId: string;
@@ -10,14 +10,8 @@ interface Response extends BaseResponse {
     balance?: number;
 }
 
-export const getBalanceRouter = (apiToken?: string, guildId?: string) => {
-    if (!apiToken || !guildId) {
-        console.error('Missing token or guid id');
-        process.exit(1);
-    }
-
+export const getBalanceRouter = (gridcraftClient: GridCraftClient) => {
     const BalanceRouter = express.Router();
-    const client = getUNBClient(apiToken);
 
     BalanceRouter.get<string, never, Response, never, GetRequest>(
         '/',
@@ -25,14 +19,18 @@ export const getBalanceRouter = (apiToken?: string, guildId?: string) => {
             const { query } = req;
             const { discordId } = query;
 
-            try {
-                const { total } = await getBalance(client, guildId, discordId);
+            if (!discordId)
+                return res.status(400).send({ error: 'Missing discord id' });
 
-                res.status(200).send({ balance: total });
-                return;
+            try {
+                const total = await getBalance(gridcraftClient, discordId);
+
+                return res.status(200).send({ balance: total });
             } catch (e) {
                 console.error(`Failed to fetch balance for ${discordId}`, e);
-                res.status(500).send({ error: 'Failed to retrieve balance' });
+                return res
+                    .status(500)
+                    .send({ error: 'Failed to retrieve balance' });
             }
         }
     );

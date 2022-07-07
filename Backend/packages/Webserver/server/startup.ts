@@ -6,7 +6,7 @@ import {
     getTagsRouter,
     getTransactionRouter,
 } from '@gac/marketplace';
-import { getBalanceRouter } from '@gac/token';
+import { getBalanceRouter, getGridcraftClient } from '@gac/token';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import express from 'express';
@@ -111,7 +111,6 @@ const startExpressInstance = async () => {
         MYSQL_USER,
         MYSQL_PASSWORD,
         MYSQL_DATABASE,
-        UNB_TOKEN,
         GUILD_ID,
         ADMIN_ROLES,
         OAUTH_CLIENT_ID,
@@ -126,6 +125,9 @@ const startExpressInstance = async () => {
         JWT_EXPIRY,
         NUM_PROXIES,
         DEFAULT_TRANSACTION_MESSAGE,
+        GRIDCRAFT_API_TOKEN,
+        GRIDCRAFT_WAF_SECRET,
+        GRIDCRAFT_BASE_URL,
     } = process.env;
 
     const sequelize = await StartDatabase(
@@ -140,7 +142,6 @@ const startExpressInstance = async () => {
     if (!GUILD_ID) throw new Error('Missing guild id');
     if (!DEFAULT_TRANSACTION_MESSAGE)
         throw new Error('Missing default Discord transaction message');
-    if (!UNB_TOKEN) throw new Error('Missing UNB Token');
     if (!WEB3_PROVIDER) throw new Error('Missing Web3 provider');
     if (!TOKEN_ADDRESS) throw new Error('Missing token address');
     if (!JWT_PRIVATE) throw new Error('Missing JWT private');
@@ -151,6 +152,8 @@ const startExpressInstance = async () => {
     if (!TRANSACTION_CHANNEL)
         throw new Error('Missing Discord transaction channel');
     if (!NUM_PROXIES) throw new Error('Number of proxies not supplied');
+    if (!GRIDCRAFT_API_TOKEN || !GRIDCRAFT_BASE_URL || !GRIDCRAFT_WAF_SECRET)
+        throw new Error('Missing Gridcraft configuration');
 
     const REQUEST_NUMERIC_TIMEOUT = Number(REQUEST_TIMEOUT || 5000); // default 5000 ms
     if (Number.isNaN(REQUEST_NUMERIC_TIMEOUT))
@@ -161,6 +164,11 @@ const startExpressInstance = async () => {
         throw new Error('Invalid number of proxies');
 
     const web3 = new Web3(WEB3_PROVIDER);
+    const gridcraftClient = getGridcraftClient(
+        GRIDCRAFT_BASE_URL,
+        GRIDCRAFT_API_TOKEN,
+        GRIDCRAFT_WAF_SECRET
+    );
 
     const app = express();
     app.set('trust proxy', NUMERIC_NUM_PROXIES);
@@ -172,7 +180,7 @@ const startExpressInstance = async () => {
     app.use(cors({ origin: '*', optionsSuccessStatus: 200 }));
 
     // app.use('/proof', ProofRouter); // no more whitelist for now...
-    app.use('/balance', getBalanceRouter(UNB_TOKEN, GUILD_ID));
+    app.use('/balance', getBalanceRouter(gridcraftClient));
 
     const { LoginRouter } = await getLoginRouter(
         OAUTH_CLIENT_ID,
@@ -196,7 +204,7 @@ const startExpressInstance = async () => {
     app.use(
         '/transaction',
         await getTransactionRouter(
-            UNB_TOKEN,
+            gridcraftClient,
             GUILD_ID,
             JWT_PRIVATE,
             web3,
@@ -278,15 +286,22 @@ export const master = async () => {
         MYSQL_DATABASE,
         MYSQL_USER,
         MYSQL_PASSWORD,
-        UNB_TOKEN,
-        GUILD_ID,
+        GRIDCRAFT_API_TOKEN,
+        GRIDCRAFT_WAF_SECRET,
+        GRIDCRAFT_BASE_URL,
     } = process.env;
 
     if (!POLYGON_WEB3_PROVIDER) throw new Error('Missing polygon provider');
     if (!GACSTAKINGANCILARY_ADDRESS)
         throw new Error('Missing GAC STAKING ANCILARY Address');
-    if (!UNB_TOKEN || !GUILD_ID)
-        throw new Error('Missing Discord data for UNB');
+    if (!GRIDCRAFT_API_TOKEN || !GRIDCRAFT_BASE_URL || !GRIDCRAFT_WAF_SECRET)
+        throw new Error('Missing Gridcraft configuration');
+
+    const gridcraftClient = getGridcraftClient(
+        GRIDCRAFT_BASE_URL,
+        GRIDCRAFT_API_TOKEN,
+        GRIDCRAFT_WAF_SECRET
+    );
 
     const sequelize = await StartDatabase(
         String(MYSQL_HOST),
@@ -306,8 +321,7 @@ export const master = async () => {
     await registerListeners(
         polygonWeb3,
         GACSTAKINGANCILARY_ADDRESS,
-        UNB_TOKEN,
-        GUILD_ID,
+        gridcraftClient,
         sequelize
     );
 };

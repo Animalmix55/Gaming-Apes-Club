@@ -1,15 +1,12 @@
 import BigDecimal from 'js-big-decimal';
 import { SentOffChain } from '@gac/shared/lib/models/GACStakingAncilary';
-import { editBalance, getUNBClient } from '@gac/token';
+import { editBalance, GridCraftClient } from '@gac/token';
 import { ProcessedGACXPMigrationEntity } from '../database/ProcessedGACXPMigrationEntity';
 
 const SentOffChainListener = async (
     args: SentOffChain,
-    unbToken: string,
-    guildId: string
+    gridcraftClient: GridCraftClient
 ) => {
-    const client = getUNBClient(unbToken);
-
     const { returnValues, transactionHash } = args;
     const { amount, userId } = returnValues;
 
@@ -29,7 +26,7 @@ const SentOffChainListener = async (
     );
 
     console.log('Increasing balance by the amount', amountAsNumber);
-    editBalance(client, guildId, userId, { cash: amountAsNumber })
+    editBalance(gridcraftClient, userId, amountAsNumber)
         .then(() => {
             console.log(
                 `Successfully increased the balance for ${userId} by ${amountAsNumber} for SentOffChain ${transactionHash}. Writing to database.`
@@ -60,7 +57,7 @@ const SentOffChainListener = async (
 };
 
 export const getSentOffChainListener =
-    (unbToken: string, guildId: string) => (args: SentOffChain) =>
-        SentOffChainListener(args, unbToken, guildId);
+    (gridcraftClient: GridCraftClient) => (args: SentOffChain) =>
+        SentOffChainListener(args, gridcraftClient);
 
 export default getSentOffChainListener;

@@ -18,7 +18,7 @@
     "@gac/shared": "^0.0.0",
     "cors": "^2.8.5",
     "express": "~4.16.1",
-    "unb-api": "^1.2.3"
+    "axios": "^0.27.2"
   },
   "peerDependencies": {
     "typescript": "^4.3.5"
