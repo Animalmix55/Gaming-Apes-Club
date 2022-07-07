@@ -11,7 +11,7 @@ import {
     verifySignature,
 } from '@gac/shared';
 import AuthLocals from '@gac/login/lib/models/AuthLocals';
-import { spend, GridCraftClient } from '@gac/token';
+import { spend, GridCraftClient, give } from '@gac/token';
 import Web3 from 'web3';
 import { Intents } from 'discord.js';
 import { v4 } from 'uuid';
@@ -442,28 +442,6 @@ export const getTransactionRouter = async (
 
         const totalCost = price * quantity;
 
-        // deduct from balance
-        if (!isAdmin) {
-            try {
-                console.log(
-                    `Deducting ${totalCost} from ${id} prior to running the transaction.`
-                );
-                await spend(gridcraftClient, id, totalCost);
-
-                console.log(
-                    `Successfully deducted ${totalCost} from user ${id}. Proceeding.`
-                );
-            } catch (e) {
-                console.error(
-                    `Failed to deduct ${totalCost} from the balance of user ${id}.`,
-                    e
-                );
-                return res.status(500).send({
-                    error: `Failed to deduct ${totalCost} from balance`,
-                });
-            }
-        }
-
         let sequelizeTransaction: SequelizeTransaction;
         try {
             sequelizeTransaction = await sequelize.transaction();
@@ -573,6 +551,34 @@ export const getTransactionRouter = async (
         console.log(
             `Transaction ${newTransaction.id} successfully published to the database.`
         );
+
+        // deduct from balance
+        if (!isAdmin) {
+            try {
+                console.log(
+                    `Deducting ${totalCost} from ${id} prior to running the transaction.`
+                );
+                await spend(gridcraftClient, id, totalCost);
+
+                console.log(
+                    `Successfully deducted ${totalCost} from user ${id}. Proceeding.`
+                );
+            } catch (e) {
+                console.error(
+                    `Failed to deduct ${totalCost} from the balance of user ${id}.`,
+                    e
+                );
+
+                console.log(
+                    `Reverting transaction ${newTransaction.id} due to failure to deduct funds`
+                );
+                tx.destroy();
+
+                return res.status(500).send({
+                    error: `Failed to deduct ${totalCost} from balance`,
+                });
+            }
+        }
 
         if (resultantRole) {
             console.log(
