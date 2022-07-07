@@ -11,7 +11,7 @@ import {
     verifySignature,
 } from '@gac/shared';
 import AuthLocals from '@gac/login/lib/models/AuthLocals';
-import { spend, GridCraftClient, give } from '@gac/token';
+import { spend, GridCraftClient } from '@gac/token';
 import Web3 from 'web3';
 import { Intents } from 'discord.js';
 import { v4 } from 'uuid';
