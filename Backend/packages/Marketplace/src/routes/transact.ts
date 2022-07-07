@@ -559,7 +559,7 @@ export const getTransactionRouter = async (
         if (!isAdmin) {
             try {
                 console.log(
-                    `Deducting ${totalCost} from ${id} prior to running the transaction.`
+                    `Deducting ${totalCost} from ${id} for transaction ${newTransaction.id}.`
                 );
                 await spend(gridcraftClient, id, totalCost);
 

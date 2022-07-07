@@ -110,7 +110,7 @@ export const editBalance = (
 ) => client.editUserBalance(userId, amount, accountType, currency);
 
 /**
- * Spends the given amount of tokens, does not do balance checking
+ * Spends the given amount of tokens, DOES do balance checking
  */
 export const spend = async (
     client: GridCraftClient,
