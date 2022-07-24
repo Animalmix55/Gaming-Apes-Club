@@ -11,6 +11,7 @@ export const connectDatabase = async (
         host,
         port,
         dialect: 'mysql',
+        logging: false,
         retry: {
             max: 10,
         },
