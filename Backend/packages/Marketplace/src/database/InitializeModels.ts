@@ -22,6 +22,7 @@ export const InitializeModels = (instance: Sequelize): void => {
 
     StoredListing.hasMany(StoredTransaction, {
         foreignKey: 'listingId',
+        as: 'transactions',
     });
 
     StoredListing.hasMany(ListingRole, {

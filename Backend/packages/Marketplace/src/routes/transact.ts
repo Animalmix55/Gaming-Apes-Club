@@ -11,7 +11,7 @@ import {
     verifySignature,
 } from '@gac/shared';
 import AuthLocals from '@gac/login/lib/models/AuthLocals';
-import { spend, GridCraftClient, getBalance } from '@gac/token';
+import { spend, GridCraftClient, getBalance, give } from '@gac/token';
 import Web3 from 'web3';
 import { Intents } from 'discord.js';
 import { v4 } from 'uuid';
@@ -23,6 +23,7 @@ import { getListing, getListingWithCount } from '../utils/ListingUtils';
 import { sendTransactionMessage } from '../utils/Discord';
 import { HasListingRoles } from '../models/ListingRole';
 import { Listing } from '../models/Listing';
+import StoredListing from '../database/models/StoredListing';
 
 interface TransactionJWTPayload {
     user: string;
@@ -60,6 +61,11 @@ interface GetResponse extends BaseResponse {
     results?: Transaction[];
     numRecords?: number;
 }
+
+interface PostRefundParams {
+    transactionId: string;
+}
+interface PostRefundResponse extends BaseResponse, Partial<Transaction> {}
 
 export const getTransactionRouter = async (
     gridcraftClient: GridCraftClient,
@@ -721,6 +727,63 @@ export const getTransactionRouter = async (
         } catch (e) {
             return res.status(500).send({ error: 'Failed to save to db' });
         }
+    });
+
+    TransactionRouter.post<
+        string,
+        PostRefundParams,
+        PostRefundResponse,
+        never,
+        never,
+        AuthLocals
+    >('/:transactionId/refund', async (req, res) => {
+        const { params } = req;
+        const { isAdmin, user } = res.locals;
+        const { transactionId } = params;
+        const { id: userId } = user;
+
+        if (!isAdmin) return res.status(403).send({ error: 'Not admin' });
+        if (!transactionId)
+            return res.status(401).send({ error: 'Missing transaction id' });
+
+        const tx = await StoredTransaction.findByPk(transactionId);
+        if (!tx)
+            return res.status(404).send({ error: 'Transaction not found' });
+
+        let totalCost = tx.getDataValue('totalCost');
+        if (totalCost == null) {
+            const listing = await StoredListing.findByPk(
+                tx.getDataValue('listingId')
+            );
+
+            if (!listing)
+                return res
+                    .status(500)
+                    .send({ error: 'Missing listing for tx' });
+
+            totalCost =
+                listing.getDataValue('price') * tx.getDataValue('quantity');
+        }
+
+        tx.set('refundDate', new Date());
+        tx.set('refunded', true);
+        tx.set('refundedBy', userId);
+
+        try {
+            await give(gridcraftClient, tx.getDataValue('user'), totalCost);
+        } catch (e) {
+            console.error(
+                `Failed to refund ${totalCost} to user ${tx.getDataValue(
+                    'user'
+                )}`,
+                e
+            );
+            return res.status(500).send({ error: 'Failed to refund' });
+        }
+
+        await tx.save();
+
+        return res.status(200).send(tx.get());
     });
 
     return TransactionRouter;

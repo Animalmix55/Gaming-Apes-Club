@@ -6,8 +6,12 @@ export interface Transaction {
     date: Date;
     quantity: number;
     fulfilled: boolean;
-    fulfilledBy?: string;
-    fulfillmentDate?: Date;
+    totalCost: number | null;
+    fulfilledBy: string | null;
+    fulfillmentDate: Date | null;
+    refunded: boolean;
+    refundedBy: string | null;
+    refundDate: Date | null;
 }
 
 export default Transaction;

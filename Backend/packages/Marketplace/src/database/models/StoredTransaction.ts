@@ -34,6 +34,10 @@ export const InitializeTransactionModel = (instance: Sequelize): void => {
                 type: DataTypes.STRING,
                 allowNull: true,
             },
+            totalCost: {
+                type: DataTypes.INTEGER,
+                allowNull: true,
+            },
             fulfilled: {
                 type: DataTypes.BOOLEAN,
                 allowNull: false,
@@ -44,6 +48,19 @@ export const InitializeTransactionModel = (instance: Sequelize): void => {
                 allowNull: true,
             },
             fulfillmentDate: {
+                type: DataTypes.DATE,
+                allowNull: true,
+            },
+            refunded: {
+                type: DataTypes.BOOLEAN,
+                allowNull: false,
+                defaultValue: false,
+            },
+            refundedBy: {
+                type: DataTypes.STRING,
+                allowNull: true,
+            },
+            refundDate: {
                 type: DataTypes.DATE,
                 allowNull: true,
             },

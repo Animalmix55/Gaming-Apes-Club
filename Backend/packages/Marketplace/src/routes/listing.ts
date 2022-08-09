@@ -4,6 +4,7 @@ import { authMiddleware } from '@gac/login';
 import AuthLocals from '@gac/login/lib/models/AuthLocals';
 import { Sequelize } from 'sequelize';
 import { v4 } from 'uuid';
+import { give, GridCraftClient } from '@gac/token';
 import StoredListing from '../database/models/StoredListing';
 import {
     Listing,
@@ -26,6 +27,7 @@ import ListingRole from '../database/models/ListingRole';
 import { ListingTagEntity } from '../database/models/ListingTag';
 import { ListingTagToListingEntity } from '../database/models/ListingTagToListing';
 import { ListingTagToListing } from '../models/ListingTag';
+import StoredTransaction from '../database/models/StoredTransaction';
 
 interface GetRequest extends Record<string, string | undefined> {
     pageSize?: string;
@@ -54,10 +56,15 @@ interface GetByIdParams {
 }
 type GetByIdReponse = Partial<Listing & HasRoleIds> & BaseResponse;
 
+interface PostRefundParams {
+    listingId: string;
+}
+
 export const getListingRouter = (
     jwtSecret: string,
     adminRoles: string[],
-    sequelize: Sequelize
+    sequelize: Sequelize,
+    gridcraftClient: GridCraftClient
 ) => {
     const ListingRouter = express.Router();
 
@@ -324,6 +331,59 @@ export const getListingRouter = (
             }
         }
     );
+
+    ListingRouter.post<
+        string,
+        PostRefundParams,
+        BaseResponse,
+        never,
+        never,
+        AuthLocals
+    >('/:listingId/refund', async (req, res) => {
+        const { params } = req;
+        const { isAdmin, user } = res.locals;
+        const { listingId } = params;
+        const { id: userId } = user;
+
+        if (!isAdmin) return res.status(403).send({ error: 'Not admin' });
+        if (!listingId)
+            return res.status(401).send({ error: 'Missing listing id' });
+
+        const listing = await StoredListing.findByPk(listingId);
+        if (!listing)
+            return res.status(404).send({ error: 'Listing not found' });
+
+        const { price: listingPrice } = listing.get();
+        const transactions = await StoredTransaction.findAll({
+            where: { listingId },
+        });
+
+        await Promise.all(
+            transactions.map(async (tx) => {
+                const { totalCost, quantity, user, id } = tx.get();
+
+                const refundAmount = totalCost ?? quantity * listingPrice;
+                try {
+                    await give(gridcraftClient, user, refundAmount);
+                } catch (e) {
+                    console.error(
+                        `Failed to refund ${user} ${refundAmount} for tx ${id}`,
+                        e
+                    );
+
+                    return;
+                }
+
+                tx.set('refundDate', new Date());
+                tx.set('refunded', true);
+                tx.set('refundedBy', userId);
+
+                await tx.save();
+            })
+        );
+
+        return res.status(200).send({});
+    });
 
     return ListingRouter;
 };
