@@ -1,10 +1,5 @@
 import { TooltipHost } from '@fluentui/react';
-import {
-    ClassNameBuilder,
-    HOVERABLE,
-    MOBILE,
-    useThemeContext,
-} from '@gac/shared';
+import { ClassNameBuilder, HOVERABLE, useThemeContext } from '@gac/shared-v2';
 import React from 'react';
 import { useStyletron } from 'styletron-react';
 import { Listing, ListingWithCount } from '../api/Models/Listing';
@@ -36,130 +31,106 @@ export const ListingTile = (props: ListingTileProps): JSX.Element => {
                 className,
                 css({
                     background: 'unset',
+                    width: '264px',
                     border: 'unset',
                     cursor: 'pointer',
                     zIndex: 1,
                     display: 'flex',
                     flexDirection: 'column',
                     justifyContent: 'center',
+                    fontFamily: theme.font,
                     alignItems: 'center',
-                    width: '300px',
-                    overflow: 'hidden',
                     fontSize: '25px',
-                    padding: '10px',
                     boxSizing: 'border-box',
                     transition: 'background-color 500ms',
-                    ...(onClick && {
-                        [HOVERABLE]: {
-                            ':hover': {
-                                background:
-                                    theme.backgroundGradients.purpleBlueButton,
-                            },
-                        },
-                    }),
-                    [MOBILE]: {
-                        width: '90%',
-                    },
                 })
             )}
         >
-            <div
+            <img
                 className={css({
-                    position: 'relative',
-                    display: 'flex',
-                    backgroundColor: theme.backgroundColor.light.toRgbaString(),
-                    padding: '4px',
-                    height: '275px',
-                    width: '275px',
-                    [MOBILE]: {
-                        width: '80%',
-                        height: 'auto',
-                    },
-                })}
-            >
-                <img
-                    className={css({
-                        zIndex: 1,
-                        height: '100%',
-                        width: 'auto',
-                        [MOBILE]: {
-                            width: '100%',
-                            height: 'auto',
+                    height: 'auto',
+                    width: '100%',
+                    borderRadius: '16px',
+                    ...(onClick && {
+                        [HOVERABLE]: {
+                            ':hover': {
+                                boxShadow: theme.shadowPallette.rainbow,
+                            },
                         },
-                    })}
-                    src={image}
-                    alt={title}
-                />
-            </div>
-            <div
-                className={css({
-                    fontFamily: theme.fonts.headers,
-                    fontWeight: '900',
-                    color: theme.fontColors.light.toRgbaString(),
-                    textOverflow: 'ellipsis',
-                    whiteSpace: 'nowrap',
-                    maxWidth: '100%',
-                    overflow: 'hidden',
-                    [MOBILE]: {
-                        fontSize: '6vw',
-                    },
+                    }),
                 })}
-            >
-                <TooltipHost content={title}>{title}</TooltipHost>
-            </div>
+                src={image}
+                alt={title}
+            />
             <div
                 className={css({
                     display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    fontFamily: theme.fonts.headers,
-                    fontWeight: '900',
-                    fontSize: '50%',
-                    color: theme.fontColors.light.toRgbaString(),
-                    textOverflow: 'ellipsis',
-                    whiteSpace: 'nowrap',
-                    maxWidth: '100%',
-                    overflow: 'hidden',
-                    [MOBILE]: {
-                        fontSize: '6vw',
-                    },
+                    width: '100%',
+                    margin: '16px 4px 0px 4px',
+                    alignItems: 'flex-start',
                 })}
             >
-                {remaining !== Infinity && supply !== undefined
-                    ? `${remaining}/${supply} Remaining`
-                    : '∞ Remaining'}
-            </div>
-            <div
-                className={css({
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    fontFamily: theme.fonts.headers,
-                    fontWeight: '900',
-                    color: theme.fontColors.accent.toRgbaString(),
-                    textOverflow: 'ellipsis',
-                    whiteSpace: 'nowrap',
-                    maxWidth: '100%',
-                    overflow: 'hidden',
-                    [MOBILE]: {
-                        fontSize: '6vw',
-                    },
-                })}
-            >
-                <img
-                    src={XPIcon}
-                    alt="XP"
+                <div
                     className={css({
-                        height: '1.5em',
-                        width: 'auto',
-                        marginRight: '10px',
+                        width: '100%',
+                        textAlign: 'left',
+                        flex: '1',
+                        marginRight: '16px',
                     })}
-                />
-                <div>
-                    <TooltipHost content={`${price.toLocaleString()} XP`}>
-                        {price.toLocaleString()}
-                    </TooltipHost>
+                >
+                    <div
+                        className={css({
+                            fontSize: '16px',
+                            fontWeight: 900,
+                            color: theme.foregroundPallette.white.toRgbaString(),
+                            marginBottom: '4px',
+                        })}
+                    >
+                        {title}
+                    </div>
+                    <div
+                        className={css({
+                            fontWeight: 600,
+                            fontSize: '12px',
+                            color: theme.foregroundPallette.white.toRgbaString(
+                                0.5
+                            ),
+                        })}
+                    >
+                        {remaining !== Infinity && supply !== undefined
+                            ? `${remaining}/${supply} Remaining`
+                            : '∞ Remaining'}
+                    </div>
                 </div>
+                <TooltipHost
+                    hostClassName={css({
+                        display: 'flex !important',
+                        alignItems: 'flex-start',
+                    })}
+                    content={`${price.toLocaleString()} XP`}
+                >
+                    <>
+                        <span
+                            className={css({
+                                fontWeight: 900,
+                                fontSize: '16px',
+                                color: theme.foregroundPallette.accent.toRgbaString(),
+                                marginRight: '8px',
+                            })}
+                        >
+                            {price.toLocaleString()}
+                        </span>
+                        <img
+                            src={XPIcon}
+                            alt="XP"
+                            className={css({
+                                height: '16px',
+                                width: 'auto',
+                                marginRight: '10px',
+                            })}
+                        />
+                    </>
+                </TooltipHost>
             </div>
         </button>
     );

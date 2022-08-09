@@ -6,10 +6,11 @@ import {
     Modal,
     useThemeContext,
     useWeb3,
+    Fraction,
+    TokenDisplay,
 } from '@gac/shared-v2';
 import React from 'react';
 import { useStyletron } from 'styletron-react';
-import { Fraction, TokenDisplay } from '../atoms/DataBadge';
 import { useAppConfiguration } from '../contexts/AppConfigurationContext';
 import { useRewardByAmount } from '../hooks/useRewardByAmount';
 import { useTokensStaked } from '../web3/hooks/useTokensStaked';

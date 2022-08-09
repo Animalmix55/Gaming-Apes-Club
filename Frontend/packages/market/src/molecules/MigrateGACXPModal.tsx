@@ -77,7 +77,7 @@ export const MigrateGACXPModal = (
             </div>
             <div>
                 <LocalBalanceWidget
-                    balance={balance.data}
+                    balance={balance.data ?? 0}
                     isLoading={balance.isLoading}
                 />
                 <TextField

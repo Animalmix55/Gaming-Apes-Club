@@ -28,6 +28,10 @@ interface ButtonPallette {
     inactive: RGBA;
 }
 
+interface AdditionalPallette {
+    red: RGBA;
+}
+
 interface ShadowPallette {
     rainbow: string;
 }
@@ -38,6 +42,7 @@ export interface ThemeContextType {
     backgroundPallette: BackgroundPallette;
     buttonPallette: ButtonPallette;
     shadowPallette: ShadowPallette;
+    additionalPallette: AdditionalPallette;
 }
 
 export const DefaultTheme: ThemeContextType = {
@@ -65,6 +70,9 @@ export const DefaultTheme: ThemeContextType = {
     shadowPallette: {
         rainbow:
             '-16px -16px 60px rgba(32, 129, 226, 0.3), 16px 16px 60px rgba(157, 0, 253, 0.3);',
+    },
+    additionalPallette: {
+        red: rgba(253, 0, 0, 0.9),
     },
 };
 

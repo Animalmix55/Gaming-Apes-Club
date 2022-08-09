@@ -4,10 +4,11 @@ import {
     ERC721Attribute,
     Icons,
     useThemeContext,
+    DataBadge,
+    AccentTextStyles,
 } from '@gac/shared-v2';
 import React from 'react';
 import { useStyletron } from 'styletron-react';
-import { DataBadge, AccentTextStyles } from './DataBadge';
 
 interface TraitCellProps {
     trait: ERC721Attribute;

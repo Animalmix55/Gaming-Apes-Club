@@ -2,58 +2,20 @@ import React from 'react';
 import {
     Sidebar,
     SidebarItem,
-    Icons,
+    SidebarItems,
     MOBILE,
     useWeb3,
     Footer,
+    Header,
 } from '@gac/shared-v2';
 import { useStyletron } from 'styletron-react';
+import Background from '@gac/shared-v2/lib/assets/png/background/BACKGROUND.png';
 import { useAppConfiguration } from '../contexts/AppConfigurationContext';
-import Background from '../assets/png/BACKGROUND.png';
-import { Header } from '../atoms/Header';
 import { StakedApesTable } from '../molecules/StakedApesTable';
 import { Dashboard } from '../atoms/Dashboard';
 import { Basket } from '../atoms/Basket';
 import { UnstakedApesTable } from '../molecules/UnstakedApesTable';
 import { NeedMoreModule } from '../atoms/NeedMoreModule';
-
-const sidebarItems: (SidebarItem & { url?: string })[] = [
-    {
-        icon: Icons.Home,
-        displayText: 'Home',
-        id: 'Home',
-        url: 'https://gamingapeclub.com/',
-    },
-    {
-        icon: Icons.Mission,
-        displayText: 'Mission',
-        id: 'Mission',
-        disabled: true,
-    },
-    {
-        icon: Icons.News,
-        displayText: 'Whitepaper',
-        id: 'Whitepaper',
-        url: 'http://docs.gamingapeclub.com/',
-    },
-    {
-        icon: Icons.Shack,
-        displayText: 'Shack',
-        id: 'Shack',
-        url: 'https://shack.gamingapeclub.com/',
-    },
-    {
-        icon: Icons.Staking,
-        displayText: 'Staking',
-        id: 'Staking',
-    },
-    {
-        icon: Icons.Profile,
-        displayText: 'Profile',
-        id: 'Profile',
-        disabled: true,
-    },
-];
 
 export const MainPage = (): JSX.Element => {
     const { OpenSeaUrl, TwitterUrl, DiscordUrl, EthereumChainId } =
@@ -82,7 +44,7 @@ export const MainPage = (): JSX.Element => {
         >
             <Sidebar
                 selectedId="Staking"
-                items={sidebarItems}
+                items={SidebarItems}
                 onDisordClick={
                     DiscordUrl
                         ? (): void => {
@@ -128,6 +90,8 @@ export const MainPage = (): JSX.Element => {
                     })}
                 >
                     <Header
+                        title="Gaming Ape Club's"
+                        subtitle="Staking Hub"
                         className={css({ [MOBILE]: { marginBottom: '40px' } })}
                     />
                     <Dashboard className={css({ marginLeft: 'auto' })} />

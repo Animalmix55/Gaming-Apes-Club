@@ -25,7 +25,6 @@ export const ListingGrid = (props: Props): JSX.Element => {
                     display: 'flex',
                     justifyContent: 'center',
                     alignItems: 'center',
-                    overflow: 'auto',
                     flexWrap: 'wrap',
                 })
             )}
@@ -38,7 +37,7 @@ export const ListingGrid = (props: Props): JSX.Element => {
                         key={r.id}
                         listing={r}
                         onClick={(): void => onSelect?.(i)}
-                        className={css({ margin: '10px' })}
+                        className={css({ margin: '12px' })}
                     />
                 ))}
         </div>

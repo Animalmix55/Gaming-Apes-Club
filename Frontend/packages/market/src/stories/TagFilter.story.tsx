@@ -6,23 +6,11 @@ export default {
     component: TagFilter,
 };
 
-export const Vertical = (): JSX.Element => {
+export const StandAlone = (): JSX.Element => {
     const [selectedTags, setSelectedTags] = React.useState<string[]>([]);
 
     return (
         <TagFilter
-            selectedTags={selectedTags}
-            setSelectedTags={setSelectedTags}
-        />
-    );
-};
-
-export const Horizontal = (): JSX.Element => {
-    const [selectedTags, setSelectedTags] = React.useState<string[]>([]);
-
-    return (
-        <TagFilter
-            horizontal
             selectedTags={selectedTags}
             setSelectedTags={setSelectedTags}
         />

@@ -1,13 +1,9 @@
 import React from 'react';
-import {
-    ClassNameBuilder,
-    Icons,
-    ThemeContextType,
-    useThemeContext,
-} from '@gac/shared-v2';
 import { StyleObject, useStyletron } from 'styletron-react';
 import { Spinner, SpinnerSize } from '@fluentui/react';
 import { BigNumber } from '@ethersproject/bignumber';
+import { ThemeContextType, useThemeContext } from '../contexts/ThemeContext';
+import { ClassNameBuilder, Icons } from '../utilties';
 
 export interface DataBadgeProps {
     className?: string;
@@ -88,9 +84,12 @@ export const Divider = ({ className }: { className?: string }): JSX.Element => {
 export const TokenDisplay = ({
     amount,
 }: {
-    amount?: BigNumber;
+    amount?: BigNumber | number;
 }): JSX.Element => {
-    const number = amount?.div(String(1e18)).toString() ?? 0;
+    const number = React.useMemo(() => {
+        if (typeof amount === 'number') return amount;
+        return amount?.div(String(1e18)).toString() ?? 0;
+    }, [amount]);
     const [css] = useStyletron();
     const theme = useThemeContext();
 

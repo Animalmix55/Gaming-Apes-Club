@@ -1,0 +1,114 @@
+import {
+    Button,
+    useWeb3,
+    WalletLoginModal,
+    DataBadge,
+    TokenDisplay,
+    DividedDashboard,
+    ButtonType,
+} from '@gac/shared-v2';
+import PolygonLogo from '@gac/shared-v2/lib/assets/svg/PolygonTransparent.svg';
+import HistoryIcon from '@gac/shared-v2/lib/assets/svg/Buyhistory.svg';
+import ETHLogo from '@gac/shared-v2/lib/assets/png/symbol/ETH White.png';
+import DiscordLogo from '@gac/shared-v2/lib/assets/png/action/Discord.png';
+import { BigNumber } from 'ethers';
+import React from 'react';
+import { useStyletron } from 'styletron-react';
+import { useBalance } from '../api/hooks/useBalance';
+import { useAuthorizationContext } from '../contexts/AuthorizationContext';
+import { useGamingApeContext } from '../contexts/GamingApeClubContext';
+import { MigrateGACXPModal } from './MigrateGACXPModal';
+import { useLogin } from '../api/hooks/useLogin';
+
+export interface DashboardProps {
+    className?: string;
+}
+
+export const Dashboard = (props: DashboardProps): JSX.Element => {
+    const { className } = props;
+    const { chainId } = useGamingApeContext();
+    const { claims } = useAuthorizationContext();
+    const discordId = claims?.id;
+
+    const [loginModalOpen, setLoginModalOpen] = React.useState(false);
+    const [migrateModalOpen, setMigrateModalOpen] = React.useState(false);
+
+    const xpBalance = useBalance(discordId);
+    const { accounts } = useWeb3(chainId);
+    const { login, isLoggingIn } = useLogin();
+
+    const account = accounts?.[0];
+    const [css] = useStyletron();
+
+    return (
+        <DividedDashboard className={className}>
+            <>
+                <WalletLoginModal
+                    chainId={chainId}
+                    isOpen={loginModalOpen}
+                    onClose={(): void => setLoginModalOpen(false)}
+                />
+                <MigrateGACXPModal
+                    isOpen={migrateModalOpen}
+                    onClose={(): void => setMigrateModalOpen(false)}
+                />
+                {discordId && (
+                    <DataBadge
+                        topText="XP Balance"
+                        isLoading={xpBalance.isLoading}
+                        lowerElement={
+                            <TokenDisplay amount={xpBalance.data ?? 0} />
+                        }
+                        className={css({ padding: '0 16px' })}
+                    />
+                )}
+                {!discordId && (
+                    <Button
+                        themeType={ButtonType.primary}
+                        text="Discord"
+                        icon={DiscordLogo}
+                        className={css({
+                            marginRight: account ? '16px' : undefined,
+                        })}
+                        onClick={login}
+                        disabled={isLoggingIn}
+                    />
+                )}
+                {!account && (
+                    <Button
+                        themeType={ButtonType.primary}
+                        text="Web3"
+                        className={css({
+                            marginLeft: discordId ? undefined : '16px',
+                            marginRight: '16px',
+                        })}
+                        icon={ETHLogo}
+                        onClick={(): void => setLoginModalOpen(true)}
+                        disabled={isLoggingIn}
+                    />
+                )}
+            </>
+            <>
+                {account && (
+                    <Button
+                        themeType={ButtonType.secondary}
+                        text="Migrate XP"
+                        className={css({ marginLeft: '16px' })}
+                        onClick={(): void => setMigrateModalOpen(true)}
+                        icon={PolygonLogo}
+                    />
+                )}
+                <Button
+                    text="History"
+                    className={css({
+                        marginLeft: '16px',
+                    })}
+                    icon={HistoryIcon}
+                    themeType={ButtonType.secondary}
+                />
+            </>
+        </DividedDashboard>
+    );
+};
+
+export default Dashboard;

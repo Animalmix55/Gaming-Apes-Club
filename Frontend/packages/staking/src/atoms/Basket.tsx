@@ -9,6 +9,9 @@ import {
     useThemeContext,
     useTokensHeld,
     useWeb3,
+    Divider,
+    Fraction,
+    TokenDisplay,
 } from '@gac/shared-v2';
 import React from 'react';
 import { useStyletron } from 'styletron-react';
@@ -23,7 +26,6 @@ import { useTokensStaked } from '../web3/hooks/useTokensStaked';
 import { useUnstaker } from '../web3/hooks/useUnstaker';
 import { BlockchainReward } from '../web3/Requests';
 import { ApprovalButton } from './ApprovalButton';
-import { Divider, Fraction, TokenDisplay } from './DataBadge';
 
 export interface BasketProps {
     className?: string;

@@ -1,8 +1,19 @@
-import { ClassNameBuilder, useThemeContext } from '@gac/shared-v2';
 import React from 'react';
 import { useStyletron } from 'styletron-react';
+import { useThemeContext } from '../contexts/ThemeContext';
+import { ClassNameBuilder } from '../utilties';
 
-export const Header = ({ className }: { className?: string }): JSX.Element => {
+export interface HeaderProps {
+    title: string;
+    subtitle: string;
+    className?: string;
+}
+
+export const Header = ({
+    className,
+    title,
+    subtitle,
+}: HeaderProps): JSX.Element => {
     const [css] = useStyletron();
     const theme = useThemeContext();
 
@@ -26,9 +37,9 @@ export const Header = ({ className }: { className?: string }): JSX.Element => {
                     color: theme.foregroundPallette.primary.toRgbaString(),
                 })}
             >
-                Gaming Ape Club&apos;s
+                {title}
             </div>
-            <div>Staking Hub</div>
+            <div>{subtitle}</div>
         </div>
     );
 };

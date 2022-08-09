@@ -10,12 +10,14 @@ import {
     Icons,
     MOBILE,
     useTokenUri,
+    AccentTextStyles,
+    Fraction,
+    DataBadge,
 } from '@gac/shared-v2';
 import React from 'react';
 import { useStyletron } from 'styletron-react';
 import { useMetadata } from '../api/hooks/useMetadata';
 import { useAppConfiguration } from '../contexts/AppConfigurationContext';
-import { AccentTextStyles, Fraction, DataBadge } from './DataBadge';
 import { TraitGrid } from './TraitGrid';
 
 export interface UnstakedTokenTileProps {
