@@ -1,10 +1,5 @@
-import {
-    ITextFieldStyles,
-    Modal,
-    TextField,
-    ThemeProvider,
-} from '@fluentui/react';
-import { useThemeContext } from '@gac/shared';
+import { ITextFieldStyles, TextField, ThemeProvider } from '@fluentui/react';
+import { useThemeContext, Modal } from '@gac/shared-v2';
 import React from 'react';
 import { useStyletron } from 'styletron-react';
 import { useGamingApeContext } from '../contexts/GamingApeClubContext';
@@ -23,37 +18,30 @@ export const DiscordMessageHelpModal = (props: Props): JSX.Element => {
 
     const theme = useThemeContext();
     const styles: Partial<ITextFieldStyles> = {
-        description: { color: theme.fontColors.light.toRgbaString() },
+        description: { color: theme.foregroundPallette.white.toRgbaString() },
         field: {
-            color: theme.fontColors.dark.toRgbaString(disabled ? 0.5 : 1),
+            color: theme.foregroundPallette.black.toRgbaString(
+                disabled ? 0.5 : 1
+            ),
         },
     };
     const [css] = useStyletron();
     const fieldClass = css({ margin: '5px' });
 
     return (
-        <Modal
-            isOpen={isOpen}
-            onDismiss={onClose}
-            styles={{
-                scrollableContent: {
-                    maxHeight: 'unset',
-                },
-                main: {
-                    background: theme.backgroundGradients.purpleBlue,
-                    padding: '10px',
-                },
-            }}
-        >
+        <Modal isOpen={isOpen} onClose={onClose}>
             <ThemeProvider
                 applyTo="none"
                 theme={{
                     palette: {
-                        themePrimary: theme.fontColors.accent.toRgbaString(),
-                        neutralPrimary: theme.fontColors.light.toRgbaString(),
-                        neutralDark: theme.fontColors.light.toRgbaString(),
-                        black: theme.fontColors.dark.toRgbaString(),
-                        white: theme.fontColors.light.toRgbaString(),
+                        themePrimary:
+                            theme.foregroundPallette.accent.toRgbaString(),
+                        neutralPrimary:
+                            theme.foregroundPallette.white.toRgbaString(),
+                        neutralDark:
+                            theme.foregroundPallette.white.toRgbaString(),
+                        black: theme.foregroundPallette.black.toRgbaString(),
+                        white: theme.foregroundPallette.white.toRgbaString(),
                     },
                 }}
             >
@@ -74,8 +62,8 @@ export const DiscordMessageHelpModal = (props: Props): JSX.Element => {
                     </div>
                     <div
                         className={css({
-                            color: theme.fontColors.light.toRgbaString(),
-                            fontFamily: theme.fonts.body,
+                            color: theme.foregroundPallette.white.toRgbaString(),
+                            fontFamily: theme.font,
                         })}
                     >
                         <div
@@ -86,8 +74,8 @@ export const DiscordMessageHelpModal = (props: Props): JSX.Element => {
                         >
                             <div
                                 className={css({
-                                    fontFamily: theme.fonts.headers,
-                                    color: theme.fontColors.accent.toRgbaString(),
+                                    fontFamily: theme.font,
+                                    color: theme.foregroundPallette.accent.toRgbaString(),
                                     fontWeight: 'bold',
                                 })}
                             >
@@ -140,7 +128,7 @@ export const DiscordMessageHelpModal = (props: Props): JSX.Element => {
                                 <div
                                     className={css({
                                         fontWeight: 'bold',
-                                        fontFamily: theme.fonts.headers,
+                                        fontFamily: theme.font,
                                     })}
                                 >
                                     User Attributes
@@ -163,7 +151,7 @@ export const DiscordMessageHelpModal = (props: Props): JSX.Element => {
                                 <div
                                     className={css({
                                         fontWeight: 'bold',
-                                        fontFamily: theme.fonts.headers,
+                                        fontFamily: theme.font,
                                     })}
                                 >
                                     Listing Attributes
@@ -183,7 +171,7 @@ export const DiscordMessageHelpModal = (props: Props): JSX.Element => {
                                 <div
                                     className={css({
                                         fontWeight: 'bold',
-                                        fontFamily: theme.fonts.headers,
+                                        fontFamily: theme.font,
                                     })}
                                 >
                                     Transaction Attributes

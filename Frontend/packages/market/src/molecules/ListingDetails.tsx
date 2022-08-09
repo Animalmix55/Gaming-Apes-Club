@@ -1,5 +1,5 @@
 import { Modal } from '@fluentui/react';
-import { GlowButton, useThemeContext } from '@gac/shared';
+import { Button, ButtonType, useThemeContext } from '@gac/shared-v2';
 import React from 'react';
 import { useStyletron } from 'styletron-react';
 import { ListingDropdown } from '../atoms/ListingDropdown';
@@ -32,7 +32,13 @@ export const ListingDetails = (): JSX.Element => {
 
     return (
         <div className={css({ display: 'flex', flexDirection: 'column' })}>
-            <div className={css({ margin: '10px', display: 'flex' })}>
+            <div
+                className={css({
+                    margin: '10px',
+                    display: 'flex',
+                    alignItems: 'center',
+                })}
+            >
                 {newListingModelOpen && (
                     <CreateListingModal
                         onClose={(): void => setNewListingModalOpen(false)}
@@ -49,12 +55,15 @@ export const ListingDetails = (): JSX.Element => {
                     showDisabled
                     showInactive
                 />
-                <GlowButton
-                    className={css({ fontFamily: theme.fonts.buttons })}
+                <Button
+                    className={css({
+                        fontFamily: theme.font,
+                        marginLeft: '16px',
+                    })}
                     onClick={(): void => setNewListingModalOpen(true)}
-                >
-                    New
-                </GlowButton>
+                    text="New"
+                    themeType={ButtonType.primary}
+                />
             </div>
             {selectedListing && (
                 <div

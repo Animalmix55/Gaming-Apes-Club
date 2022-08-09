@@ -2,13 +2,16 @@ import {
     Checkbox,
     ITextFieldStyles,
     Label,
-    Spinner,
-    SpinnerSize,
     TextField,
     ThemeProvider,
 } from '@fluentui/react';
 import DateTimePicker from 'react-datetime-picker';
-import { ClassNameBuilder, GlowButton, useThemeContext } from '@gac/shared';
+import {
+    ClassNameBuilder,
+    Button,
+    useThemeContext,
+    ButtonType,
+} from '@gac/shared-v2';
 import React from 'react';
 import { useStyletron } from 'styletron-react';
 import { useListing } from '../api/hooks/useListing';
@@ -99,9 +102,11 @@ export const ListingForm = (props: Props): JSX.Element => {
     const theme = useThemeContext();
     const fieldClass = css({ margin: '5px' });
     const styles: Partial<ITextFieldStyles> = {
-        description: { color: theme.fontColors.light.toRgbaString() },
+        description: { color: theme.foregroundPallette.white.toRgbaString() },
         field: {
-            color: theme.fontColors.dark.toRgbaString(disabled ? 0.5 : 1),
+            color: theme.foregroundPallette.black.toRgbaString(
+                disabled ? 0.5 : 1
+            ),
         },
     };
     const [discordHelpModalOpen, setDiscordHelpModalOpen] =
@@ -127,11 +132,14 @@ export const ListingForm = (props: Props): JSX.Element => {
                 applyTo="none"
                 theme={{
                     palette: {
-                        themePrimary: theme.fontColors.accent.toRgbaString(),
-                        neutralPrimary: theme.fontColors.light.toRgbaString(),
-                        neutralDark: theme.fontColors.light.toRgbaString(),
-                        black: theme.fontColors.dark.toRgbaString(),
-                        white: theme.fontColors.light.toRgbaString(),
+                        themePrimary:
+                            theme.foregroundPallette.accent.toRgbaString(),
+                        neutralPrimary:
+                            theme.foregroundPallette.white.toRgbaString(),
+                        neutralDark:
+                            theme.foregroundPallette.white.toRgbaString(),
+                        black: theme.foregroundPallette.black.toRgbaString(),
+                        white: theme.foregroundPallette.white.toRgbaString(),
                     },
                 }}
             >
@@ -143,8 +151,10 @@ export const ListingForm = (props: Props): JSX.Element => {
                             flexDirection: 'column',
                             justifyContent: 'center',
                             alignContent: 'center',
-                            background: theme.backgroundGradients.purpleBlue,
+                            background:
+                                theme.backgroundPallette.light.toRgbaString(),
                             padding: '10px',
+                            borderRadius: '8px',
                         })
                     )}
                 >
@@ -172,9 +182,6 @@ export const ListingForm = (props: Props): JSX.Element => {
                                     createdOn: new Date(),
                                 }}
                                 className={css({
-                                    background: `${theme.backgroundGradients.purpleBlue} !important`,
-                                    boxShadow:
-                                        'rgba(0, 0, 0, 0.35) 0px 5px 15px',
                                     margin: '5px',
                                 })}
                             />
@@ -385,7 +392,7 @@ export const ListingForm = (props: Props): JSX.Element => {
                                     />
                                     <div
                                         className={css({
-                                            color: theme.fontColors.accent.toRgbaString(),
+                                            color: theme.foregroundPallette.accent.toRgbaString(),
                                             fontWeight: 'bold',
                                         })}
                                     >
@@ -485,30 +492,21 @@ export const ListingForm = (props: Props): JSX.Element => {
                                 margin: '10px',
                             })}
                         >
-                            <GlowButton
+                            <Button
+                                themeType={ButtonType.primary}
                                 disabled={formDisabled}
                                 onClick={(): void => onSave?.(listing)}
                                 className={css({
-                                    fontSize: '40px',
-                                    padding: '5px',
-                                    fontFamily: `${theme.fonts.buttons} !important`,
+                                    fontSize: '35px',
+                                    height: 'unset !important',
                                 })}
-                                innerclass={css({
-                                    minHeight: '60px',
-                                    minWidth: '150px',
-                                })}
-                            >
-                                {!!error && (
-                                    <span className={css({ fontSize: '15px' })}>
-                                        {error}
-                                    </span>
-                                )}
-                                {isLoading && (
-                                    <Spinner size={SpinnerSize.medium} />
-                                )}
-                                {isSuccess && 'Success'}
-                                {!error && !isLoading && !isSuccess && 'Save'}
-                            </GlowButton>
+                                text={((): string => {
+                                    if (error) return error;
+                                    if (isLoading) return 'Loading';
+                                    if (isSuccess) return 'Success';
+                                    return 'Save';
+                                })()}
+                            />
                         </div>
                     )}
                 </div>
