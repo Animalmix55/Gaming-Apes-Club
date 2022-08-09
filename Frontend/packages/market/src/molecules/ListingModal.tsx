@@ -1,10 +1,5 @@
 /* eslint-disable react/no-danger */
-import {
-    MessageBar,
-    MessageBarType,
-    Spinner,
-    TextField,
-} from '@fluentui/react';
+import { MessageBar, MessageBarType } from '@fluentui/react';
 import { ClassNameBuilder } from '@gac/shared';
 import {
     Badge,
@@ -24,7 +19,6 @@ import { useStyletron } from 'styletron-react';
 import { useRoleNames } from '../api/hooks/useRoleNames';
 import { useTransactionSubmitter } from '../api/hooks/useTransactionSubmitter';
 import { Listing, ListingWithCount } from '../api/Models/Listing';
-import { ListingTile } from '../atoms/ListingTile';
 import { useAuthorizationContext } from '../contexts/AuthorizationContext';
 import { ExtractErrorMessageFromError } from '../utils/ErrorMessage';
 
@@ -133,8 +127,8 @@ export const ListingModal = (props: Props): JSX.Element => {
 
     const {
         mutate: sendTransaction,
-        isLoading,
         isSuccess,
+        isLoading,
         error,
     } = useTransactionSubmitter(onRequestSignature);
 
@@ -164,9 +158,9 @@ export const ListingModal = (props: Props): JSX.Element => {
     const remaining = Math.max(0, (supply ?? Infinity) - totalPurchased);
 
     const errorMessage = React.useMemo(() => {
+        if (remaining === 0) return 'Sold out';
         if (!addressValid) return 'Invalid address';
         if (!hasRole) return 'Missing required role';
-        if (remaining === 0) return 'Sold out';
         return ExtractErrorMessageFromError(error);
     }, [addressValid, error, hasRole, remaining]);
 
@@ -242,6 +236,20 @@ export const ListingModal = (props: Props): JSX.Element => {
                             ? `${remaining}/${supply} Remaining`
                             : '∞ Remaining'}
                     </div>
+                    {endDate != null && (
+                        <div
+                            className={css({
+                                fontWeight: 600,
+                                fontSize: '12px',
+                                color: theme.foregroundPallette.white.toRgbaString(
+                                    0.5
+                                ),
+                            })}
+                        >
+                            Ends {new Date(endDate).toLocaleDateString()} at{' '}
+                            {new Date(endDate).toLocaleTimeString()}
+                        </div>
+                    )}
                     <div
                         className={css({
                             color: theme.foregroundPallette.white.toRgbaString(),
@@ -287,6 +295,7 @@ export const ListingModal = (props: Props): JSX.Element => {
                                 ])
                             }
                             disabled={
+                                isLoading ||
                                 remaining === 0 ||
                                 !hasRole ||
                                 (!!requiresLinkedAddress && !addressValid)
@@ -304,6 +313,14 @@ export const ListingModal = (props: Props): JSX.Element => {
                     messageBarType={MessageBarType.error}
                 >
                     {errorMessage}
+                </MessageBar>
+            )}
+            {isSuccess && (
+                <MessageBar
+                    className={css({ borderRadius: '8px', marginTop: '16px' })}
+                    messageBarType={MessageBarType.success}
+                >
+                    Transaction Success
                 </MessageBar>
             )}
         </Modal>

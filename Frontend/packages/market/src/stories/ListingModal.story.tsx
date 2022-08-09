@@ -18,7 +18,13 @@ export const StandAlone = (props: { listingId: string }): JSX.Element => {
     // eslint-disable-next-line no-void
     return (
         <ListingModal
-            listing={{ ...listing, totalPurchased: 0 } as ListingWithCount}
+            listing={
+                {
+                    ...listing,
+                    totalPurchased: 0,
+                    endDate: '2022-08-10',
+                } as ListingWithCount
+            }
             onClose={(): void => void 0}
         />
     );
