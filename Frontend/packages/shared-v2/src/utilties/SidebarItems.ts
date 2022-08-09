@@ -30,6 +30,7 @@ export const SidebarItems: (SidebarItem & { url?: string })[] = [
         icon: Icons.Staking,
         displayText: 'Staking',
         id: 'Staking',
+        url: 'https://staking.gamingapeclub.com/',
     },
     {
         icon: Icons.Profile,

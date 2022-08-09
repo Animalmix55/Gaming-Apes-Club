@@ -21,10 +21,11 @@ import { useLogin } from '../api/hooks/useLogin';
 
 export interface DashboardProps {
     className?: string;
+    additionalItems?: React.ReactNode[];
 }
 
 export const Dashboard = (props: DashboardProps): JSX.Element => {
-    const { className } = props;
+    const { className, additionalItems } = props;
     const { chainId } = useGamingApeContext();
     const { claims } = useAuthorizationContext();
     const discordId = claims?.id;
@@ -105,6 +106,7 @@ export const Dashboard = (props: DashboardProps): JSX.Element => {
                     icon={HistoryIcon}
                     themeType={ButtonType.secondary}
                 />
+                {...additionalItems ?? []}
             </>
         </DividedDashboard>
     );

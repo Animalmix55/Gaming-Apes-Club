@@ -1,6 +1,8 @@
 import React from 'react';
 import { useStyletron } from 'styletron-react';
 import {
+    Button,
+    ButtonType,
     Footer,
     Header,
     MOBILE,
@@ -25,11 +27,16 @@ export const MarketplacePage = (): JSX.Element => {
     const [css] = useStyletron();
     const { login } = useLogin(true);
     const { adminRoles } = useGamingApeContext();
-    const { token } = useAuthorizationContext();
+    const { token, claims } = useAuthorizationContext();
     const { discordUrl, openseaUrl, twitterUrl, chainId } =
         useGamingApeContext();
     const [modalOpen, setModalOpen] = React.useState(false);
     const { accounts } = useWeb3();
+
+    const isAdmin =
+        adminRoles &&
+        claims &&
+        claims.member?.roles.some((heldRole) => adminRoles.includes(heldRole));
 
     const [adminPanelOpen, setAdminPanelOpen] = React.useState(false);
     const [selectedFilterTags, setSelectedFilterTags] = React.useState<
@@ -91,7 +98,7 @@ export const MarketplacePage = (): JSX.Element => {
             })}
         >
             <Sidebar
-                selectedId="Staking"
+                selectedId="Shack"
                 items={SidebarItems}
                 onDisordClick={
                     discordUrl
@@ -141,7 +148,28 @@ export const MarketplacePage = (): JSX.Element => {
                         title="Gaming Ape Club's"
                         subtitle="Shopping Shack"
                     />
-                    <Dashboard className={css({ marginLeft: 'auto' })} />
+                    <Dashboard
+                        additionalItems={
+                            isAdmin
+                                ? [
+                                      <Button
+                                          key="ADMIN_BUTTON"
+                                          text={
+                                              adminPanelOpen ? 'Home' : 'Admin'
+                                          }
+                                          className={css({
+                                              marginLeft: '16px',
+                                          })}
+                                          themeType={ButtonType.secondary}
+                                          onClick={(): void =>
+                                              setAdminPanelOpen((a) => !a)
+                                          }
+                                      />,
+                                  ]
+                                : undefined
+                        }
+                        className={css({ marginLeft: 'auto' })}
+                    />
                 </div>
                 {selectedListing && (
                     <ListingModal
