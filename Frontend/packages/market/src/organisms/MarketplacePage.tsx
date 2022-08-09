@@ -8,6 +8,7 @@ import {
     SidebarItem,
     SidebarItems,
     useWeb3,
+    WalletLoginModal,
 } from '@gac/shared-v2';
 import Background from '@gac/shared-v2/lib/assets/png/background/BACKGROUND.png';
 import { useListings } from '../api/hooks/useListings';
@@ -25,7 +26,8 @@ export const MarketplacePage = (): JSX.Element => {
     const { login } = useLogin(true);
     const { adminRoles } = useGamingApeContext();
     const { token } = useAuthorizationContext();
-    const { discordUrl, openseaUrl, twitterUrl } = useGamingApeContext();
+    const { discordUrl, openseaUrl, twitterUrl, chainId } =
+        useGamingApeContext();
     const [modalOpen, setModalOpen] = React.useState(false);
     const { accounts } = useWeb3();
 
@@ -147,6 +149,7 @@ export const MarketplacePage = (): JSX.Element => {
                         onClose={(): void => setSelectedIndex(undefined)}
                     />
                 )}
+                {modalOpen && <WalletLoginModal chainId={chainId} />}
                 {!adminPanelOpen && (
                     <div
                         className={css({

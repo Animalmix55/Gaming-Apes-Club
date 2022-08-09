@@ -1,18 +1,29 @@
-import { Modal, Spinner, TextField } from '@fluentui/react';
+/* eslint-disable react/no-danger */
 import {
-    GlowButton,
+    MessageBar,
+    MessageBarType,
+    Spinner,
+    TextField,
+} from '@fluentui/react';
+import { ClassNameBuilder } from '@gac/shared';
+import {
+    Badge,
+    Button,
+    ButtonType,
     isURL,
-    MOBILE,
+    Modal,
+    TextInput,
+    TokenDisplay,
     UrlRegex,
     useThemeContext,
-} from '@gac/shared';
-import { useWeb3 } from '@gac/shared-v2';
+    useWeb3,
+} from '@gac/shared-v2';
 import { ethers } from 'ethers';
 import React from 'react';
 import { useStyletron } from 'styletron-react';
 import { useRoleNames } from '../api/hooks/useRoleNames';
 import { useTransactionSubmitter } from '../api/hooks/useTransactionSubmitter';
-import { ListingWithCount } from '../api/Models/Listing';
+import { Listing, ListingWithCount } from '../api/Models/Listing';
 import { ListingTile } from '../atoms/ListingTile';
 import { useAuthorizationContext } from '../contexts/AuthorizationContext';
 import { ExtractErrorMessageFromError } from '../utils/ErrorMessage';
@@ -30,6 +41,72 @@ const descriptionToHtml = (description: string, className?: string): string => {
             }rel="noreferrer">${word}</a>`;
         return word;
     });
+};
+
+const ListingTags = ({
+    listing,
+    className,
+}: {
+    listing: Listing;
+    className?: string;
+}): JSX.Element => {
+    const { roles, requiresHoldership, tags } = listing;
+
+    const theme = useThemeContext();
+    const [css] = useStyletron();
+
+    const { data: roleNames } = useRoleNames(roles);
+
+    return (
+        <div
+            className={ClassNameBuilder(
+                className,
+                css({
+                    display: 'flex',
+                    overflowX: 'auto',
+                    flexWrap: 'nowrap',
+                })
+            )}
+        >
+            {tags?.map((t, i) => (
+                <Badge
+                    color={theme.additionalPallette.red.toRgbaString()}
+                    text={t.displayName}
+                    textColor={theme.foregroundPallette.white.toRgbaString()}
+                    key={t.id}
+                    className={css({
+                        marginLeft: i === 0 ? undefined : '16px',
+                    })}
+                />
+            ))}
+            {roleNames?.map((r, i) => (
+                <Badge
+                    color={theme.buttonPallette.inactive.toRgbaString()}
+                    text={r}
+                    textColor={theme.foregroundPallette.white.toRgbaString()}
+                    key={r}
+                    className={css({
+                        marginLeft:
+                            i === 0 && !tags?.length ? undefined : '16px',
+                    })}
+                />
+            ))}
+            {!!requiresHoldership && (
+                <Badge
+                    color={theme.buttonPallette.primary.toRgbaString()}
+                    text="Holders Only"
+                    textColor={theme.foregroundPallette.white.toRgbaString()}
+                    key="HOLDERSHIP_REQ"
+                    className={css({
+                        marginLeft:
+                            roleNames?.length || tags?.length
+                                ? '16px'
+                                : undefined,
+                    })}
+                />
+            )}
+        </div>
+    );
 };
 
 export const ListingModal = (props: Props): JSX.Element => {
@@ -61,11 +138,6 @@ export const ListingModal = (props: Props): JSX.Element => {
         error,
     } = useTransactionSubmitter(onRequestSignature);
 
-    const errorMessage = React.useMemo(
-        () => ExtractErrorMessageFromError(error),
-        [error]
-    );
-
     const { claims } = useAuthorizationContext();
     const userRoles = claims?.member?.roles;
 
@@ -75,10 +147,11 @@ export const ListingModal = (props: Props): JSX.Element => {
         totalPurchased,
         supply,
         requiresLinkedAddress,
-        requiresHoldership,
         roles,
-        tags,
         endDate,
+        price,
+        image,
+        title,
     } = listing;
 
     const hasRole = React.useMemo(() => {
@@ -88,247 +161,124 @@ export const ListingModal = (props: Props): JSX.Element => {
         return userRoles.some((r) => roles.includes(r));
     }, [roles, userRoles]);
 
-    const { data: roleNames, isLoading: roleNamesLoading } =
-        useRoleNames(roles);
-
     const remaining = Math.max(0, (supply ?? Infinity) - totalPurchased);
+
+    const errorMessage = React.useMemo(() => {
+        if (!addressValid) return 'Invalid address';
+        if (!hasRole) return 'Missing required role';
+        if (remaining === 0) return 'Sold out';
+        return ExtractErrorMessageFromError(error);
+    }, [addressValid, error, hasRole, remaining]);
 
     return (
         <Modal
+            suppressCloseButton
             isOpen
-            onDismiss={onClose}
-            styles={{
-                scrollableContent: {
-                    maxHeight: 'unset',
-                },
-                main: {
-                    background: theme.backgroundGradients.purpleBlue,
-                },
-            }}
+            onClose={onClose}
+            modalClass={css({
+                width: '830px',
+                maxWidth: '90%',
+            })}
         >
             <div
                 className={css({
                     display: 'flex',
-                    justifyContent: 'center',
-                    padding: '20px',
                     overflow: 'hidden',
+                    alignItems: 'stretch',
                     minWidth: 'fit-content',
-                    [MOBILE]: {
-                        alignItems: 'center',
-                        flexWrap: 'wrap',
-                    },
+                    fontFamily: theme.font,
                 })}
             >
-                <ListingTile listing={listing as ListingWithCount} />
+                <img
+                    src={image}
+                    alt={title}
+                    className={css({
+                        width: 'auto',
+                        height: '264px',
+                        borderRadius: '8px',
+                    })}
+                />
 
                 <div
                     className={css({
-                        maxWidth: '300px',
-                        color: theme.fontColors.light.toRgbaString(),
+                        flex: '1',
+                        marginLeft: '22px',
                         display: 'flex',
                         flexDirection: 'column',
-                        [MOBILE]: {
-                            maxWidth: 'unset',
-                        },
                     })}
                 >
                     <div
                         className={css({
-                            padding: '5px',
+                            display: 'flex',
+                            marginBottom: '20px',
                         })}
                     >
-                        <div
-                            className={css({
-                                fontFamily: theme.fonts.headers,
-                                fontWeight: '900',
-                            })}
-                        >
-                            Description
-                        </div>
-                        <div
-                            className={css({
-                                fontFamily: theme.fonts.body,
-                                overflow: 'auto',
-                                minHeight: '0px',
-                            })}
-                            // eslint-disable-next-line react/no-danger
-                            dangerouslySetInnerHTML={{
-                                __html: descriptionToHtml(
-                                    description,
-                                    css({
-                                        color: theme.fontColors.accent.toRgbaString(),
-                                    })
-                                ),
-                            }}
+                        <ListingTags
+                            listing={listing}
+                            className={css({ flex: '1', marginRight: '16px' })}
                         />
+                        <TokenDisplay amount={price} />
                     </div>
-
-                    {!!endDate && (
-                        <div
-                            className={css({
-                                padding: '5px',
-                            })}
-                        >
-                            <div
+                    <div
+                        className={css({
+                            fontWeight: 900,
+                            fontSize: '28px',
+                            color: theme.foregroundPallette.white.toRgbaString(),
+                            fontStyle: 'italic',
+                        })}
+                    >
+                        {title}
+                    </div>
+                    <div
+                        className={css({
+                            fontWeight: 600,
+                            fontSize: '12px',
+                            color: theme.foregroundPallette.white.toRgbaString(
+                                0.5
+                            ),
+                        })}
+                    >
+                        {remaining !== Infinity && supply !== undefined
+                            ? `${remaining}/${supply} Remaining`
+                            : '∞ Remaining'}
+                    </div>
+                    <div
+                        className={css({
+                            color: theme.foregroundPallette.white.toRgbaString(),
+                            fontSize: '12px',
+                            fontWeight: 500,
+                            marginTop: '16px',
+                        })}
+                        dangerouslySetInnerHTML={{
+                            __html: descriptionToHtml(
+                                description,
+                                css({
+                                    color: theme.foregroundPallette.accent.toRgbaString(),
+                                })
+                            ),
+                        }}
+                    />
+                    <div
+                        className={css({
+                            display: 'flex',
+                            alignItems: 'center',
+                            marginTop: 'auto',
+                        })}
+                    >
+                        {requiresLinkedAddress && (
+                            <TextInput
+                                label="Wallet Address"
+                                value={address}
+                                onChange={setAddress}
                                 className={css({
-                                    fontFamily: theme.fonts.headers,
-                                    fontWeight: '900',
+                                    flex: '1',
+                                    marginRight: '24px',
                                 })}
-                            >
-                                End Date
-                            </div>
-                            <div
-                                className={css({
-                                    fontFamily: theme.fonts.body,
-                                })}
-                            >
-                                {new Date(endDate).toLocaleDateString()}{' '}
-                                {new Date(endDate).toLocaleTimeString()}
-                            </div>
-                        </div>
-                    )}
-
-                    {!!tags?.length && (
-                        <div
-                            className={css({
-                                padding: '5px',
-                            })}
-                        >
-                            <div
-                                className={css({
-                                    fontFamily: theme.fonts.headers,
-                                    fontWeight: '900',
-                                })}
-                            >
-                                Tags
-                            </div>
-                            <div
-                                className={css({
-                                    fontFamily: theme.fonts.body,
-                                })}
-                            >
-                                {tags.map((t) => t.displayName).join(', ')}
-                            </div>
-                        </div>
-                    )}
-
-                    {!!roles.length && (
-                        <div
-                            className={css({
-                                padding: '5px',
-                            })}
-                        >
-                            <div
-                                className={css({
-                                    fontFamily: theme.fonts.headers,
-                                    fontWeight: '900',
-                                })}
-                            >
-                                Applicable Roles
-                            </div>
-                            <div
-                                className={css({
-                                    fontFamily: theme.fonts.body,
-                                })}
-                            >
-                                {roleNamesLoading && <Spinner />}
-                                {!roleNamesLoading &&
-                                    !!roleNames &&
-                                    roleNames.join(', ')}
-                            </div>
-                        </div>
-                    )}
-
-                    {supply !== undefined && (
-                        <div
-                            className={css({
-                                padding: '5px',
-                            })}
-                        >
-                            <div
-                                className={css({
-                                    fontFamily: theme.fonts.headers,
-                                    fontWeight: '900',
-                                })}
-                            >
-                                Remaining
-                            </div>
-                            <div
-                                className={css({
-                                    fontFamily: theme.fonts.body,
-                                })}
-                            >
-                                {remaining}
-                            </div>
-                        </div>
-                    )}
-
-                    {!!requiresHoldership && (
-                        <div
-                            className={css({
-                                padding: '5px',
-                            })}
-                        >
-                            <div
-                                className={css({
-                                    fontFamily: theme.fonts.headers,
-                                    fontWeight: '900',
-                                })}
-                            >
-                                Requires NFT Ownership
-                            </div>
-                            <div
-                                className={css({
-                                    fontFamily: theme.fonts.body,
-                                })}
-                            >
-                                Yes
-                            </div>
-                        </div>
-                    )}
-
-                    {!!requiresLinkedAddress && (
-                        <div
-                            className={css({
-                                padding: '5px',
-                            })}
-                        >
-                            <div
-                                className={css({
-                                    fontFamily: theme.fonts.headers,
-                                    fontWeight: '900',
-                                })}
-                            >
-                                Address
-                            </div>
-                            <div
-                                className={css({
-                                    fontFamily: theme.fonts.body,
-                                })}
-                            >
-                                <TextField
-                                    placeholder="0x..."
-                                    value={address}
-                                    required
-                                    styles={{
-                                        errorMessage: {
-                                            fontFamily: theme.fonts.headers,
-                                            fontWeight: '900',
-                                        },
-                                    }}
-                                    errorMessage={
-                                        !addressValid
-                                            ? 'Invalid Address'
-                                            : undefined
-                                    }
-                                    onChange={(_, v): void => setAddress(v)}
-                                />
-                            </div>
-                        </div>
-                    )}
-                    <div className={css({ margin: '5px 5px auto 5px' })}>
-                        <GlowButton
-                            disabled={remaining === 0 || !hasRole}
+                            />
+                        )}
+                        <Button
+                            themeType={ButtonType.primary}
+                            text="Purchase"
                             onClick={(): void =>
                                 sendTransaction([
                                     listingId,
@@ -336,29 +286,26 @@ export const ListingModal = (props: Props): JSX.Element => {
                                     requiresLinkedAddress ? address : undefined,
                                 ])
                             }
-                            innerclass={css({
-                                minHeight: '60px',
-                                fontFamily: theme.fonts.buttons,
-                            })}
+                            disabled={
+                                remaining === 0 ||
+                                !hasRole ||
+                                (!!requiresLinkedAddress && !addressValid)
+                            }
                             className={css({
-                                width: '100%',
+                                marginLeft: 'auto',
                             })}
-                        >
-                            {isLoading && <Spinner />}
-                            {isSuccess && 'Success'}
-                            {!hasRole && 'Missing required role'}
-                            {remaining === 0 && 'Sold out'}
-                            {errorMessage && errorMessage}
-                            {!errorMessage &&
-                                hasRole &&
-                                !isLoading &&
-                                !isSuccess &&
-                                remaining !== 0 &&
-                                'Purchase'}
-                        </GlowButton>
+                        />
                     </div>
                 </div>
             </div>
+            {errorMessage && (
+                <MessageBar
+                    className={css({ borderRadius: '8px', marginTop: '16px' })}
+                    messageBarType={MessageBarType.error}
+                >
+                    {errorMessage}
+                </MessageBar>
+            )}
         </Modal>
     );
 };

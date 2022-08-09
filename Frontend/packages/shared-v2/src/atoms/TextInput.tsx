@@ -30,7 +30,7 @@ export const TextInput = (props: TextInputProps): JSX.Element => {
                     boxSizing: 'border-box',
                     borderRadius: '15px',
                     backgroundColor:
-                        theme.backgroundPallette.dark.toRgbaString(),
+                        theme.backgroundPallette.light.toRgbaString(),
                 })
             )}
         >

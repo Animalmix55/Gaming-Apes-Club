@@ -11,7 +11,6 @@ import PolygonLogo from '@gac/shared-v2/lib/assets/svg/PolygonTransparent.svg';
 import HistoryIcon from '@gac/shared-v2/lib/assets/svg/Buyhistory.svg';
 import ETHLogo from '@gac/shared-v2/lib/assets/png/symbol/ETH White.png';
 import DiscordLogo from '@gac/shared-v2/lib/assets/png/action/Discord.png';
-import { BigNumber } from 'ethers';
 import React from 'react';
 import { useStyletron } from 'styletron-react';
 import { useBalance } from '../api/hooks/useBalance';

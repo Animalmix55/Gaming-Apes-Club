@@ -14,10 +14,18 @@ export interface ModalProps {
     modalClass?: string;
     onClose?: () => void;
     isOpen?: boolean;
+    suppressCloseButton?: boolean;
 }
 
 export const Modal = (props: ModalProps): JSX.Element | null => {
-    const { children, curtainClass, modalClass, onClose, isOpen } = props;
+    const {
+        children,
+        curtainClass,
+        modalClass,
+        onClose,
+        suppressCloseButton,
+        isOpen,
+    } = props;
 
     const [css] = useStyletron();
     const theme = useThemeContext();
@@ -25,6 +33,8 @@ export const Modal = (props: ModalProps): JSX.Element | null => {
     if (!isOpen) {
         return null;
     }
+
+    const hasCloseButton = onClose && !suppressCloseButton;
 
     return (
         <Layer>
@@ -50,7 +60,7 @@ export const Modal = (props: ModalProps): JSX.Element | null => {
                     className={ClassNameBuilder(
                         modalClass,
                         css({
-                            padding: '24px',
+                            padding: hasCloseButton ? '24px' : '16px',
                             borderRadius: '20px',
                             position: 'relative',
                             minHeight: '200px',
@@ -60,7 +70,7 @@ export const Modal = (props: ModalProps): JSX.Element | null => {
                     )}
                     onClick={(e): void => e.stopPropagation()}
                 >
-                    {onClose && (
+                    {hasCloseButton && (
                         <Button
                             onClick={onClose}
                             icon={Icons.Close}
