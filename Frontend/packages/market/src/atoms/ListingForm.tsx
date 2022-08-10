@@ -11,6 +11,7 @@ import {
     Button,
     useThemeContext,
     ButtonType,
+    MOBILE,
 } from '@gac/shared-v2';
 import React from 'react';
 import { useStyletron } from 'styletron-react';
@@ -188,7 +189,7 @@ export const ListingForm = (props: Props): JSX.Element => {
                         </div>
                         <div
                             className={css({
-                                minWidth: '350px',
+                                minWidth: '250px',
                                 padding: '5px',
                             })}
                         >
@@ -354,12 +355,16 @@ export const ListingForm = (props: Props): JSX.Element => {
                                         display: 'flex',
                                         justifyContent: 'center',
                                         alignItems: 'center',
+                                        [MOBILE]: {
+                                            flexWrap: 'wrap',
+                                        },
                                     })}
                                 >
                                     <DateTimePicker
                                         disabled={formDisabled}
                                         className={css({
                                             backgroundColor: 'white',
+                                            flexGrow: 1,
                                             marginRight: '5px',
                                         })}
                                         value={
@@ -403,6 +408,10 @@ export const ListingForm = (props: Props): JSX.Element => {
                                         className={css({
                                             backgroundColor: 'white',
                                             marginLeft: '5px',
+                                            flexGrow: 1,
+                                            [MOBILE]: {
+                                                marginLeft: 'unset',
+                                            },
                                         })}
                                         value={
                                             endDate !== null

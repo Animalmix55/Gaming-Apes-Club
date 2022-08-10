@@ -1,5 +1,5 @@
 import { getId, Spinner } from '@fluentui/react';
-import { ClassNameBuilder } from '@gac/shared';
+import { ClassNameBuilder, MOBILE } from '@gac/shared';
 import { ButtonType, CheckableButton, Header, Modal } from '@gac/shared-v2';
 import React from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
@@ -86,6 +86,12 @@ export const HistoryModal = (props: HistoryModalProps): JSX.Element => {
                         overflow: 'hidden',
                         display: 'flex',
                         flexDirection: 'column',
+                        [MOBILE]: {
+                            maxHeight: 'unset',
+                            maxWidth: 'unset',
+                            width: '100%',
+                            height: '100%',
+                        },
                     })
                 )}
             >

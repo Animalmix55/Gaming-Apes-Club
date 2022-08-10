@@ -15,6 +15,7 @@ import ETHLogo from '@gac/shared-v2/lib/assets/png/symbol/ETH White.png';
 import DiscordLogo from '@gac/shared-v2/lib/assets/png/action/Discord.png';
 import React from 'react';
 import { useStyletron } from 'styletron-react';
+import { ClassNameBuilder } from '@gac/shared';
 import { useBalance } from '../api/hooks/useBalance';
 import { useAuthorizationContext } from '../contexts/AuthorizationContext';
 import { useGamingApeContext } from '../contexts/GamingApeClubContext';
@@ -46,7 +47,12 @@ export const Dashboard = (props: DashboardProps): JSX.Element => {
     const [css] = useStyletron();
 
     return (
-        <DividedDashboard className={className}>
+        <DividedDashboard
+            className={ClassNameBuilder(
+                className,
+                css({ padding: '8px 16px !important' })
+            )}
+        >
             <>
                 <WalletLoginModal
                     chainId={chainId}
@@ -70,6 +76,8 @@ export const Dashboard = (props: DashboardProps): JSX.Element => {
                         }
                         className={css({
                             padding: '0 16px',
+                            marginTop: '8px',
+                            marginBottom: '8px',
                         })}
                     />
                 )}
@@ -80,6 +88,8 @@ export const Dashboard = (props: DashboardProps): JSX.Element => {
                         icon={DiscordLogo}
                         className={css({
                             marginRight: account ? '16px' : undefined,
+                            marginTop: '8px',
+                            marginBottom: '8px',
                         })}
                         onClick={login}
                         disabled={isLoggingIn}
@@ -92,6 +102,8 @@ export const Dashboard = (props: DashboardProps): JSX.Element => {
                         className={css({
                             marginLeft: discordId ? undefined : '16px',
                             marginRight: '16px',
+                            marginTop: '8px',
+                            marginBottom: '8px',
                         })}
                         icon={ETHLogo}
                         onClick={(): void => setLoginModalOpen(true)}
@@ -110,7 +122,11 @@ export const Dashboard = (props: DashboardProps): JSX.Element => {
                     <Button
                         themeType={ButtonType.secondary}
                         text={isMobile ? undefined : 'Migrate XP'}
-                        className={css({ marginLeft: '16px' })}
+                        className={css({
+                            marginLeft: '16px',
+                            marginTop: '8px',
+                            marginBottom: '8px',
+                        })}
                         onClick={(): void => setMigrateModalOpen(true)}
                         icon={PolygonLogo}
                     />
@@ -119,6 +135,8 @@ export const Dashboard = (props: DashboardProps): JSX.Element => {
                     text={isMobile ? undefined : 'History'}
                     className={css({
                         marginLeft: '16px',
+                        marginTop: '8px',
+                        marginBottom: '8px',
                     })}
                     icon={HistoryIcon}
                     themeType={ButtonType.secondary}

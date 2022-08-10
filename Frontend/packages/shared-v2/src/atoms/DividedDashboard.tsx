@@ -39,10 +39,11 @@ export const DividedDashboard = (props: DividedDashboardProps): JSX.Element => {
             {children.map((c, i) => {
                 if (i === 0) return c;
                 return (
-                    <>
+                    // eslint-disable-next-line react/no-array-index-key
+                    <React.Fragment key={i}>
                         <Divider />
                         {c}
-                    </>
+                    </React.Fragment>
                 );
             })}
             {rightItem && (

@@ -1,5 +1,4 @@
-import { Modal } from '@fluentui/react';
-import { Button, ButtonType, useThemeContext } from '@gac/shared-v2';
+import { Button, ButtonType, useThemeContext, Modal } from '@gac/shared-v2';
 import React from 'react';
 import { useStyletron } from 'styletron-react';
 import { ListingDropdown } from '../atoms/ListingDropdown';
@@ -13,13 +12,19 @@ const CreateListingModal = ({
     onSave: (newId: string) => void;
     onClose: () => void;
 }): JSX.Element => {
+    const [css] = useStyletron();
+
     return (
-        <Modal
-            isOpen
-            onDismiss={onClose}
-            styles={{ scrollableContent: { maxHeight: 'unset' } }}
-        >
-            <ServersideListingForm setListingId={onSave} />
+        <Modal isOpen onClose={onClose}>
+            <ServersideListingForm
+                className={css({
+                    boxSizing: 'border-box',
+                    backgroundColor: 'unset !important',
+                    overflow: 'auto',
+                    height: '100%',
+                })}
+                setListingId={onSave}
+            />
         </Modal>
     );
 };

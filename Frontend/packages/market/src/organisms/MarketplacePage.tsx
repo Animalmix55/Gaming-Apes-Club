@@ -9,7 +9,6 @@ import {
     Sidebar,
     SidebarItem,
     SidebarItems,
-    TABLET,
     useWeb3,
     WalletLoginModal,
 } from '@gac/shared-v2';

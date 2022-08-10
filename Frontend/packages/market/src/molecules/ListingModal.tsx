@@ -1,6 +1,6 @@
 /* eslint-disable react/no-danger */
 import { MessageBar, MessageBarType } from '@fluentui/react';
-import { ClassNameBuilder } from '@gac/shared';
+import { ClassNameBuilder, MOBILE } from '@gac/shared';
 import {
     Badge,
     Button,
@@ -10,6 +10,7 @@ import {
     TextInput,
     TokenDisplay,
     UrlRegex,
+    useMatchMediaQuery,
     useThemeContext,
     useWeb3,
 } from '@gac/shared-v2';
@@ -164,6 +165,36 @@ export const ListingModal = (props: Props): JSX.Element => {
         return ExtractErrorMessageFromError(error);
     }, [addressValid, error, hasRole, remaining]);
 
+    const listingTags = (
+        <ListingTags
+            listing={listing}
+            className={css({ flex: '1', marginRight: '16px' })}
+        />
+    );
+
+    const alerts = (
+        <>
+            {errorMessage && (
+                <MessageBar
+                    className={css({ borderRadius: '8px', marginTop: '16px' })}
+                    messageBarType={MessageBarType.error}
+                >
+                    {errorMessage}
+                </MessageBar>
+            )}
+            {isSuccess && (
+                <MessageBar
+                    className={css({ borderRadius: '8px', marginTop: '16px' })}
+                    messageBarType={MessageBarType.success}
+                >
+                    Transaction Success
+                </MessageBar>
+            )}
+        </>
+    );
+
+    const isMobile = useMatchMediaQuery(MOBILE);
+
     return (
         <Modal
             suppressCloseButton
@@ -181,8 +212,29 @@ export const ListingModal = (props: Props): JSX.Element => {
                     alignItems: 'stretch',
                     minWidth: 'fit-content',
                     fontFamily: theme.font,
+                    [MOBILE]: {
+                        display: 'flex',
+                        flexDirection: 'column',
+                        position: 'relative',
+                        textAlign: 'center',
+                        height: '100%',
+                        overflow: 'auto',
+                    },
                 })}
             >
+                {isMobile && (
+                    <div
+                        className={css({
+                            position: 'absolute',
+                            top: '0px',
+                            padding: '4px',
+                            boxSizing: 'border-box',
+                            width: '100%',
+                        })}
+                    >
+                        {listingTags}
+                    </div>
+                )}
                 <img
                     src={image}
                     alt={title}
@@ -190,6 +242,10 @@ export const ListingModal = (props: Props): JSX.Element => {
                         width: 'auto',
                         height: '264px',
                         borderRadius: '8px',
+                        [MOBILE]: {
+                            width: '100%',
+                            height: 'auto',
+                        },
                     })}
                 />
 
@@ -199,26 +255,31 @@ export const ListingModal = (props: Props): JSX.Element => {
                         marginLeft: '22px',
                         display: 'flex',
                         flexDirection: 'column',
+                        [MOBILE]: {
+                            marginLeft: '0px',
+                        },
                     })}
                 >
-                    <div
-                        className={css({
-                            display: 'flex',
-                            marginBottom: '20px',
-                        })}
-                    >
-                        <ListingTags
-                            listing={listing}
-                            className={css({ flex: '1', marginRight: '16px' })}
-                        />
-                        <TokenDisplay amount={price} />
-                    </div>
+                    {!isMobile && (
+                        <div
+                            className={css({
+                                display: 'flex',
+                                marginBottom: '20px',
+                            })}
+                        >
+                            {listingTags}
+                            <TokenDisplay amount={price} />
+                        </div>
+                    )}
                     <div
                         className={css({
                             fontWeight: 900,
                             fontSize: '28px',
                             color: theme.foregroundPallette.white.toRgbaString(),
                             fontStyle: 'italic',
+                            [MOBILE]: {
+                                marginTop: '16px',
+                            },
                         })}
                     >
                         {title}
@@ -230,6 +291,9 @@ export const ListingModal = (props: Props): JSX.Element => {
                             color: theme.foregroundPallette.white.toRgbaString(
                                 0.5
                             ),
+                            [MOBILE]: {
+                                marginTop: '8px',
+                            },
                         })}
                     >
                         {remaining !== Infinity && supply !== undefined
@@ -244,18 +308,27 @@ export const ListingModal = (props: Props): JSX.Element => {
                                 color: theme.foregroundPallette.white.toRgbaString(
                                     0.5
                                 ),
+                                [MOBILE]: {
+                                    textAlign: 'center',
+                                },
                             })}
                         >
                             Ends {new Date(endDate).toLocaleDateString()} at{' '}
                             {new Date(endDate).toLocaleTimeString()}
                         </div>
                     )}
+                    <div className={css({ marginTop: '8px' })}>
+                        <TokenDisplay amount={price} />
+                    </div>
                     <div
                         className={css({
                             color: theme.foregroundPallette.white.toRgbaString(),
                             fontSize: '12px',
                             fontWeight: 500,
                             marginTop: '16px',
+                            [MOBILE]: {
+                                marginBottom: '24px',
+                            },
                         })}
                         dangerouslySetInnerHTML={{
                             __html: descriptionToHtml(
@@ -271,6 +344,9 @@ export const ListingModal = (props: Props): JSX.Element => {
                             display: 'flex',
                             alignItems: 'center',
                             marginTop: 'auto',
+                            [MOBILE]: {
+                                display: 'block',
+                            },
                         })}
                     >
                         {requiresLinkedAddress && (
@@ -281,6 +357,10 @@ export const ListingModal = (props: Props): JSX.Element => {
                                 className={css({
                                     flex: '1',
                                     marginRight: '24px',
+                                    [MOBILE]: {
+                                        textAlign: 'left',
+                                        marginRight: '0px',
+                                    },
                                 })}
                             />
                         )}
@@ -302,27 +382,20 @@ export const ListingModal = (props: Props): JSX.Element => {
                             }
                             className={css({
                                 marginLeft: 'auto',
+                                [MOBILE]: {
+                                    marginTop: '24px',
+                                    marginBottom: '8px',
+                                    width: '100%',
+                                    textAlign: 'center',
+                                    justifyContent: 'center',
+                                },
                             })}
                         />
                     </div>
+                    {isMobile && alerts}
                 </div>
             </div>
-            {errorMessage && (
-                <MessageBar
-                    className={css({ borderRadius: '8px', marginTop: '16px' })}
-                    messageBarType={MessageBarType.error}
-                >
-                    {errorMessage}
-                </MessageBar>
-            )}
-            {isSuccess && (
-                <MessageBar
-                    className={css({ borderRadius: '8px', marginTop: '16px' })}
-                    messageBarType={MessageBarType.success}
-                >
-                    Transaction Success
-                </MessageBar>
-            )}
+            {!isMobile && alerts}
         </Modal>
     );
 };

@@ -4,7 +4,8 @@ import { Layer } from '@fluentui/react';
 import React from 'react';
 import { useStyletron } from 'styletron-react';
 import { useThemeContext } from '../contexts/ThemeContext';
-import { ClassNameBuilder } from '../utilties';
+import { useMatchMediaQuery } from '../hooks/useMatchMediaQuery';
+import { ClassNameBuilder, MOBILE } from '../utilties';
 import { Icons } from '../utilties/Icons';
 import { Button } from './Button';
 
@@ -29,6 +30,7 @@ export const Modal = (props: ModalProps): JSX.Element | null => {
 
     const [css] = useStyletron();
     const theme = useThemeContext();
+    const isMobile = useMatchMediaQuery(MOBILE);
 
     if (!isOpen) {
         return null;
@@ -52,10 +54,32 @@ export const Modal = (props: ModalProps): JSX.Element | null => {
                         color: theme.foregroundPallette.white.toRgbaString(),
                         backgroundColor:
                             theme.backgroundPallette.darker.toRgbaString(),
+                        padding: '24px',
+                        [MOBILE]: {
+                            padding: `${
+                                onClose ? '80px' : '44px'
+                            } 24px 44px 24px`,
+                            position: 'relative',
+                        },
                     })
                 )}
                 onClick={onClose}
             >
+                {isMobile && onClose && (
+                    <Button
+                        onClick={onClose}
+                        icon={Icons.Close}
+                        iconClass={css({ height: '36px !important' })}
+                        className={css({
+                            zIndex: 10,
+                            top: '24px',
+                            left: '24px',
+                            position: 'absolute',
+                            padding: 'unset !important',
+                            height: 'auto !important',
+                        })}
+                    />
+                )}
                 <div
                     className={ClassNameBuilder(
                         modalClass,
@@ -63,14 +87,19 @@ export const Modal = (props: ModalProps): JSX.Element | null => {
                             padding: hasCloseButton ? '24px' : '16px',
                             borderRadius: '20px',
                             position: 'relative',
+                            boxSizing: 'border-box',
                             minHeight: '200px',
                             minWidth: '200px',
                             boxShadow: theme.shadowPallette.rainbow,
+                            [MOBILE]: {
+                                height: '100%',
+                                width: '100%',
+                            },
                         })
                     )}
                     onClick={(e): void => e.stopPropagation()}
                 >
-                    {hasCloseButton && (
+                    {hasCloseButton && !isMobile && (
                         <Button
                             onClick={onClose}
                             icon={Icons.Close}
@@ -82,6 +111,11 @@ export const Modal = (props: ModalProps): JSX.Element | null => {
                                 position: 'absolute',
                                 padding: 'unset !important',
                                 height: 'auto !important',
+                                [MOBILE]: {
+                                    position: 'relative',
+                                    top: 'unset',
+                                    right: 'unset',
+                                },
                             })}
                         />
                     )}
