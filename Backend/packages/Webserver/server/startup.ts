@@ -1,4 +1,4 @@
-import { getLoginRouter, authMiddleware } from '@gac/login';
+import { getLoginRouter } from '@gac/login';
 import {
     StartDatabase,
     getRolesRouter,
@@ -195,11 +195,11 @@ const startExpressInstance = async () => {
 
     app.use('/login', LoginRouter);
     app.use('/roles', await getRolesRouter(DISCORD_BOT_TOKEN, GUILD_ID));
-    app.use('/listing', getListingRouter(JWT_PRIVATE, adminRoles, sequelize));
+    app.use(
+        '/listing',
+        getListingRouter(JWT_PRIVATE, adminRoles, sequelize, gridcraftClient)
+    );
     app.use('/tags', getTagsRouter());
-
-    // ALL AUTHENTICATED ROUTES
-    app.use(authMiddleware(JWT_PRIVATE, adminRoles));
 
     app.use(
         '/transaction',
@@ -212,7 +212,8 @@ const startExpressInstance = async () => {
             DISCORD_BOT_TOKEN,
             TRANSACTION_CHANNEL,
             sequelize,
-            DEFAULT_TRANSACTION_MESSAGE
+            DEFAULT_TRANSACTION_MESSAGE,
+            adminRoles
         )
     );
 

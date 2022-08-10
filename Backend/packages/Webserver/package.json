@@ -6,7 +6,7 @@
   "license": "ISC",
   "scripts": {
     "start:fresh": "npx kill-port 3000 && yarn server",
-    "start": "yarn server",
+    "start": "npx kill-port 3000 && yarn server",
     "transpile": "yarn tsc",
     "clean": "rimraf dist-server",
     "build": "yarn clean && yarn transpile",

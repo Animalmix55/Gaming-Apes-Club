@@ -10,10 +10,13 @@ const SentOffChainListener = async (
     const { returnValues, transactionHash } = args;
     const { amount, userId } = returnValues;
 
-    if (await ProcessedGACXPMigrationEntity.findByPk(transactionHash)) {
+    const dbTx = await ProcessedGACXPMigrationEntity.findByPk(transactionHash);
+    if (dbTx) {
         console.log(
             `${transactionHash} already processed from event SentOffChain. Skipping.`
         );
+
+        return;
     }
 
     const amountAsNumber = Number(

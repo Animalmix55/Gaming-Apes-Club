@@ -1,3 +1,5 @@
+import { Listing } from './Listing';
+
 export interface Transaction {
     id: string | null;
     listingId: string;
@@ -12,6 +14,7 @@ export interface Transaction {
     refunded: boolean;
     refundedBy: string | null;
     refundDate: Date | null;
+    listing?: Listing;
 }
 
 export default Transaction;

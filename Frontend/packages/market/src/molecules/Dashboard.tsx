@@ -106,7 +106,7 @@ export const Dashboard = (props: DashboardProps): JSX.Element => {
                     icon={HistoryIcon}
                     themeType={ButtonType.secondary}
                 />
-                {...additionalItems ?? []}
+                {additionalItems ?? []}
             </>
         </DividedDashboard>
     );

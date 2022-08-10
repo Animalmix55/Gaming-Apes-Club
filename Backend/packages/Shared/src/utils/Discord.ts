@@ -1,4 +1,9 @@
-import { BitFieldResolvable, Client, IntentsString } from 'discord.js';
+import {
+    BitFieldResolvable,
+    Client,
+    IntentsString,
+    GuildMember,
+} from 'discord.js';
 
 export const getClient = async (
     token: string,
@@ -16,7 +21,46 @@ export const getGuildMember = async (
     guildId: string
 ) => {
     const guild = await client.guilds.fetch(guildId);
-    return guild.members.fetch(userId);
+    let result = await guild.members.cache.get(userId);
+    if (!result) result = await guild.members.fetch(userId);
+
+    return result;
+};
+
+export const getGuildMembers = async (
+    client: Client,
+    userIds: string[],
+    guildId: string
+) => {
+    const guild = await client.guilds.fetch(guildId);
+    const unprocessedIds = [...userIds];
+
+    const members: Record<string, GuildMember> = {};
+    for (let i = unprocessedIds.length - 1; i >= 0; i--) {
+        const id = unprocessedIds[i];
+
+        const member = guild.members.cache.get(id);
+        if (member) {
+            members[id] = member;
+            unprocessedIds.pop();
+        }
+    }
+
+    const remaining = unprocessedIds.length;
+    const groupSize = 100;
+    const groups = Math.ceil(remaining / groupSize);
+
+    for (let i = 0; i < groups; i++) {
+        const group = unprocessedIds.slice(i * groupSize, (i + 1) * groupSize);
+
+        // eslint-disable-next-line no-await-in-loop
+        const results = await guild.members.fetch({ user: group });
+        results.forEach((val, key) => {
+            members[key] = val;
+        });
+    }
+
+    return members;
 };
 
 export const sendMessage = async (

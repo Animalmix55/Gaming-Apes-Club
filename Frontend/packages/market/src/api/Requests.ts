@@ -1,5 +1,6 @@
 import axios, { AxiosRequestHeaders } from 'axios';
 import { BaseResponse } from './Models/BaseResponse';
+import { GuildMember } from './Models/GuildMember';
 import {
     Listing as ListingModel,
     ListingWithCount,
@@ -11,9 +12,9 @@ import { Member } from './Models/Member';
 import { Transaction as TransactionModel } from './Models/Transaction';
 import { User } from './Models/User';
 
-const getHeaders = (token: string): AxiosRequestHeaders => {
+const getHeaders = (token?: string): AxiosRequestHeaders => {
     const headers: AxiosRequestHeaders = {};
-    headers.Authorization = `Bearer ${token}`;
+    if (token) headers.Authorization = `Bearer ${token}`;
 
     return headers;
 };
@@ -148,6 +149,7 @@ export const Listing = {
 export interface TransactionGetResponse extends BaseResponse {
     results?: TransactionModel[];
     numRecords?: number;
+    users?: Record<string, GuildMember>;
 }
 
 export interface TransactionGetSignableMessageResponse extends BaseResponse {
@@ -167,7 +169,7 @@ export interface TransactionSendResponse
 export const Transaction = {
     async getByUserId(
         api: string,
-        token: string,
+        token: string | undefined,
         userId: string,
         offset = 0,
         pageSize = 1000
@@ -182,7 +184,7 @@ export const Transaction = {
 
     async getByListingId(
         api: string,
-        token: string,
+        token: string | undefined,
         listingId: string,
         offset = 0,
         pageSize = 1000
@@ -197,7 +199,7 @@ export const Transaction = {
 
     async getBulk(
         api: string,
-        token: string,
+        token: string | undefined,
         offset = 0,
         pageSize = 1000
     ): Promise<TransactionGetResponse> {

@@ -83,8 +83,10 @@ export const Divider = ({ className }: { className?: string }): JSX.Element => {
 
 export const TokenDisplay = ({
     amount,
+    negative,
 }: {
     amount?: BigNumber | number;
+    negative?: boolean;
 }): JSX.Element => {
     const number = React.useMemo(() => {
         if (typeof amount === 'number') return amount;
@@ -101,7 +103,17 @@ export const TokenDisplay = ({
                 alignItems: 'center',
             })}
         >
-            <span className={css(AccentTextStyles(theme))}>{number}</span>
+            <span
+                className={css({
+                    ...AccentTextStyles(theme),
+                    ...(negative && {
+                        color: theme.additionalPallette.red.toRgbaString(),
+                    }),
+                })}
+            >
+                {negative ? '-' : ''}
+                {number}
+            </span>
             <img
                 src={Icons.GACXP}
                 className={css({

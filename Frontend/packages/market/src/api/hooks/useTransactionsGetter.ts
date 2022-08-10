@@ -16,7 +16,6 @@ export const useTransactionsGetter = (): ((
 
     const queryFn = React.useCallback(
         (uid?: string, lid?: string, offset?: number, pageSize?: number) => {
-            if (!token) throw new Error('Missing token');
             if (!api) throw new Error('Missing api');
             if (lid && uid)
                 throw new Error('Cannot filter by both user and listing');
