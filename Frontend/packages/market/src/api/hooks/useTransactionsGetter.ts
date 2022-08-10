@@ -5,7 +5,9 @@ import { useAuthorizationContext } from '../../contexts/AuthorizationContext';
 import { Transaction, TransactionGetResponse } from '../Requests';
 import { TransactionsKey } from './useTransactions';
 
-export const useTransactionsGetter = (): ((
+export const useTransactionsGetter = (
+    loadUsers?: boolean
+): ((
     uid?: string | undefined,
     lid?: string | undefined,
     offset?: number | undefined,
@@ -26,7 +28,8 @@ export const useTransactionsGetter = (): ((
                     token,
                     uid,
                     offset,
-                    pageSize
+                    pageSize,
+                    loadUsers
                 );
             if (lid)
                 return Transaction.getByListingId(
@@ -34,11 +37,12 @@ export const useTransactionsGetter = (): ((
                     token,
                     lid,
                     offset,
-                    pageSize
+                    pageSize,
+                    loadUsers
                 );
-            return Transaction.getBulk(api, token, offset, pageSize);
+            return Transaction.getBulk(api, token, offset, pageSize, loadUsers);
         },
-        [api, token]
+        [api, loadUsers, token]
     );
 
     const result = useRequestGetter(queryFn, TransactionsKey);

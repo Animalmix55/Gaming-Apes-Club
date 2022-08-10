@@ -172,9 +172,12 @@ export const Transaction = {
         token: string | undefined,
         userId: string,
         offset = 0,
-        pageSize = 1000
+        pageSize = 1000,
+        loadUsers = false
     ): Promise<TransactionGetResponse> {
-        const url = `${api}/transaction/user/${userId}?offset=${offset}&pageSize=${pageSize}`;
+        const url = `${api}/transaction/user/${userId}?offset=${offset}&pageSize=${pageSize}&loadUsers=${String(
+            loadUsers
+        )}`;
 
         const headers = getHeaders(token);
         const { data } = await axios.get(url, { headers });
@@ -187,9 +190,12 @@ export const Transaction = {
         token: string | undefined,
         listingId: string,
         offset = 0,
-        pageSize = 1000
+        pageSize = 1000,
+        loadUsers = false
     ): Promise<TransactionGetResponse> {
-        const url = `${api}/transaction/listing/${listingId}?offset=${offset}&pageSize=${pageSize}`;
+        const url = `${api}/transaction/listing/${listingId}?offset=${offset}&pageSize=${pageSize}&loadUsers=${String(
+            loadUsers
+        )}`;
 
         const headers = getHeaders(token);
         const { data } = await axios.get(url, { headers });
@@ -201,9 +207,12 @@ export const Transaction = {
         api: string,
         token: string | undefined,
         offset = 0,
-        pageSize = 1000
+        pageSize = 1000,
+        loadUsers = false
     ): Promise<TransactionGetResponse> {
-        const url = `${api}/transaction?offset=${offset}&pageSize=${pageSize}`;
+        const url = `${api}/transaction?offset=${offset}&pageSize=${pageSize}&loadUsers=${String(
+            loadUsers
+        )}`;
 
         const headers = getHeaders(token);
         const { data } = await axios.get(url, { headers });

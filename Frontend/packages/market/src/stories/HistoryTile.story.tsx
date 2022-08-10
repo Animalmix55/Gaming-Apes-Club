@@ -3,11 +3,10 @@ import { useTransactionsGetter } from '../api/hooks/useTransactionsGetter';
 import { GuildMember } from '../api/Models/GuildMember';
 import { Transaction } from '../api/Models/Transaction';
 import { HistoryTile } from '../atoms/HistoryTile';
-import { ImageWithBadge } from '../atoms/ImageWithBadge';
 
 export default {
     title: 'Market/Atoms/HistoryTile',
-    component: ImageWithBadge,
+    component: HistoryTile,
 };
 
 export const StandAlone = ({ index }: { index: number }): JSX.Element => {

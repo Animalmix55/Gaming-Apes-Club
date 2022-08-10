@@ -43,6 +43,7 @@
     "@ethersproject/units": "^5.4.0"
   },
   "dependencies": {
+    "react-infinite-scroll-component": "^6.1.0",
     "@gac/shared": "^1.0.0",
     "@gac/shared-v2": "^1.0.0",
     "buffer": "^6.0.3",

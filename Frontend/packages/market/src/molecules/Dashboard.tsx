@@ -18,6 +18,7 @@ import { useAuthorizationContext } from '../contexts/AuthorizationContext';
 import { useGamingApeContext } from '../contexts/GamingApeClubContext';
 import { MigrateGACXPModal } from './MigrateGACXPModal';
 import { useLogin } from '../api/hooks/useLogin';
+import { HistoryModal } from './HistoryModal';
 
 export interface DashboardProps {
     className?: string;
@@ -32,6 +33,7 @@ export const Dashboard = (props: DashboardProps): JSX.Element => {
 
     const [loginModalOpen, setLoginModalOpen] = React.useState(false);
     const [migrateModalOpen, setMigrateModalOpen] = React.useState(false);
+    const [historyModalOpen, setHistoryModalOpen] = React.useState(false);
 
     const xpBalance = useBalance(discordId);
     const { accounts } = useWeb3(chainId);
@@ -51,6 +53,10 @@ export const Dashboard = (props: DashboardProps): JSX.Element => {
                 <MigrateGACXPModal
                     isOpen={migrateModalOpen}
                     onClose={(): void => setMigrateModalOpen(false)}
+                />
+                <HistoryModal
+                    isOpen={historyModalOpen}
+                    onClose={(): void => setHistoryModalOpen(false)}
                 />
                 {discordId && (
                     <DataBadge
@@ -105,6 +111,7 @@ export const Dashboard = (props: DashboardProps): JSX.Element => {
                     })}
                     icon={HistoryIcon}
                     themeType={ButtonType.secondary}
+                    onClick={(): void => setHistoryModalOpen(true)}
                 />
                 {additionalItems ?? []}
             </>

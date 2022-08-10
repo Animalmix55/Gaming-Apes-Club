@@ -100,8 +100,8 @@ export const getTransactionRouter = async (
     ]);
 
     // GET
-    const getMinuteLimiter = rateLimit({
-        windowMs: 30 * 1000, // 30 sec
+    const getLimiter = rateLimit({
+        windowMs: 5 * 1000, // 30 sec
         max: 5,
         standardHeaders: true,
         legacyHeaders: false,
@@ -121,7 +121,7 @@ export const getTransactionRouter = async (
         never,
         GetRequest,
         never
-    >('/user/:userId', getMinuteLimiter, async (req, res) => {
+    >('/user/:userId', getLimiter, async (req, res) => {
         const { query, params } = req;
         const { offset: offsetStr, pageSize: pageSizeStr, loadUsers } = query;
         const { userId } = params;
@@ -135,6 +135,7 @@ export const getTransactionRouter = async (
             ({ count, rows } = await StoredTransaction.findAndCountAll({
                 offset,
                 limit,
+                order: [['date', 'desc']],
                 where: {
                     user: userId,
                 },
@@ -181,7 +182,7 @@ export const getTransactionRouter = async (
         never,
         GetRequest,
         never
-    >('/listing/:listingId', getMinuteLimiter, async (req, res) => {
+    >('/listing/:listingId', getLimiter, async (req, res) => {
         const { query, params } = req;
         const { offset: offsetStr, pageSize: pageSizeStr, loadUsers } = query;
         const { listingId } = params;
@@ -195,6 +196,7 @@ export const getTransactionRouter = async (
             ({ count, rows } = await StoredTransaction.findAndCountAll({
                 offset,
                 limit,
+                order: [['date', 'desc']],
                 where: {
                     listingId,
                 },
@@ -243,7 +245,7 @@ export const getTransactionRouter = async (
         never,
         GetRequest,
         AuthLocals
-    >('/', getMinuteLimiter, async (req, res) => {
+    >('/', getLimiter, async (req, res) => {
         const { query } = req;
         const { offset: offsetStr, pageSize: pageSizeStr, loadUsers } = query;
 
@@ -256,6 +258,7 @@ export const getTransactionRouter = async (
             ({ count, rows } = await StoredTransaction.findAndCountAll({
                 offset,
                 limit,
+                order: [['date', 'desc']],
                 include: [
                     {
                         model: StoredListing,
