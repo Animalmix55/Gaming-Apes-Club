@@ -9,6 +9,7 @@ import {
     Sidebar,
     SidebarItem,
     SidebarItems,
+    TABLET,
     useWeb3,
     WalletLoginModal,
 } from '@gac/shared-v2';
@@ -147,6 +148,12 @@ export const MarketplacePage = (): JSX.Element => {
                     <Header
                         title="Gaming Ape Club's"
                         subtitle="Shopping Shack"
+                        className={css({
+                            [MOBILE]: {
+                                marginBottom: '40px',
+                                width: '100%',
+                            },
+                        })}
                     />
                     <Dashboard
                         additionalItems={
@@ -168,7 +175,10 @@ export const MarketplacePage = (): JSX.Element => {
                                   ]
                                 : undefined
                         }
-                        className={css({ marginLeft: 'auto' })}
+                        className={css({
+                            marginLeft: 'auto',
+                            [MOBILE]: { width: '100%' },
+                        })}
                     />
                 </div>
                 {selectedListing && (
@@ -182,11 +192,17 @@ export const MarketplacePage = (): JSX.Element => {
                     <div
                         className={css({
                             padding: '48px',
+                            [MOBILE]: {
+                                padding: '24px 0px',
+                            },
                         })}
                     >
                         <TagFilter
                             className={css({
                                 margin: '0px 0px 40px 0px',
+                                [MOBILE]: {
+                                    paddingLeft: '24px',
+                                },
                             })}
                             selectedTags={selectedFilterTags}
                             setSelectedTags={setSelectedFilterTags}
@@ -194,6 +210,18 @@ export const MarketplacePage = (): JSX.Element => {
                         <ListingGrid
                             onSelect={onItemSelect}
                             request={listingRequest}
+                            className={css({
+                                [MOBILE]: {
+                                    boxSizing: 'border-box',
+                                    width: '100%',
+                                    padding: '0px 24px',
+                                },
+                            })}
+                            itemClass={css({
+                                [MOBILE]: {
+                                    width: '100%',
+                                },
+                            })}
                         />
                     </div>
                 )}

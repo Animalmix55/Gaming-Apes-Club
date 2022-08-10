@@ -9,10 +9,11 @@ interface Props {
     request: RequestResult<GetListingResponse>;
     onSelect?: (listingIndex: number) => void;
     className?: string;
+    itemClass?: string;
 }
 
 export const ListingGrid = (props: Props): JSX.Element => {
-    const { onSelect, className, request } = props;
+    const { onSelect, className, request, itemClass } = props;
     const { data: listings, isError, isLoading } = request;
 
     const [css] = useStyletron();
@@ -37,7 +38,13 @@ export const ListingGrid = (props: Props): JSX.Element => {
                         key={r.id}
                         listing={r}
                         onClick={(): void => onSelect?.(i)}
-                        className={css({ margin: '12px' })}
+                        className={ClassNameBuilder(
+                            itemClass,
+                            css({
+                                margin: '12px',
+                                boxSizing: 'border-box',
+                            })
+                        )}
                     />
                 ))}
         </div>

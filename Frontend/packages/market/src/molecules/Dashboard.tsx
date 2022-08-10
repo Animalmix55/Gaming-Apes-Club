@@ -6,6 +6,8 @@ import {
     TokenDisplay,
     DividedDashboard,
     ButtonType,
+    useMatchMediaQuery,
+    MOBILE,
 } from '@gac/shared-v2';
 import PolygonLogo from '@gac/shared-v2/lib/assets/svg/PolygonTransparent.svg';
 import HistoryIcon from '@gac/shared-v2/lib/assets/svg/Buyhistory.svg';
@@ -31,6 +33,7 @@ export const Dashboard = (props: DashboardProps): JSX.Element => {
     const { claims } = useAuthorizationContext();
     const discordId = claims?.id;
 
+    const isMobile = useMatchMediaQuery(MOBILE);
     const [loginModalOpen, setLoginModalOpen] = React.useState(false);
     const [migrateModalOpen, setMigrateModalOpen] = React.useState(false);
     const [historyModalOpen, setHistoryModalOpen] = React.useState(false);
@@ -65,13 +68,15 @@ export const Dashboard = (props: DashboardProps): JSX.Element => {
                         lowerElement={
                             <TokenDisplay amount={xpBalance.data ?? 0} />
                         }
-                        className={css({ padding: '0 16px' })}
+                        className={css({
+                            padding: '0 16px',
+                        })}
                     />
                 )}
                 {!discordId && (
                     <Button
                         themeType={ButtonType.primary}
-                        text="Discord"
+                        text={isMobile ? undefined : 'Discord'}
                         icon={DiscordLogo}
                         className={css({
                             marginRight: account ? '16px' : undefined,
@@ -80,7 +85,7 @@ export const Dashboard = (props: DashboardProps): JSX.Element => {
                         disabled={isLoggingIn}
                     />
                 )}
-                {!account && (
+                {!account && !isMobile && (
                     <Button
                         themeType={ButtonType.primary}
                         text="Web3"
@@ -93,19 +98,25 @@ export const Dashboard = (props: DashboardProps): JSX.Element => {
                         disabled={isLoggingIn}
                     />
                 )}
+                <div
+                    className={css({
+                        [MOBILE]: { marginRight: 'auto', display: 'block' },
+                        display: 'none',
+                    })}
+                />
             </>
             <>
                 {account && (
                     <Button
                         themeType={ButtonType.secondary}
-                        text="Migrate XP"
+                        text={isMobile ? undefined : 'Migrate XP'}
                         className={css({ marginLeft: '16px' })}
                         onClick={(): void => setMigrateModalOpen(true)}
                         icon={PolygonLogo}
                     />
                 )}
                 <Button
-                    text="History"
+                    text={isMobile ? undefined : 'History'}
                     className={css({
                         marginLeft: '16px',
                     })}

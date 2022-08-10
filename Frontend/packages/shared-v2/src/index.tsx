@@ -37,3 +37,4 @@ export * from './atoms/DividedDashboard';
 export * from './atoms/DataBadge';
 export * from './utilties/SidebarItems';
 export * from './atoms/HexagonContainer';
+export * from './hooks/useMatchMediaQuery';
