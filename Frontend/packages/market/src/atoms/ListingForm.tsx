@@ -129,397 +129,389 @@ export const ListingForm = (props: Props): JSX.Element => {
                 }
                 disabled={!!disabled}
             />
-            <ThemeProvider
-                applyTo="none"
-                theme={{
-                    palette: {
-                        themePrimary:
-                            theme.foregroundPallette.accent.toRgbaString(),
-                        neutralPrimary:
-                            theme.foregroundPallette.white.toRgbaString(),
-                        neutralDark:
-                            theme.foregroundPallette.white.toRgbaString(),
-                        black: theme.foregroundPallette.black.toRgbaString(),
-                        white: theme.foregroundPallette.white.toRgbaString(),
-                    },
-                }}
+
+            <div
+                className={ClassNameBuilder(
+                    className,
+                    css({
+                        display: 'flex',
+                        flexDirection: 'column',
+                        justifyContent: 'center',
+                        alignContent: 'center',
+                        background:
+                            theme.backgroundPallette.light.toRgbaString(),
+                        padding: '10px',
+                        borderRadius: '8px',
+                    })
+                )}
             >
                 <div
-                    className={ClassNameBuilder(
-                        className,
-                        css({
-                            display: 'flex',
-                            flexDirection: 'column',
-                            justifyContent: 'center',
-                            alignContent: 'center',
-                            background:
-                                theme.backgroundPallette.light.toRgbaString(),
-                            padding: '10px',
-                            borderRadius: '8px',
-                        })
-                    )}
+                    className={css({
+                        display: 'flex',
+                        flex: '1',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        overflow: 'auto',
+                        flexWrap: 'wrap',
+                    })}
                 >
                     <div
                         className={css({
                             display: 'flex',
-                            flex: '1',
-                            alignItems: 'center',
                             justifyContent: 'center',
-                            overflow: 'auto',
-                            flexWrap: 'wrap',
                         })}
                     >
-                        <div
+                        <ListingTile
+                            listing={{
+                                ...convertToListing(listing),
+                                id: '',
+                                createdBy: '',
+                                createdOn: new Date(),
+                            }}
                             className={css({
-                                display: 'flex',
-                                justifyContent: 'center',
+                                margin: '5px',
                             })}
-                        >
-                            <ListingTile
-                                listing={{
-                                    ...convertToListing(listing),
-                                    id: '',
-                                    createdBy: '',
-                                    createdOn: new Date(),
-                                }}
+                        />
+                    </div>
+                    <ThemeProvider
+                        className={css({
+                            minWidth: '250px',
+                            padding: '5px',
+                        })}
+                        applyTo="none"
+                        theme={{
+                            palette: {
+                                themePrimary:
+                                    theme.foregroundPallette.accent.toRgbaString(),
+                                neutralPrimary:
+                                    theme.foregroundPallette.white.toRgbaString(),
+                                neutralDark:
+                                    theme.foregroundPallette.white.toRgbaString(),
+                                black: theme.foregroundPallette.black.toRgbaString(),
+                                white: theme.foregroundPallette.white.toRgbaString(),
+                            },
+                        }}
+                    >
+                        <TextField
+                            disabled={formDisabled}
+                            className={fieldClass}
+                            styles={styles}
+                            label="Title"
+                            value={title}
+                            onChange={(_, v): void =>
+                                onChange(
+                                    convertToListing({
+                                        ...listing,
+                                        title: v,
+                                    })
+                                )
+                            }
+                        />
+                        <TextField
+                            disabled={formDisabled}
+                            className={fieldClass}
+                            label="Description"
+                            value={description}
+                            styles={styles}
+                            multiline
+                            resizable={false}
+                            onChange={(_, v): void =>
+                                onChange(
+                                    convertToListing({
+                                        ...listing,
+                                        description: v,
+                                    })
+                                )
+                            }
+                        />
+                        <TextField
+                            disabled={formDisabled}
+                            className={fieldClass}
+                            label="Discord Message"
+                            description="The message sent to the GAC Shack discord channel after the transaction completes"
+                            value={discordMessage ?? undefined}
+                            placeholder={defaultDiscordMessage}
+                            styles={styles}
+                            multiline
+                            resizable={false}
+                            onClick={(): void => setDiscordHelpModalOpen(true)}
+                            onChange={(_, v): void =>
+                                onChange(
+                                    convertToListing({
+                                        ...listing,
+                                        discordMessage: v,
+                                    })
+                                )
+                            }
+                        />
+                        <TextField
+                            disabled={formDisabled}
+                            className={fieldClass}
+                            label="Image Url"
+                            styles={styles}
+                            value={image}
+                            onChange={(_, v): void =>
+                                onChange(
+                                    convertToListing({
+                                        ...listing,
+                                        image: v,
+                                    })
+                                )
+                            }
+                        />
+                        <TextField
+                            disabled={formDisabled}
+                            className={fieldClass}
+                            label="Price"
+                            type="number"
+                            styles={styles}
+                            min={0}
+                            value={String(price || 0)}
+                            onChange={(_, v): void =>
+                                onChange({
+                                    ...listing,
+                                    price: Number(v || 0),
+                                })
+                            }
+                        />
+                        <TextField
+                            disabled={formDisabled}
+                            className={fieldClass}
+                            label="Maximum Supply (zero for no max)"
+                            type="number"
+                            min={0}
+                            styles={styles}
+                            value={String(supply || 0)}
+                            onChange={(_, v): void =>
+                                onChange({
+                                    ...listing,
+                                    supply: v ? Number(v) : null,
+                                })
+                            }
+                        />
+                        <TextField
+                            disabled={formDisabled}
+                            className={fieldClass}
+                            label="Max Per User (zero for no max)"
+                            type="number"
+                            min={0}
+                            styles={styles}
+                            value={String(maxPerUser || 0)}
+                            onChange={(_, v): void =>
+                                onChange({
+                                    ...listing,
+                                    maxPerUser: v ? Number(v) : null,
+                                })
+                            }
+                        />
+                        <RolesDropdown
+                            label="Applicable Roles (none for all)"
+                            onSelect={(v): void =>
+                                onChange({ ...listing, roles: v })
+                            }
+                            selectedKeys={listing.roles}
+                            multiSelect
+                            disabled={formDisabled}
+                            className={fieldClass}
+                            onClear={(): void => {
+                                onChange({
+                                    ...listing,
+                                    roles: [],
+                                });
+                            }}
+                        />
+                        <RolesDropdown
+                            label="Resultant Role"
+                            onClear={(): void => {
+                                onChange({
+                                    ...listing,
+                                    resultantRole: null,
+                                });
+                            }}
+                            onSelect={(v): void =>
+                                onChange({
+                                    ...listing,
+                                    resultantRole:
+                                        listing.resultantRole === v[0]
+                                            ? null
+                                            : v[0],
+                                })
+                            }
+                            selectedKeys={
+                                listing.resultantRole
+                                    ? [listing.resultantRole]
+                                    : []
+                            }
+                            disabled={formDisabled}
+                            className={fieldClass}
+                        />
+                        <div className={fieldClass}>
+                            <Label>Active Range</Label>
+                            <div
                                 className={css({
-                                    margin: '5px',
+                                    display: 'flex',
+                                    justifyContent: 'center',
+                                    alignItems: 'center',
+                                    [MOBILE]: {
+                                        flexWrap: 'wrap',
+                                    },
                                 })}
-                            />
-                        </div>
-                        <div
-                            className={css({
-                                minWidth: '250px',
-                                padding: '5px',
-                            })}
-                        >
-                            <TextField
-                                disabled={formDisabled}
-                                className={fieldClass}
-                                styles={styles}
-                                label="Title"
-                                value={title}
-                                onChange={(_, v): void =>
-                                    onChange(
-                                        convertToListing({
+                            >
+                                <DateTimePicker
+                                    disabled={formDisabled}
+                                    className={css({
+                                        backgroundColor: 'white',
+                                        flexGrow: 1,
+                                        marginRight: '5px',
+                                    })}
+                                    value={
+                                        startDate !== null
+                                            ? new Date(startDate)
+                                            : undefined
+                                    }
+                                    onChange={(v?: Date): void => {
+                                        if (
+                                            endDate !== null &&
+                                            v &&
+                                            v.valueOf() > Date.parse(endDate)
+                                        ) {
+                                            onChange({
+                                                ...listing,
+                                                startDate: endDate,
+                                            });
+
+                                            return;
+                                        }
+
+                                        onChange({
                                             ...listing,
-                                            title: v,
-                                        })
-                                    )
-                                }
-                            />
-                            <TextField
-                                disabled={formDisabled}
-                                className={fieldClass}
-                                label="Description"
-                                value={description}
-                                styles={styles}
-                                multiline
-                                resizable={false}
-                                onChange={(_, v): void =>
-                                    onChange(
-                                        convertToListing({
-                                            ...listing,
-                                            description: v,
-                                        })
-                                    )
-                                }
-                            />
-                            <TextField
-                                disabled={formDisabled}
-                                className={fieldClass}
-                                label="Discord Message"
-                                description="The message sent to the GAC Shack discord channel after the transaction completes"
-                                value={discordMessage ?? undefined}
-                                placeholder={defaultDiscordMessage}
-                                styles={styles}
-                                multiline
-                                resizable={false}
-                                onClick={(): void =>
-                                    setDiscordHelpModalOpen(true)
-                                }
-                                onChange={(_, v): void =>
-                                    onChange(
-                                        convertToListing({
-                                            ...listing,
-                                            discordMessage: v,
-                                        })
-                                    )
-                                }
-                            />
-                            <TextField
-                                disabled={formDisabled}
-                                className={fieldClass}
-                                label="Image Url"
-                                styles={styles}
-                                value={image}
-                                onChange={(_, v): void =>
-                                    onChange(
-                                        convertToListing({
-                                            ...listing,
-                                            image: v,
-                                        })
-                                    )
-                                }
-                            />
-                            <TextField
-                                disabled={formDisabled}
-                                className={fieldClass}
-                                label="Price"
-                                type="number"
-                                styles={styles}
-                                min={0}
-                                value={String(price || 0)}
-                                onChange={(_, v): void =>
-                                    onChange({
-                                        ...listing,
-                                        price: Number(v || 0),
-                                    })
-                                }
-                            />
-                            <TextField
-                                disabled={formDisabled}
-                                className={fieldClass}
-                                label="Maximum Supply (zero for no max)"
-                                type="number"
-                                min={0}
-                                styles={styles}
-                                value={String(supply || 0)}
-                                onChange={(_, v): void =>
-                                    onChange({
-                                        ...listing,
-                                        supply: v ? Number(v) : null,
-                                    })
-                                }
-                            />
-                            <TextField
-                                disabled={formDisabled}
-                                className={fieldClass}
-                                label="Max Per User (zero for no max)"
-                                type="number"
-                                min={0}
-                                styles={styles}
-                                value={String(maxPerUser || 0)}
-                                onChange={(_, v): void =>
-                                    onChange({
-                                        ...listing,
-                                        maxPerUser: v ? Number(v) : null,
-                                    })
-                                }
-                            />
-                            <RolesDropdown
-                                label="Applicable Roles (none for all)"
-                                onSelect={(v): void =>
-                                    onChange({ ...listing, roles: v })
-                                }
-                                selectedKeys={listing.roles}
-                                multiSelect
-                                disabled={formDisabled}
-                                className={fieldClass}
-                                onClear={(): void => {
-                                    onChange({
-                                        ...listing,
-                                        roles: [],
-                                    });
-                                }}
-                            />
-                            <RolesDropdown
-                                label="Resultant Role"
-                                onClear={(): void => {
-                                    onChange({
-                                        ...listing,
-                                        resultantRole: null,
-                                    });
-                                }}
-                                onSelect={(v): void =>
-                                    onChange({
-                                        ...listing,
-                                        resultantRole:
-                                            listing.resultantRole === v[0]
-                                                ? null
-                                                : v[0],
-                                    })
-                                }
-                                selectedKeys={
-                                    listing.resultantRole
-                                        ? [listing.resultantRole]
-                                        : []
-                                }
-                                disabled={formDisabled}
-                                className={fieldClass}
-                            />
-                            <div className={fieldClass}>
-                                <Label>Active Range</Label>
+                                            startDate: v
+                                                ? v.toISOString()
+                                                : null,
+                                        });
+                                    }}
+                                />
                                 <div
                                     className={css({
-                                        display: 'flex',
-                                        justifyContent: 'center',
-                                        alignItems: 'center',
-                                        [MOBILE]: {
-                                            flexWrap: 'wrap',
-                                        },
+                                        color: theme.foregroundPallette.accent.toRgbaString(),
+                                        fontWeight: 'bold',
                                     })}
                                 >
-                                    <DateTimePicker
-                                        disabled={formDisabled}
-                                        className={css({
-                                            backgroundColor: 'white',
-                                            flexGrow: 1,
-                                            marginRight: '5px',
-                                        })}
-                                        value={
-                                            startDate !== null
-                                                ? new Date(startDate)
-                                                : undefined
-                                        }
-                                        onChange={(v?: Date): void => {
-                                            if (
-                                                endDate !== null &&
-                                                v &&
-                                                v.valueOf() >
-                                                    Date.parse(endDate)
-                                            ) {
-                                                onChange({
-                                                    ...listing,
-                                                    startDate: endDate,
-                                                });
-
-                                                return;
-                                            }
-
-                                            onChange({
-                                                ...listing,
-                                                startDate: v
-                                                    ? v.toISOString()
-                                                    : null,
-                                            });
-                                        }}
-                                    />
-                                    <div
-                                        className={css({
-                                            color: theme.foregroundPallette.accent.toRgbaString(),
-                                            fontWeight: 'bold',
-                                        })}
-                                    >
-                                        {' → '}
-                                    </div>
-                                    <DateTimePicker
-                                        disabled={formDisabled}
-                                        className={css({
-                                            backgroundColor: 'white',
-                                            marginLeft: '5px',
-                                            flexGrow: 1,
-                                            [MOBILE]: {
-                                                marginLeft: 'unset',
-                                            },
-                                        })}
-                                        value={
-                                            endDate !== null
-                                                ? new Date(endDate)
-                                                : undefined
-                                        }
-                                        onChange={(v?: Date): void => {
-                                            if (
-                                                startDate !== null &&
-                                                v &&
-                                                v.valueOf() <
-                                                    Date.parse(startDate)
-                                            ) {
-                                                onChange({
-                                                    ...listing,
-                                                    endDate: startDate,
-                                                });
-
-                                                return;
-                                            }
-
-                                            onChange({
-                                                ...listing,
-                                                endDate: v
-                                                    ? v.toISOString()
-                                                    : null,
-                                            });
-                                        }}
-                                    />
+                                    {' → '}
                                 </div>
+                                <DateTimePicker
+                                    disabled={formDisabled}
+                                    className={css({
+                                        backgroundColor: 'white',
+                                        marginLeft: '5px',
+                                        flexGrow: 1,
+                                        [MOBILE]: {
+                                            marginLeft: 'unset',
+                                        },
+                                    })}
+                                    value={
+                                        endDate !== null
+                                            ? new Date(endDate)
+                                            : undefined
+                                    }
+                                    onChange={(v?: Date): void => {
+                                        if (
+                                            startDate !== null &&
+                                            v &&
+                                            v.valueOf() < Date.parse(startDate)
+                                        ) {
+                                            onChange({
+                                                ...listing,
+                                                endDate: startDate,
+                                            });
+
+                                            return;
+                                        }
+
+                                        onChange({
+                                            ...listing,
+                                            endDate: v ? v.toISOString() : null,
+                                        });
+                                    }}
+                                />
                             </div>
-                            <TagSelector
-                                className={fieldClass}
-                                disabled={formDisabled}
-                                selection={listing.tags || []}
-                                onChange={(tags): void => {
-                                    onChange({
-                                        ...listing,
-                                        tags,
-                                    });
-                                }}
-                            />
-                            <Checkbox
-                                disabled={formDisabled}
-                                className={fieldClass}
-                                label="Requires NFT Ownership"
-                                styles={styles}
-                                checked={!!requiresHoldership}
-                                onChange={(_, v): void =>
-                                    onChange({
-                                        ...listing,
-                                        requiresHoldership: !!v,
-                                    })
-                                }
-                            />
-                            <Checkbox
-                                disabled={formDisabled}
-                                className={fieldClass}
-                                label="Requires Address Entry"
-                                styles={styles}
-                                checked={!!requiresLinkedAddress}
-                                onChange={(_, v): void =>
-                                    onChange({
-                                        ...listing,
-                                        requiresLinkedAddress: !!v,
-                                    })
-                                }
-                            />
-                            <Checkbox
-                                disabled={formDisabled}
-                                className={fieldClass}
-                                label="Disable"
-                                styles={styles}
-                                checked={!!disabled}
-                                onChange={(_, v): void =>
-                                    onChange({ ...listing, disabled: !!v })
-                                }
-                            />
                         </div>
-                    </div>
-                    {onSave && (
-                        <div
-                            className={css({
-                                display: 'flex',
-                                justifyContent: 'center',
-                                alignItems: 'center',
-                                margin: '10px',
-                            })}
-                        >
-                            <Button
-                                themeType={ButtonType.primary}
-                                disabled={formDisabled}
-                                onClick={(): void => onSave?.(listing)}
-                                className={css({
-                                    fontSize: '35px',
-                                    height: 'unset !important',
-                                })}
-                                text={((): string => {
-                                    if (error) return error;
-                                    if (isLoading) return 'Loading';
-                                    if (isSuccess) return 'Success';
-                                    return 'Save';
-                                })()}
-                            />
-                        </div>
-                    )}
+                        <TagSelector
+                            className={fieldClass}
+                            disabled={formDisabled}
+                            selection={listing.tags || []}
+                            onChange={(tags): void => {
+                                onChange({
+                                    ...listing,
+                                    tags,
+                                });
+                            }}
+                        />
+                        <Checkbox
+                            disabled={formDisabled}
+                            className={fieldClass}
+                            label="Requires NFT Ownership"
+                            styles={styles}
+                            checked={!!requiresHoldership}
+                            onChange={(_, v): void =>
+                                onChange({
+                                    ...listing,
+                                    requiresHoldership: !!v,
+                                })
+                            }
+                        />
+                        <Checkbox
+                            disabled={formDisabled}
+                            className={fieldClass}
+                            label="Requires Address Entry"
+                            styles={styles}
+                            checked={!!requiresLinkedAddress}
+                            onChange={(_, v): void =>
+                                onChange({
+                                    ...listing,
+                                    requiresLinkedAddress: !!v,
+                                })
+                            }
+                        />
+                        <Checkbox
+                            disabled={formDisabled}
+                            className={fieldClass}
+                            label="Disable"
+                            styles={styles}
+                            checked={!!disabled}
+                            onChange={(_, v): void =>
+                                onChange({ ...listing, disabled: !!v })
+                            }
+                        />
+                    </ThemeProvider>
                 </div>
-            </ThemeProvider>
+                {onSave && (
+                    <div
+                        className={css({
+                            display: 'flex',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            margin: '10px',
+                        })}
+                    >
+                        <Button
+                            themeType={ButtonType.primary}
+                            disabled={formDisabled}
+                            onClick={(): void => onSave?.(listing)}
+                            className={css({
+                                fontSize: '35px',
+                                height: 'unset !important',
+                            })}
+                            text={((): string => {
+                                if (error) return error;
+                                if (isLoading) return 'Loading';
+                                if (isSuccess) return 'Success';
+                                return 'Save';
+                            })()}
+                        />
+                    </div>
+                )}
+            </div>
         </>
     );
 };

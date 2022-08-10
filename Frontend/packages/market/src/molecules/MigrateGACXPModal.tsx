@@ -1,6 +1,7 @@
 import { TextField } from '@fluentui/react';
-import { GlowButton } from '@gac/shared';
 import {
+    Button,
+    ButtonType,
     Modal,
     useERC20Balance,
     useThemeContext,
@@ -49,7 +50,10 @@ export const MigrateGACXPModal = (
             modalClass={css({
                 fontFamily: theme.font,
                 color: theme.foregroundPallette.white.toRgbaString(),
-                maxWidth: '400px',
+                maxWidth: '450px !important',
+                overflow: 'auto',
+                display: 'flex',
+                flexDirection: 'column',
             })}
         >
             <div className={css({ fontWeight: 900, fontSize: '30px' })}>
@@ -75,54 +79,53 @@ export const MigrateGACXPModal = (
             >
                 Current On-Chain Balance
             </div>
-            <div>
-                <LocalBalanceWidget
-                    balance={balance.data ?? 0}
-                    isLoading={balance.isLoading}
-                />
-                <TextField
-                    className={css({ marginTop: '10px' })}
-                    label="Conversion Amount"
-                    type="number"
-                    styles={{
-                        root: {
-                            '.ms-Label': {
-                                color: theme.foregroundPallette.white.toRgbaString(),
-                                fontFamily: theme.font,
-                            },
+            <LocalBalanceWidget
+                balance={balance.data ?? 0}
+                isLoading={balance.isLoading}
+            />
+            <TextField
+                className={css({ marginTop: '10px' })}
+                label="Conversion Amount"
+                type="number"
+                styles={{
+                    root: {
+                        '.ms-Label': {
+                            color: theme.foregroundPallette.white.toRgbaString(),
+                            fontFamily: theme.font,
                         },
-                    }}
-                    max={integerBalance ?? 0}
-                    min={0}
-                    step={1}
-                    value={String(amount)}
-                    placeholder="Amount to convert"
-                    disabled={!integerBalance || mutator.isLoading}
-                    onChange={(_, newValue): void => {
-                        setAmount(Math.round(Number(newValue ?? 0)));
-                    }}
-                />
-                <GlowButton
-                    disabled={
-                        !integerBalance || mutator.isLoading || amount === 0
-                    }
-                    className={css({
-                        marginTop: '10px',
-                        height: '60px',
-                        width: '100%',
-                        justifyContent: 'center',
-                    })}
-                    onClick={(): void =>
-                        mutator.mutate([
-                            BigNumber.from(amount).mul(String(10 ** 18)),
-                        ])
-                    }
-                >
-                    {mutator.isLoading
+                        marginBottom: 'auto',
+                    },
+                }}
+                max={integerBalance ?? 0}
+                min={0}
+                step={1}
+                value={String(amount)}
+                placeholder="Amount to convert"
+                disabled={!integerBalance || mutator.isLoading}
+                onChange={(_, newValue): void => {
+                    setAmount(Math.round(Number(newValue ?? 0)));
+                }}
+            />
+            <Button
+                themeType={ButtonType.primary}
+                disabled={!integerBalance || mutator.isLoading || amount === 0}
+                className={css({
+                    marginTop: '10px',
+                    height: '60px',
+                    width: '100%',
+                    justifyContent: 'center',
+                })}
+                onClick={(): void =>
+                    mutator.mutate([
+                        BigNumber.from(amount).mul(String(10 ** 18)),
+                    ])
+                }
+                text={
+                    mutator.isLoading
                         ? 'Converting...'
-                        : `Convert ${amount} GACXP`}
-                </GlowButton>
-            </div>
+                        : `Convert ${amount} GACXP`
+                }
+            />
         </Modal>
     );
 };

@@ -1,3 +1,4 @@
+import { MOBILE } from '@gac/shared';
 import { Button, ButtonType, useThemeContext, Modal } from '@gac/shared-v2';
 import React from 'react';
 import { useStyletron } from 'styletron-react';
@@ -21,7 +22,11 @@ const CreateListingModal = ({
                     boxSizing: 'border-box',
                     backgroundColor: 'unset !important',
                     overflow: 'auto',
+                    maxHeight: '80vh',
                     height: '100%',
+                    [MOBILE]: {
+                        maxHeight: 'unset',
+                    },
                 })}
                 setListingId={onSave}
             />

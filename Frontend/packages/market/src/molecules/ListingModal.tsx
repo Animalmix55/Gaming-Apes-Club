@@ -317,9 +317,11 @@ export const ListingModal = (props: Props): JSX.Element => {
                             {new Date(endDate).toLocaleTimeString()}
                         </div>
                     )}
-                    <div className={css({ marginTop: '8px' })}>
-                        <TokenDisplay amount={price} />
-                    </div>
+                    {isMobile && (
+                        <div className={css({ marginTop: '8px' })}>
+                            <TokenDisplay amount={price} />
+                        </div>
+                    )}
                     <div
                         className={css({
                             color: theme.foregroundPallette.white.toRgbaString(),

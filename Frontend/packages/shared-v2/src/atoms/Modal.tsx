@@ -91,6 +91,10 @@ export const Modal = (props: ModalProps): JSX.Element | null => {
                             minHeight: '200px',
                             minWidth: '200px',
                             boxShadow: theme.shadowPallette.rainbow,
+                            maxHeight: '100%',
+                            maxWidth: '100%',
+                            backgroundColor:
+                                theme.backgroundPallette.dark.toRgbaString(),
                             [MOBILE]: {
                                 height: '100%',
                                 width: '100%',
