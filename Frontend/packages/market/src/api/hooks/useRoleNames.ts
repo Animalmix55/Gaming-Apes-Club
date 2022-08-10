@@ -1,4 +1,4 @@
-import { RequestResult } from '@gac/shared';
+import { RequestResult } from '@gac/shared-v2';
 import React from 'react';
 import { useRoles } from './useRoles';
 

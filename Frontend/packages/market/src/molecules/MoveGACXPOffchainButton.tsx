@@ -1,5 +1,4 @@
-import { ClassNameBuilder } from '@gac/shared';
-import { Button, Icons } from '@gac/shared-v2';
+import { Button, Icons, ClassNameBuilder } from '@gac/shared-v2';
 import React from 'react';
 import { useStyletron } from 'styletron-react';
 import { MigrateGACXPModal } from './MigrateGACXPModal';

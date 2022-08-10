@@ -9,7 +9,7 @@ import {
     SpinnerSize,
 } from '@fluentui/react';
 import { useStyletron } from 'styletron-react';
-import { GlowButton, useThemeContext } from '@gac/shared';
+import { Button, ButtonType, useThemeContext } from '@gac/shared-v2';
 import { v4 } from 'uuid';
 import { useTags } from '../api/hooks/useTags';
 import { ListingTag } from '../api/Models/ListingTag';
@@ -43,32 +43,32 @@ export const TagSelector = (props: TagSelectorProps): JSX.Element => {
                 text: r.displayName,
                 styles: {
                     root: {
-                        color: `${theme.fontColors.accent.toRgbaString()} !important`,
+                        color: `${theme.foregroundPallette.accent.toRgbaString()} !important`,
                     },
                     rootHovered: {
-                        backgroundColor: `${theme.backgroundColor.dark.toRgbaString(
+                        backgroundColor: `${theme.backgroundPallette.dark.toRgbaString(
                             0.4
                         )} !important`,
                     },
                     rootFocused: {
-                        backgroundColor: `${theme.backgroundColor.dark.toRgbaString(
+                        backgroundColor: `${theme.backgroundPallette.dark.toRgbaString(
                             0.7
                         )} !important`,
                     },
                     rootChecked: {
-                        backgroundColor: `${theme.backgroundColor.dark.toRgbaString(
+                        backgroundColor: `${theme.backgroundPallette.dark.toRgbaString(
                             0.7
                         )} !important`,
-                        color: `${theme.fontColors.light.toRgbaString()} !important`,
+                        color: `${theme.foregroundPallette.white.toRgbaString()} !important`,
                     },
                 },
             })
         );
     }, [
         allTags,
-        theme.backgroundColor.dark,
-        theme.fontColors.accent,
-        theme.fontColors.light,
+        theme.backgroundPallette.dark,
+        theme.foregroundPallette.accent,
+        theme.foregroundPallette.white,
     ]);
 
     const onChangeInner = React.useCallback(
@@ -100,16 +100,16 @@ export const TagSelector = (props: TagSelectorProps): JSX.Element => {
             );
 
         return (
-            <GlowButton
-                className={css({ width: '100%', height: '30px' })}
+            <Button
+                themeType={ButtonType.primary}
+                className={css({ width: '100%', justifyContent: 'center' })}
                 onClick={(): void => {
                     const tag = prompt("What's the tag?");
                     if (!tag) return;
                     setAllTags((t) => [...t, { displayName: tag, id: v4() }]);
                 }}
-            >
-                New
-            </GlowButton>
+                text="New"
+            />
         );
     }, [css, tokenRequest.isLoading]);
 
@@ -122,13 +122,13 @@ export const TagSelector = (props: TagSelectorProps): JSX.Element => {
         <ComboBox
             styles={{
                 callout: {
-                    background: theme.backgroundGradients.purpleBlue,
+                    background: theme.backgroundPallette.light.toRgbaString(),
                     '.ms-Callout-main': {
                         background: 'unset',
                     },
                 },
                 input: {
-                    color: `${theme.fontColors.dark.toRgbaString()} !important`,
+                    color: `${theme.foregroundPallette.black.toRgbaString()} !important`,
                 },
             }}
             options={options}

@@ -1,4 +1,4 @@
-import { useCurrentTime } from '@gac/shared';
+import { useCurrentTime } from '@gac/shared-v2';
 import decodeJWT from 'jwt-decode';
 import React from 'react';
 import { LoginPostResponse } from '../api/Requests';

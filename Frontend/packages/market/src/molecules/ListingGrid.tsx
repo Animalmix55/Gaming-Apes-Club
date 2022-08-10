@@ -1,5 +1,5 @@
 import { Spinner, SpinnerSize } from '@fluentui/react';
-import { ClassNameBuilder, RequestResult } from '@gac/shared';
+import { ClassNameBuilder, RequestResult } from '@gac/shared-v2';
 import React from 'react';
 import { useStyletron } from 'styletron-react';
 import { GetListingResponse } from '../api/Requests';

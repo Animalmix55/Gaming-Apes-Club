@@ -1,5 +1,5 @@
 import React from 'react';
-import { useRequestGetter } from '@gac/shared';
+import { useRequestGetter } from '@gac/shared-v2';
 import { useGamingApeContext } from '../../contexts/GamingApeClubContext';
 import { useAuthorizationContext } from '../../contexts/AuthorizationContext';
 import { Transaction, TransactionGetResponse } from '../Requests';

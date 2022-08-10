@@ -8,6 +8,7 @@ import {
     ButtonType,
     useMatchMediaQuery,
     MOBILE,
+    ClassNameBuilder,
 } from '@gac/shared-v2';
 import PolygonLogo from '@gac/shared-v2/lib/assets/svg/PolygonTransparent.svg';
 import HistoryIcon from '@gac/shared-v2/lib/assets/svg/Buyhistory.svg';
@@ -15,7 +16,6 @@ import ETHLogo from '@gac/shared-v2/lib/assets/png/symbol/ETH White.png';
 import DiscordLogo from '@gac/shared-v2/lib/assets/png/action/Discord.png';
 import React from 'react';
 import { useStyletron } from 'styletron-react';
-import { ClassNameBuilder } from '@gac/shared';
 import { useBalance } from '../api/hooks/useBalance';
 import { useAuthorizationContext } from '../contexts/AuthorizationContext';
 import { useGamingApeContext } from '../contexts/GamingApeClubContext';
@@ -118,7 +118,7 @@ export const Dashboard = (props: DashboardProps): JSX.Element => {
                 />
             </>
             <>
-                {account && (
+                {account && discordId && (
                     <Button
                         themeType={ButtonType.secondary}
                         text={isMobile ? undefined : 'Migrate XP'}

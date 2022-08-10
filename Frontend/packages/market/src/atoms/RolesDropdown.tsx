@@ -1,5 +1,5 @@
 import { ComboBox, IComboBox, IComboBoxOption, Spinner } from '@fluentui/react';
-import { GlowButton, useThemeContext } from '@gac/shared';
+import { Button, ButtonType, useThemeContext } from '@gac/shared-v2';
 import React from 'react';
 import { useStyletron } from 'styletron-react';
 import { useRoles } from '../api/hooks/useRoles';
@@ -36,32 +36,32 @@ export const RolesDropdown = ({
                 id: r,
                 styles: {
                     root: {
-                        color: `${theme.fontColors.accent.toRgbaString()} !important`,
+                        color: `${theme.foregroundPallette.accent.toRgbaString()} !important`,
                     },
                     rootHovered: {
-                        backgroundColor: `${theme.backgroundColor.dark.toRgbaString(
+                        backgroundColor: `${theme.backgroundPallette.dark.toRgbaString(
                             0.4
                         )} !important`,
                     },
                     rootFocused: {
-                        backgroundColor: `${theme.backgroundColor.dark.toRgbaString(
+                        backgroundColor: `${theme.backgroundPallette.dark.toRgbaString(
                             0.7
                         )} !important`,
                     },
                     rootChecked: {
-                        backgroundColor: `${theme.backgroundColor.dark.toRgbaString(
+                        backgroundColor: `${theme.backgroundPallette.dark.toRgbaString(
                             0.7
                         )} !important`,
-                        color: `${theme.fontColors.light.toRgbaString()} !important`,
+                        color: `${theme.foregroundPallette.white.toRgbaString()} !important`,
                     },
                 },
             })
         );
     }, [
         roles,
-        theme.backgroundColor.dark,
-        theme.fontColors.accent,
-        theme.fontColors.light,
+        theme.backgroundPallette.dark,
+        theme.foregroundPallette.accent,
+        theme.foregroundPallette.white,
     ]);
 
     const onSelectionChange = React.useCallback(
@@ -94,25 +94,28 @@ export const RolesDropdown = ({
             options={options}
             styles={{
                 callout: {
-                    background: theme.backgroundGradients.purpleBlue,
+                    background: theme.backgroundPallette.light.toRgbaString(),
                     '.ms-Callout-main': {
                         background: 'unset',
                     },
                 },
                 input: {
-                    color: `${theme.fontColors.dark.toRgbaString()} !important`,
+                    color: `${theme.foregroundPallette.black.toRgbaString()} !important`,
                 },
             }}
             onRenderLowerContent={(): React.ReactElement => {
                 if (!onClear) return <></>;
                 return (
-                    <GlowButton
+                    <Button
+                        themeType={ButtonType.primary}
                         onClick={onClear}
-                        className={css({ height: '80px', width: '100%' })}
+                        className={css({
+                            width: '100%',
+                            justifyContent: 'center',
+                        })}
                         type="button"
-                    >
-                        Clear
-                    </GlowButton>
+                        text="Clear"
+                    />
                 );
             }}
             onRenderUpperContent={(): React.ReactElement => {

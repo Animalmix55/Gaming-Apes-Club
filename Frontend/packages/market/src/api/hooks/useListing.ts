@@ -1,5 +1,5 @@
 import React from 'react';
-import { RequestResult, useRequest } from '@gac/shared';
+import { RequestResult, useRequest } from '@gac/shared-v2';
 import { useGamingApeContext } from '../../contexts/GamingApeClubContext';
 import { Listing, GetListingByIdReponse } from '../Requests';
 

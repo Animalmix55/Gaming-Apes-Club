@@ -28,7 +28,7 @@ export const WalletLoginModal = (props: WalletLoginModalProps): JSX.Element => {
         <Modal
             isOpen={isOpen}
             onClose={onClose}
-            modalClass={css({ width: '90%', maxWidth: '400px' })}
+            modalClass={css({ width: '90%', maxWidth: '400px !important' })}
         >
             <div
                 className={css({

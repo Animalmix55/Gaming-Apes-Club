@@ -1,5 +1,5 @@
+import { RequestResult, useRequest } from '@gac/shared-v2';
 import React from 'react';
-import { RequestResult, useRequest } from '@gac/shared';
 import { useGamingApeContext } from '../../contexts/GamingApeClubContext';
 import { Balance } from '../Requests';
 

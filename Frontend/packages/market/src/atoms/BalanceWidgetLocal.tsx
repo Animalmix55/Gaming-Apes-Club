@@ -1,4 +1,4 @@
-import { ClassNameBuilder, useThemeContext } from '@gac/shared';
+import { ClassNameBuilder, useThemeContext } from '@gac/shared-v2';
 import React from 'react';
 import { useStyletron } from 'styletron-react';
 import { Spinner, SpinnerSize } from '@fluentui/react';
@@ -20,10 +20,10 @@ export const LocalBalanceWidget = (props: {
             className={ClassNameBuilder(
                 className,
                 css({
-                    border: `4px solid ${theme.fontColors.light.toRgbaString()}`,
-                    fontFamily: theme.fonts.headers,
+                    border: `4px solid ${theme.foregroundPallette.white.toRgbaString()}`,
+                    fontFamily: theme.font,
                     fontWeight: '900',
-                    color: theme.fontColors.light.toRgbaString(),
+                    color: theme.foregroundPallette.white.toRgbaString(),
                     padding: '8px',
                     fontSize: '20px',
                     display: 'flex',

@@ -8,11 +8,6 @@ import 'react-toastify/dist/ReactToastify.css';
 import './styles/global.css';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import {
-    DefaultTheme,
-    ThemeContextProvider,
-    ProviderContextProvider,
-} from '@gac/shared';
-import {
     DefaultTheme as DefaultThemeV2,
     ThemeContextProvider as ThemeContextProviderV2,
     Web3ContextProvider,
@@ -50,33 +45,29 @@ const Root = (): JSX.Element => {
         <Web3ContextProvider>
             <Provider value={styletron}>
                 <QueryClientProvider client={queryClient}>
-                    <ThemeContextProvider value={DefaultTheme}>
-                        <ThemeContextProviderV2 value={DefaultThemeV2}>
-                            <ProviderContextProvider>
-                                <AuthorizationContextProvider>
-                                    <GamingApeContextProvider
-                                        value={{
-                                            api,
-                                            homeUrl,
-                                            discordUrl,
-                                            twitterUrl,
-                                            openseaUrl,
-                                            adminRoles,
-                                            defaultDiscordMessage,
-                                            gacStakingAncilaryAddress,
-                                            gacXPAddress,
-                                            chainId,
-                                        }}
-                                    >
-                                        <>
-                                            <MarketplacePage />
-                                            <ToastContainer position="bottom-left" />
-                                        </>
-                                    </GamingApeContextProvider>
-                                </AuthorizationContextProvider>
-                            </ProviderContextProvider>
-                        </ThemeContextProviderV2>
-                    </ThemeContextProvider>
+                    <ThemeContextProviderV2 value={DefaultThemeV2}>
+                        <AuthorizationContextProvider>
+                            <GamingApeContextProvider
+                                value={{
+                                    api,
+                                    homeUrl,
+                                    discordUrl,
+                                    twitterUrl,
+                                    openseaUrl,
+                                    adminRoles,
+                                    defaultDiscordMessage,
+                                    gacStakingAncilaryAddress,
+                                    gacXPAddress,
+                                    chainId,
+                                }}
+                            >
+                                <>
+                                    <MarketplacePage />
+                                    <ToastContainer position="bottom-left" />
+                                </>
+                            </GamingApeContextProvider>
+                        </AuthorizationContextProvider>
+                    </ThemeContextProviderV2>
                 </QueryClientProvider>
             </Provider>
         </Web3ContextProvider>

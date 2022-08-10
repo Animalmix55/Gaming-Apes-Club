@@ -1,5 +1,10 @@
-import { MOBILE } from '@gac/shared';
-import { Button, ButtonType, useThemeContext, Modal } from '@gac/shared-v2';
+import {
+    Button,
+    ButtonType,
+    useThemeContext,
+    Modal,
+    MOBILE,
+} from '@gac/shared-v2';
 import React from 'react';
 import { useStyletron } from 'styletron-react';
 import { ListingDropdown } from '../atoms/ListingDropdown';

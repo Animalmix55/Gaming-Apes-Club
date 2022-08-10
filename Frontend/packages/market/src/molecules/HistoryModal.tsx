@@ -1,6 +1,12 @@
 import { getId, Spinner } from '@fluentui/react';
-import { ClassNameBuilder, MOBILE } from '@gac/shared';
-import { ButtonType, CheckableButton, Header, Modal } from '@gac/shared-v2';
+import {
+    ButtonType,
+    CheckableButton,
+    Header,
+    Modal,
+    ClassNameBuilder,
+    MOBILE,
+} from '@gac/shared-v2';
 import React from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { useStyletron } from 'styletron-react';

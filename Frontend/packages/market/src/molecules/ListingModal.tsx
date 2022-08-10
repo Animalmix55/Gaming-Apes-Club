@@ -1,6 +1,5 @@
 /* eslint-disable react/no-danger */
 import { MessageBar, MessageBarType } from '@fluentui/react';
-import { ClassNameBuilder, MOBILE } from '@gac/shared';
 import {
     Badge,
     Button,
@@ -13,6 +12,8 @@ import {
     useMatchMediaQuery,
     useThemeContext,
     useWeb3,
+    ClassNameBuilder,
+    MOBILE,
 } from '@gac/shared-v2';
 import { ethers } from 'ethers';
 import React from 'react';

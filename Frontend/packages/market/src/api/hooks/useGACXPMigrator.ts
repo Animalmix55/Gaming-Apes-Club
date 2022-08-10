@@ -1,11 +1,11 @@
 import React from 'react';
-import { useMutation } from '@gac/shared';
 import {
     ERC20_BALANCE_KEY,
     signPermit,
     useGACStakingAncilaryContract,
     useGACXPContract,
     useWeb3,
+    useMutation,
 } from '@gac/shared-v2';
 import { UseMutationResult, useQueryClient } from 'react-query';
 import { BigNumber } from 'ethers';

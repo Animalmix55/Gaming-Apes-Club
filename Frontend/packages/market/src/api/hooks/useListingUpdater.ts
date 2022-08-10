@@ -1,5 +1,5 @@
 import React from 'react';
-import { useMutation } from '@gac/shared';
+import { useMutation } from '@gac/shared-v2';
 import { UseMutationResult, useQueryClient } from 'react-query';
 import { useAuthorizationContext } from '../../contexts/AuthorizationContext';
 import { useGamingApeContext } from '../../contexts/GamingApeClubContext';
