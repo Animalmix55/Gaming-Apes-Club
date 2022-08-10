@@ -13,6 +13,7 @@ import { Checkbox, Icon, IconButton, Spinner } from '@fluentui/react';
 import { useTransactionsGetter } from '../api/hooks/useTransactionsGetter';
 import { useFulfiller } from '../api/hooks/useFulfiller';
 import { Transaction } from '../api/Models/Transaction';
+import { useRefunder } from '../api/hooks/useRefunder';
 
 /**
  * listingId: string;
@@ -83,14 +84,62 @@ export const FulfillmentRenderer = (props: {
     );
 };
 
+export const RefundRenderer = (props: {
+    params: ICellRendererParams;
+}): JSX.Element => {
+    const { params } = props;
+    const { node, value, data } = params;
+
+    const [css] = useStyletron();
+    const { isLoading, isError, mutateAsync: refund } = useRefunder();
+
+    const onChange = React.useCallback(() => {
+        const { id } = data as Transaction;
+        if (!value) refund([id || '']).then((r) => node.setData(r));
+    }, [data, refund, node, value]);
+
+    if (!data) return <></>;
+
+    if (isLoading) return <Spinner />;
+
+    return (
+        <div
+            className={css({
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-evenly',
+                height: '100%',
+            })}
+        >
+            {isError && <Icon iconName="ErrorBadge" />}
+            <Checkbox
+                checked={!!value}
+                disabled={!!value}
+                onChange={onChange}
+            />
+        </div>
+    );
+};
+
 const colDefs: ColDef[] = [
     {
-        field: 'id',
-        editable: false,
-        resizable: true,
+        field: 'fulfilled',
         type: 'text',
+        resizable: true,
+        editable: false,
+        initialWidth: 120,
         cellRenderer: (params: ICellRendererParams) => (
-            <TextCellRenderer params={params} />
+            <FulfillmentRenderer params={params} />
+        ),
+    },
+    {
+        field: 'refunded',
+        type: 'text',
+        resizable: true,
+        editable: false,
+        initialWidth: 120,
+        cellRenderer: (params: ICellRendererParams) => (
+            <RefundRenderer params={params} />
         ),
     },
     {
@@ -132,16 +181,6 @@ const colDefs: ColDef[] = [
         ),
     },
     {
-        field: 'fulfilled',
-        type: 'text',
-        resizable: true,
-        editable: false,
-        initialWidth: 400,
-        cellRenderer: (params: ICellRendererParams) => (
-            <FulfillmentRenderer params={params} />
-        ),
-    },
-    {
         field: 'fulfilledBy',
         type: 'text',
         resizable: true,
@@ -157,6 +196,35 @@ const colDefs: ColDef[] = [
         resizable: true,
         editable: false,
         initialWidth: 400,
+        cellRenderer: (params: ICellRendererParams) => (
+            <TextCellRenderer params={params} />
+        ),
+    },
+    {
+        field: 'refundedBy',
+        type: 'text',
+        resizable: true,
+        editable: false,
+        initialWidth: 400,
+        cellRenderer: (params: ICellRendererParams) => (
+            <TextCellRenderer params={params} />
+        ),
+    },
+    {
+        field: 'refundDate',
+        type: 'text',
+        resizable: true,
+        editable: false,
+        initialWidth: 400,
+        cellRenderer: (params: ICellRendererParams) => (
+            <TextCellRenderer params={params} />
+        ),
+    },
+    {
+        field: 'id',
+        editable: false,
+        resizable: true,
+        type: 'text',
         cellRenderer: (params: ICellRendererParams) => (
             <TextCellRenderer params={params} />
         ),

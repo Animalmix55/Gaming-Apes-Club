@@ -277,6 +277,19 @@ export const Transaction = {
 
         return data;
     },
+
+    async refund(
+        api: string,
+        token: string,
+        txId: string
+    ): Promise<TransactionModel> {
+        const url = `${api}/transaction/${txId}/refund`;
+
+        const headers = getHeaders(token);
+        const { data } = await axios.post(url, undefined, { headers });
+
+        return data;
+    },
 };
 
 export interface TagsGetResponse extends BaseResponse {

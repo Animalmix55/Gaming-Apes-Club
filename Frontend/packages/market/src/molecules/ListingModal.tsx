@@ -161,10 +161,10 @@ export const ListingModal = (props: Props): JSX.Element => {
 
     const errorMessage = React.useMemo(() => {
         if (remaining === 0) return 'Sold out';
-        if (!addressValid) return 'Invalid address';
+        if (!addressValid && requiresLinkedAddress) return 'Invalid address';
         if (!hasRole) return 'Missing required role';
         return ExtractErrorMessageFromError(error);
-    }, [addressValid, error, hasRole, remaining]);
+    }, [addressValid, error, hasRole, requiresLinkedAddress, remaining]);
 
     const listingTags = (
         <ListingTags
