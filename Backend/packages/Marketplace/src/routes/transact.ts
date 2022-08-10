@@ -139,6 +139,12 @@ export const getTransactionRouter = async (
                 where: {
                     user: userId,
                 },
+                include: [
+                    {
+                        model: StoredListing,
+                        as: 'listing',
+                    },
+                ],
             }));
         } catch (e) {
             console.error(
