@@ -80,6 +80,7 @@ export const DashboardPage = (): JSX.Element => {
                         display: 'flex',
                         flexDirection: 'column',
                         gap: '0.5rem',
+                        padding: '3rem',
                     })}
                 >
                     <NewsHeader />
