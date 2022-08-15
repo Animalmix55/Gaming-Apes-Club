@@ -25,7 +25,7 @@ export const DashboardPage = (): JSX.Element => {
     return (
         <div
             className={css({
-                height: '100%',
+                minHeight: '100vh',
                 width: '100%',
                 display: 'flex',
                 alignItems: 'stretch',

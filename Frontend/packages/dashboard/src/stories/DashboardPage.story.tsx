@@ -2,7 +2,7 @@ import React from 'react';
 import { DashboardPage } from '../organisms/DashboardPage';
 
 export default {
-    title: 'Market/Organisms/DashboardPage',
+    title: 'Dashboard/Organisms/DashboardPage',
     component: DashboardPage,
 };
 
