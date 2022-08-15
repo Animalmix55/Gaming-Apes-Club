@@ -13,11 +13,6 @@ module.exports = (env) => ({
         path: path.resolve(__dirname, 'dist'),
         filename: 'bundle-08102022-2.js',
     },
-    devServer: {
-        static: './dist',
-        open: true,
-        liveReload: true,
-    },
     devtool: 'inline-source-map',
     mode: 'development',
     optimization: {
@@ -98,10 +93,6 @@ module.exports = (env) => ({
                     ['optipng', { optimizationLevel: 5 }],
                 ],
             },
-        }),
-        new HtmlWebpackPlugin({
-            template: './index.html',
-            filename: 'index.html',
         }),
     ],
 });

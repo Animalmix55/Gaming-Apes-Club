@@ -19,7 +19,6 @@ import { useListing } from '../api/hooks/useListing';
 import { useListingCreator } from '../api/hooks/useListingCreator';
 import { useListingUpdater } from '../api/hooks/useListingUpdater';
 import { NewListing } from '../api/Models/Listing';
-import { DiscordMessageHelpModal } from '../molecules/DiscordMessageHelpModal';
 import { ExtractErrorMessageFromError } from '../utils/ErrorMessage';
 import { ListingTile } from './ListingTile';
 import { RolesDropdown } from './RolesDropdown';
@@ -115,21 +114,6 @@ export const ListingForm = (props: Props): JSX.Element => {
 
     return (
         <>
-            <DiscordMessageHelpModal
-                isOpen={discordHelpModalOpen}
-                value={discordMessage ?? undefined}
-                onClose={(): void => setDiscordHelpModalOpen(false)}
-                onValueChange={(v): void =>
-                    onChange(
-                        convertToListing({
-                            ...listing,
-                            discordMessage: v,
-                        })
-                    )
-                }
-                disabled={!!disabled}
-            />
-
             <div
                 className={ClassNameBuilder(
                     className,

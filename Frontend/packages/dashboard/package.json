@@ -12,8 +12,7 @@
   "scripts": {
     "build": "webpack",
     "build:prod": "webpack --mode production",
-    "build:watch": "webpack --watch",
-    "dev": "webpack-dev-server --hot"
+    "build:watch": "webpack --watch"
   },
   "peerDependencies": {
     "js-big-decimal": "^1.3.4",
@@ -51,8 +50,7 @@
   },
   "devDependencies": {
     "@types/uuid": "^8.3.4",
-    "@types/react-datetime-picker": "^3.4.1",
-    "webpack-dev-server": "^4.10.0"
+    "@types/react-datetime-picker": "^3.4.1"
   },
   "prettier": {
     "trailingComma": "es5",
