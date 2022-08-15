@@ -9,6 +9,14 @@ import {
 } from '@gac/shared-v2';
 import Background from '@gac/shared-v2/lib/assets/png/background/BACKGROUND.png';
 import { useGamingApeContext } from '../contexts/GamingApeClubContext';
+import NewsHeader from '../molecules/NewsHeader';
+import LatestNewsGrid from '../molecules/LatestNewsGrid';
+import RecentListings from '../molecules/RecentListings';
+import LatestNewsBanner from '../molecules/LatestNewsBanner';
+import HolderStats from '../molecules/HolderStats';
+import ShackSpecials from '../molecules/ShackSpecials';
+import TeamMembers from '../molecules/TeamMembers';
+import Partners from '../molecules/Partners';
 
 export const DashboardPage = (): JSX.Element => {
     const [css] = useStyletron();
@@ -67,6 +75,32 @@ export const DashboardPage = (): JSX.Element => {
                     width: '100%',
                 })}
             >
+                <main
+                    className={css({
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: '0.5rem',
+                    })}
+                >
+                    <NewsHeader />
+                    <LatestNewsGrid />
+                    <RecentListings />
+                    <div
+                        className={css({
+                            display: 'grid',
+                            gridTemplateColumns: 'repeat(3, auto)',
+                            gap: '0.5rem',
+                        })}
+                    >
+                        <LatestNewsBanner
+                            className={css({ gridColumnStart: 'span 2' })}
+                        />
+                        <HolderStats />
+                    </div>
+                    <ShackSpecials />
+                    <TeamMembers />
+                    <Partners />
+                </main>
                 <div
                     className={css({
                         padding: '48px',

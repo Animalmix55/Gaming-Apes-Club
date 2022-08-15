@@ -18,7 +18,7 @@ export const Footer = (props: FooterProps): JSX.Element => {
     const [css] = useStyletron();
 
     return (
-        <div
+        <footer
             className={ClassNameBuilder(
                 className,
                 css({
@@ -122,7 +122,7 @@ export const Footer = (props: FooterProps): JSX.Element => {
             >
                 &copy; {new Date().getFullYear()} Gaming Ape Club, Inc.
             </div>
-        </div>
+        </footer>
     );
 };
 
