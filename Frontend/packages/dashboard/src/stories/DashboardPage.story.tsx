@@ -1,15 +1,15 @@
 import React from 'react';
-import { MarketplacePage } from '../organisms/MarketplacePage';
+import { DashboardPage } from '../organisms/DashboardPage';
 
 export default {
-    title: 'Market/Organisms/MarketplacePage',
-    component: MarketplacePage,
+    title: 'Market/Organisms/DashboardPage',
+    component: DashboardPage,
 };
 
 export const StandAlone = (): JSX.Element => {
     return (
         <div style={{ height: '100vh' }}>
-            <MarketplacePage />
+            <DashboardPage />
         </div>
     );
 };

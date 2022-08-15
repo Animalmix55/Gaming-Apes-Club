@@ -24,10 +24,7 @@ module.exports = (env) => ({
         minimize: false,
     },
     watchOptions: {
-        ignored: [
-            path.resolve(__dirname, '.git'),
-            path.resolve(__dirname, 'node_modules'),
-        ],
+        ignored: [path.resolve(__dirname, '.git')],
     },
     module: {
         rules: [

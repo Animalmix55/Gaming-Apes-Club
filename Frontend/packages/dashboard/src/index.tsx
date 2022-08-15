@@ -17,8 +17,7 @@ import {
     GamingApeClubContextType,
     GamingApeContextProvider,
 } from './contexts/GamingApeClubContext';
-import { AuthorizationContextProvider } from './contexts/AuthorizationContext';
-import { MarketplacePage } from './organisms/MarketplacePage';
+import { DashboardPage } from './organisms/DashboardPage';
 
 initializeIcons();
 
@@ -46,27 +45,25 @@ const Root = (): JSX.Element => {
             <Provider value={styletron}>
                 <QueryClientProvider client={queryClient}>
                     <ThemeContextProviderV2 value={DefaultThemeV2}>
-                        <AuthorizationContextProvider>
-                            <GamingApeContextProvider
-                                value={{
-                                    api,
-                                    homeUrl,
-                                    discordUrl,
-                                    twitterUrl,
-                                    openseaUrl,
-                                    adminRoles,
-                                    defaultDiscordMessage,
-                                    gacStakingAncilaryAddress,
-                                    gacXPAddress,
-                                    chainId,
-                                }}
-                            >
-                                <>
-                                    <MarketplacePage />
-                                    <ToastContainer position="bottom-left" />
-                                </>
-                            </GamingApeContextProvider>
-                        </AuthorizationContextProvider>
+                        <GamingApeContextProvider
+                            value={{
+                                api,
+                                homeUrl,
+                                discordUrl,
+                                twitterUrl,
+                                openseaUrl,
+                                adminRoles,
+                                defaultDiscordMessage,
+                                gacStakingAncilaryAddress,
+                                gacXPAddress,
+                                chainId,
+                            }}
+                        >
+                            <>
+                                <DashboardPage />
+                                <ToastContainer position="bottom-left" />
+                            </>
+                        </GamingApeContextProvider>
                     </ThemeContextProviderV2>
                 </QueryClientProvider>
             </Provider>
