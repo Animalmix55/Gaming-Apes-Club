@@ -1,6 +1,7 @@
-import { ClassNameBuilder, useThemeContext } from '@gac/shared-v2';
+import { useThemeContext } from '@gac/shared-v2';
 import React from 'react';
 import { useStyletron } from 'styletron-react';
+import RoundedHexagon from './RoundedHexagon';
 
 interface Props {
     name: string;
@@ -8,69 +9,6 @@ interface Props {
     title: string;
     image?: string;
 }
-
-const RoundedHexagon: React.FC<{
-    id: string;
-    className?: string;
-    radius?: number;
-}> = ({ id, children, className, radius = 10 }): JSX.Element => {
-    const [css] = useStyletron();
-    const filterId = `round-${id}`;
-
-    return (
-        <>
-            <svg
-                style={{ visibility: 'hidden', position: 'absolute' }}
-                width="0"
-                height="0"
-                xmlns="http://www.w3.org/2000/svg"
-                version="1.1"
-            >
-                <defs>
-                    <filter id={filterId}>
-                        <feGaussianBlur
-                            in="SourceGraphic"
-                            stdDeviation={radius}
-                            result="blur"
-                        />
-                        <feColorMatrix
-                            in="blur"
-                            mode="matrix"
-                            values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 19 -9"
-                            result="goo"
-                        />
-                        <feComposite
-                            in="SourceGraphic"
-                            in2="goo"
-                            operator="atop"
-                        />
-                    </filter>
-                </defs>
-            </svg>
-            <div
-                className={ClassNameBuilder(
-                    className,
-                    css({
-                        width: '264px',
-
-                        '::before': {
-                            content: '""',
-                            paddingTop: '86.6%',
-                            display: 'block',
-                            background: 'red',
-                            clipPath:
-                                'polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%)',
-                        },
-
-                        filter: `url(#${filterId})`,
-                    })
-                )}
-            >
-                {children}
-            </div>
-        </>
-    );
-};
 
 const MemberCard: React.FC<Props> = ({
     name,
