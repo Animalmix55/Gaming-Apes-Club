@@ -5,6 +5,7 @@ const path = require('path');
 const webpack = require('webpack');
 const ImageMinimizerPlugin = require('image-minimizer-webpack-plugin');
 const Dotenv = require('dotenv-webpack');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = (env) => ({
     entry: './src/index.tsx',
@@ -12,10 +13,21 @@ module.exports = (env) => ({
         path: path.resolve(__dirname, 'dist'),
         filename: 'bundle-08102022-2.js',
     },
+    devServer: {
+        static: './dist',
+        open: true,
+        liveReload: true,
+    },
     devtool: 'inline-source-map',
     mode: 'development',
     optimization: {
         minimize: false,
+    },
+    watchOptions: {
+        ignored: [
+            path.resolve(__dirname, '.git'),
+            path.resolve(__dirname, 'node_modules'),
+        ],
     },
     module: {
         rules: [
@@ -47,9 +59,10 @@ module.exports = (env) => ({
                 type: 'asset/resource',
             },
             {
-                test: /\.js$/,
+                test: [/\.js?$/, /\.ts?$/, /\.jsx?$/, /\.tsx?$/],
                 enforce: 'pre',
                 use: ['source-map-loader'],
+                exclude: /node_modules/,
             },
         ],
     },
@@ -88,6 +101,10 @@ module.exports = (env) => ({
                     ['optipng', { optimizationLevel: 5 }],
                 ],
             },
+        }),
+        new HtmlWebpackPlugin({
+            template: './index.html',
+            filename: 'index.html',
         }),
     ],
 });
