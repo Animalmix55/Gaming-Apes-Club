@@ -9,14 +9,14 @@ import {
 } from '@gac/shared-v2';
 import Background from '@gac/shared-v2/lib/assets/png/background/BACKGROUND.png';
 import { useGamingApeContext } from '../contexts/GamingApeClubContext';
-import NewsHeader from '../molecules/NewsHeader';
-import LatestNewsGrid from '../molecules/LatestNewsGrid';
-import RecentListings from '../molecules/RecentListings';
-import LatestNewsBanner from '../molecules/LatestNewsBanner';
-import HolderStats from '../molecules/HolderStats';
-import ShackSpecials from '../molecules/ShackSpecials';
-import TeamMembers from '../molecules/TeamMembers';
-import Partners from '../molecules/Partners';
+import NewsHeader from './NewsHeader';
+import LatestNewsGrid from './LatestNewsGrid';
+import RecentListings from './RecentListings';
+import LatestNewsBanner from './LatestNewsBanner';
+import HolderStats from './HolderStats';
+import ShackSpecials from './ShackSpecials';
+import TeamMembers from './TeamMembers';
+import Partners from './Partners';
 
 export const DashboardPage = (): JSX.Element => {
     const [css] = useStyletron();

@@ -1,10 +1,10 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import React from 'react';
-import TeamMembers from '../molecules/TeamMembers';
+import TeamMembers from '../organisms/TeamMembers';
 import '../styles/global.css';
 
 export default {
-    title: 'Dashboard/Molecules/TeamMembers',
+    title: 'Dashboard/Organisms/TeamMembers',
     component: TeamMembers,
 };
 
