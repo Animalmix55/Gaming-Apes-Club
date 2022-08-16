@@ -47,26 +47,32 @@ const RoundedHexagon: React.FC<Props> = ({
                     </filter>
                 </defs>
             </svg>
-            <div
-                className={ClassNameBuilder(
-                    className,
-                    css({
-                        width: '264px',
 
-                        '::before': {
-                            content: '""',
+            <div
+                className={css({
+                    filter: `url(#${filterId})`,
+                })}
+            >
+                <div
+                    className={ClassNameBuilder(
+                        className,
+                        css({
+                            width: '264px',
                             paddingTop: '86.6%',
-                            display: 'block',
-                            background: 'red',
                             clipPath:
                                 'polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%)',
-                        },
-
-                        filter: `url(#${filterId})`,
-                    })
-                )}
-            >
-                {children}
+                        })
+                    )}
+                >
+                    <div
+                        className={css({
+                            position: 'absolute',
+                            inset: '0',
+                        })}
+                    >
+                        {children}
+                    </div>
+                </div>
             </div>
         </>
     );

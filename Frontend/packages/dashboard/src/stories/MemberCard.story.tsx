@@ -24,4 +24,5 @@ Primary.args = {
     alias: 'Politikos',
     title: 'Chief Executive Officer',
     image: undefined,
+    twitter: 'david',
 };

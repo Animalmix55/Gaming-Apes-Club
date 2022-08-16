@@ -15,7 +15,14 @@ const Template = (
     const [css] = useStyletron();
     return (
         <div style={{ padding: '3rem' }}>
-            <RoundedHexagon {...args} className={css({ width: '200px' })} />
+            <div className={css({ width: '264px' })}>
+                <RoundedHexagon
+                    {...args}
+                    className={css({
+                        background: 'black',
+                    })}
+                />
+            </div>
         </div>
     );
 };
