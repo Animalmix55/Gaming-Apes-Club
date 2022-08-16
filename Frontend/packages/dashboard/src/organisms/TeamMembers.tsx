@@ -57,7 +57,7 @@ export const TeamMembers = (): JSX.Element => {
                 <Heading
                     className={css({ flex: '1' })}
                     highlightedTitle="Meet the"
-                    title="founding members"
+                    title="founding team"
                 />
 
                 <a href="#">Our mission</a>
