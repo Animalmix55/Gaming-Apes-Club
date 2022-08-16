@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import { ClassNameBuilder, Icons, useThemeContext } from '@gac/shared-v2';
+import { ClassNameBuilder, useThemeContext } from '@gac/shared-v2';
 import React, { useState } from 'react';
 import { useStyletron } from 'styletron-react';
 import RoundedHexagon from './RoundedHexagon';
@@ -27,7 +27,6 @@ const MemberCard: React.FC<Props> = ({
     return (
         <div
             className={css({
-                width: '264px',
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
@@ -47,7 +46,7 @@ const MemberCard: React.FC<Props> = ({
                 <RoundedHexagon
                     id={name}
                     className={css({
-                        width: '264px',
+                        width: '215px',
                     })}
                     radius={10}
                 >
@@ -59,7 +58,7 @@ const MemberCard: React.FC<Props> = ({
                             css({
                                 position: 'absolute',
                                 inset: '0',
-                                background: 'green',
+                                background: 'rgba(10,10,10,100)',
                                 display: 'flex',
                                 alignItems: 'center',
                                 justifyContent: 'center',
@@ -137,8 +136,8 @@ const MemberCard: React.FC<Props> = ({
                 <p
                     className={css({
                         fontWeight: 900,
-                        fontSize: '28px',
-                        lineHeight: '34px',
+                        fontSize: '22px',
+                        lineHeight: '28px',
                         textTransform: 'uppercase',
                     })}
                 >
@@ -152,7 +151,7 @@ const MemberCard: React.FC<Props> = ({
                         ({alias})
                     </span>
                 </p>
-                <p className={css({ fontWeight: 700, fontSize: '16px' })}>
+                <p className={css({ fontWeight: 700, fontSize: '14px' })}>
                     {title}
                 </p>
             </div>
