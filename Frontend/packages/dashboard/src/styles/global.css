@@ -80,3 +80,7 @@ h6 {
 .react-multi-carousel-track {
     overflow: visible;
 }
+
+a {
+    text-decoration: none;
+}

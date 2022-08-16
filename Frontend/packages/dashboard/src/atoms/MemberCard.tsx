@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { useStyletron } from 'styletron-react';
 import RoundedHexagon from './RoundedHexagon';
 import TwitterImage from '../assets/png/Twitter.png';
+import { dropShadowStyle } from '../common/styles';
 
 interface Props {
     className?: string;
@@ -43,7 +44,7 @@ const MemberCard: React.FC<Props> = ({
                 className={ClassNameBuilder(
                     hover
                         ? css({
-                              filter: 'drop-shadow(8px 8px 20px rgba(157, 0, 253, 0.3)) drop-shadow(-8px -8px 20px rgba(32, 129, 226, 0.3))',
+                              ...dropShadowStyle,
                           })
                         : undefined,
                     css({
