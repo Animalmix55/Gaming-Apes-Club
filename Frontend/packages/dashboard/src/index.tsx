@@ -6,6 +6,7 @@ import { Client } from 'styletron-engine-atomic';
 import { Provider } from 'styletron-react';
 import 'react-toastify/dist/ReactToastify.css';
 import './styles/global.css';
+
 import { QueryClient, QueryClientProvider } from 'react-query';
 import {
     DefaultTheme as DefaultThemeV2,

@@ -2,6 +2,7 @@ import React from 'react';
 import { useStyletron } from 'styletron-react';
 import Heading from '../atoms/Heading';
 import MemberCard from '../atoms/MemberCard';
+import Carousel from '../molecules/Carousel';
 
 const MEMBERS = [
     {
@@ -61,7 +62,7 @@ export const TeamMembers = (): JSX.Element => {
 
                 <a href="#">Our mission</a>
             </div>
-            <div className={css({ display: 'flex', gap: '0.5rem' })}>
+            <Carousel>
                 {MEMBERS.map(({ name, alias, title, image, twitter }) => (
                     <MemberCard
                         key={name}
@@ -72,7 +73,7 @@ export const TeamMembers = (): JSX.Element => {
                         twitter={twitter}
                     />
                 ))}
-            </div>
+            </Carousel>
         </section>
     );
 };

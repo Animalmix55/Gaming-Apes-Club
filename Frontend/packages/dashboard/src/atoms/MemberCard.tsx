@@ -6,6 +6,7 @@ import RoundedHexagon from './RoundedHexagon';
 import TwitterImage from '../assets/png/Twitter.png';
 
 interface Props {
+    className?: string;
     name: string;
     alias: string;
     title: string;
@@ -14,6 +15,7 @@ interface Props {
 }
 
 const MemberCard: React.FC<Props> = ({
+    className,
     name,
     alias,
     title,
@@ -26,22 +28,28 @@ const MemberCard: React.FC<Props> = ({
 
     return (
         <div
-            className={css({
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '1rem',
-            })}
+            className={ClassNameBuilder(
+                className,
+                css({
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '1rem',
+                })
+            )}
         >
             <div
-                className={
+                className={ClassNameBuilder(
                     hover
                         ? css({
-                              filter: 'drop-shadow(8px 8px 60px rgba(157, 0, 253, 0.3)) drop-shadow(-8px -8px 60px rgba(32, 129, 226, 0.3))',
+                              filter: 'drop-shadow(8px 8px 20px rgba(157, 0, 253, 0.3)) drop-shadow(-8px -8px 20px rgba(32, 129, 226, 0.3))',
                           })
-                        : undefined
-                }
+                        : undefined,
+                    css({
+                        transition: '0.3s filter linear',
+                    })
+                )}
             >
                 <RoundedHexagon
                     id={name}
