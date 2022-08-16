@@ -1,5 +1,6 @@
 import React from 'react';
 import { useStyletron } from 'styletron-react';
+import Heading from '../atoms/Heading';
 import MemberCard from '../atoms/MemberCard';
 
 const MEMBERS = [
@@ -52,7 +53,12 @@ export const TeamMembers = (): JSX.Element => {
                     alignItems: 'center',
                 })}
             >
-                <h2 className={css({ flex: '1' })}>Meet the Founding Team</h2>
+                <Heading
+                    className={css({ flex: '1' })}
+                    highlightedTitle="Meet the"
+                    title="founding members"
+                />
+
                 <a href="#">Our mission</a>
             </div>
             <div className={css({ display: 'flex', gap: '0.5rem' })}>
