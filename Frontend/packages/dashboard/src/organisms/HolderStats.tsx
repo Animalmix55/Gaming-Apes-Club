@@ -128,8 +128,6 @@ export const HolderStats = (): JSX.Element => {
             <Heading
                 className={css({
                     flex: '1',
-                    fontSize: '28px !important',
-                    lineHeight: '28px',
                 })}
                 highlightedTitle="Overal GAC"
                 title="Holder Stats"

@@ -27,9 +27,9 @@ const Heading: React.FC<Props> = ({
 
                     fontStyle: 'italic',
                     fontWeight: 900,
-                    fontSize: '22px',
-                    lineHeight: '22px',
-                    letterSpacing: '0.5px',
+                    fontSize: '28px',
+                    lineHeight: '28px',
+                    letterSpacing: '0.05em',
                     textTransform: 'uppercase',
                     color: theme.foregroundPallette.white.toRgbaString(),
                 })
