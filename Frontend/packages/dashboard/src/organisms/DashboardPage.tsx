@@ -90,7 +90,7 @@ export const DashboardPage = (): JSX.Element => {
                     <div
                         className={css({
                             display: 'grid',
-                            gridTemplateColumns: 'repeat(3, auto)',
+                            gridTemplateColumns: 'repeat(3, minmax(0, 1fr))',
                             gap: '0.5rem',
                         })}
                     >
