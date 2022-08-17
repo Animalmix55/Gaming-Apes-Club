@@ -1,7 +1,7 @@
 import { ClassNameBuilder, useThemeContext } from '@gac/shared-v2';
 import React from 'react';
 import { useStyletron } from 'styletron-react';
-import newsData from '../assets/news/data';
+import newsData from '../assets/news';
 
 interface Props {
     className?: string;

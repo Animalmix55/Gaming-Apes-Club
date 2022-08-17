@@ -2,39 +2,9 @@ import React from 'react';
 import { useStyletron } from 'styletron-react';
 import Heading from '../atoms/Heading';
 import Carousel from '../molecules/Carousel';
+import partners from '../assets/partners';
 
-import AsteriaLabs from '../assets/partners/asteria-labs.png';
-import Llamaverse from '../assets/partners/llamaverse.png';
-import PowerGpu from '../assets/partners/power-gpu.png';
-import RooTroop from '../assets/partners/roo-troop.png';
-import {
-    boxShadowStyle,
-    dropShadowStyle,
-    dropShadowTransition,
-} from '../common/styles';
-
-const partners = [
-    {
-        name: 'Llamaverse',
-        image: Llamaverse,
-        url: '#',
-    },
-    {
-        name: 'Asteria Labs',
-        image: AsteriaLabs,
-        url: '#',
-    },
-    {
-        name: 'Roo Troop',
-        image: RooTroop,
-        url: '#',
-    },
-    {
-        name: 'Power GPU',
-        image: PowerGpu,
-        url: '#',
-    },
-];
+import { dropShadowStyle, dropShadowTransition } from '../common/styles';
 
 export const Partners = (): JSX.Element => {
     const [css] = useStyletron();

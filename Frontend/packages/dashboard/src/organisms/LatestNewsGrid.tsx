@@ -4,7 +4,7 @@ import { useStyletron } from 'styletron-react';
 import Heading from '../atoms/Heading';
 import Carousel from '../molecules/Carousel';
 import { boxShadowStyle, boxShadowTransition } from '../common/styles';
-import newsData, { NewsType } from '../assets/news/data';
+import newsData, { NewsType } from '../assets/news';
 
 const NewsItem = ({ image, title, url }: NewsType): JSX.Element => {
     const [css] = useStyletron();
