@@ -3,7 +3,7 @@ import React from 'react';
 import { useStyletron } from 'styletron-react';
 import Heading from '../atoms/Heading';
 import Carousel from '../molecules/Carousel';
-import { boxShadowStyle } from '../common/styles';
+import { boxShadowStyle, boxShadowTransition } from '../common/styles';
 import newsData, { NewsType } from '../assets/news/data';
 
 const NewsItem = ({ image, title, url }: NewsType): JSX.Element => {
@@ -35,7 +35,7 @@ const NewsItem = ({ image, title, url }: NewsType): JSX.Element => {
                 textTransform: 'uppercase',
                 color: theme.foregroundPallette.white.toRgbaString(),
 
-                transition: '0.3s box-shadow linear',
+                transition: boxShadowTransition,
 
                 ':hover': {
                     ...boxShadowStyle,

@@ -44,7 +44,7 @@ export const TeamMembers = (): JSX.Element => {
                 color: 'white',
                 display: 'flex',
                 flexDirection: 'column',
-                gap: '1rem',
+                gap: '2rem',
             })}
         >
             <div

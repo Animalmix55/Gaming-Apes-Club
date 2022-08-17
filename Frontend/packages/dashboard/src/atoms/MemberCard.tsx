@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import { useStyletron } from 'styletron-react';
 import RoundedHexagon from './RoundedHexagon';
 import TwitterImage from '../assets/png/Twitter.png';
-import { dropShadowStyle } from '../common/styles';
+import { dropShadowStyle, dropShadowTransition } from '../common/styles';
 
 interface Props {
     className?: string;
@@ -48,7 +48,7 @@ const MemberCard: React.FC<Props> = ({
                           })
                         : undefined,
                     css({
-                        transition: '0.3s filter linear',
+                        transition: dropShadowTransition,
                     })
                 )}
             >
