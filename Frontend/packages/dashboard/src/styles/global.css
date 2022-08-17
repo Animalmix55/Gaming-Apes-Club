@@ -85,3 +85,20 @@ h6 {
 a {
     text-decoration: none;
 }
+
+/*
+Transitions
+*/
+
+.cross-fade-enter {
+    opacity: 0;
+}
+.cross-fade-enter-active {
+    opacity: 1;
+}
+.cross-fade-exit {
+    opacity: 1;
+}
+.cross-fade-exit-active {
+    opacity: 0;
+}

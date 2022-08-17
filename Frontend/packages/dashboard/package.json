@@ -47,11 +47,13 @@
     "jwt-decode": "^3.1.2",
     "uuid": "^8.3.2",
     "react-datetime-picker": "^3.5.0",
-    "react-multi-carousel": "^2.8.2"
+    "react-multi-carousel": "^2.8.2",
+    "react-swipeable": "^7.0.0"
   },
   "devDependencies": {
     "@types/uuid": "^8.3.4",
-    "@types/react-datetime-picker": "^3.4.1"
+    "@types/react-datetime-picker": "^3.4.1",
+    "@types/react-swipeable": "^5.2.0"
   },
   "prettier": {
     "trailingComma": "es5",

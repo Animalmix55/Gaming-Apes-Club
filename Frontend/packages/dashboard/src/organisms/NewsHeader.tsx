@@ -1,12 +1,28 @@
+/* eslint-disable react/jsx-props-no-spreading */
 import { MOBILE, useMatchMediaQuery } from '@gac/shared-v2';
 import React, { useMemo, useState } from 'react';
 import { useStyletron } from 'styletron-react';
+import { useSwipeable } from 'react-swipeable';
 import data from '../assets/banner';
 import HeaderControls from '../atoms/HeaderControls';
 
 export const NewsHeader = (): JSX.Element => {
     const [css] = useStyletron();
     const [index, setIndex] = useState(0);
+
+    const next = (): void => {
+        setIndex((prev) => Math.min(data.length - 1, prev + 1));
+    };
+
+    const previous = (): void => {
+        setIndex((prev) => Math.max(0, prev - 1));
+    };
+
+    const handlers = useSwipeable({
+        onSwipedRight: previous,
+        onSwipedLeft: next,
+        trackMouse: true,
+    });
 
     const currentItem = useMemo(() => {
         return data[index];
@@ -31,6 +47,7 @@ export const NewsHeader = (): JSX.Element => {
                 display: 'flex',
                 alignItems: 'flex-end',
             })}
+            {...handlers}
         >
             <img
                 src={currentItem.image}
@@ -45,6 +62,7 @@ export const NewsHeader = (): JSX.Element => {
                     objectFit: 'cover',
                 })}
             />
+
             <div
                 className={css({
                     position: 'absolute',
@@ -54,6 +72,7 @@ export const NewsHeader = (): JSX.Element => {
                     zIndex: '-1',
                 })}
             />
+
             <div
                 className={css({
                     display: 'grid',
@@ -62,6 +81,7 @@ export const NewsHeader = (): JSX.Element => {
 
                     [MOBILE]: {
                         gridTemplateColumns: '1fr',
+                        gap: '16px',
                     },
                 })}
             >
@@ -108,6 +128,8 @@ export const NewsHeader = (): JSX.Element => {
                         total={data.length}
                         currentIndex={index}
                         showArrows={!isMobile}
+                        onNext={next}
+                        onPrev={previous}
                     />
                 </div>
             </div>
