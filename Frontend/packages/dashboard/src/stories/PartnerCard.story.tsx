@@ -1,7 +1,7 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import React from 'react';
 import PartnerCard from '../atoms/PartnerCard';
-import RooTroop from '../assets/partners/roo-troop.png';
+import partners from '../assets/partners';
 import '../styles/global.css';
 
 export default {
@@ -21,7 +21,5 @@ const Template = (
 
 export const Primary = Template.bind({});
 Primary.args = {
-    name: 'Roo Troop',
-    image: RooTroop,
-    url: '#',
+    ...partners[0],
 };
