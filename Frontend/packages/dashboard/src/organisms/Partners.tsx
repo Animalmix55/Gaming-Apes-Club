@@ -5,6 +5,7 @@ import Carousel from '../molecules/Carousel';
 import partners from '../assets/partners';
 
 import { dropShadowStyle, dropShadowTransition } from '../common/styles';
+import PartnerCard from '../atoms/PartnerCard';
 
 export const Partners = (): JSX.Element => {
     const [css] = useStyletron();
@@ -33,34 +34,12 @@ export const Partners = (): JSX.Element => {
             </div>
             <Carousel>
                 {partners.map(({ name, image, url }) => (
-                    <a
-                        className={css({
-                            overflow: 'hidden',
-                            borderRadius: '50%',
-
-                            transition: dropShadowTransition,
-
-                            ':hover': {
-                                ...dropShadowStyle,
-                            },
-
-                            ':focus': {
-                                ...dropShadowStyle,
-                            },
-                        })}
+                    <PartnerCard
                         key={url}
-                        href={url}
-                    >
-                        <img
-                            className={css({
-                                width: '208px',
-                                height: '208px',
-                                objectFit: 'cover',
-                            })}
-                            src={image}
-                            alt={name}
-                        />
-                    </a>
+                        name={name}
+                        image={image}
+                        url={url}
+                    />
                 ))}
             </Carousel>
         </section>
