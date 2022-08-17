@@ -1,4 +1,9 @@
-import { ClassNameBuilder, useThemeContext } from '@gac/shared-v2';
+import {
+    ClassNameBuilder,
+    MOBILE,
+    useMatchMediaQuery,
+    useThemeContext,
+} from '@gac/shared-v2';
 import React from 'react';
 import { useStyletron } from 'styletron-react';
 import Heading from '../atoms/Heading';
@@ -23,6 +28,8 @@ const StatItem: React.FC<StatItemProps> = ({
 }): JSX.Element => {
     const [css] = useStyletron();
     const theme = useThemeContext();
+    const isMobile = useMatchMediaQuery(MOBILE);
+
     return (
         <div
             className={ClassNameBuilder(
@@ -60,7 +67,7 @@ const StatItem: React.FC<StatItemProps> = ({
                         alt={iconAlt}
                         src={icon}
                         className={css({
-                            height: '30px',
+                            height: isMobile ? '20px' : '30px',
                             width: 'auto',
                         })}
                     />
@@ -142,14 +149,33 @@ export const HolderStats = (): JSX.Element => {
                     icon={XPIcon}
                     iconAlt="XP"
                 />
-                <StatItem heading="GAC Holders" smallHeading text="2,453" />
                 <StatItem
+                    className={css({
+                        [MOBILE]: {
+                            gridColumn: 'span 3',
+                        },
+                    })}
+                    heading="GAC Holders"
+                    smallHeading
+                    text="2,453"
+                />
+                <StatItem
+                    className={css({
+                        [MOBILE]: {
+                            gridColumn: 'span 3',
+                        },
+                    })}
                     heading="Diamond District"
                     smallHeading
                     text="1,952"
                 />
                 <StatItem
-                    heading="Whitelist Puirchased"
+                    className={css({
+                        [MOBILE]: {
+                            gridColumn: 'span 3',
+                        },
+                    })}
+                    heading="Whitelist Purchased"
                     smallHeading
                     text="2,671"
                 />

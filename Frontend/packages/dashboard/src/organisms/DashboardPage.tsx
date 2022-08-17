@@ -6,6 +6,7 @@ import {
     Sidebar,
     SidebarItem,
     SidebarItems,
+    TABLET,
 } from '@gac/shared-v2';
 import Background from '@gac/shared-v2/lib/assets/png/background/BACKGROUND.png';
 import { useGamingApeContext } from '../contexts/GamingApeClubContext';
@@ -82,6 +83,9 @@ export const DashboardPage = (): JSX.Element => {
                         flexDirection: 'column',
                         gap: '3.6rem',
                         padding: '3rem',
+                        [TABLET]: {
+                            padding: '1.5rem',
+                        },
                     })}
                 >
                     <NewsHeader />
@@ -92,10 +96,20 @@ export const DashboardPage = (): JSX.Element => {
                             display: 'grid',
                             gridTemplateColumns: 'repeat(3, minmax(0, 1fr))',
                             gap: '1.5rem',
+
+                            [TABLET]: {
+                                gap: '3.6rem',
+                                gridTemplateColumns: '1fr',
+                            },
                         })}
                     >
                         <LatestNewsBanner
-                            className={css({ gridColumnStart: 'span 2' })}
+                            className={css({
+                                gridColumnStart: 'span 2',
+                                [TABLET]: {
+                                    gridColumnStart: 'span 1',
+                                },
+                            })}
                         />
                         <HolderStats />
                     </div>
