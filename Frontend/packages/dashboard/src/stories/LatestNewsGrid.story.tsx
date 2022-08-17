@@ -12,7 +12,13 @@ const Template = (
     args: React.ComponentProps<typeof LatestNewsGrid>
 ): JSX.Element => {
     return (
-        <div style={{ padding: '3rem', backgroundColor: 'black' }}>
+        <div
+            style={{
+                padding: '3rem',
+                backgroundColor: 'black',
+                overflow: 'hidden',
+            }}
+        >
             <LatestNewsGrid />
         </div>
     );

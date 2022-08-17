@@ -27,6 +27,7 @@ export const DashboardPage = (): JSX.Element => {
             className={css({
                 minHeight: '100vh',
                 width: '100%',
+                overflowX: 'hidden',
                 display: 'flex',
                 alignItems: 'stretch',
                 backgroundImage: `url(${Background})`,

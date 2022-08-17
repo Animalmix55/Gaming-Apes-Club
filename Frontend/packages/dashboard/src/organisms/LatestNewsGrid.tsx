@@ -3,34 +3,8 @@ import React from 'react';
 import { useStyletron } from 'styletron-react';
 import Heading from '../atoms/Heading';
 import Carousel from '../molecules/Carousel';
-import UtilityImage from '../assets/news/utility-game-plan.png';
-import GridCraftImage from '../assets/news/grid-craft.png';
-import P2EImage from '../assets/news/p2e.png';
 import { boxShadowStyle } from '../common/styles';
-
-interface NewsType {
-    image: string;
-    title: string;
-    url: string;
-}
-
-const NEWS: NewsType[] = [
-    {
-        image: UtilityImage,
-        title: 'Gaming Ape Club Utility & Game Plan V1',
-        url: '#',
-    },
-    {
-        image: GridCraftImage,
-        title: 'GAC x GridCraft Latest Updates',
-        url: '#',
-    },
-    {
-        image: P2EImage,
-        title: 'Play 2 Earn Intergration has arrived!',
-        url: '#',
-    },
-];
+import newsData, { NewsType } from '../assets/news/data';
 
 const NewsItem = ({ image, title, url }: NewsType): JSX.Element => {
     const [css] = useStyletron();
@@ -41,7 +15,8 @@ const NewsItem = ({ image, title, url }: NewsType): JSX.Element => {
             href={url}
             className={css({
                 position: 'relative',
-                width: '260px',
+                // width: '260px',
+                marginInline: '4px',
                 borderRadius: '20px',
                 aspectRatio: '264 / 120',
 
@@ -77,8 +52,11 @@ const NewsItem = ({ image, title, url }: NewsType): JSX.Element => {
                 className={css({
                     position: 'absolute',
                     inset: '0',
+                    width: '100%',
+                    height: '100%',
                     zIndex: '-2',
                     filter: 'blur(1px)',
+                    objectFit: 'cover',
                 })}
             />
             <div
@@ -132,7 +110,7 @@ export const LatestNewsGrid = (): JSX.Element => {
                     xxl: 5,
                 }}
             >
-                {NEWS.map(({ image, title, url }) => (
+                {newsData.latestNews.map(({ image, title, url }) => (
                     <NewsItem key={url} image={image} title={title} url={url} />
                 ))}
             </Carousel>

@@ -18,6 +18,7 @@ const Template = (args: React.ComponentProps<typeof Carousel>): JSX.Element => {
                 padding: '3rem',
                 backgroundColor: 'black',
                 color: 'white',
+                overflow: 'hidden',
             }}
         >
             <Carousel {...args}>

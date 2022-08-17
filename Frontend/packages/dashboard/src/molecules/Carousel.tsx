@@ -65,6 +65,7 @@ const Carousel: React.FC<Props> = ({
     className,
     items,
 }): JSX.Element => {
+    const [css] = useStyletron();
     const responsive = useMemo(
         () => ({
             xxl: {
