@@ -38,8 +38,6 @@ export const ShackSpecials = (): JSX.Element => {
                     <a key={url} href={url}>
                         <div
                             className={css({
-                                fontFamily: theme.font,
-
                                 overflow: 'hidden',
                                 borderRadius: '20px',
 

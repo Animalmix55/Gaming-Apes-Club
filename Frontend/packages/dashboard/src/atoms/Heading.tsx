@@ -25,7 +25,6 @@ const Heading: React.FC<Props> = ({
                     display: 'flex',
                     flexDirection: 'column',
 
-                    fontFamily: theme.font,
                     fontStyle: 'italic',
                     fontWeight: 900,
                     fontSize: '22px',

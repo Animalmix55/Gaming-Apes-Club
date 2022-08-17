@@ -52,7 +52,6 @@ export const LatestNewsBanner: React.FC<Props> = ({
                     background: 'rgba(115, 91, 242, 0.4)',
                     backdropFilter: 'blur(40px)',
 
-                    fontFamily: theme.font,
                     color: theme.foregroundPallette.white.toRgbaString(),
                     /* Note: backdrop-filter has minimal browser support */
                 })}

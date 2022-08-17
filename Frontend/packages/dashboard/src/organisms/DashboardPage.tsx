@@ -80,7 +80,7 @@ export const DashboardPage = (): JSX.Element => {
                     className={css({
                         display: 'flex',
                         flexDirection: 'column',
-                        gap: '0.5rem',
+                        gap: '3.6rem',
                         padding: '3rem',
                     })}
                 >
@@ -91,7 +91,7 @@ export const DashboardPage = (): JSX.Element => {
                         className={css({
                             display: 'grid',
                             gridTemplateColumns: 'repeat(3, minmax(0, 1fr))',
-                            gap: '0.5rem',
+                            gap: '1.5rem',
                         })}
                     >
                         <LatestNewsBanner

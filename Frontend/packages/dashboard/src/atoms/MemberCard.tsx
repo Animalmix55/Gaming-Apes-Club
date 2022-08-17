@@ -136,7 +136,6 @@ const MemberCard: React.FC<Props> = ({
                     flexDirection: 'column',
                     gap: '1rem',
 
-                    fontFamily: theme.font,
                     fontStyle: 'italic',
 
                     color: theme.foregroundPallette.white.toRgbaString(),

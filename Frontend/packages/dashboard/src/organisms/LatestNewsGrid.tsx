@@ -27,7 +27,6 @@ const NewsItem = ({ image, title, url }: NewsType): JSX.Element => {
                 display: 'flex',
                 alignItems: 'flex-end',
 
-                fontFamily: theme.font,
                 fontStyle: 'italic',
                 fontWeight: 800,
                 fontSize: '16px',
