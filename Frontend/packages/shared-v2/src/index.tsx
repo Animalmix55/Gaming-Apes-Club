@@ -8,6 +8,7 @@ export * from './models/Chain';
 export * from './models/Meta';
 export * from './models/GamingApeClub';
 export * from './atoms/Button';
+export * from './atoms/LinkButton';
 export * from './atoms/Footer';
 export * from './hooks/useHover';
 export * from './hooks/useRequest';

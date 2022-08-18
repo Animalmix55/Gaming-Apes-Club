@@ -10,7 +10,7 @@ export enum ButtonType {
     error,
 }
 
-export interface Props {
+export interface ButtonProps {
     text?: string;
     icon?: string;
     iconAlt?: string;
@@ -22,7 +22,7 @@ export interface Props {
     type?: 'button' | 'reset' | 'submit';
 }
 
-export const Button = (props: Props): JSX.Element => {
+export const Button = (props: ButtonProps): JSX.Element => {
     const {
         text,
         icon,
