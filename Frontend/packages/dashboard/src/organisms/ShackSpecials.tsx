@@ -1,5 +1,6 @@
 import React from 'react';
 import { useStyletron } from 'styletron-react';
+import { LinkButton } from '@gac/shared-v2';
 import specials from '../assets/specials';
 import Heading from '../atoms/Heading';
 import Carousel from '../molecules/Carousel';
@@ -29,6 +30,7 @@ export const ShackSpecials = (): JSX.Element => {
                     highlightedTitle="The Shack's"
                     title="Special of the month"
                 />
+                <LinkButton text="Shop the Shack" href="#" />
             </div>
             <Carousel>
                 {specials.map(({ name, image, tag, cost, url }) => (

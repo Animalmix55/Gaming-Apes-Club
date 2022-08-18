@@ -1,5 +1,6 @@
 import {
     ClassNameBuilder,
+    Icons,
     MOBILE,
     useMatchMediaQuery,
     useThemeContext,
@@ -7,7 +8,6 @@ import {
 import React from 'react';
 import { useStyletron } from 'styletron-react';
 import Heading from '../atoms/Heading';
-import XPIcon from '../assets/png/GAC_XP_ICON.png';
 
 interface StatItemProps {
     className?: string;
@@ -144,7 +144,7 @@ export const HolderStats = (): JSX.Element => {
                     className={css({ gridColumn: 'span 3' })}
                     heading="Total GAC XP Earned"
                     text="19,857,602"
-                    icon={XPIcon}
+                    icon={Icons.GACXP}
                     iconAlt="XP"
                 />
                 <StatItem
@@ -181,7 +181,7 @@ export const HolderStats = (): JSX.Element => {
                     className={css({ gridColumn: 'span 3' })}
                     heading="Total GAC XP Spent"
                     text="857,602"
-                    icon={XPIcon}
+                    icon={Icons.GACXP}
                     iconAlt="XP"
                 />
             </div>

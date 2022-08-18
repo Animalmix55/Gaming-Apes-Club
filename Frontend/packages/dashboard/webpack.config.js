@@ -5,7 +5,6 @@ const path = require('path');
 const webpack = require('webpack');
 const ImageMinimizerPlugin = require('image-minimizer-webpack-plugin');
 const Dotenv = require('dotenv-webpack');
-const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = (env) => ({
     entry: './src/index.tsx',

@@ -1,5 +1,6 @@
 import React from 'react';
 import { useStyletron } from 'styletron-react';
+import { LinkButton } from '@gac/shared-v2';
 import Heading from '../atoms/Heading';
 import MemberCard from '../atoms/MemberCard';
 import Carousel from '../molecules/Carousel';
@@ -30,7 +31,7 @@ export const TeamMembers = (): JSX.Element => {
                     title="founding team"
                 />
 
-                <a href="#">Our mission</a>
+                <LinkButton text="Our mission" href="#" />
             </div>
             <Carousel>
                 {teamMembers.map(({ name, alias, title, image, twitter }) => (

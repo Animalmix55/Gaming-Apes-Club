@@ -23,6 +23,7 @@ export interface LinkButtonProps {
     className?: string;
     iconClass?: string;
     themeType?: LinkButtonType | ThemeType;
+    external?: boolean;
 }
 
 const getTheme = (
@@ -64,6 +65,7 @@ export const LinkButton = ({
     iconClass,
     className,
     themeType = LinkButtonType.secondary,
+    external = true,
 }: LinkButtonProps): JSX.Element => {
     const [css] = useStyletron();
     const theme = useThemeContext();
@@ -97,8 +99,17 @@ export const LinkButton = ({
         });
     }, [css, theme, themeType]);
 
+    const externalProps = external
+        ? { target: '_blank', rel: 'noopener noreferrer' }
+        : {};
+
     return (
-        <a href={href} className={ClassNameBuilder(className, buttonClassName)}>
+        <a
+            href={href}
+            className={ClassNameBuilder(className, buttonClassName)}
+            // eslint-disable-next-line react/jsx-props-no-spreading
+            {...externalProps}
+        >
             {icon && (
                 <img
                     src={icon}

@@ -1,5 +1,6 @@
 import React from 'react';
 import { useStyletron } from 'styletron-react';
+import { LinkButton } from '@gac/shared-v2';
 import Heading from '../atoms/Heading';
 import Carousel from '../molecules/Carousel';
 import newsData from '../assets/news';
@@ -30,7 +31,7 @@ export const LatestNewsGrid = (): JSX.Element => {
                     title="Latest News"
                 />
 
-                <a href="#">Check the news</a>
+                <LinkButton text="Check the news" href="#" />
             </div>
             <Carousel
                 items={{

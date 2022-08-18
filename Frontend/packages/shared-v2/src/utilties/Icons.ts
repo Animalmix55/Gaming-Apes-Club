@@ -22,6 +22,7 @@ import WalletConnect from '../assets/png/action/WalletConnect.png';
 // SOCIAL
 import DiscordRound from '../assets/png/social/Discord.png';
 import OpenSeaRound from '../assets/png/social/Opensea.png';
+import OpenSeaBlue from '../assets/png/social/OpenSea-blue.png';
 import TwitterBlue from '../assets/png/social/Twitter blue.png';
 import TwitterRound from '../assets/png/social/Twitter.png';
 
@@ -65,6 +66,7 @@ export const Icons = {
     WalletConnect,
     DiscordRound,
     OpenSeaRound,
+    OpenSeaBlue,
     TwitterBlue,
     TwitterRound,
     Chainlink,

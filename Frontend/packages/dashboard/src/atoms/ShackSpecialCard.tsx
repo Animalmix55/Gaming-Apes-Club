@@ -1,7 +1,6 @@
-import { useThemeContext } from '@gac/shared-v2';
+import { Icons, useThemeContext } from '@gac/shared-v2';
 import React from 'react';
 import { useStyletron } from 'styletron-react';
-import XPIcon from '../assets/png/GAC_XP_ICON.png';
 import { boxShadowStyle, boxShadowTransition } from '../common/styles';
 
 interface Props {
@@ -98,9 +97,9 @@ const ShackSpecialCard: React.FC<Props> = ({
                         <span>{cost}</span>
                         <img
                             alt="XP"
-                            src={XPIcon}
+                            src={Icons.GACXP}
                             className={css({
-                                height: '16px',
+                                height: '24px',
                                 width: 'auto',
                             })}
                         />

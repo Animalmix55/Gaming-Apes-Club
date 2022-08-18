@@ -1,4 +1,5 @@
 /* eslint-disable react/jsx-props-no-spreading */
+import { Icons, LinkButton } from '@gac/shared-v2';
 import React from 'react';
 import { useStyletron } from 'styletron-react';
 import Heading from '../atoms/Heading';
@@ -67,9 +68,24 @@ export const RecentListings = (): JSX.Element => {
                     highlightedTitle="OpenSea's"
                     title="Recent Listings"
                 />
-                <p>
+                <p
+                    className={css({
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        gap: '16px',
+                    })}
+                >
                     <span>View collection on</span>
-                    <a href="#">OpenSea</a>
+                    <LinkButton
+                        text="OpenSea"
+                        href="https://opensea.io/collection/gamingapeclub"
+                        icon={Icons.OpenSeaBlue}
+                        themeType={{
+                            backgroundColor: 'rgba(32, 129, 226, 0.2)',
+                            hoveredBackgroundColor: '#2081E2',
+                        }}
+                    />
                 </p>
             </div>
             <Carousel>
