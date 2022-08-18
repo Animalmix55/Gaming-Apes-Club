@@ -88,11 +88,13 @@ export const RecentListings = (): JSX.Element => {
                     />
                 </p>
             </div>
-            <Carousel itemPaddingVertical={32} itemPaddingHorizontal={12}>
-                {listings.map((listing) => (
-                    <ListingCard key={listing.url} {...listing} />
-                ))}
-            </Carousel>
+            <div>
+                <Carousel itemPaddingVertical={32} itemPaddingHorizontal={12}>
+                    {listings.map((listing) => (
+                        <ListingCard key={listing.url} {...listing} />
+                    ))}
+                </Carousel>
+            </div>
         </section>
     );
 };
