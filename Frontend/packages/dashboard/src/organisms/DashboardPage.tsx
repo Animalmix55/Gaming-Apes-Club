@@ -18,6 +18,7 @@ import HolderStats from './HolderStats';
 import ShackSpecials from './ShackSpecials';
 import TeamMembers from './TeamMembers';
 import Partners from './Partners';
+import { DASHBOARD_PADDING, DASHBOARD_PADDING_TABLET } from '../common/styles';
 
 export const DashboardPage = (): JSX.Element => {
     const [css] = useStyletron();
@@ -82,9 +83,9 @@ export const DashboardPage = (): JSX.Element => {
                         display: 'flex',
                         flexDirection: 'column',
                         gap: '3.6rem',
-                        padding: '3rem',
+                        padding: DASHBOARD_PADDING,
                         [TABLET]: {
-                            padding: '1.5rem',
+                            padding: DASHBOARD_PADDING_TABLET,
                         },
                     })}
                 >

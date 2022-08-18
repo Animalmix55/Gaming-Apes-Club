@@ -15,7 +15,6 @@ export const ShackSpecials = (): JSX.Element => {
                 color: 'white',
                 display: 'flex',
                 flexDirection: 'column',
-                gap: '2rem',
             })}
         >
             <div
@@ -32,16 +31,17 @@ export const ShackSpecials = (): JSX.Element => {
                 />
                 <LinkButton text="Shop the Shack" href="#" />
             </div>
-            <Carousel>
+            <Carousel itemPaddingVertical={32} itemPaddingHorizontal={8}>
                 {specials.map(({ name, image, tag, cost, url }) => (
-                    <ShackSpecialCard
-                        key={name}
-                        name={name}
-                        image={image}
-                        tag={tag}
-                        cost={cost}
-                        url={url}
-                    />
+                    <div key={name} itemID={name}>
+                        <ShackSpecialCard
+                            name={name}
+                            image={image}
+                            tag={tag}
+                            cost={cost}
+                            url={url}
+                        />
+                    </div>
                 ))}
             </Carousel>
         </section>

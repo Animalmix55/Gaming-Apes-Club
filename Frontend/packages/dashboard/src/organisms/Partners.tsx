@@ -3,8 +3,6 @@ import { useStyletron } from 'styletron-react';
 import Heading from '../atoms/Heading';
 import Carousel from '../molecules/Carousel';
 import partners from '../assets/partners';
-
-import { dropShadowStyle, dropShadowTransition } from '../common/styles';
 import PartnerCard from '../atoms/PartnerCard';
 
 export const Partners = (): JSX.Element => {
@@ -16,7 +14,6 @@ export const Partners = (): JSX.Element => {
                 color: 'white',
                 display: 'flex',
                 flexDirection: 'column',
-                gap: '2rem',
             })}
         >
             <div
@@ -32,14 +29,17 @@ export const Partners = (): JSX.Element => {
                     title="Partners"
                 />
             </div>
-            <Carousel>
+            <Carousel itemPaddingHorizontal={32} itemPaddingVertical={32}>
                 {partners.map(({ name, image, url }) => (
-                    <PartnerCard
-                        key={url}
-                        name={name}
-                        image={image}
-                        url={url}
-                    />
+                    <div
+                        key={name}
+                        itemID={name}
+                        className={css({
+                            minWidth: '208px',
+                        })}
+                    >
+                        <PartnerCard name={name} image={image} url={url} />
+                    </div>
                 ))}
             </Carousel>
         </section>

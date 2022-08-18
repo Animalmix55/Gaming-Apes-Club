@@ -1,9 +1,10 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import { Icons, LinkButton } from '@gac/shared-v2';
+import { Icons, LinkButton, TABLET } from '@gac/shared-v2';
 import React from 'react';
 import { useStyletron } from 'styletron-react';
 import Heading from '../atoms/Heading';
 import ListingCard from '../atoms/ListingCard';
+import { DASHBOARD_PADDING, DASHBOARD_PADDING_TABLET } from '../common/styles';
 import Carousel from '../molecules/Carousel';
 
 const listings = [
@@ -53,7 +54,6 @@ export const RecentListings = (): JSX.Element => {
                 color: 'white',
                 display: 'flex',
                 flexDirection: 'column',
-                gap: '2rem',
             })}
         >
             <div
@@ -88,7 +88,7 @@ export const RecentListings = (): JSX.Element => {
                     />
                 </p>
             </div>
-            <Carousel>
+            <Carousel itemPaddingVertical={32} itemPaddingHorizontal={12}>
                 {listings.map((listing) => (
                     <ListingCard key={listing.url} {...listing} />
                 ))}

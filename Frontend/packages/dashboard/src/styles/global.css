@@ -1,5 +1,3 @@
-@import '~react-multi-carousel/lib/styles.css';
-
 /*
   1. Use a more-intuitive box-sizing model.
 */
@@ -77,11 +75,6 @@ h6 {
     isolation: isolate;
 }
 
-.react-multi-carousel-list,
-.react-multi-carousel-track {
-    overflow: visible;
-}
-
 a {
     text-decoration: none;
 }
@@ -101,4 +94,14 @@ Transitions
 }
 .cross-fade-exit-active {
     opacity: 0;
+}
+
+/* chrome and chromium based */
+.react-horizontal-scrolling-menu--scroll-container.hide-scrollbar::-webkit-scrollbar {
+    display: none;
+}
+
+.react-horizontal-scrolling-menu--scroll-container.hide-scrollbar {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
 }

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useStyletron } from 'styletron-react';
 import { dropShadowStyle, dropShadowTransition } from '../common/styles';
 
@@ -39,7 +39,8 @@ const PartnerCard: React.FC<Props> = ({
                 className={css({
                     width: '208px',
                     height: '208px',
-                    objectFit: 'cover',
+                    aspectRatio: '1 / 1',
+                    objectFit: 'contain',
                 })}
                 src={image}
                 alt={name}

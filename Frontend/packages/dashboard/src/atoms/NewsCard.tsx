@@ -13,7 +13,7 @@ const NewsCard = ({ image, title, url }: NewsType): JSX.Element => {
             href={url}
             className={css({
                 position: 'relative',
-                // width: '260px',
+                width: '264px',
                 marginInline: '4px',
                 borderRadius: '20px',
                 aspectRatio: '264 / 120',

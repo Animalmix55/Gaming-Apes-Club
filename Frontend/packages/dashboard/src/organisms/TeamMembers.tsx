@@ -1,6 +1,6 @@
 import React from 'react';
 import { useStyletron } from 'styletron-react';
-import { LinkButton } from '@gac/shared-v2';
+import { LinkButton, TABLET, useMatchMediaQuery } from '@gac/shared-v2';
 import Heading from '../atoms/Heading';
 import MemberCard from '../atoms/MemberCard';
 import Carousel from '../molecules/Carousel';
@@ -8,6 +8,7 @@ import teamMembers from '../assets/team';
 
 export const TeamMembers = (): JSX.Element => {
     const [css] = useStyletron();
+    const isTablet = useMatchMediaQuery(TABLET);
 
     return (
         <section
@@ -15,7 +16,6 @@ export const TeamMembers = (): JSX.Element => {
                 color: 'white',
                 display: 'flex',
                 flexDirection: 'column',
-                gap: '2rem',
             })}
         >
             <div
@@ -33,16 +33,20 @@ export const TeamMembers = (): JSX.Element => {
 
                 <LinkButton text="Our mission" href="#" />
             </div>
-            <Carousel>
+            <Carousel
+                itemPaddingVertical={32}
+                itemPaddingHorizontal={isTablet ? 12 : 32}
+            >
                 {teamMembers.map(({ name, alias, title, image, twitter }) => (
-                    <MemberCard
-                        key={name}
-                        name={name}
-                        alias={alias}
-                        title={title}
-                        image={image}
-                        twitter={twitter}
-                    />
+                    <div key={name} itemID={name}>
+                        <MemberCard
+                            name={name}
+                            alias={alias}
+                            title={title}
+                            image={image}
+                            twitter={twitter}
+                        />
+                    </div>
                 ))}
             </Carousel>
         </section>

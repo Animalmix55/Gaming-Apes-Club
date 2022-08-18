@@ -1,20 +1,32 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable react/jsx-props-no-spreading */
-import { Icons } from '@gac/shared-v2';
-import React, { useMemo } from 'react';
-import MultiCarousel from 'react-multi-carousel';
+import {
+    ClassNameBuilder,
+    Icons,
+    MOBILE,
+    TABLET,
+    useMatchMediaQuery,
+} from '@gac/shared-v2';
+import React from 'react';
 import { useStyletron } from 'styletron-react';
+import { ScrollMenu, VisibilityContext } from 'react-horizontal-scrolling-menu';
+import { DASHBOARD_PADDING, DASHBOARD_PADDING_TABLET } from '../common/styles';
 
+export declare type ItemType = React.ReactElement<{
+    /**
+      Required. id for every item, should be unique
+     */
+    itemId: string;
+}>;
 interface Props {
-    className?: string;
-    items?: {
-        xs: number;
-        sm: number;
-        md: number;
-        lg: number;
-        xl: number;
-        xxl: number;
-    };
+    itemClassName?: string;
+    separatorClassName?: string;
+    scrollContainerClassName?: string;
+    wrapperClassName?: string;
+    children: ItemType | ItemType[];
+    itemPaddingVertical?: number;
+    itemPaddingHorizontal?: number;
+    extendToEdges?: boolean;
 }
 
 const CustomArrow = ({ onClick, left = false }: any): JSX.Element => {
@@ -24,7 +36,8 @@ const CustomArrow = ({ onClick, left = false }: any): JSX.Element => {
             type="button"
             className={css({
                 position: 'absolute',
-                [left ? 'left' : 'right']: '0',
+                [left ? 'left' : 'right']: '15px',
+                top: 'calc(50% - 15px)',
 
                 width: '30px',
                 aspectRatio: '1 / 1',
@@ -45,6 +58,8 @@ const CustomArrow = ({ onClick, left = false }: any): JSX.Element => {
                 ':hover': {
                     backgroundColor: 'rgba(255, 255, 255, 0.6)',
                 },
+
+                zIndex: '1',
             })}
             onClick={onClick}
         >
@@ -60,61 +75,82 @@ const CustomArrow = ({ onClick, left = false }: any): JSX.Element => {
     );
 };
 
-const Carousel: React.FC<Props> = ({
+const LeftArrow = (): JSX.Element | null => {
+    const { isFirstItemVisible, scrollPrev } =
+        React.useContext(VisibilityContext);
+    const isMobile = useMatchMediaQuery(MOBILE);
+
+    if (isMobile || isFirstItemVisible) return null;
+
+    return <CustomArrow onClick={(): unknown => scrollPrev()} left />;
+};
+
+const RightArrow = (): JSX.Element | null => {
+    const { isLastItemVisible, scrollNext } =
+        React.useContext(VisibilityContext);
+    const isMobile = useMatchMediaQuery(MOBILE);
+
+    if (isMobile || isLastItemVisible) return null;
+
+    return <CustomArrow onClick={(): unknown => scrollNext()} />;
+};
+
+const extendedStyleWrapper = {
+    marginInline: `-${DASHBOARD_PADDING}`,
+    [TABLET]: {
+        marginInline: `-${DASHBOARD_PADDING_TABLET}`,
+    },
+};
+
+const extendedStyleScrollContainer = (horizontalPadding: number): any => ({
+    paddingInline: `calc(${DASHBOARD_PADDING} - ${horizontalPadding}px)`,
+    [TABLET]: {
+        marginInline: `calc(${DASHBOARD_PADDING_TABLET} - ${horizontalPadding}px)`,
+    },
+});
+
+const Carousel = ({
     children,
-    className,
-    items,
-}): JSX.Element => {
+    itemClassName,
+    separatorClassName,
+    scrollContainerClassName,
+    wrapperClassName,
+    itemPaddingVertical = 0,
+    itemPaddingHorizontal = 0,
+    extendToEdges = true,
+}: Props): JSX.Element => {
     const [css] = useStyletron();
-    const responsive = useMemo(
-        () => ({
-            xxl: {
-                breakpoint: { max: 4000, min: 1536 },
-                items: items?.xxl ?? 5,
-                slidesToSlide: items?.xxl ?? 5, // optional, default to 1.
-            },
-            xl: {
-                breakpoint: { max: 1536, min: 1280 },
-                items: items?.xl ?? 4,
-                slidesToSlide: items?.xl ?? 4, // optional, default to 1.
-            },
-            lg: {
-                breakpoint: { max: 1280, min: 1024 },
-                items: items?.lg ?? 3,
-                slidesToSlide: items?.lg ?? 3, // optional, default to 1.
-            },
-            md: {
-                breakpoint: { max: 1024, min: 768 },
-                items: items?.md ?? 2,
-                slidesToSlide: items?.md ?? 2, // optional, default to 1.
-            },
-            sm: {
-                breakpoint: { max: 768, min: 640 },
-                items: items?.sm ?? 1,
-                slidesToSlide: items?.sm ?? 1, // optional, default to 1.
-            },
-            xs: {
-                breakpoint: { max: 480, min: 0 },
-                items: items?.xs ?? 1,
-                slidesToSlide: items?.xs ?? 1, // optional, default to 1.
-            },
-        }),
-        [items]
-    );
 
     return (
-        <div>
-            <MultiCarousel
-                containerClass={className}
-                arrows
-                responsive={responsive}
-                removeArrowOnDeviceType={['xs', 'sm', 'md']}
-                customLeftArrow={<CustomArrow left />}
-                customRightArrow={<CustomArrow />}
-            >
-                {children}
-            </MultiCarousel>
-        </div>
+        <ScrollMenu
+            itemClassName={ClassNameBuilder(
+                itemClassName,
+                css({
+                    padding: `${itemPaddingVertical}px ${itemPaddingHorizontal}px`,
+                })
+            )}
+            separatorClassName={separatorClassName}
+            scrollContainerClassName={ClassNameBuilder(
+                'hide-scrollbar',
+                scrollContainerClassName,
+                css({
+                    ...(extendToEdges
+                        ? extendedStyleScrollContainer(itemPaddingHorizontal)
+                        : {}),
+                })
+            )}
+            wrapperClassName={ClassNameBuilder(
+                wrapperClassName,
+                css({
+                    position: 'relative',
+                    ...(extendToEdges ? extendedStyleWrapper : {}),
+                })
+            )}
+            LeftArrow={LeftArrow}
+            RightArrow={RightArrow}
+        >
+            {children}
+        </ScrollMenu>
     );
 };
 

@@ -15,7 +15,6 @@ export const LatestNewsGrid = (): JSX.Element => {
                 color: 'white',
                 display: 'flex',
                 flexDirection: 'column',
-                gap: '2rem',
             })}
         >
             <div
@@ -33,18 +32,11 @@ export const LatestNewsGrid = (): JSX.Element => {
 
                 <LinkButton text="Check the news" href="#" />
             </div>
-            <Carousel
-                items={{
-                    xs: 1,
-                    sm: 1,
-                    md: 2,
-                    lg: 3,
-                    xl: 4,
-                    xxl: 5,
-                }}
-            >
-                {newsData.latestNews.map(({ image, title, url }) => (
-                    <NewsCard key={url} image={image} title={title} url={url} />
+            <Carousel itemPaddingVertical={32} itemPaddingHorizontal={12}>
+                {newsData.latestNews.map(({ image, title, url }, i) => (
+                    <div key={url} itemID={`${title}-${i}`}>
+                        <NewsCard image={image} title={title} url={url} />
+                    </div>
                 ))}
             </Carousel>
         </section>
