@@ -12,21 +12,21 @@ const GridLayouts = {
     desktop: {
         withAction: {
             gridTemplateAreas: '"header action" "main main"',
-            gridTemplateColumns: 'auto max-content',
+            gridTemplateColumns: 'minmax(250px, 1fr) max-content',
         },
         withoutAction: {
             gridTemplateAreas: '"header" "main"',
-            gridTemplateColumns: '1fr',
+            gridTemplateColumns: 'minmax(250px, 1fr)',
         },
     },
     mobile: {
         withAction: {
             gridTemplateAreas: '"header" "main" "action"',
-            gridTemplateColumns: '1fr',
+            gridTemplateColumns: 'minmax(250px, 1fr)',
         },
         withoutAction: {
             gridTemplateAreas: '"header" "main"',
-            gridTemplateColumns: '1fr',
+            gridTemplateColumns: 'minmax(250px, 1fr)',
         },
     },
 };

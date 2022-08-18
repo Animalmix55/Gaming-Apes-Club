@@ -1,11 +1,12 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import { Icons, LinkButton, TABLET } from '@gac/shared-v2';
+import { Icons, LinkButton, MOBILE, TABLET } from '@gac/shared-v2';
 import React from 'react';
 import { useStyletron } from 'styletron-react';
 import Heading from '../atoms/Heading';
 import ListingCard from '../atoms/ListingCard';
 import { DASHBOARD_PADDING, DASHBOARD_PADDING_TABLET } from '../common/styles';
 import Carousel from '../molecules/Carousel';
+import DashboardSection from '../molecules/DashboardSection';
 
 const listings = [
     {
@@ -49,31 +50,21 @@ export const RecentListings = (): JSX.Element => {
     const [css] = useStyletron();
 
     return (
-        <section
-            className={css({
-                color: 'white',
-                display: 'flex',
-                flexDirection: 'column',
-            })}
-        >
-            <div
-                className={css({
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                })}
-            >
-                <Heading
-                    className={css({ flex: '1' })}
-                    highlightedTitle="OpenSea's"
-                    title="Recent Listings"
-                />
+        <DashboardSection
+            heading={
+                <Heading highlightedTitle="OpenSea's" title="Recent Listings" />
+            }
+            action={
                 <p
                     className={css({
                         display: 'flex',
                         justifyContent: 'center',
                         alignItems: 'center',
                         gap: '16px',
+
+                        [MOBILE]: {
+                            flexDirection: 'column',
+                        },
                     })}
                 >
                     <span>View collection on</span>
@@ -87,15 +78,14 @@ export const RecentListings = (): JSX.Element => {
                         }}
                     />
                 </p>
-            </div>
-            <div>
-                <Carousel itemPaddingVertical={32} itemPaddingHorizontal={12}>
-                    {listings.map((listing) => (
-                        <ListingCard key={listing.url} {...listing} />
-                    ))}
-                </Carousel>
-            </div>
-        </section>
+            }
+        >
+            <Carousel itemPaddingVertical={32} itemPaddingHorizontal={12}>
+                {listings.map((listing) => (
+                    <ListingCard key={listing.url} {...listing} />
+                ))}
+            </Carousel>
+        </DashboardSection>
     );
 };
 

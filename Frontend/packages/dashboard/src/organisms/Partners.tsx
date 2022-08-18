@@ -4,31 +4,17 @@ import Heading from '../atoms/Heading';
 import Carousel from '../molecules/Carousel';
 import partners from '../assets/partners';
 import PartnerCard from '../atoms/PartnerCard';
+import DashboardSection from '../molecules/DashboardSection';
 
 export const Partners = (): JSX.Element => {
     const [css] = useStyletron();
 
     return (
-        <section
-            className={css({
-                color: 'white',
-                display: 'flex',
-                flexDirection: 'column',
-            })}
+        <DashboardSection
+            heading={
+                <Heading highlightedTitle="Our Awesome" title="Partners" />
+            }
         >
-            <div
-                className={css({
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                })}
-            >
-                <Heading
-                    className={css({ flex: '1' })}
-                    highlightedTitle="Our Awesome"
-                    title="Partners"
-                />
-            </div>
             <Carousel itemPaddingHorizontal={32} itemPaddingVertical={32}>
                 {partners.map(({ name, image, url }) => (
                     <div
@@ -42,7 +28,7 @@ export const Partners = (): JSX.Element => {
                     </div>
                 ))}
             </Carousel>
-        </section>
+        </DashboardSection>
     );
 };
 

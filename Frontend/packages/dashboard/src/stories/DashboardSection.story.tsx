@@ -2,23 +2,13 @@
 import { LinkButton } from '@gac/shared-v2';
 import React from 'react';
 import { useStyletron } from 'styletron-react';
-import DashboardSection from '../atoms/DashboardSection';
+import DashboardSection from '../molecules/DashboardSection';
 import Heading from '../atoms/Heading';
 import '../styles/global.css';
 
 export default {
-    title: 'Dashboard/Atoms/DashboardSection',
+    title: 'Dashboard/Molecules/DashboardSection',
     component: DashboardSection,
-};
-
-const Template = (
-    args: React.ComponentProps<typeof DashboardSection>
-): JSX.Element => {
-    return (
-        <div style={{ padding: '3rem', backgroundColor: 'black' }}>
-            <DashboardSection {...args} />
-        </div>
-    );
 };
 
 export const WithoutAction = (): JSX.Element => {
