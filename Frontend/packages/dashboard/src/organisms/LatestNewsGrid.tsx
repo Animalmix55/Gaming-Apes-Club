@@ -6,6 +6,8 @@ import Carousel from '../molecules/Carousel';
 import newsData from '../assets/news';
 import NewsCard from '../atoms/NewsCard';
 
+const { latestNews } = newsData;
+
 export const LatestNewsGrid = (): JSX.Element => {
     const [css] = useStyletron();
 
@@ -33,8 +35,8 @@ export const LatestNewsGrid = (): JSX.Element => {
                 <LinkButton text="Check the news" href="#" />
             </div>
             <Carousel itemPaddingVertical={32} itemPaddingHorizontal={12}>
-                {newsData.latestNews.map(({ image, title, url }, i) => (
-                    <div key={url} itemID={`${title}-${i}`}>
+                {latestNews.map(({ image, title, url }) => (
+                    <div key={title} itemID={title}>
                         <NewsCard image={image} title={title} url={url} />
                     </div>
                 ))}

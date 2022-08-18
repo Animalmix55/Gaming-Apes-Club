@@ -105,7 +105,7 @@ const extendedStyleWrapper = {
 const extendedStyleScrollContainer = (horizontalPadding: number): any => ({
     paddingInline: `calc(${DASHBOARD_PADDING} - ${horizontalPadding}px)`,
     [TABLET]: {
-        marginInline: `calc(${DASHBOARD_PADDING_TABLET} - ${horizontalPadding}px)`,
+        paddingInline: `calc(${DASHBOARD_PADDING_TABLET} - ${horizontalPadding}px)`,
     },
 });
 
