@@ -26,17 +26,17 @@ const latestNews: NewsType[] = [
     },
     {
         image: UtilityImage,
-        title: 'Gaming Ape Club Utility & Game Plan V1',
+        title: 'Gaming Ape Club Utility & Game Plan V2',
         url: '#',
     },
     {
         image: GridCraftImage,
-        title: 'GAC x GridCraft Latest Updates',
+        title: 'GAC x GridCraft Latest Updates 2',
         url: '#',
     },
     {
         image: P2EImage,
-        title: 'Play 2 Earn Intergration has arrived!',
+        title: 'Play 2 Earn Intergration has arrived! 2',
         url: '#',
     },
 ];
