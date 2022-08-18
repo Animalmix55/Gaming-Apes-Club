@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import {
     Sidebar,
     SidebarItem,
@@ -24,6 +24,14 @@ export const MainPage = (): JSX.Element => {
     const account = accounts?.[0];
 
     const [css] = useStyletron();
+
+    const footerLinks = useMemo(() => {
+        return [
+            { name: 'Twitter', url: TwitterUrl },
+            { name: 'Discord', url: DiscordUrl },
+            { name: 'OpenSea', url: OpenSeaUrl },
+        ];
+    }, [DiscordUrl, OpenSeaUrl, TwitterUrl]);
 
     return (
         <div
@@ -152,11 +160,7 @@ export const MainPage = (): JSX.Element => {
                         },
                     })}
                 >
-                    <Footer
-                        openSeaUrl={OpenSeaUrl}
-                        discordUrl={DiscordUrl}
-                        twitterUrl={TwitterUrl}
-                    />
+                    <Footer links={footerLinks} />
                 </div>
             </div>
             <Basket

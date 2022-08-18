@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { useStyletron } from 'styletron-react';
 import {
     Button,
@@ -32,6 +32,14 @@ export const MarketplacePage = (): JSX.Element => {
         useGamingApeContext();
     const [modalOpen, setModalOpen] = React.useState(false);
     const { accounts } = useWeb3();
+
+    const footerLinks = useMemo(() => {
+        return [
+            { name: 'Twitter', url: twitterUrl },
+            { name: 'Discord', url: discordUrl },
+            { name: 'OpenSea', url: openseaUrl },
+        ];
+    }, [discordUrl, openseaUrl, twitterUrl]);
 
     const isAdmin =
         adminRoles &&
@@ -244,11 +252,7 @@ export const MarketplacePage = (): JSX.Element => {
                         },
                     })}
                 >
-                    <Footer
-                        openSeaUrl={openseaUrl}
-                        discordUrl={discordUrl}
-                        twitterUrl={twitterUrl}
-                    />
+                    <Footer links={footerLinks} />
                 </div>
             </div>
         </div>

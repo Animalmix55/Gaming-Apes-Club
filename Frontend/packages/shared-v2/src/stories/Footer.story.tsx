@@ -7,5 +7,13 @@ export default {
 };
 
 export const StandAlone = (): JSX.Element => {
-    return <Footer openSeaUrl="test" discordUrl="test" twitterUrl="test" />;
+    return (
+        <Footer
+            links={[
+                { name: 'Twitter', url: '#' },
+                { name: 'Discord', url: '#' },
+                { name: 'OpenSea', url: '#' },
+            ]}
+        />
+    );
 };

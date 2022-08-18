@@ -20,6 +20,15 @@ import TeamMembers from './TeamMembers';
 import Partners from './Partners';
 import { DASHBOARD_PADDING, DASHBOARD_PADDING_TABLET } from '../common/styles';
 
+const FooterLinks = [
+    {
+        name: 'Cookie Policy',
+        url: '#',
+    },
+    { name: 'Privacy Policy', url: '#' },
+    { name: 'Terms & Conditions', url: '#' },
+];
+
 export const DashboardPage = (): JSX.Element => {
     const [css] = useStyletron();
     const { discordUrl, openseaUrl, twitterUrl } = useGamingApeContext();
@@ -126,11 +135,7 @@ export const DashboardPage = (): JSX.Element => {
                         },
                     })}
                 >
-                    <Footer
-                        openSeaUrl={openseaUrl}
-                        discordUrl={discordUrl}
-                        twitterUrl={twitterUrl}
-                    />
+                    <Footer links={FooterLinks} />
                 </div>
             </div>
         </div>
