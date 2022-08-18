@@ -74,6 +74,8 @@ const MemberCard: React.FC<Props> = ({
 
                                 color: 'white',
                                 textDecoration: 'none',
+
+                                isolation: 'isolate',
                             })
                         )}
                         onMouseEnter={(): void => setHover(true)}
@@ -82,20 +84,16 @@ const MemberCard: React.FC<Props> = ({
                         <img src={image} alt={`${name}`} />
                         <div
                             className={ClassNameBuilder(
-                                hover
-                                    ? css({
-                                          opacity: '1',
-                                      })
-                                    : undefined,
                                 css({
                                     position: 'absolute',
                                     inset: '0',
 
-                                    opacity: '0',
+                                    opacity: hover ? '1' : '0',
+                                    transition: 'opacity 0.2s linear',
+
                                     background: 'rgba(0, 0, 0, 0.9)',
                                     boxShadow: '0 4px 30px rgba(0, 0, 0, 0.1)',
                                     backdropFilter: 'blur(7.4px)',
-                                    transition: 'opacity 0.1s ease-in',
 
                                     display: 'flex',
                                     flexDirection: 'column',
@@ -106,6 +104,8 @@ const MemberCard: React.FC<Props> = ({
                                     fontWeight: 700,
                                     fontSize: '16px',
                                     lineHeight: '20px',
+
+                                    zIndex: 10,
 
                                     ':focus': {
                                         opacity: '1',
