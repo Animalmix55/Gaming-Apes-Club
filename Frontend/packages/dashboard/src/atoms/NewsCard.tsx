@@ -34,7 +34,11 @@ const NewsCard = ({ image, title, url }: NewsType): JSX.Element => {
 
                 transition: boxShadowTransition,
 
-                ':hover, :focus': {
+                ':hover': {
+                    ...boxShadowStyle,
+                },
+
+                ':focus': {
                     ...boxShadowStyle,
                 },
             })}

@@ -36,7 +36,11 @@ const ShackSpecialCard: React.FC<Props> = ({
 
                     transition: boxShadowTransition,
 
-                    ':hover, :focus': {
+                    ':hover': {
+                        ...boxShadowStyle,
+                    },
+
+                    ':focus': {
                         ...boxShadowStyle,
                     },
 

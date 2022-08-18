@@ -24,7 +24,11 @@ const PartnerCard: React.FC<Props> = ({
 
                 transition: dropShadowTransition,
 
-                ':hover, :focus': {
+                ':hover': {
+                    ...dropShadowStyle,
+                },
+
+                ':focus': {
                     ...dropShadowStyle,
                 },
             })}

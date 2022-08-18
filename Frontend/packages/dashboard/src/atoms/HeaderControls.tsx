@@ -45,7 +45,11 @@ const Button: React.FC<{ disabled?: boolean; onClick?: () => void }> = ({
 
                 cursor: disabled ? 'default' : 'pointer',
 
-                ':hover:not(:disabled), :focus:not(:disabled)': {
+                ':hover:not(:disabled)': {
+                    backgroundColor:
+                        theme.buttonPallette.primary.toRgbaString(),
+                },
+                ':focus:not(:disabled)': {
                     backgroundColor:
                         theme.buttonPallette.primary.toRgbaString(),
                 },

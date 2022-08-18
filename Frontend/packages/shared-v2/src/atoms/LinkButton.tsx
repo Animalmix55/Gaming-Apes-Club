@@ -91,10 +91,11 @@ export const LinkButton = ({
             alignItems: 'center',
             gap: '4px',
 
-            [HOVERABLE]: {
-                ':hover, :focus': {
-                    backgroundColor: hoveredBackgroundColor,
-                },
+            ':hover': {
+                backgroundColor: hoveredBackgroundColor,
+            },
+            ':focus': {
+                backgroundColor: hoveredBackgroundColor,
             },
         });
     }, [css, theme, themeType]);
