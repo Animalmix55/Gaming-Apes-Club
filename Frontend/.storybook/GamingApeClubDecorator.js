@@ -1,7 +1,8 @@
 import { GamingApeContextProvider as MintContextProvider } from '@gac/mint/src/contexts/GamingApeClubContext';
 import { GamingApeContextProvider as MarketContextProvider } from '@gac/market/src/contexts/GamingApeClubContext';
+import { GamingApeContextProvider as DashboardContextProvider } from '@gac/dashboard/src/contexts/GamingApeClubContext';
 
-export default (story) => 
+export default (story) => (
     <MintContextProvider
         value={{
             homeUrl: 'https://gamingapeclub.com',
@@ -10,17 +11,33 @@ export default (story) =>
             chainId: 4,
             openseaUrl: 'test',
             twitterUrl: 'test',
-            discordUrl: 'test'
-        }}>
-            <MarketContextProvider
+            discordUrl: 'test',
+        }}
+    >
+        <MarketContextProvider
+            value={{
+                homeUrl: 'https://gamingapeclub.com',
+                api: 'http://localhost:3000',
+                openseaUrl: 'test',
+                twitterUrl: 'test',
+                discordUrl: 'test',
+            }}
+        >
+            <DashboardContextProvider
                 value={{
                     homeUrl: 'https://gamingapeclub.com',
                     api: 'http://localhost:3000',
                     openseaUrl: 'test',
                     twitterUrl: 'test',
-                    discordUrl: 'test'
+                    discordUrl: 'test',
+                    gacStakingAncilaryAddress:
+                        '0xf4a08D9c5CfA5281A242eEA7c777A4014225B14a',
+                    gacXPAddress: '0xAc2a6706285b91143eaded25d946Ff17A60A6512',
+                    chainId: 137,
                 }}
             >
                 {story()}
-            </MarketContextProvider>
-    </MintContextProvider> 
+            </DashboardContextProvider>
+        </MarketContextProvider>
+    </MintContextProvider>
+);
