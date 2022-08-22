@@ -1,10 +1,8 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import { Icons, LinkButton, MOBILE, TABLET } from '@gac/shared-v2';
+import { Header, Icons, LinkButton, MOBILE, TABLET } from '@gac/shared-v2';
 import React from 'react';
 import { useStyletron } from 'styletron-react';
-import Heading from '../atoms/Heading';
 import ListingCard from '../atoms/ListingCard';
-import { DASHBOARD_PADDING, DASHBOARD_PADDING_TABLET } from '../common/styles';
 import Carousel from '../molecules/Carousel';
 import DashboardSection from '../molecules/DashboardSection';
 
@@ -51,9 +49,7 @@ export const RecentListings = (): JSX.Element => {
 
     return (
         <DashboardSection
-            heading={
-                <Heading highlightedTitle="OpenSea's" title="Recent Listings" />
-            }
+            heading={<Header title="OpenSea's" subtitle="Recent Listings" />}
             action={
                 <p
                     className={css({

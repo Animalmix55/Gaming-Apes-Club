@@ -18,7 +18,7 @@ import {
     GamingApeClubContextType,
     GamingApeContextProvider,
 } from './contexts/GamingApeClubContext';
-import { DashboardPage } from './organisms/DashboardPage';
+import { ProfilePage } from './organisms/ProfilePage';
 
 initializeIcons();
 
@@ -65,7 +65,7 @@ const Root = (): JSX.Element => {
                             }}
                         >
                             <>
-                                <DashboardPage />
+                                <ProfilePage />
                                 <ToastContainer position="bottom-left" />
                             </>
                         </GamingApeContextProvider>

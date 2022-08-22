@@ -1,6 +1,6 @@
 import React from 'react';
 import { useStyletron } from 'styletron-react';
-import Heading from '../atoms/Heading';
+import { Header } from '@gac/shared-v2';
 import Carousel from '../molecules/Carousel';
 import partners from '../assets/partners';
 import PartnerCard from '../atoms/PartnerCard';
@@ -11,9 +11,7 @@ export const Partners = (): JSX.Element => {
 
     return (
         <DashboardSection
-            heading={
-                <Heading highlightedTitle="Our Awesome" title="Partners" />
-            }
+            heading={<Header title="Our Awesome" subtitle="Partners" />}
         >
             <Carousel itemPaddingHorizontal={32} itemPaddingVertical={32}>
                 {partners.map(({ name, image, url }) => (

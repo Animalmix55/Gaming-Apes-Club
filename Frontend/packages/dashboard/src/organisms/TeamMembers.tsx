@@ -1,6 +1,5 @@
 import React from 'react';
-import { LinkButton, TABLET, useMatchMediaQuery } from '@gac/shared-v2';
-import Heading from '../atoms/Heading';
+import { Header, LinkButton, TABLET, useMatchMediaQuery } from '@gac/shared-v2';
 import MemberCard from '../atoms/MemberCard';
 import Carousel from '../molecules/Carousel';
 import teamMembers from '../assets/team';
@@ -11,9 +10,7 @@ export const TeamMembers = (): JSX.Element => {
 
     return (
         <DashboardSection
-            heading={
-                <Heading highlightedTitle="Meet the" title="founding team" />
-            }
+            heading={<Header title="Meet the" subtitle="founding team" />}
             action={<LinkButton text="Our mission" href="#" />}
         >
             <Carousel

@@ -1,7 +1,6 @@
 import React from 'react';
-import { LinkButton } from '@gac/shared-v2';
+import { Header, LinkButton } from '@gac/shared-v2';
 import specials from '../assets/specials';
-import Heading from '../atoms/Heading';
 import Carousel from '../molecules/Carousel';
 import ShackSpecialCard from '../atoms/ShackSpecialCard';
 import DashboardSection from '../molecules/DashboardSection';
@@ -10,10 +9,7 @@ export const ShackSpecials = (): JSX.Element => {
     return (
         <DashboardSection
             heading={
-                <Heading
-                    highlightedTitle="The Shack's"
-                    title="Special of the month"
-                />
+                <Header title="The Shack's" subtitle="Special of the month" />
             }
             action={<LinkButton text="Shop the Shack" href="#" />}
         >

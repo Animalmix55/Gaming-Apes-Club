@@ -3,6 +3,7 @@ import {
     AccentTextStyles,
     ClassNameBuilder,
     Fraction,
+    Header,
     Icons,
     MOBILE,
     TokenDisplay,
@@ -14,7 +15,6 @@ import {
 } from '@gac/shared-v2';
 import React from 'react';
 import { useStyletron } from 'styletron-react';
-import Heading from '../atoms/Heading';
 import { useGamingApeContext } from '../contexts/GamingApeClubContext';
 
 interface StatItemProps {
@@ -158,12 +158,12 @@ export const HolderStatsFigma = (): JSX.Element => {
                 padding: '24px',
             })}
         >
-            <Heading
+            <Header
                 className={css({
                     flex: '1',
                 })}
-                highlightedTitle="Overal GAC"
-                title="Holder Stats"
+                title="Overal GAC"
+                subtitle="Holder Stats"
             />
             <div
                 className={css({
@@ -266,7 +266,7 @@ const HolderStats = (): JSX.Element => {
                 padding: '24px',
             })}
         >
-            <Heading highlightedTitle="Overal GAC" title="Holder Stats" />
+            <Header title="Overal GAC" subtitle="Holder Stats" />
             <div
                 className={css({
                     display: 'flex',

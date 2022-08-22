@@ -27,6 +27,8 @@ export const Header = ({
                     fontStyle: 'italic',
                     fontWeight: 900,
                     fontSize: '28px',
+                    lineHeight: '28px',
+                    letterSpacing: '0.05em',
                     textTransform: 'uppercase',
                     color: theme.foregroundPallette.white.toRgbaString(),
                 })

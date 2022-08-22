@@ -1,9 +1,8 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import { LinkButton } from '@gac/shared-v2';
+import { LinkButton, Header } from '@gac/shared-v2';
 import React from 'react';
 import { useStyletron } from 'styletron-react';
 import DashboardSection from '../molecules/DashboardSection';
-import Heading from '../atoms/Heading';
 import '../styles/global.css';
 
 export default {
@@ -16,7 +15,7 @@ export const WithoutAction = (): JSX.Element => {
     return (
         <DashboardSection
             className={css({ padding: '3rem', backgroundColor: 'black' })}
-            heading={<Heading highlightedTitle="A Simple" title="Heading" />}
+            heading={<Header title="A Simple" subtitle="Heading" />}
         >
             <p className={css({ height: '300px', backgroundColor: 'blue' })}>
                 Content
@@ -30,7 +29,7 @@ export const WithAction = (): JSX.Element => {
     return (
         <DashboardSection
             className={css({ padding: '3rem', backgroundColor: 'black' })}
-            heading={<Heading highlightedTitle="A Simple" title="Heading" />}
+            heading={<Header title="A Simple" subtitle="Heading" />}
             action={<LinkButton href="#" text="An action link" />}
         >
             <p className={css({ height: '300px', backgroundColor: 'blue' })}>
