@@ -242,7 +242,7 @@ const HolderStats = (): JSX.Element => {
         gamingApeClubAddress,
         gacXPAddress,
     } = useGamingApeContext();
-    const { accounts, provider: ethProvider } = useWeb3(ethereumChainId);
+    const { provider: ethProvider } = useWeb3(ethereumChainId);
     const { provider: polygonProvider } = useWeb3(polygonChainId);
 
     const totalStaked = useNFTBalance(
