@@ -30,10 +30,14 @@ export default (story) => (
                     openseaUrl: 'test',
                     twitterUrl: 'test',
                     discordUrl: 'test',
-                    gacStakingAncilaryAddress:
-                        '0xf4a08D9c5CfA5281A242eEA7c777A4014225B14a',
+                    gamingApeClubAddress:
+                        '0xAc2a6706285b91143eaded25d946Ff17A60A6512',
+                    gacStakingContractAddress:
+                        '0x412aCAd86FFa3b287C1043ab4e56F7C4A6A9e385',
                     gacXPAddress: '0xAc2a6706285b91143eaded25d946Ff17A60A6512',
                     chainId: 137,
+                    ethereumChainId: 1,
+                    polygonChainId: 1,
                 }}
             >
                 {story()}

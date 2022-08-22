@@ -10,8 +10,11 @@ export interface GamingApeClubContextType {
     adminRoles?: string[];
     defaultDiscordMessage?: string;
     chainId?: Chain;
+    ethereumChainId?: Chain;
+    polygonChainId?: Chain;
     gacXPAddress?: string;
-    gacStakingAncilaryAddress?: string;
+    gacStakingContractAddress?: string;
+    gamingApeClubAddress?: string;
 }
 
 export const GamingApeClubContext =

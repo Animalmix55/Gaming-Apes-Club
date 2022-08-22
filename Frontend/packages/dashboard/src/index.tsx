@@ -58,6 +58,8 @@ const Root = (): JSX.Element => {
                                 gacStakingAncilaryAddress,
                                 gacXPAddress,
                                 chainId,
+                                polygonChainId: 137,
+                                ethereumChainId: 1,
                             }}
                         >
                             <>
