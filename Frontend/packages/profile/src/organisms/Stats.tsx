@@ -2,77 +2,21 @@ import React, { useMemo } from 'react';
 import { useStyletron } from 'styletron-react';
 import {
     AccentTextStyles,
-    Button,
-    ButtonType,
     ClassNameBuilder,
     Fraction,
-    Header,
-    Icons,
     MOBILE,
     TokenDisplay,
     useERC20Balance,
-    useERC20Supply,
     useNFTBalance,
     useThemeContext,
     useWeb3,
 } from '@gac/shared-v2';
-import { Spinner, SpinnerSize } from '@fluentui/react';
 import { BigNumber } from '@ethersproject/bignumber';
 import { useGamingApeContext } from '../contexts/GamingApeClubContext';
 import { useTokensStaked } from '../web3/hooks/useTokensStaked';
 import { useCurrentReward } from '../web3/hooks/useCurrentReward';
 import useRewardByAmount from '../web3/hooks/useRewardByAmount';
-
-const Heading = ({ text }: { text: string }): JSX.Element => {
-    const [css] = useStyletron();
-    return (
-        <p
-            className={css({
-                fontWeight: 900,
-                fontSize: '16px',
-                lineHeight: '20px',
-                letterSpacing: '0.03em',
-            })}
-        >
-            {text}
-        </p>
-    );
-};
-
-const StatItem: React.FC<{ title: string; loading?: boolean }> = ({
-    children,
-    title,
-    loading,
-}): JSX.Element => {
-    const [css] = useStyletron();
-    const theme = useThemeContext();
-    return (
-        <div
-            className={css({
-                backgroundColor: theme.backgroundPallette.light.toRgbaString(),
-                padding: '16px',
-                borderRadius: '20px',
-                textAlign: 'center',
-
-                display: 'flex',
-                flexDirection: 'column',
-                gap: '4px',
-            })}
-        >
-            <Heading text={title} />
-            <div
-                className={css({
-                    flex: 1,
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                })}
-            >
-                {loading ? <Spinner size={SpinnerSize.medium} /> : children}
-            </div>
-        </div>
-    );
-};
+import StatItem from '../atoms/StatItem';
 
 export const Stats = (): JSX.Element => {
     const [css] = useStyletron();
@@ -111,7 +55,7 @@ export const Stats = (): JSX.Element => {
     }, [dailyYield]);
 
     const tokenClass = css({
-        fontWeight: 700,
+        fontWeight: 900,
         fontSize: '20px !important',
         lineHeight: '32px',
         letterSpacing: '0.1em !important',

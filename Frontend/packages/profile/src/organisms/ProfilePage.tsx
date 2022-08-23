@@ -18,6 +18,8 @@ import ConnectDiscord from '../molecules/ConnectDiscord';
 import ProfileHeader from '../atoms/ProfileHeader';
 import Stats from './Stats';
 import PurchaseHistory from './PurchaseHistory';
+import SocialEarnings from './SocialEarnings';
+import Leaderboard from './Leaderboard';
 
 const FooterLinks = [
     {
@@ -101,8 +103,8 @@ const Body = (): JSX.Element => {
                         />
                     </div>
                 )}
-                {(!isMobile || tab === 'earnings') && <div>Earnings</div>}
-                {(!isMobile || tab === 'leaderboard') && <div>Leaderboard</div>}
+                {(!isMobile || tab === 'earnings') && <SocialEarnings />}
+                {(!isMobile || tab === 'leaderboard') && <Leaderboard />}
                 {(!isMobile || tab === 'history') && (
                     <>
                         <Stats />
