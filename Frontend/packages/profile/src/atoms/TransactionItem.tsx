@@ -1,4 +1,4 @@
-import { TokenDisplay } from '@gac/shared-v2';
+import { MOBILE, TokenDisplay } from '@gac/shared-v2';
 import React from 'react';
 import { useStyletron } from 'styletron-react';
 
@@ -24,6 +24,12 @@ const TransactionItem: React.FC<Props> = ({
                 display: 'flex',
                 justifyContent: 'center',
                 gap: '8px',
+
+                [MOBILE]: {
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    textAlign: 'center',
+                },
             })}
         >
             <img
@@ -66,6 +72,7 @@ const TransactionItem: React.FC<Props> = ({
                     <span>{address}</span>
                 </p>
             </div>
+
             <TokenDisplay
                 className={css({
                     fontWeight: 900,

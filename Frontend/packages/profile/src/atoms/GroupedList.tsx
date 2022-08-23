@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { ClassNameBuilder } from '@gac/shared-v2';
+import { ClassNameBuilder, MOBILE } from '@gac/shared-v2';
 import { useStyletron } from 'styletron-react';
 
 type Item<T> = T & { createdAt: number };
@@ -54,6 +54,9 @@ const GroupedList = <T,>({
                     display: 'flex',
                     flexDirection: 'column',
                     gap: '16px',
+                    [MOBILE]: {
+                        gap: '24px',
+                    },
                 }),
                 className
             )}
@@ -76,6 +79,12 @@ const GroupedList = <T,>({
                             flexDirection: 'column',
                             gap: '24px',
                             marginTop: '16px',
+                            marginLeft: '8px',
+
+                            [MOBILE]: {
+                                marginTop: '24px',
+                                marginLeft: 0,
+                            },
                         })}
                     >
                         {items.map(render)}

@@ -1,6 +1,5 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import React from 'react';
-import { useStyletron } from 'styletron-react';
 import GroupedList from '../atoms/GroupedList';
 import TransactionItem from '../atoms/TransactionItem';
 
@@ -18,8 +17,6 @@ interface Props {
 }
 
 const TransactionList: React.FC<Props> = ({ transactions }): JSX.Element => {
-    const [css] = useStyletron();
-
     return (
         <GroupedList
             items={transactions}
