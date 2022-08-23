@@ -36,7 +36,7 @@ export const SidebarItems: (SidebarItem & { url?: string })[] = [
         icon: Icons.Profile,
         displayText: 'Profile',
         id: 'Profile',
-        disabled: true,
+        url: 'https://profile.gamingapeclub.com/',
     },
 ];
 

@@ -1,7 +1,7 @@
 {
-  "name": "@gac/account",
+  "name": "@gac/profile",
   "version": "1.0.0",
-  "description": "The account page for GAC",
+  "description": "The profile page for GAC",
   "main": "index.tsx",
   "license": "MIT",
   "private": true,

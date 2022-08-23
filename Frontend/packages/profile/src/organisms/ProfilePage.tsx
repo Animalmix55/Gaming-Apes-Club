@@ -10,7 +10,8 @@ import {
 } from '@gac/shared-v2';
 import Background from '@gac/shared-v2/lib/assets/png/background/BACKGROUND.png';
 import { useGamingApeContext } from '../contexts/GamingApeClubContext';
-import { DASHBOARD_PADDING, DASHBOARD_PADDING_TABLET } from '../common/styles';
+import { PADDING, PADDING_TABLET } from '../common/styles';
+import ConnectDiscord from '../molecules/ConnectDiscord';
 
 const FooterLinks = [
     {
@@ -20,6 +21,44 @@ const FooterLinks = [
     { name: 'Privacy Policy', url: '#' },
     { name: 'Terms & Conditions', url: '#' },
 ];
+
+const Body = (): JSX.Element => {
+    const [css] = useStyletron();
+
+    return (
+        <div
+            className={css({
+                overflowY: 'auto',
+                overflowX: 'hidden',
+                width: '100%',
+            })}
+        >
+            <main
+                className={css({
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '3.6rem',
+                    padding: PADDING,
+                    [TABLET]: {
+                        padding: PADDING_TABLET,
+                    },
+                })}
+            >
+                <p>Hello</p>
+            </main>
+            <div
+                className={css({
+                    padding: '48px',
+                    [MOBILE]: {
+                        padding: '48px 24px 48px 24px',
+                    },
+                })}
+            >
+                <Footer links={FooterLinks} />
+            </div>
+        </div>
+    );
+};
 
 export const ProfilePage = (): JSX.Element => {
     const [css] = useStyletron();
@@ -44,7 +83,7 @@ export const ProfilePage = (): JSX.Element => {
             })}
         >
             <Sidebar
-                selectedId="Home"
+                selectedId="Profile"
                 items={SidebarItems}
                 onDisordClick={
                     discordUrl
@@ -77,32 +116,15 @@ export const ProfilePage = (): JSX.Element => {
                     overflowY: 'auto',
                     overflowX: 'hidden',
                     width: '100%',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    padding: PADDING,
                 })}
             >
-                <main
-                    className={css({
-                        display: 'flex',
-                        flexDirection: 'column',
-                        gap: '3.6rem',
-                        padding: DASHBOARD_PADDING,
-                        [TABLET]: {
-                            padding: DASHBOARD_PADDING_TABLET,
-                        },
-                    })}
-                >
-                    <p>Hello</p>
-                </main>
-                <div
-                    className={css({
-                        padding: '48px',
-                        [MOBILE]: {
-                            padding: '48px 24px 48px 24px',
-                        },
-                    })}
-                >
-                    <Footer links={FooterLinks} />
-                </div>
+                <ConnectDiscord />
             </div>
+            {/* <Body /> */}
         </div>
     );
 };
