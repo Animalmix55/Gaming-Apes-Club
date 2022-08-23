@@ -44,15 +44,18 @@ const ProfileHeader: React.FC<Props> = ({
                 className
             )}
         >
-            <div className={css({ width: '80px' })}>
-                <RoundedHexagon id={getId(discord)} radius={5} width={80}>
-                    <img
-                        src={image}
-                        alt={name}
-                        className={css({ objectFit: 'contain', width: '80px' })}
-                    />
-                </RoundedHexagon>
-            </div>
+            <RoundedHexagon id={getId(discord)} radius={5} width={80}>
+                <img
+                    src={image}
+                    alt={name}
+                    className={css({
+                        objectFit: 'cover',
+                        width: '100%',
+                        height: '100%',
+                    })}
+                />
+            </RoundedHexagon>
+
             <div
                 className={css({
                     display: 'flex',

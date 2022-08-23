@@ -55,13 +55,7 @@ const MemberCard: React.FC<Props> = ({
                     })
                 )}
             >
-                <RoundedHexagon
-                    id={name}
-                    className={css({
-                        width: '215px',
-                    })}
-                    radius={10}
-                >
+                <RoundedHexagon id={name} width={215} radius={10}>
                     <a
                         href={`https://twitter.com/${twitter}`}
                         target="_blank"

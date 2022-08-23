@@ -39,15 +39,20 @@ const RankItem: React.FC<Props> = ({
                 className
             )}
         >
-            <div className={css({ width: '48px' })}>
+            <div className={css({ flexShrink: 0 })}>
                 <RoundedHexagon id={getId(name)} radius={5} width={48}>
                     <img
                         src={image}
                         alt={name}
-                        className={css({ objectFit: 'contain', width: '48px' })}
+                        className={css({
+                            objectFit: 'cover',
+                            width: '100%',
+                            height: '100%',
+                        })}
                     />
                 </RoundedHexagon>
             </div>
+
             <div
                 className={css({
                     flex: 1,

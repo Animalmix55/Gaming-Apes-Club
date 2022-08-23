@@ -60,21 +60,15 @@ export const RoundedHexagon: React.FC<RoundedHexagonProps> = ({
                         css({
                             position: 'relative',
                             width: `${width}px`,
-                            paddingTop: '86.6%',
+                            aspectRatio: '1000 / 866',
                             clipPath:
                                 'polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%)',
+                            overflow: 'hidden',
                         }),
                         className
                     )}
                 >
-                    <div
-                        className={css({
-                            position: 'absolute',
-                            inset: '0',
-                        })}
-                    >
-                        {children}
-                    </div>
+                    {children}
                 </div>
             </div>
         </>

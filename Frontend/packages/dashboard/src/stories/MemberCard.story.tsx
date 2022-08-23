@@ -2,6 +2,7 @@
 import React from 'react';
 import MemberCard from '../atoms/MemberCard';
 import '../styles/global.css';
+import data from '../assets/team';
 
 export default {
     title: 'Dashboard/Atoms/MemberCard',
@@ -20,9 +21,9 @@ const Template = (
 
 export const Primary = Template.bind({});
 Primary.args = {
-    name: 'David',
-    alias: 'Politikos',
-    title: 'Chief Executive Officer',
-    image: undefined,
-    twitter: 'david',
+    name: data[0].name,
+    alias: data[0].alias,
+    title: data[0].title,
+    image: data[0].image,
+    twitter: data[0].twitter,
 };

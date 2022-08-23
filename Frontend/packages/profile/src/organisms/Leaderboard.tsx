@@ -42,7 +42,6 @@ const LeaderboardHeader = (): JSX.Element => {
             >
                 <div
                     className={css({
-                        width: '96px',
                         marginRight: '-30px',
                     })}
                 >
@@ -51,8 +50,9 @@ const LeaderboardHeader = (): JSX.Element => {
                             src={RANKS[1].image}
                             alt={RANKS[1].name}
                             className={css({
-                                objectFit: 'contain',
-                                width: '96px',
+                                objectFit: 'cover',
+                                width: '100%',
+                                height: '100%',
                             })}
                         />
                     </RoundedHexagon>
@@ -97,7 +97,6 @@ const LeaderboardHeader = (): JSX.Element => {
 
                     <div
                         className={css({
-                            width: '140px',
                             ...dropShadowStyle,
                         })}
                     >
@@ -106,8 +105,9 @@ const LeaderboardHeader = (): JSX.Element => {
                                 src={RANKS[0].image}
                                 alt={RANKS[0].name}
                                 className={css({
-                                    objectFit: 'contain',
-                                    width: '140px',
+                                    objectFit: 'cover',
+                                    width: '100%',
+                                    height: '100%',
                                 })}
                             />
                         </RoundedHexagon>
@@ -116,7 +116,6 @@ const LeaderboardHeader = (): JSX.Element => {
 
                 <div
                     className={css({
-                        width: '96px',
                         marginLeft: '-30px',
                     })}
                 >
@@ -125,8 +124,9 @@ const LeaderboardHeader = (): JSX.Element => {
                             src={RANKS[2].image}
                             alt={RANKS[2].name}
                             className={css({
-                                objectFit: 'contain',
-                                width: '96px',
+                                objectFit: 'cover',
+                                width: '100%',
+                                height: '100%',
                             })}
                         />
                     </RoundedHexagon>
