@@ -82,6 +82,7 @@ export const Button = (props: ButtonProps): JSX.Element => {
             padding: '8px 16px 8px 16px',
             display: 'flex',
             alignItems: 'center',
+            justifyContent: 'center',
             ...(!disabled && {
                 [HOVERABLE]: {
                     ':hover': {

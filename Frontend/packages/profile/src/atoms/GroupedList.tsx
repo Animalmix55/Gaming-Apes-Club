@@ -77,7 +77,7 @@ const GroupedList = <T,>({
                         className={css({
                             display: 'flex',
                             flexDirection: 'column',
-                            gap: '24px',
+                            gap: '12px',
                             marginTop: '16px',
                             marginLeft: '8px',
 

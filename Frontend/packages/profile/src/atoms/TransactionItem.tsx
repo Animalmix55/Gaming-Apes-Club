@@ -1,4 +1,4 @@
-import { MOBILE, TokenDisplay } from '@gac/shared-v2';
+import { TokenDisplay, useThemeContext } from '@gac/shared-v2';
 import React from 'react';
 import { useStyletron } from 'styletron-react';
 
@@ -18,17 +18,19 @@ const TransactionItem: React.FC<Props> = ({
     cost,
 }): JSX.Element => {
     const [css] = useStyletron();
+    const theme = useThemeContext();
     return (
         <div
             className={css({
                 display: 'flex',
                 justifyContent: 'center',
                 gap: '8px',
+                padding: '8px',
+                borderRadius: '12px',
 
-                [MOBILE]: {
-                    flexDirection: 'column',
-                    alignItems: 'center',
-                    textAlign: 'center',
+                ':hover': {
+                    backgroundColor:
+                        theme.backgroundPallette.darker.toRgbaString(),
                 },
             })}
         >
@@ -48,6 +50,7 @@ const TransactionItem: React.FC<Props> = ({
                     display: 'flex',
                     flexDirection: 'column',
                     justifyContent: 'center',
+                    overflow: 'hidden',
                 })}
             >
                 <p
@@ -56,6 +59,10 @@ const TransactionItem: React.FC<Props> = ({
                         fontSize: '14px',
                         lineHeight: '20px',
                         letterSpacing: '0.03em',
+
+                        whiteSpace: 'nowrap',
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
                     })}
                 >
                     {title}
@@ -66,10 +73,14 @@ const TransactionItem: React.FC<Props> = ({
                         fontSize: '12px',
                         lineHeight: '18px',
                         letterSpacing: '0.02em',
+
+                        whiteSpace: 'nowrap',
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
                     })}
                 >
                     <span className={css({ opacity: 0.5 })}>{description}</span>{' '}
-                    <span>{address}</span>
+                    {address}
                 </p>
             </div>
 
@@ -79,6 +90,8 @@ const TransactionItem: React.FC<Props> = ({
                     fontSize: '16px',
                     lineHeight: '24px',
                     letterSpacing: '0.1em',
+
+                    flexShrink: 0,
                 })}
                 amount={cost}
                 negative
