@@ -40,7 +40,9 @@ const GroupedList = <T,>({
         return Object.keys(dateGroups)
             .map((date) => ({
                 date: Number(date),
-                items: dateGroups[date],
+                items: dateGroups[date].sort(
+                    (a, b) => b.createdAt - a.createdAt
+                ),
             }))
             .sort((a, b) => b.date - a.date);
     }, [items]);
