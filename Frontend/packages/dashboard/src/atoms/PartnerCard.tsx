@@ -20,7 +20,6 @@ const PartnerCard: React.FC<Props> = ({
         <a
             className={css({
                 overflow: 'hidden',
-                borderRadius: '50%',
 
                 transition: dropShadowTransition,
 
@@ -40,7 +39,8 @@ const PartnerCard: React.FC<Props> = ({
                     width: '208px',
                     height: '208px',
                     aspectRatio: '1 / 1',
-                    objectFit: 'contain',
+                    objectFit: 'cover',
+                    borderRadius: '50%',
                 })}
                 src={image}
                 alt={name}

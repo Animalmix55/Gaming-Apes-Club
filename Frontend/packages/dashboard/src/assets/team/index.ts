@@ -1,31 +1,44 @@
+import David from './David.jpg';
+import Alex from './Alex.jpg';
+import Justin from './Justin.jpg';
+import Luke from './Luke.jpg';
+import Nick from './Nick.jpg';
+
 const members = [
     {
         name: 'David',
         alias: 'Politikos',
         title: 'Chief Executive Officer',
-        image: '',
-        twitter: 'Politikos',
+        image: David,
+        twitter: 'itsPolitikos',
     },
     {
         name: 'Luke',
         alias: 'Truzo',
         title: 'Chief Operating Officer',
-        image: '',
-        twitter: 'oaTruzo',
+        image: Luke,
+        twitter: 'itsTruzo',
     },
     {
         name: 'Alex',
         alias: 'Rubix',
         title: 'Chief Information Officer',
-        image: '',
-        twitter: 'alex',
+        image: Alex,
+        twitter: 'RubiksLive',
     },
     {
         name: 'Nick',
         alias: 'Minski',
         title: 'Chief Marketing Officer',
-        image: '',
-        twitter: 'nick',
+        image: Nick,
+        twitter: 'itsminski',
+    },
+    {
+        name: 'Justin',
+        alias: 'MysterJustyn',
+        title: '-',
+        image: Justin,
+        twitter: 'MysterJustyn',
     },
 ];
 
