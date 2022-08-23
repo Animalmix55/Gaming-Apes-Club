@@ -2,10 +2,9 @@
 import React from 'react';
 import { useStyletron } from 'styletron-react';
 import RoundedHexagon from '../atoms/RoundedHexagon';
-import '../styles/global.css';
 
 export default {
-    title: 'Dashboard/Atoms/RoundedHexagon',
+    title: 'Shared/v2/Atoms/RoundedHexagon',
     component: RoundedHexagon,
 };
 

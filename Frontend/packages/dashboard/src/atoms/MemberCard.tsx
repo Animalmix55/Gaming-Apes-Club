@@ -1,8 +1,11 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import { ClassNameBuilder, useThemeContext } from '@gac/shared-v2';
+import {
+    ClassNameBuilder,
+    useThemeContext,
+    RoundedHexagon,
+} from '@gac/shared-v2';
 import React, { useState } from 'react';
 import { useStyletron } from 'styletron-react';
-import RoundedHexagon from './RoundedHexagon';
 import TwitterImage from '../assets/png/Twitter.png';
 import { dropShadowStyle, dropShadowTransition } from '../common/styles';
 

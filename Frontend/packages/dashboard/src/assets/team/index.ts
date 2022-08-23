@@ -3,6 +3,7 @@ import Alex from './Alex.jpg';
 import Justin from './Justin.jpg';
 import Luke from './Luke.jpg';
 import Nick from './Nick.jpg';
+import Cory from './Cory.jpg';
 
 const members = [
     {
@@ -36,9 +37,16 @@ const members = [
     {
         name: 'Justin',
         alias: 'MysterJustyn',
-        title: '-',
+        title: 'Chief Financial Officer',
         image: Justin,
         twitter: 'MysterJustyn',
+    },
+    {
+        name: 'Cory',
+        alias: 'ToxicPizza',
+        title: 'Developer',
+        image: Cory,
+        twitter: 'cory',
     },
 ];
 

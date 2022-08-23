@@ -1,18 +1,20 @@
 import React from 'react';
-import { ClassNameBuilder } from '@gac/shared-v2';
 import { useStyletron } from 'styletron-react';
+import { ClassNameBuilder } from '../utilties';
 
-interface Props {
+export interface RoundedHexagonProps {
     id: string;
     className?: string;
     radius?: number;
+    width?: number;
 }
 
-const RoundedHexagon: React.FC<Props> = ({
+export const RoundedHexagon: React.FC<RoundedHexagonProps> = ({
     id,
     children,
     className,
     radius = 10,
+    width = 264,
 }): JSX.Element => {
     const [css] = useStyletron();
     const filterId = `round-${id}`;
@@ -55,13 +57,14 @@ const RoundedHexagon: React.FC<Props> = ({
             >
                 <div
                     className={ClassNameBuilder(
-                        className,
                         css({
-                            width: '264px',
+                            position: 'relative',
+                            width: `${width}px`,
                             paddingTop: '86.6%',
                             clipPath:
                                 'polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%)',
-                        })
+                        }),
+                        className
                     )}
                 >
                     <div

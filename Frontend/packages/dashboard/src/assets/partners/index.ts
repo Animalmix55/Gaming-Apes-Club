@@ -1,3 +1,4 @@
+import AlphaSharks from './Alpha Sharks.jpg';
 import AsteriaLabs from './Asteria Labs.jpg';
 import Cheetopia from './Cheetopia.jpg';
 import GamerAdvantage from './Gamer Advantage.jpg';
@@ -10,22 +11,12 @@ import ProjectWhitelist from './Project Whitelist.jpg';
 import RooTroop from './Roo Troop.png';
 import ThePlague from './The Plague.png';
 
-/**
- * Llamaverse -
-Pixl Labs -
-Alpha Sharks - https://twitter.com/AlphaSharksNFT - missing?
-Gridcraft -
-Roo Troop -
-The Plague -
-Asteria Labs -
-Project Whitelist -
-Cheetopia -
-PowerGPU -
-Gamer Advantage -
-Gamers Outreach -
- */
-
 const partners = [
+    {
+        name: 'Alpha Sharks',
+        image: AlphaSharks,
+        url: 'https://twitter.com/AlphaSharksNFT',
+    },
     {
         name: 'Asteria Labs',
         image: AsteriaLabs,

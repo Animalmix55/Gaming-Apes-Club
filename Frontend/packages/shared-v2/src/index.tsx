@@ -10,6 +10,7 @@ export * from './models/GamingApeClub';
 export * from './atoms/Button';
 export * from './atoms/LinkButton';
 export * from './atoms/Footer';
+export * from './atoms/RoundedHexagon';
 export * from './hooks/useHover';
 export * from './hooks/useRequest';
 export * from './hooks/useCurrentTime';
