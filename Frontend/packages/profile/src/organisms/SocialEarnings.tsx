@@ -393,6 +393,7 @@ export const SocialEarnings = (): JSX.Element => {
 
                 display: 'flex',
                 flexDirection: 'column',
+                justifyContent: 'space-between',
                 gap: '16px',
 
                 [MOBILE]: {

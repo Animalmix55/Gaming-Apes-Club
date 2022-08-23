@@ -120,8 +120,8 @@ const Body = (): JSX.Element => {
                             className={css({
                                 display: 'grid',
                                 gridTemplateColumns: '3fr 2fr',
-                                gap: '24px',
 
+                                gap: '24px',
                                 [TABLET]: {
                                     gridTemplateColumns: '1fr',
                                 },
