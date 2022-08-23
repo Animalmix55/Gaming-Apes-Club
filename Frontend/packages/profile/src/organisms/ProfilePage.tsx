@@ -103,10 +103,33 @@ const Body = (): JSX.Element => {
                         />
                     </div>
                 )}
-                {(!isMobile || tab === 'earnings') && <SocialEarnings />}
-                {(!isMobile || tab === 'leaderboard') && <Leaderboard />}
-                {(!isMobile || tab === 'history') && (
+                {isMobile ? (
                     <>
+                        {tab === 'earnings' && <SocialEarnings />}
+                        {tab === 'leaderboard' && <Leaderboard />}
+                        {tab === 'history' && (
+                            <>
+                                <Stats />
+                                <PurchaseHistory />
+                            </>
+                        )}
+                    </>
+                ) : (
+                    <>
+                        <div
+                            className={css({
+                                display: 'grid',
+                                gridTemplateColumns: '3fr 2fr',
+                                gap: '24px',
+
+                                [TABLET]: {
+                                    gridTemplateColumns: '1fr',
+                                },
+                            })}
+                        >
+                            <SocialEarnings />
+                            <Leaderboard />
+                        </div>
                         <Stats />
                         <PurchaseHistory />
                     </>
