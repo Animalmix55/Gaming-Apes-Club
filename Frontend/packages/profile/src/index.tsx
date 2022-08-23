@@ -41,9 +41,14 @@ const {
 const styletron = new Client();
 const queryClient = new QueryClient();
 
+const providers = {
+    1: 'https://mainnet.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161',
+    137: 'https://polygon-rpc.com',
+};
+
 const Root = (): JSX.Element => {
     return (
-        <Web3ContextProvider>
+        <Web3ContextProvider defaultProviders={providers}>
             <Provider value={styletron}>
                 <QueryClientProvider client={queryClient}>
                     <ThemeContextProviderV2 value={DefaultThemeV2}>
