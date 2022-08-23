@@ -34,6 +34,7 @@ const {
     gamingApeClubAddress,
     gacXPAddress,
     chainId,
+    gacStakingChildContractAddress,
 } = {
     ...window,
 } as unknown as GamingApeClubContextType;
@@ -62,6 +63,7 @@ const Root = (): JSX.Element => {
                                 adminRoles,
                                 defaultDiscordMessage,
                                 gacStakingContractAddress,
+                                gacStakingChildContractAddress,
                                 gamingApeClubAddress,
                                 gacXPAddress,
                                 chainId,

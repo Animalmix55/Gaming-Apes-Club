@@ -14,6 +14,7 @@ export interface GamingApeClubContextType {
     polygonChainId?: Chain;
     gacXPAddress?: string;
     gacStakingContractAddress?: string;
+    gacStakingChildContractAddress?: string;
     gamingApeClubAddress?: string;
 }
 

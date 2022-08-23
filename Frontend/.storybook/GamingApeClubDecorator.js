@@ -11,6 +11,8 @@ const PROVIDER_VALUE = {
     discordUrl: 'test',
     gamingApeClubAddress: '0xAc2a6706285b91143eaded25d946Ff17A60A6512',
     gacStakingContractAddress: '0x412aCAd86FFa3b287C1043ab4e56F7C4A6A9e385',
+    gacStakingChildContractAddress:
+        '0x16bc136Ec912623aA8154D72FB5cE30bb6330D93',
     gacXPAddress: '0xAc2a6706285b91143eaded25d946Ff17A60A6512',
     chainId: 137,
     ethereumChainId: 1,
