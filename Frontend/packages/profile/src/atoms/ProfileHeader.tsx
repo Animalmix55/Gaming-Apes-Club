@@ -1,5 +1,10 @@
 import React from 'react';
-import { ClassNameBuilder, Icons, RoundedHexagon } from '@gac/shared-v2';
+import {
+    ClassNameBuilder,
+    Icons,
+    MOBILE,
+    RoundedHexagon,
+} from '@gac/shared-v2';
 import { useStyletron } from 'styletron-react';
 
 interface Props {
@@ -28,6 +33,13 @@ const ProfileHeader: React.FC<Props> = ({
                     gap: '24px',
 
                     alignItems: 'center',
+
+                    [MOBILE]: {
+                        textAlign: 'center',
+                        justifyContent: 'center',
+                        flexDirection: 'column',
+                        gap: '16px',
+                    },
                 }),
                 className
             )}
@@ -41,7 +53,15 @@ const ProfileHeader: React.FC<Props> = ({
                     />
                 </RoundedHexagon>
             </div>
-            <div>
+            <div
+                className={css({
+                    display: 'flex',
+                    flexDirection: 'column',
+                    [MOBILE]: {
+                        gap: '4px',
+                    },
+                })}
+            >
                 <h1
                     className={css({
                         fontWeight: 900,
@@ -65,6 +85,10 @@ const ProfileHeader: React.FC<Props> = ({
                             display: 'flex',
                             gap: '4px',
                             alignItems: 'center',
+
+                            [MOBILE]: {
+                                justifyContent: 'center',
+                            },
                         })}
                     >
                         <span>
