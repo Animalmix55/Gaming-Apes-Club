@@ -2,14 +2,18 @@ import React, { useMemo } from 'react';
 import { useStyletron } from 'styletron-react';
 import {
     AccentTextStyles,
+    Button,
+    ButtonType,
     ClassNameBuilder,
     Fraction,
+    Icons,
     MOBILE,
     TokenDisplay,
     useERC20Balance,
     useNFTBalance,
     useThemeContext,
     useWeb3,
+    WalletLoginModal,
 } from '@gac/shared-v2';
 import { BigNumber } from '@ethersproject/bignumber';
 import { useGamingApeContext } from '../contexts/GamingApeClubContext';
@@ -18,21 +22,19 @@ import { useCurrentReward } from '../web3/hooks/useCurrentReward';
 import useRewardByAmount from '../web3/hooks/useRewardByAmount';
 import StatItem from '../atoms/StatItem';
 
-export const Stats = (): JSX.Element => {
+const AccountStats = ({ account }: { account: string }): JSX.Element => {
     const [css] = useStyletron();
     const theme = useThemeContext();
 
     const {
         ethereumChainId,
         polygonChainId,
-
         gamingApeClubAddress,
         gacXPAddress,
     } = useGamingApeContext();
-    const { accounts, provider: ethProvider } = useWeb3(ethereumChainId);
+    const { provider: ethProvider } = useWeb3(ethereumChainId);
     const { provider: polygonProvider } = useWeb3(polygonChainId);
 
-    const account = accounts?.[0];
     const userStake = useTokensStaked(account);
     const amountStaked = userStake.data?.length ?? 0;
     const userNFTBalance = useNFTBalance(
@@ -130,6 +132,64 @@ export const Stats = (): JSX.Element => {
                 />
             </StatItem>
         </div>
+    );
+};
+
+export const Stats = (): JSX.Element => {
+    const [css] = useStyletron();
+    const theme = useThemeContext();
+
+    const { ethereumChainId } = useGamingApeContext();
+    const { accounts } = useWeb3(ethereumChainId);
+    const account = accounts?.[0];
+
+    const [loginModalOpen, setWalletModalOpen] = React.useState(false);
+
+    return account ? (
+        <AccountStats account={account} />
+    ) : (
+        <>
+            <WalletLoginModal
+                isOpen={loginModalOpen}
+                onClose={(): void => setWalletModalOpen(false)}
+            />
+
+            <div
+                className={css({
+                    backgroundColor:
+                        theme.backgroundPallette.dark.toRgbaString(),
+                    borderRadius: '20px',
+                    padding: '24px',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    gap: '16px',
+
+                    [MOBILE]: {
+                        flexDirection: 'column',
+                        gap: 'unset',
+                    },
+                })}
+            >
+                <p>View Account Stats</p>
+                <Button
+                    icon={Icons.ETHWhite}
+                    themeType={ButtonType.primary}
+                    className={css({
+                        [MOBILE]: {
+                            flex: '1',
+                            textAlign: 'center',
+                            marginLeft: 'unset',
+                            marginTop: '24px',
+                            display: 'flex',
+                            justifyContent: 'center',
+                        },
+                    })}
+                    text="Connect Wallet"
+                    onClick={(): void => setWalletModalOpen(true)}
+                />
+            </div>
+        </>
     );
 };
 
