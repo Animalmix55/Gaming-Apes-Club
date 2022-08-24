@@ -20,6 +20,8 @@ import Stats from './Stats';
 import PurchaseHistory from './PurchaseHistory';
 import SocialEarnings from './SocialEarnings';
 import Leaderboard from './Leaderboard';
+import useDiscordLogin from '../api/hooks/useDiscordLogin';
+import { useAuthorizationContext } from '../contexts/AuthorizationContext';
 
 const FooterLinks = [
     {
@@ -152,8 +154,8 @@ const Body = (): JSX.Element => {
 export const ProfilePage = (): JSX.Element => {
     const [css] = useStyletron();
     const { discordUrl, openseaUrl, twitterUrl } = useGamingApeContext();
-
-    const [loggedIn, setLoggedIn] = useState(true);
+    const { login, isLoggingIn } = useDiscordLogin();
+    const { discordId } = useAuthorizationContext();
 
     return (
         <div
@@ -202,7 +204,7 @@ export const ProfilePage = (): JSX.Element => {
                     window.location.href = i.url;
                 }}
             />
-            {loggedIn ? (
+            {discordId ? (
                 <Body />
             ) : (
                 <div
@@ -216,11 +218,7 @@ export const ProfilePage = (): JSX.Element => {
                         padding: PADDING,
                     })}
                 >
-                    <ConnectDiscord />
-                    <Button
-                        onClick={(): void => setLoggedIn(true)}
-                        text="Next screen"
-                    />
+                    <ConnectDiscord login={login} isLoggingIn={isLoggingIn} />
                 </div>
             )}
         </div>

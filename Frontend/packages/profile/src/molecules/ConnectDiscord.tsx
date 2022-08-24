@@ -1,12 +1,16 @@
 import React from 'react';
 import { useStyletron } from 'styletron-react';
 import { Button, ButtonType, Header, Icons, MOBILE } from '@gac/shared-v2';
-import { useGamingApeContext } from '../contexts/GamingApeClubContext';
 import XPIconLarge from '../assets/png/xp-icon-large.png';
 
-export const ConnectDiscord = (): JSX.Element => {
+export const ConnectDiscord = ({
+    login,
+    isLoggingIn,
+}: {
+    login: () => void;
+    isLoggingIn: boolean;
+}): JSX.Element => {
     const [css] = useStyletron();
-    const { discordUrl, openseaUrl, twitterUrl } = useGamingApeContext();
 
     return (
         <div
@@ -44,7 +48,7 @@ export const ConnectDiscord = (): JSX.Element => {
                 adipiscing elit. Nam a efficit adipiscing elit adipiscing elit.
             </p>
             <Button
-                icon={Icons.ETHWhite}
+                icon={Icons.Discord}
                 themeType={ButtonType.primary}
                 className={css({
                     [MOBILE]: {
@@ -56,8 +60,9 @@ export const ConnectDiscord = (): JSX.Element => {
                         justifyContent: 'center',
                     },
                 })}
-                text="Connect Wallet"
-                // onClick={(): void => setWalletModalOpen(true)}
+                text="Connect Discord"
+                onClick={login}
+                disabled={isLoggingIn}
             />
         </div>
     );

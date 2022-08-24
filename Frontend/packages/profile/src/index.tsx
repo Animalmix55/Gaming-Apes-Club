@@ -19,6 +19,7 @@ import {
     GamingApeContextProvider,
 } from './contexts/GamingApeClubContext';
 import { ProfilePage } from './organisms/ProfilePage';
+import { AuthorizationContextProvider } from './contexts/AuthorizationContext';
 
 initializeIcons();
 
@@ -71,10 +72,12 @@ const Root = (): JSX.Element => {
                                 ethereumChainId: 1,
                             }}
                         >
-                            <>
-                                <ProfilePage />
-                                <ToastContainer position="bottom-left" />
-                            </>
+                            <AuthorizationContextProvider>
+                                <>
+                                    <ProfilePage />
+                                    <ToastContainer position="bottom-left" />
+                                </>
+                            </AuthorizationContextProvider>
                         </GamingApeContextProvider>
                     </ThemeContextProviderV2>
                 </QueryClientProvider>

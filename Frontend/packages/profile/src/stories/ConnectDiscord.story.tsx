@@ -10,7 +10,7 @@ export default {
 export const StandAlone = (): JSX.Element => {
     return (
         <div style={{ height: '100vh', padding: '3em', background: 'black' }}>
-            <ConnectDiscord />
+            <ConnectDiscord login={(): number => 0} isLoggingIn={false} />
         </div>
     );
 };
