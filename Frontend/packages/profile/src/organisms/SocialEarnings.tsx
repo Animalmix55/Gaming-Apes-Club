@@ -146,16 +146,16 @@ const DiscordEarnings = (): JSX.Element => {
             <div
                 className={css({
                     display: 'flex',
-                    gap: '4px',
+                    gap: '14px',
                     alignItems: 'center',
                     justifyContent: 'center',
                 })}
             >
                 <img
-                    src={Icons.Discord}
+                    src={Icons.DiscordPurple}
                     alt=""
                     className={css({
-                        height: '30px',
+                        height: '14px',
                         width: 'auto',
                     })}
                 />
@@ -278,7 +278,7 @@ const TwitterEarnings = (): JSX.Element => {
             <div
                 className={css({
                     display: 'flex',
-                    gap: '4px',
+                    gap: '6px',
                     alignItems: 'center',
                     justifyContent: 'center',
                 })}

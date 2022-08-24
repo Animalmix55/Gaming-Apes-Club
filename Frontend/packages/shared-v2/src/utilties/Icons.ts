@@ -21,6 +21,7 @@ import WalletConnect from '../assets/png/action/WalletConnect.png';
 
 // SOCIAL
 import DiscordRound from '../assets/png/social/Discord.png';
+import DiscordPurple from '../assets/svg/discord-purple.svg';
 import OpenSeaRound from '../assets/png/social/Opensea.png';
 import OpenSeaBlue from '../assets/png/social/OpenSea-blue.png';
 import TwitterBlue from '../assets/png/social/Twitter blue.png';
@@ -70,6 +71,7 @@ export const Icons = {
     Staking,
     WalletConnect,
     DiscordRound,
+    DiscordPurple,
     OpenSeaRound,
     OpenSeaBlue,
     TwitterBlue,

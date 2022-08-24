@@ -96,9 +96,9 @@ const ProfileHeader: React.FC<Props> = ({
                     >
                         <span>
                             <img
-                                src={Icons.Discord}
+                                src={Icons.DiscordPurple}
                                 className={css({
-                                    height: '20px',
+                                    height: '14px',
                                     width: 'auto',
                                 })}
                                 alt="Discord"
