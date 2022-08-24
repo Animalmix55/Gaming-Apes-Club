@@ -7,8 +7,8 @@ import {
 } from '@gac/shared-v2';
 import React from 'react';
 import { useStyletron } from 'styletron-react';
+import { BorderedRoundedHexagon } from '../atoms/BorderedRoundedHexagon';
 import RankItem from '../atoms/RankItem';
-import { dropShadowStyle } from '../common/styles';
 
 const IMAGE =
     'https://lh3.googleusercontent.com/gtRedQThacyBS3cJikU2QXkyhJL6vmmz8GlLQAEB5f8GsiXlqjRxWgRKAlbxyu1cBbwUoidpo3vxp64VH8tkUPW00eepbiV126wmLA=w600';
@@ -45,7 +45,15 @@ const LeaderboardHeader = (): JSX.Element => {
                         marginRight: '-30px',
                     })}
                 >
-                    <RoundedHexagon id="rank-2" radius={5} width={96}>
+                    <BorderedRoundedHexagon
+                        id="rank-2"
+                        radius={6.85}
+                        width={96}
+                        borderWidth={8}
+                        borderClassName={css({
+                            backgroundColor: 'rgba(22, 28, 45, 0.8)',
+                        })}
+                    >
                         <img
                             src={RANKS[1].image}
                             alt={RANKS[1].name}
@@ -55,7 +63,7 @@ const LeaderboardHeader = (): JSX.Element => {
                                 height: '100%',
                             })}
                         />
-                    </RoundedHexagon>
+                    </BorderedRoundedHexagon>
                 </div>
                 <div
                     className={css({
@@ -95,12 +103,16 @@ const LeaderboardHeader = (): JSX.Element => {
                         </p>
                     </div>
 
-                    <div
-                        className={css({
-                            ...dropShadowStyle,
-                        })}
-                    >
-                        <RoundedHexagon id="rank-1" radius={5} width={140}>
+                    <div>
+                        <BorderedRoundedHexagon
+                            id="rank-1"
+                            radius={10}
+                            width={140}
+                            borderWidth={8}
+                            borderClassName={css({
+                                backgroundColor: 'rgba(22, 28, 45, 0.8)',
+                            })}
+                        >
                             <img
                                 src={RANKS[0].image}
                                 alt={RANKS[0].name}
@@ -110,7 +122,7 @@ const LeaderboardHeader = (): JSX.Element => {
                                     height: '100%',
                                 })}
                             />
-                        </RoundedHexagon>
+                        </BorderedRoundedHexagon>
                     </div>
                 </div>
 
@@ -119,7 +131,15 @@ const LeaderboardHeader = (): JSX.Element => {
                         marginLeft: '-30px',
                     })}
                 >
-                    <RoundedHexagon id="rank-3" radius={5} width={96}>
+                    <BorderedRoundedHexagon
+                        id="rank-3"
+                        radius={6.85}
+                        width={96}
+                        borderWidth={8}
+                        borderClassName={css({
+                            backgroundColor: 'rgba(22, 28, 45, 0.8)',
+                        })}
+                    >
                         <img
                             src={RANKS[2].image}
                             alt={RANKS[2].name}
@@ -129,8 +149,22 @@ const LeaderboardHeader = (): JSX.Element => {
                                 height: '100%',
                             })}
                         />
-                    </RoundedHexagon>
+                    </BorderedRoundedHexagon>
                 </div>
+
+                <div
+                    className={css({
+                        zIndex: -1,
+                        position: 'absolute',
+
+                        width: '140px',
+                        height: '140px',
+
+                        background:
+                            'linear-gradient(112deg, rgba(32,129,226,0.3) 40%, rgba(157,0,253,0.3) 60%)',
+                        filter: 'blur(20px)',
+                    })}
+                />
             </div>
             <div
                 className={css({
