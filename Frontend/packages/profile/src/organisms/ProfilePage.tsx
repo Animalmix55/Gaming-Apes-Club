@@ -204,7 +204,7 @@ export const ProfilePage = (): JSX.Element => {
                     window.location.href = i.url;
                 }}
             />
-            {discordId ? (
+            {discordId || true ? (
                 <Body />
             ) : (
                 <div

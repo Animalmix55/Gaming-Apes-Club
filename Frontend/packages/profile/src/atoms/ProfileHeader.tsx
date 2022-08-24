@@ -86,7 +86,7 @@ const ProfileHeader: React.FC<Props> = ({
                     <p
                         className={css({
                             display: 'flex',
-                            gap: '4px',
+                            gap: '10px',
                             alignItems: 'center',
 
                             [MOBILE]: {
