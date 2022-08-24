@@ -72,7 +72,7 @@ export const PurchaseHistory = (): JSX.Element => {
             >
                 <Button
                     text="Previous"
-                    themeType={ButtonType.secondary}
+                    themeType={ButtonType.primary}
                     disabled={page === 0}
                     onClick={(): void => {
                         scrollToListTop();
@@ -84,7 +84,7 @@ export const PurchaseHistory = (): JSX.Element => {
                 />
                 <Button
                     text="Next"
-                    themeType={ButtonType.secondary}
+                    themeType={ButtonType.primary}
                     disabled={page === maxPages - 1}
                     onClick={(): void => {
                         scrollToListTop();
