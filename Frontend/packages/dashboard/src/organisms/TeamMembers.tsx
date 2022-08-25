@@ -11,7 +11,12 @@ export const TeamMembers = (): JSX.Element => {
     return (
         <DashboardSection
             heading={<Header title="Meet the" subtitle="founding team" />}
-            action={<LinkButton text="Our mission" href="#" />}
+            action={
+                <LinkButton
+                    text="Our mission"
+                    href="https://app.gitbook.com/s/eQzDpDMnDp8m5Um37K2y/what-now-for-gac/game-plan-v2"
+                />
+            }
         >
             <Carousel
                 itemPaddingVertical={32}

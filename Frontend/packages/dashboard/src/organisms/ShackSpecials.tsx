@@ -11,7 +11,12 @@ export const ShackSpecials = (): JSX.Element => {
             heading={
                 <Header title="The Shack's" subtitle="Special of the month" />
             }
-            action={<LinkButton text="Shop the Shack" href="#" />}
+            action={
+                <LinkButton
+                    text="Shop the Shack"
+                    href="https://shack.gamingapeclub.com/"
+                />
+            }
         >
             <Carousel itemPaddingVertical={32} itemPaddingHorizontal={8}>
                 {specials.map(({ name, image, tag, cost, url }) => (

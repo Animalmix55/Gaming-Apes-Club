@@ -10,9 +10,9 @@ export const SidebarItems: (SidebarItem & { url?: string })[] = [
     },
     {
         icon: Icons.Mission,
-        displayText: 'Mission',
-        id: 'Mission',
-        disabled: true,
+        displayText: 'Game Plan',
+        id: 'Game Plan',
+        url: 'https://app.gitbook.com/s/eQzDpDMnDp8m5Um37K2y/what-now-for-gac/game-plan-v2',
     },
     {
         icon: Icons.News,

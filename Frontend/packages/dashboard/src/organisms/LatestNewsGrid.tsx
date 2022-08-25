@@ -11,7 +11,12 @@ export const LatestNewsGrid = (): JSX.Element => {
             heading={
                 <Header title="Gaming Ape Club's" subtitle="Latest News" />
             }
-            action={<LinkButton text="Check the news" href="#" />}
+            action={
+                <LinkButton
+                    text="Check the news"
+                    href="https://docs.gamingapeclub.com/"
+                />
+            }
         >
             <Carousel itemPaddingVertical={32} itemPaddingHorizontal={12}>
                 {newsData.latestNews.map(({ image, title, url }) => (

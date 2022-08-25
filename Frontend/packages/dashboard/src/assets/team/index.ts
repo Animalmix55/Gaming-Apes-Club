@@ -22,7 +22,7 @@ const members = [
     },
     {
         name: 'Alex',
-        alias: 'Rubix',
+        alias: 'Rubiks',
         title: 'Chief Information Officer',
         image: Alex,
         twitter: 'RubiksLive',
@@ -46,7 +46,7 @@ const members = [
         alias: 'ToxicPizza',
         title: 'Developer',
         image: Cory,
-        twitter: 'cory',
+        twitter: 'Animalmix55',
     },
 ];
 
