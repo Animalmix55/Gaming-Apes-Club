@@ -13,54 +13,25 @@ import ThePlague from './The Plague.png';
 
 const partners = [
     {
-        name: 'Alpha Sharks',
-        image: AlphaSharks,
-        url: 'https://twitter.com/AlphaSharksNFT',
-    },
-    {
-        name: 'Asteria Labs',
-        image: AsteriaLabs,
-        url: 'https://twitter.com/AsteriaLabs',
-    },
-    {
-        name: 'Cheetopia',
-        image: Cheetopia,
-        url: 'https://twitter.com/CheetopiaNFT',
-    },
-    {
-        name: 'Gamer Advantage',
-        image: GamerAdvantage,
-        url: 'https://twitter.com/GamerAdvantage',
-    },
-    {
-        name: 'Gamers Outreach',
-        image: GamersOutreach,
-        url: 'https://twitter.com/GamersOutreach',
-    },
-    {
-        name: 'Gridcraft',
-        image: Gridcraft,
-        url: 'https://twitter.com/Gridcraft',
-    },
-    {
         name: 'Llamaverse',
         image: Llamaverse,
         url: 'https://twitter.com/Llamaverse_',
     },
+
     {
         name: 'Pixl Labs',
         image: PixlLabs,
         url: 'https://twitter.com/PixlLabs_',
     },
     {
-        name: 'Power GPU',
-        image: PowerGPU,
-        url: 'https://twitter.com/PowerGPU',
+        name: 'Alpha Sharks',
+        image: AlphaSharks,
+        url: 'https://twitter.com/AlphaSharksNFT',
     },
     {
-        name: 'Project Whitelist',
-        image: ProjectWhitelist,
-        url: 'https://twitter.com/PRJCTWhitelist',
+        name: 'Gridcraft',
+        image: Gridcraft,
+        url: 'https://twitter.com/Gridcraft',
     },
     {
         name: 'Roo Troop',
@@ -71,6 +42,36 @@ const partners = [
         name: 'The Plague',
         image: ThePlague,
         url: 'https://twitter.com/ThePlagueNFT',
+    },
+    {
+        name: 'Asteria Labs',
+        image: AsteriaLabs,
+        url: 'https://twitter.com/AsteriaLabs',
+    },
+    {
+        name: 'Project Whitelist',
+        image: ProjectWhitelist,
+        url: 'https://twitter.com/PRJCTWhitelist',
+    },
+    {
+        name: 'Cheetopia',
+        image: Cheetopia,
+        url: 'https://twitter.com/CheetopiaNFT',
+    },
+    {
+        name: 'Power GPU',
+        image: PowerGPU,
+        url: 'https://twitter.com/PowerGPU',
+    },
+    {
+        name: 'Gamer Advantage',
+        image: GamerAdvantage,
+        url: 'https://twitter.com/GamerAdvantage',
+    },
+    {
+        name: 'Gamers Outreach',
+        image: GamersOutreach,
+        url: 'https://twitter.com/GamersOutreach',
     },
 ];
 

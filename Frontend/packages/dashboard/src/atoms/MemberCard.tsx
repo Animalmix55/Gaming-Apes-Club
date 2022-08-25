@@ -156,7 +156,13 @@ const MemberCard: React.FC<Props> = ({
                         ({alias})
                     </span>
                 </p>
-                <p className={css({ fontWeight: 700, fontSize: '14px' })}>
+                <p
+                    className={css({
+                        fontWeight: 700,
+                        fontSize: '16px',
+                        lineHeight: '20px',
+                    })}
+                >
                     {title}
                 </p>
             </div>

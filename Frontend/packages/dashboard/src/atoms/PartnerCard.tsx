@@ -20,6 +20,13 @@ const PartnerCard: React.FC<Props> = ({
         <a
             className={css({
                 overflow: 'hidden',
+                color: 'white',
+
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'center',
+                alignItems: 'center',
+                gap: '16px',
 
                 transition: dropShadowTransition,
 
@@ -45,6 +52,16 @@ const PartnerCard: React.FC<Props> = ({
                 src={image}
                 alt={name}
             />
+            <p
+                className={css({
+                    fontWeight: 700,
+                    fontSize: '16px',
+                    lineHeight: '20px',
+                    textTransform: 'uppercase',
+                })}
+            >
+                {name}
+            </p>
         </a>
     );
 };
