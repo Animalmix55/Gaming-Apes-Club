@@ -8,6 +8,7 @@ import React, { useState } from 'react';
 import { useStyletron } from 'styletron-react';
 import TwitterImage from '../assets/png/Twitter.png';
 import { dropShadowStyle, dropShadowTransition } from '../common/styles';
+import useTwitterFollowers from '../hooks/useTwitterFollowers';
 
 interface Props {
     className?: string;
@@ -29,6 +30,8 @@ const MemberCard: React.FC<Props> = ({
     const [css] = useStyletron();
     const theme = useThemeContext();
     const [hover, setHover] = useState(false);
+
+    const { data: followerCount } = useTwitterFollowers(twitter);
 
     return (
         <div
@@ -119,6 +122,19 @@ const MemberCard: React.FC<Props> = ({
                                 alt=""
                             />
                             <p>@{twitter}</p>
+                            {followerCount && (
+                                <p
+                                    className={css({
+                                        fontWeight: 600,
+                                        fontSize: '12px',
+                                        lineHeight: '16px',
+                                        letterSpacing: '0.02em',
+                                        color: 'rgba(255,255,255,0.5)',
+                                    })}
+                                >
+                                    {followerCount.toLocaleString()} Followers
+                                </p>
+                            )}
                         </div>
                     </a>
                 </RoundedHexagon>

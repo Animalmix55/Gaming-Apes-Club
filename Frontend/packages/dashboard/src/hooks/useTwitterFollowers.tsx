@@ -1,26 +1,29 @@
 import { RequestResult, useRequest } from '@gac/shared-v2';
 import axios from 'axios';
 import React from 'react';
+import { useGamingApeContext } from '../contexts/GamingApeClubContext';
 
 export const FollowersKey = 'FOLLOWERS';
 
 export const useTwitterFollowers = (
     twitterId: string | undefined
-): RequestResult<number | undefined> => {
-    // https://api.twitter.com/2/users/[ID]?user.fields=public_metrics,[any other fields]
-    const queryFn = React.useCallback(async (twitterId: string | undefined) => {
-        if (!twitterId) return undefined;
+): RequestResult<number> => {
+    const { api } = useGamingApeContext();
 
-        // const url = `https://api.twitter.com/2/users/${twitterId}?user.fields=public_metrics`;
+    const queryFn = React.useCallback(
+        async (twitterId: string) => {
+            if (!twitterId) return 0;
+            if (!api) throw new Error('Missing api');
 
-        // const { data } = await axios.get(url);
-        // console.log({ data });
-
-        return 0;
-    }, []);
+            const url = `${api}/twitter/followerCount?twitterId=${twitterId}`;
+            const { data } = await axios.get(url);
+            return data?.followers ?? 0;
+        },
+        [api]
+    );
 
     const result = useRequest(queryFn, FollowersKey, [twitterId], {
-        staleTime: 60 * 60 * 1000, // 60 mins
+        staleTime: 60 * 60 * 1000, // 5 mins
     });
 
     return result;

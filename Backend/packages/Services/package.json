@@ -1,0 +1,38 @@
+{
+  "name": "@gac/services",
+  "version": "0.0.0",
+  "description": "External service resources for Gaming Ape Club",
+  "main": "lib/index.js",
+  "scripts": {
+    "build": "tsc"
+  },
+  "typings": "lib/index.d.ts",
+  "typescript": {
+    "definition": "lib/index.d.ts"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "@types/cors": "^2.8.12",
+    "sequelize-cli": "^6.4.1"
+  },
+  "dependencies": {
+    "@gac/shared": "^0.0.0",
+    "cors": "^2.8.5",
+    "express": "~4.16.1",
+    "uuid": "^8.3.2",
+    "express-rate-limit": "^6.3.0",
+    "axios": "^0.27.2"
+  },
+  "peerDependencies": {
+    "typescript": "^4.3.5",
+    "web3": "^1.6.0",
+    "sequelize": "^6.17.0",
+    "discord.js": "^13.6.0"
+  },
+  "files": [
+    "lib"
+  ],
+  "directories": {
+    "lib": "lib"
+  }
+}
