@@ -1,11 +1,8 @@
 import React from 'react';
-import {
-    RequestResult,
-    useAuthorizationContext,
-    useRequest,
-} from '@gac/shared-v2';
+import { RequestResult, useRequest } from '@gac/shared-v2';
 import { useGamingApeContext } from '../../contexts/GamingApeClubContext';
 import { Transaction, TransactionGetResponse } from '../Requests';
+import { useAuthorizationContext } from '../../contexts/AuthorizationContext';
 
 export const TransactionsKey = 'TRANSACTIONS';
 
