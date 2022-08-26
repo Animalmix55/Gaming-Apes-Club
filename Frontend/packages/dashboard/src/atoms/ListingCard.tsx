@@ -7,7 +7,7 @@ interface Props {
     image: string;
     name: string;
     price: string;
-    rank: string;
+    rank?: string;
     url: string;
 }
 
@@ -54,27 +54,29 @@ const ListingCard: React.FC<Props> = ({
                         height: '264px',
                     })}
                 />
-                <p
-                    className={css({
-                        position: 'absolute',
-                        top: '16px',
-                        right: '16px',
-                        padding: '4px 8px',
+                {rank && (
+                    <p
+                        className={css({
+                            position: 'absolute',
+                            top: '16px',
+                            right: '16px',
+                            padding: '4px 8px',
 
-                        backgroundColor: 'rgba(255, 255, 255, 0.3)',
-                        backdropFilter: 'blur(40px)',
-                        borderRadius: '8px',
+                            backgroundColor: 'rgba(255, 255, 255, 0.3)',
+                            backdropFilter: 'blur(40px)',
+                            borderRadius: '8px',
 
-                        fontWeight: '700',
-                        fontSize: '12px',
-                        lineHeight: '16px',
-                        letterSpacing: '0.05em',
+                            fontWeight: '700',
+                            fontSize: '12px',
+                            lineHeight: '16px',
+                            letterSpacing: '0.05em',
 
-                        color: 'white',
-                    })}
-                >
-                    Rank {rank}
-                </p>
+                            color: 'white',
+                        })}
+                    >
+                        Rank {rank}
+                    </p>
+                )}
             </div>
             <div
                 className={css({
