@@ -66,7 +66,5 @@ export const AuthorizationContextProvider = ({
     );
 };
 
-export const useAuthorizationContext = (): AuthorizationContextType => {
-    const { claims, ...other } = React.useContext(AuthorizationContext);
-    return { claims, ...other, discordId: claims?.id };
-};
+export const useAuthorizationContext = (): AuthorizationContextType =>
+    React.useContext(AuthorizationContext);

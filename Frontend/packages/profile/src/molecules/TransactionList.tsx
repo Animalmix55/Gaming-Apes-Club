@@ -20,7 +20,12 @@ const TransactionList: React.FC<Props> = ({ transactions }): JSX.Element => {
     return (
         <GroupedList
             items={transactions}
-            render={(item): React.ReactElement => <TransactionItem {...item} />}
+            render={(item): React.ReactElement => (
+                <TransactionItem
+                    key={`${item.createdAt}-${item.title}-${item.cost}`}
+                    {...item}
+                />
+            )}
         />
     );
 };

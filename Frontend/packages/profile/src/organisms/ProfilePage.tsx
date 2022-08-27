@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { useStyletron } from 'styletron-react';
 import {
     Button,
@@ -35,6 +35,18 @@ const FooterLinks = [
 const Body = (): JSX.Element => {
     const [css] = useStyletron();
     const isMobile = useMatchMediaQuery(MOBILE);
+    const { claims } = useAuthorizationContext();
+
+    const { name, image, discord } = useMemo(
+        () => ({
+            name: claims?.member?.nick || claims?.username || 'My Profile',
+            image: claims?.avatar
+                ? `https://cdn.discordapp.com/avatars/${claims.id}/${claims.avatar}.png`
+                : 'https://openseauserdata.com/files/433f3b338548fd8edb45df66cb293f89.png',
+            discord: `${claims?.username}#${claims?.discriminator}`,
+        }),
+        [claims]
+    );
 
     const [tab, setTab] = useState<'earnings' | 'leaderboard' | 'history'>(
         'earnings'
@@ -59,11 +71,7 @@ const Body = (): JSX.Element => {
                     },
                 })}
             >
-                <ProfileHeader
-                    name="Mr. Krockett"
-                    image="https://lh3.googleusercontent.com/gtRedQThacyBS3cJikU2QXkyhJL6vmmz8GlLQAEB5f8GsiXlqjRxWgRKAlbxyu1cBbwUoidpo3vxp64VH8tkUPW00eepbiV126wmLA=w600"
-                    discord="Mr Krockett#0014"
-                />
+                <ProfileHeader name={name} image={image} discord={discord} />
                 {isMobile && (
                     <div
                         className={css({
@@ -155,7 +163,8 @@ export const ProfilePage = (): JSX.Element => {
     const [css] = useStyletron();
     const { discordUrl, openseaUrl, twitterUrl } = useGamingApeContext();
     const { login, isLoggingIn } = useDiscordLogin();
-    const { discordId } = useAuthorizationContext();
+    const { claims } = useAuthorizationContext();
+    const discordId = useMemo(() => claims?.id, [claims]);
 
     return (
         <div
