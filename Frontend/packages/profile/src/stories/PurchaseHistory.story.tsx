@@ -10,7 +10,7 @@ export default {
 export const StandAlone = (): JSX.Element => {
     return (
         <div style={{ background: 'black', padding: '3em' }}>
-            <PurchaseHistory />
+            <PurchaseHistory discordId="test" />
         </div>
     );
 };

@@ -4,7 +4,7 @@ import Cheetopia from './Cheetopia.jpg';
 import GamerAdvantage from './Gamer Advantage.jpg';
 import GamersOutreach from './Gamers Outreach.jpg';
 import Gridcraft from './Gridcraft.jpg';
-import Llamaverse from './Llamaverse.png';
+import Llamaverse from './llamaverse.png';
 import PixlLabs from './Pixl Labs.png';
 import PowerGPU from './PowerGPU.jpg';
 import ProjectWhitelist from './Project Whitelist.jpg';

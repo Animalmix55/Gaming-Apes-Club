@@ -5,7 +5,7 @@ export interface Transaction {
     listingId: string;
     user: string;
     address?: string;
-    date: Date;
+    date: string;
     quantity: number;
     totalCost?: number;
     fulfilled: boolean;

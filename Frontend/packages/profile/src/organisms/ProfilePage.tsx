@@ -36,6 +36,7 @@ const Body = (): JSX.Element => {
     const [css] = useStyletron();
     const isMobile = useMatchMediaQuery(MOBILE);
     const { claims } = useAuthorizationContext();
+    const discordId = useMemo(() => claims?.id, [claims]);
 
     const { name, image, discord } = useMemo(
         () => ({
@@ -120,7 +121,7 @@ const Body = (): JSX.Element => {
                         {tab === 'history' && (
                             <>
                                 <Stats />
-                                <PurchaseHistory />
+                                <PurchaseHistory discordId={discordId} />
                             </>
                         )}
                     </>
@@ -141,7 +142,7 @@ const Body = (): JSX.Element => {
                             <Leaderboard />
                         </div>
                         <Stats />
-                        <PurchaseHistory />
+                        <PurchaseHistory discordId={discordId} />
                     </>
                 )}
             </main>
