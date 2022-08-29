@@ -4,7 +4,7 @@ import { useStyletron } from 'styletron-react';
 import GroupedList from '../atoms/GroupedList';
 import TransactionItem from '../atoms/TransactionItem';
 
-interface Transaction {
+export interface TransactionListItem {
     image: string;
     title: string;
     description: string;
@@ -14,7 +14,7 @@ interface Transaction {
 }
 
 interface Props {
-    transactions: Transaction[];
+    transactions: TransactionListItem[];
 }
 
 const TransactionList: React.FC<Props> = ({ transactions }): JSX.Element => {
