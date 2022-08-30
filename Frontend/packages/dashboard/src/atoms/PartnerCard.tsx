@@ -40,6 +40,8 @@ const PartnerCard: React.FC<Props> = ({
             })}
             key={url}
             href={url}
+            target="_blank"
+            rel="noopener noreferrer"
         >
             <img
                 className={css({

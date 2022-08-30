@@ -24,6 +24,8 @@ const ListingCard: React.FC<Props> = ({
     return (
         <a
             href={url}
+            target="_blank"
+            rel="noopener noreferrer"
             className={css({
                 display: 'inline-flex',
                 flexDirection: 'column',

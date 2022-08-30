@@ -22,7 +22,7 @@ const ShackSpecialCard: React.FC<Props> = ({
     const theme = useThemeContext();
 
     return (
-        <a key={url} href={url}>
+        <a key={url} target="_blank" rel="noopener noreferrer" href={url}>
             <div
                 className={css({
                     overflow: 'hidden',

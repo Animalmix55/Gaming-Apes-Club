@@ -11,6 +11,8 @@ const NewsCard = ({ image, title, url }: NewsType): JSX.Element => {
     return (
         <a
             href={url}
+            target="_blank"
+            rel="noopener noreferrer"
             className={css({
                 position: 'relative',
                 width: '264px',
