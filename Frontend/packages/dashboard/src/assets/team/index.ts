@@ -1,5 +1,5 @@
 import David from './David.jpg';
-import Alex from './Alex.jpg';
+import Alex from './Alex.png';
 import Justin from './Justin.jpg';
 import Luke from './Luke.jpg';
 import Nick from './Nick.jpg';

@@ -32,6 +32,8 @@ const FooterLinks = [
     { name: 'Terms & Conditions', url: '#' },
 ];
 
+const COMING_SOON = true;
+
 const Body = (): JSX.Element => {
     const [css] = useStyletron();
     const isMobile = useMatchMediaQuery(MOBILE);
@@ -50,7 +52,7 @@ const Body = (): JSX.Element => {
     );
 
     const [tab, setTab] = useState<'earnings' | 'leaderboard' | 'history'>(
-        'earnings'
+        COMING_SOON ? 'history' : 'earnings'
     );
 
     return (
@@ -73,7 +75,7 @@ const Body = (): JSX.Element => {
                 })}
             >
                 <ProfileHeader name={name} image={image} discord={discord} />
-                {isMobile && (
+                {isMobile && !COMING_SOON && (
                     <div
                         className={css({
                             display: 'grid',
@@ -130,7 +132,9 @@ const Body = (): JSX.Element => {
                         <div
                             className={css({
                                 display: 'grid',
-                                gridTemplateColumns: '3fr 2fr',
+                                gridTemplateColumns: COMING_SOON
+                                    ? '1fr 1fr'
+                                    : '3fr 2fr',
 
                                 gap: '24px',
                                 [TABLET]: {
@@ -138,8 +142,8 @@ const Body = (): JSX.Element => {
                                 },
                             })}
                         >
-                            <SocialEarnings />
-                            <Leaderboard />
+                            <SocialEarnings comingSoon={COMING_SOON} />
+                            <Leaderboard comingSoon={COMING_SOON} />
                         </div>
                         <Stats />
                         <PurchaseHistory discordId={discordId} />
