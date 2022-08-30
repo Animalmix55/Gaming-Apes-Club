@@ -7,7 +7,15 @@ export default {
     component: Leaderboard,
 };
 
-export const StandAlone = (): JSX.Element => {
+export const Normal = (): JSX.Element => {
+    return (
+        <div style={{ background: 'black', padding: '3em' }}>
+            <Leaderboard comingSoon={false} />
+        </div>
+    );
+};
+
+export const Comingsoon = (): JSX.Element => {
     return (
         <div style={{ background: 'black', padding: '3em' }}>
             <Leaderboard />

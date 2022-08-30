@@ -7,7 +7,15 @@ export default {
     component: SocialEarnings,
 };
 
-export const StandAlone = (): JSX.Element => {
+export const Normal = (): JSX.Element => {
+    return (
+        <div style={{ background: 'black', padding: '3em' }}>
+            <SocialEarnings comingSoon={false} />
+        </div>
+    );
+};
+
+export const ComingSoon = (): JSX.Element => {
     return (
         <div style={{ background: 'black', padding: '3em' }}>
             <SocialEarnings />

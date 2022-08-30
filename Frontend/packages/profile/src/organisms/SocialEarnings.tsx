@@ -380,7 +380,11 @@ const TwitterEarnings = (): JSX.Element => {
     );
 };
 
-export const SocialEarnings = (): JSX.Element => {
+interface Props {
+    comingSoon?: boolean;
+}
+
+export const SocialEarnings = ({ comingSoon = true }: Props): JSX.Element => {
     const [css] = useStyletron();
     const theme = useThemeContext();
 
@@ -402,40 +406,56 @@ export const SocialEarnings = (): JSX.Element => {
             })}
         >
             <Header title="Gac social" subtitle="earnings" />
-            <p
-                className={css({
-                    fontWeight: '500',
-                    fontSize: '15px',
-                    lineHeight: '22px',
+            {comingSoon ? (
+                <p
+                    className={css({
+                        textAlign: 'center',
+                        padding: '48px 0',
+                        fontWeight: 600,
+                        fontSize: '18px',
+                        lineHeight: '28px',
+                    })}
+                >
+                    Coming Soon
+                </p>
+            ) : (
+                <>
+                    <p
+                        className={css({
+                            fontWeight: '500',
+                            fontSize: '15px',
+                            lineHeight: '22px',
 
-                    wordWrap: 'break-word',
-                    overflow: 'hidden',
+                            wordWrap: 'break-word',
+                            overflow: 'hidden',
 
-                    display: '-webkit-box',
-                    '-webkit-line-clamp': '2',
-                    '-webkit-box-orient': 'vertical',
-                })}
-            >
-                Lorem ipsum dolor sit, amet consectetur adipisicing elit. Minus
-                nam, illo eaque dignissimos eos culpa quasi molestias cumque
-                numquam ut reiciendis, quaerat eligendi quibusdam esse modi ea
-                repellendus cum harum.
-            </p>
-            <div
-                className={css({
-                    display: 'grid',
-                    gridTemplateColumns: 'repeat(2, 1fr)',
-                    marginTop: '8px',
-                    gap: '24px',
+                            display: '-webkit-box',
+                            '-webkit-line-clamp': '2',
+                            '-webkit-box-orient': 'vertical',
+                        })}
+                    >
+                        Lorem ipsum dolor sit, amet consectetur adipisicing
+                        elit. Minus nam, illo eaque dignissimos eos culpa quasi
+                        molestias cumque numquam ut reiciendis, quaerat eligendi
+                        quibusdam esse modi ea repellendus cum harum.
+                    </p>
+                    <div
+                        className={css({
+                            display: 'grid',
+                            gridTemplateColumns: 'repeat(2, 1fr)',
+                            marginTop: '8px',
+                            gap: '24px',
 
-                    [MOBILE]: {
-                        gridTemplateColumns: '1fr',
-                    },
-                })}
-            >
-                <DiscordEarnings />
-                <TwitterEarnings />
-            </div>
+                            [MOBILE]: {
+                                gridTemplateColumns: '1fr',
+                            },
+                        })}
+                    >
+                        <DiscordEarnings />
+                        <TwitterEarnings />
+                    </div>
+                </>
+            )}
         </section>
     );
 };

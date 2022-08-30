@@ -236,7 +236,11 @@ const LeaderboardHeader = (): JSX.Element => {
     );
 };
 
-export const Leaderboard = (): JSX.Element => {
+interface Props {
+    comingSoon?: boolean;
+}
+
+export const Leaderboard = ({ comingSoon = true }: Props): JSX.Element => {
     const [css] = useStyletron();
     const theme = useThemeContext();
 
@@ -265,52 +269,66 @@ export const Leaderboard = (): JSX.Element => {
             })}
         >
             <Header title="Gac xp" subtitle="leaderboard" />
-            <div
-                className={css({
-                    display: 'flex',
-                    flexDirection: 'column',
-                    gap: '16px',
-                    overflowY: 'auto',
-
-                    [TABLET]: {
-                        overflowY: 'unset',
-                    },
-                })}
-            >
-                <div>
-                    <p className={subheadingClass}>Your Rank</p>
-                    <div className={css({ marginTop: '16px' })}>
-                        <RankItem
-                            name="Mr. Krockett"
-                            image={IMAGE}
-                            subtitle="Ranked 10th"
-                            xp={102000}
-                        />
-                    </div>
-                </div>
+            {comingSoon ? (
+                <p
+                    className={css({
+                        textAlign: 'center',
+                        padding: '48px 0',
+                        fontWeight: 600,
+                        fontSize: '18px',
+                        lineHeight: '28px',
+                    })}
+                >
+                    Coming Soon
+                </p>
+            ) : (
                 <div
                     className={css({
-                        isolation: 'isolate',
                         display: 'flex',
                         flexDirection: 'column',
                         gap: '16px',
+                        overflowY: 'auto',
+
+                        [TABLET]: {
+                            overflowY: 'unset',
+                        },
                     })}
                 >
-                    <p className={subheadingClass}>Leaderboard</p>
-                    <LeaderboardHeader />
+                    <div>
+                        <p className={subheadingClass}>Your Rank</p>
+                        <div className={css({ marginTop: '16px' })}>
+                            <RankItem
+                                name="Mr. Krockett"
+                                image={IMAGE}
+                                subtitle="Ranked 10th"
+                                xp={102000}
+                            />
+                        </div>
+                    </div>
                     <div
                         className={css({
+                            isolation: 'isolate',
                             display: 'flex',
                             flexDirection: 'column',
                             gap: '16px',
                         })}
                     >
-                        {RANKS.slice(3).map((item) => (
-                            <RankItem key={item.subtitle} {...item} />
-                        ))}
+                        <p className={subheadingClass}>Leaderboard</p>
+                        <LeaderboardHeader />
+                        <div
+                            className={css({
+                                display: 'flex',
+                                flexDirection: 'column',
+                                gap: '16px',
+                            })}
+                        >
+                            {RANKS.slice(3).map((item) => (
+                                <RankItem key={item.subtitle} {...item} />
+                            ))}
+                        </div>
                     </div>
                 </div>
-            </div>
+            )}
         </section>
     );
 };
