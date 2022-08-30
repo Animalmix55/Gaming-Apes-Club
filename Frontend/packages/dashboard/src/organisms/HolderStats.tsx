@@ -16,6 +16,7 @@ import {
 import React from 'react';
 import { useStyletron } from 'styletron-react';
 import { useGamingApeContext } from '../contexts/GamingApeClubContext';
+import useTwitterFollowers from '../hooks/useTwitterFollowers';
 
 interface StatItemProps {
     className?: string;
@@ -162,7 +163,7 @@ export const HolderStatsFigma = (): JSX.Element => {
                 className={css({
                     flex: '1',
                 })}
-                title="Overal GAC"
+                title="Overall GAC"
                 subtitle="Holder Stats"
             />
             <div
@@ -253,6 +254,8 @@ const HolderStats = (): JSX.Element => {
 
     const rewardTokenSupply = useERC20Supply(polygonProvider, gacXPAddress);
 
+    const twitterFollowers = useTwitterFollowers('GamingApeClub');
+
     return (
         <section
             className={css({
@@ -266,7 +269,7 @@ const HolderStats = (): JSX.Element => {
                 padding: '24px',
             })}
         >
-            <Header title="Overal GAC" subtitle="Holder Stats" />
+            <Header title="Overall GAC" subtitle="Holder Stats" />
             <div
                 className={css({
                     display: 'flex',
@@ -290,6 +293,16 @@ const HolderStats = (): JSX.Element => {
                 >
                     <TokenDisplay amount={rewardTokenSupply.data} />
                 </StatItem>
+                {!twitterFollowers.isError && (
+                    <StatItem
+                        heading="@GamingApeClub Twitter Following"
+                        loading={twitterFollowers.isLoading}
+                    >
+                        <p className={css(AccentTextStyles(theme))}>
+                            {twitterFollowers.data?.toLocaleString()}
+                        </p>
+                    </StatItem>
+                )}
             </div>
         </section>
     );
