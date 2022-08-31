@@ -23,15 +23,6 @@ import Leaderboard from './Leaderboard';
 import useDiscordLogin from '../api/hooks/useDiscordLogin';
 import { useAuthorizationContext } from '../contexts/AuthorizationContext';
 
-const FooterLinks = [
-    {
-        name: 'Cookie Policy',
-        url: '#',
-    },
-    { name: 'Privacy Policy', url: '#' },
-    { name: 'Terms & Conditions', url: '#' },
-];
-
 const COMING_SOON = true;
 
 const Body = (): JSX.Element => {
@@ -39,6 +30,16 @@ const Body = (): JSX.Element => {
     const isMobile = useMatchMediaQuery(MOBILE);
     const { claims } = useAuthorizationContext();
     const discordId = useMemo(() => claims?.id, [claims]);
+
+    const { discordUrl, openseaUrl, twitterUrl } = useGamingApeContext();
+
+    const footerLinks = useMemo(() => {
+        return [
+            { name: 'Twitter', url: twitterUrl },
+            { name: 'Discord', url: discordUrl },
+            { name: 'OpenSea', url: openseaUrl },
+        ];
+    }, [discordUrl, openseaUrl, twitterUrl]);
 
     const { name, image, discord } = useMemo(
         () => ({
@@ -158,7 +159,7 @@ const Body = (): JSX.Element => {
                     },
                 })}
             >
-                <Footer links={FooterLinks} />
+                <Footer links={footerLinks} />
             </div>
         </div>
     );

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { useStyletron } from 'styletron-react';
 import {
     Footer,
@@ -20,18 +20,17 @@ import TeamMembers from './TeamMembers';
 import Partners from './Partners';
 import { DASHBOARD_PADDING, DASHBOARD_PADDING_TABLET } from '../common/styles';
 
-const FooterLinks = [
-    {
-        name: 'Cookie Policy',
-        url: '#',
-    },
-    { name: 'Privacy Policy', url: '#' },
-    { name: 'Terms & Conditions', url: '#' },
-];
-
 export const DashboardPage = (): JSX.Element => {
     const [css] = useStyletron();
     const { discordUrl, openseaUrl, twitterUrl } = useGamingApeContext();
+
+    const footerLinks = useMemo(() => {
+        return [
+            { name: 'Twitter', url: twitterUrl },
+            { name: 'Discord', url: discordUrl },
+            { name: 'OpenSea', url: openseaUrl },
+        ];
+    }, [discordUrl, openseaUrl, twitterUrl]);
 
     return (
         <div
@@ -135,7 +134,7 @@ export const DashboardPage = (): JSX.Element => {
                         },
                     })}
                 >
-                    <Footer links={FooterLinks} />
+                    <Footer links={footerLinks} />
                 </div>
             </div>
         </div>
