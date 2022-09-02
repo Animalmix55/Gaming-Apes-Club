@@ -36,6 +36,7 @@
     "@gac/whitelist": "^0.0.0",
     "@gac/token": "^0.0.0",
     "@gac/marketplace": "^0.0.0",
+    "@gac/services": "^0.0.0",
     "@gac/login": "^0.0.0",
     "@babel/cli": "^7.14.8",
     "@babel/core": "^7.15.0",

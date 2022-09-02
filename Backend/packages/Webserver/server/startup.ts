@@ -16,6 +16,7 @@ import http from 'http';
 import { WebsocketProvider } from 'web3-core';
 import { BlockHeader } from 'web3-eth';
 import { registerListeners } from '@gac/blockchain';
+import { getTwitterRouter } from '@gac/services';
 
 /**
  * Normalize a port into a number, string, or false.
@@ -128,6 +129,7 @@ const startExpressInstance = async () => {
         GRIDCRAFT_API_TOKEN,
         GRIDCRAFT_WAF_SECRET,
         GRIDCRAFT_BASE_URL,
+        TWITTER_API_BEARER_TOKEN,
     } = process.env;
 
     const sequelize = await StartDatabase(
@@ -154,6 +156,8 @@ const startExpressInstance = async () => {
     if (!NUM_PROXIES) throw new Error('Number of proxies not supplied');
     if (!GRIDCRAFT_API_TOKEN || !GRIDCRAFT_BASE_URL || !GRIDCRAFT_WAF_SECRET)
         throw new Error('Missing Gridcraft configuration');
+    if (!TWITTER_API_BEARER_TOKEN)
+        throw new Error('Missing twitter api bearer token');
 
     const REQUEST_NUMERIC_TIMEOUT = Number(REQUEST_TIMEOUT || 5000); // default 5000 ms
     if (Number.isNaN(REQUEST_NUMERIC_TIMEOUT))
@@ -200,6 +204,7 @@ const startExpressInstance = async () => {
         getListingRouter(JWT_PRIVATE, adminRoles, sequelize, gridcraftClient)
     );
     app.use('/tags', getTagsRouter());
+    app.use('/twitter', getTwitterRouter(TWITTER_API_BEARER_TOKEN));
 
     app.use(
         '/transaction',

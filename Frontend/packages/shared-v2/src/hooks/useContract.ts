@@ -1,5 +1,5 @@
 import React from 'react';
-import { Web3Provider } from '@ethersproject/providers';
+import { JsonRpcProvider } from '@ethersproject/providers';
 import { ethers } from 'ethers';
 import { GACStaking } from '../models/GACStaking';
 import GACStakingABI from '../assets/web3/GACStakingABI.json';
@@ -19,35 +19,26 @@ import { GACStakingAncilary } from '../models/GACStakingAncilary';
 import { ERC20 } from '../models/ERC20';
 
 export const useContract = <T extends ethers.Contract>(
-    provider: Web3Provider | undefined,
+    provider: JsonRpcProvider | undefined,
     abi: ethers.ContractInterface,
     address: string | undefined,
     readonly?: boolean
 ): T | undefined => {
-    const [contract, _setContract] = React.useState<T>();
-    React.useEffect(() => {
+    return React.useMemo((): T | undefined => {
         if (!provider || !address) {
-            _setContract(undefined);
-            return;
+            return undefined;
         }
 
-        const getContract = async (): Promise<void> => {
-            const newContract = new ethers.Contract(
-                address,
-                abi,
-                readonly ? provider : provider.getSigner()
-            );
-
-            _setContract(newContract as never);
-        };
-        getContract();
+        return new ethers.Contract(
+            address,
+            abi,
+            readonly ? provider : provider.getSigner()
+        ) as never as T;
     }, [abi, address, provider, readonly]);
-
-    return contract as never as T;
 };
 
 export const useGACStakingContract = (
-    provider?: Web3Provider,
+    provider?: JsonRpcProvider,
     address?: string,
     readonly?: boolean
 ): GACStaking | undefined => {
@@ -55,7 +46,7 @@ export const useGACStakingContract = (
 };
 
 export const useGACStakingChildContract = (
-    provider?: Web3Provider,
+    provider?: JsonRpcProvider,
     address?: string,
     readonly?: boolean
 ): GACStakingChild | undefined => {
@@ -63,7 +54,7 @@ export const useGACStakingChildContract = (
 };
 
 export const useGACXPContract = (
-    provider?: Web3Provider,
+    provider?: JsonRpcProvider,
     address?: string,
     readonly?: boolean
 ): GACXP | undefined => {
@@ -71,7 +62,7 @@ export const useGACXPContract = (
 };
 
 export const useGamingApeClubContract = (
-    provider?: Web3Provider,
+    provider?: JsonRpcProvider,
     address?: string,
     readonly?: boolean
 ): GamingApeClub | undefined => {
@@ -79,7 +70,7 @@ export const useGamingApeClubContract = (
 };
 
 export const useIERC20Contract = (
-    provider?: Web3Provider,
+    provider?: JsonRpcProvider,
     address?: string,
     readonly?: boolean
 ): IERC20 | undefined => {
@@ -87,7 +78,7 @@ export const useIERC20Contract = (
 };
 
 export const useIERC721MetadataContract = (
-    provider?: Web3Provider,
+    provider?: JsonRpcProvider,
     address?: string,
     readonly?: boolean
 ): IERC721Metadata | undefined => {
@@ -95,7 +86,7 @@ export const useIERC721MetadataContract = (
 };
 
 export const useGACStakingAncilaryContract = (
-    provider?: Web3Provider,
+    provider?: JsonRpcProvider,
     address?: string,
     readonly?: boolean
 ): GACStakingAncilary | undefined => {
@@ -103,7 +94,7 @@ export const useGACStakingAncilaryContract = (
 };
 
 export const useERC20Contract = (
-    provider?: Web3Provider,
+    provider?: JsonRpcProvider,
     address?: string,
     readonly?: boolean
 ): ERC20 | undefined => {

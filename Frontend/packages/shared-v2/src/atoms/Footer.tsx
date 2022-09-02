@@ -4,21 +4,24 @@ import { useThemeContext } from '../contexts/ThemeContext';
 import GACLogo from '../assets/png/logo/GAC.png';
 import { ClassNameBuilder, MOBILE } from '../utilties';
 
+type Link = {
+    name: string;
+    url: string | undefined;
+};
+
 export interface FooterProps {
     className?: string;
-    twitterUrl?: string;
-    discordUrl?: string;
-    openSeaUrl?: string;
+    links?: Link[];
 }
 
 export const Footer = (props: FooterProps): JSX.Element => {
-    const { className, twitterUrl, discordUrl, openSeaUrl } = props;
+    const { className, links } = props;
 
     const theme = useThemeContext();
     const [css] = useStyletron();
 
     return (
-        <div
+        <footer
             className={ClassNameBuilder(
                 className,
                 css({
@@ -70,48 +73,24 @@ export const Footer = (props: FooterProps): JSX.Element => {
                     justifyContent: 'end',
                     [MOBILE]: {
                         flexWrap: 'wrap',
+                        justifyContent: 'center',
                     },
+                    gap: '24px',
                 })}
             >
-                {!!twitterUrl && (
+                {links?.map(({ name, url }) => (
                     <a
-                        href={twitterUrl}
+                        key={name}
+                        href={url ?? '#'}
                         className={css({
                             color: theme.foregroundPallette.white.toRgbaString(),
                         })}
                         target="_blank"
                         rel="noreferrer"
                     >
-                        Twitter
+                        {name}
                     </a>
-                )}
-                {!!discordUrl && (
-                    <a
-                        href={discordUrl}
-                        className={css({
-                            marginLeft: twitterUrl ? '24px' : undefined,
-                            color: theme.foregroundPallette.white.toRgbaString(),
-                        })}
-                        target="_blank"
-                        rel="noreferrer"
-                    >
-                        Discord
-                    </a>
-                )}
-                {!!openSeaUrl && (
-                    <a
-                        className={css({
-                            marginLeft:
-                                twitterUrl || discordUrl ? '24px' : undefined,
-                            color: theme.foregroundPallette.white.toRgbaString(),
-                        })}
-                        href={openSeaUrl}
-                        target="_blank"
-                        rel="noreferrer"
-                    >
-                        OpenSea
-                    </a>
-                )}
+                ))}
             </div>
             <div
                 className={css({
@@ -122,7 +101,7 @@ export const Footer = (props: FooterProps): JSX.Element => {
             >
                 &copy; {new Date().getFullYear()} Gaming Ape Club, Inc.
             </div>
-        </div>
+        </footer>
     );
 };
 

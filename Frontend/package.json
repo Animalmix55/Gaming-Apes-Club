@@ -93,6 +93,7 @@
     "eslint-plugin-react": "^7.26.1",
     "eslint-plugin-react-hooks": "4.2.1-alpha-c3a19e5af-20211014",
     "file-loader": "^6.2.0",
+    "html-webpack-plugin": "^5.5.0",
     "imagemin-gifsicle": "^7.0.0",
     "imagemin-jpegtran": "^7.0.0",
     "imagemin-optipng": "^8.0.0",

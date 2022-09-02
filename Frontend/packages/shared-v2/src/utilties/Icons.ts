@@ -21,7 +21,9 @@ import WalletConnect from '../assets/png/action/WalletConnect.png';
 
 // SOCIAL
 import DiscordRound from '../assets/png/social/Discord.png';
+import DiscordPurple from '../assets/svg/discord-purple.svg';
 import OpenSeaRound from '../assets/png/social/Opensea.png';
+import OpenSeaBlue from '../assets/png/social/OpenSea-blue.png';
 import TwitterBlue from '../assets/png/social/Twitter blue.png';
 import TwitterRound from '../assets/png/social/Twitter.png';
 
@@ -39,6 +41,11 @@ import ChevronLeft from '../assets/png/symbol/ChevronLeft.png';
 import ChevronUp from '../assets/png/symbol/ChevronUp.png';
 import ChevronRight from '../assets/png/symbol/ChevronRight.png';
 import ChevronDown from '../assets/png/symbol/ChevronDown.png';
+import CommentFilled from '../assets/svg/comment-filled.svg';
+import CommentOutline from '../assets/svg/comment-outline.svg';
+import Heart from '../assets/svg/heart-outline.svg';
+import Retweet from '../assets/svg/retweet.svg';
+import Note from '../assets/svg/note.svg';
 
 // logos
 import Polygon from '../assets/svg/Polygon.svg';
@@ -64,7 +71,9 @@ export const Icons = {
     Staking,
     WalletConnect,
     DiscordRound,
+    DiscordPurple,
     OpenSeaRound,
+    OpenSeaBlue,
     TwitterBlue,
     TwitterRound,
     Chainlink,
@@ -81,6 +90,11 @@ export const Icons = {
     ChevronRight,
     ChevronUp,
     Polygon,
+    CommentFilled,
+    CommentOutline,
+    Heart,
+    Retweet,
+    Note,
 };
 
 export default Icons;

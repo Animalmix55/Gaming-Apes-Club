@@ -82,9 +82,11 @@ export const Divider = ({ className }: { className?: string }): JSX.Element => {
 };
 
 export const TokenDisplay = ({
+    className,
     amount,
     negative,
 }: {
+    className?: string;
     amount?: BigNumber | number;
     negative?: boolean;
 }): JSX.Element => {
@@ -104,12 +106,15 @@ export const TokenDisplay = ({
             })}
         >
             <span
-                className={css({
-                    ...AccentTextStyles(theme),
-                    ...(negative && {
-                        color: theme.additionalPallette.red.toRgbaString(),
-                    }),
-                })}
+                className={ClassNameBuilder(
+                    className,
+                    css({
+                        ...AccentTextStyles(theme),
+                        ...(negative && {
+                            color: theme.additionalPallette.red.toRgbaString(),
+                        }),
+                    })
+                )}
             >
                 {negative ? '-' : ''}
                 {number}

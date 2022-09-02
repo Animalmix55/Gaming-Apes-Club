@@ -1,7 +1,10 @@
+/* eslint-disable jsx-a11y/no-static-element-interactions */
+/* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable react/no-unused-prop-types */
 /* eslint-disable react/jsx-props-no-spreading */
 import React from 'react';
 import { useStyletron } from 'styletron-react';
+import { CSSTransition } from 'react-transition-group';
 import GACLogo from '../assets/png/logo/GAC.png';
 import { ButtonType, Button } from '../atoms/Button';
 import { LoginButton } from '../atoms/LoginButton';
@@ -65,70 +68,96 @@ const MobileSidebar = (props: SidebarProps): JSX.Element => {
     const [expanded, setExpanded] = React.useState(false);
 
     return (
-        <div
-            className={css({
-                display: 'flex',
-                flexDirection: 'column',
-                overflow: 'hidden',
-                boxSizing: 'border-box',
-                position: 'fixed',
-                top: 0,
-                zIndex: 100,
-                width: '100%',
-                maxHeight: '100%',
-                padding: '8px 24px',
-                backgroundColor: theme.backgroundPallette.darker.toRgbaString(),
-                backdropFilter: 'blur(40px)',
-            })}
-        >
-            <div className={css({ display: 'flex', alignItems: 'center' })}>
-                <Button
-                    icon={expanded ? Icons.Close : Icons.Burger}
-                    onClick={(): void => setExpanded((e) => !e)}
-                    iconClass={css({
-                        height: '40px !important',
-                        width: 'auto',
-                    })}
+        <>
+            <div
+                className={css({
+                    display: 'flex',
+                    flexDirection: 'column',
+                    overflow: 'hidden',
+                    boxSizing: 'border-box',
+                    position: 'fixed',
+                    top: 0,
+                    zIndex: 100,
+                    width: '100%',
+                    maxHeight: expanded ? '100%' : '64px',
+                    padding: '8px 24px',
+                    backgroundColor:
+                        theme.backgroundPallette.darker.toRgbaString(),
+                    backdropFilter: 'blur(40px)',
+                    transition: 'max-height 300ms linear',
+                })}
+            >
+                <div
                     className={css({
-                        padding: 'unset !important',
+                        display: 'flex',
+                        alignItems: 'center',
+                        height: '48px',
                     })}
-                />
-                <img
-                    src={GACLogo}
-                    alt="Gaming Ape Club"
-                    className={css({
-                        height: '42px',
-                        width: 'auto',
-                        marginRight: 'auto',
-                        marginLeft: 'auto',
-                    })}
-                />
-                <LoginButton
-                    active={!address}
-                    onClick={(): void => setLoginModalOpen(true)}
-                />
-                <WalletLoginModal
-                    onClose={(): void => setLoginModalOpen(false)}
-                    isOpen={loginModalOpen}
-                />
-            </div>
-            {expanded && (
-                <div className={css({ overflow: 'auto', width: '100%' })}>
-                    {items.map((b) => (
-                        <div key={b.id}>
-                            <SidebarButton
-                                disabled={b.disabled}
-                                onClick={(): void => onSelectButton?.(b)}
-                                icon={b.icon}
-                                text={b.displayText}
-                                className={css({ margin: '20px 0px' })}
-                                selected={selectedId === b.id}
-                            />
-                        </div>
-                    ))}
+                >
+                    <Button
+                        icon={expanded ? Icons.Close : Icons.Burger}
+                        onClick={(): void => setExpanded((e) => !e)}
+                        iconClass={css({
+                            height: '40px !important',
+                            width: 'auto',
+                        })}
+                        className={css({
+                            padding: 'unset !important',
+                        })}
+                    />
+                    <img
+                        src={GACLogo}
+                        alt="Gaming Ape Club"
+                        className={css({
+                            height: '42px',
+                            width: 'auto',
+                            marginRight: 'auto',
+                            marginLeft: 'auto',
+                        })}
+                    />
+                    <LoginButton
+                        active={!address}
+                        onClick={(): void => setLoginModalOpen(true)}
+                    />
+                    <WalletLoginModal
+                        onClose={(): void => setLoginModalOpen(false)}
+                        isOpen={loginModalOpen}
+                    />
                 </div>
-            )}
-        </div>
+                {expanded && (
+                    <div className={css({ overflow: 'hidden', width: '100%' })}>
+                        {items.map((b) => (
+                            <div key={b.id}>
+                                <SidebarButton
+                                    disabled={b.disabled}
+                                    onClick={(): void => onSelectButton?.(b)}
+                                    icon={b.icon}
+                                    text={b.displayText}
+                                    className={css({ margin: '20px 0px' })}
+                                    selected={selectedId === b.id}
+                                />
+                            </div>
+                        ))}
+                    </div>
+                )}
+            </div>
+            <CSSTransition
+                in={expanded}
+                timeout={200}
+                classNames="sidebar-overlay"
+                unmountOnExit
+            >
+                <div
+                    onClick={(): void => setExpanded(false)}
+                    className={css({
+                        position: 'absolute',
+                        inset: '0',
+                        background: 'rgba(0,0,0,0.6)',
+                        zIndex: 90,
+                    })}
+                />
+            </CSSTransition>
+        </>
     );
 };
 
