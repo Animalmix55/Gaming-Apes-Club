@@ -78,7 +78,7 @@ jobs:
     if: github.event_name != 'pull_request' || github.event.pull_request.merged
     needs: 
       - build
-      - paths-filter
+      - updated-packages
     runs-on: ubuntu-latest
     steps:
       - name: Download Artifacts
