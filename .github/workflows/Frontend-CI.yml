@@ -1,0 +1,81 @@
+# This is a basic workflow to help you get started with Actions
+
+name: CI/CD Frontend
+
+# Controls when the workflow will run
+on:
+  push:
+    branches: [ master ]
+    paths:
+      - 'Frontend'
+
+  pull_request:
+    branches: [ master ]
+    paths:
+      - 'Frontend'
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+
+      - uses: actions/cache@v2
+        with:
+          path: '**/node_modules'
+          key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
+
+      - name: Install lerna
+        working-directory: Frontend/
+        run: yarn global add lerna
+        
+      - name: Bootstrap lerna
+        working-directory: Frontend/
+        run: lerna bootstrap
+        
+      - name: Build
+        working-directory: Frontend/
+        run: yarn build
+
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@master
+        with:
+          name: Dashboard
+          path: Frontend/packages/dashboard/dist
+
+
+  production-deploy:
+    if: github.event_name != 'pull_request' || github.event.pull_request.merged
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Download Artifacts
+        uses: actions/download-artifact@master
+        with:
+          name: Dashboard
+          path: Frontend/Temp-Builds/Dashboard
+
+      - name: Sync files
+        uses: SamKirkland/FTP-Deploy-Action@4.3.2
+        with:
+          server: ${{ secrets.ftp_password }}
+          username: ${{ secrets.ftp_password }}
+          password: ${{ secrets.ftp_password }}
+          port: ${{ secrets.ftp_password }}
+          local-dir: Frontend/Temp-Builds/Dashboard
+          server-dir: home.gamingapeclub.com/public_html/dist
+
+      
+
+          
+      
