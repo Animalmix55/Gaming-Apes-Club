@@ -73,7 +73,9 @@ jobs:
         with:
           name: Builds
           # the root will be the contents of packages (with only packages with dist folders)
-          path: Frontend/packages/*/dist
+          path: |
+            Frontend/packages/*/dist
+            Frontend/packages/*.{png,xml,html,webmanifest,ico}
 
 
   production-deploy:
@@ -97,8 +99,8 @@ jobs:
           username: ${{ secrets.CI_FTP_USER }}
           password: ${{ secrets.CI_FTP_PASSWORD }}
           port: ${{ secrets.CI_FTP_PORT }}
-          local-dir: dashboard/dist/
-          server-dir: home.gamingapeclub.com/public_html/dist/
+          local-dir: dashboard/
+          server-dir: home.gamingapeclub.com/public_html/
 
       
 

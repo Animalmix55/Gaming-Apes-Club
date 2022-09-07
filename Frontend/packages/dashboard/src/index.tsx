@@ -71,6 +71,7 @@ const Root = (): JSX.Element => {
                         >
                             <>
                                 <DashboardPage />
+                                <div>Wow!</div>
                                 <ToastContainer position="bottom-left" />
                             </>
                         </GamingApeContextProvider>
