@@ -7,12 +7,12 @@ on:
   push:
     branches: [ master ]
     paths:
-      - 'Frontend'
+      - 'Frontend/**'
 
   pull_request:
     branches: [ master ]
     paths:
-      - 'Frontend'
+      - 'Frontend/**'
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
