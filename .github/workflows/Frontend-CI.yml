@@ -22,10 +22,10 @@ jobs:
   updated-packages:
     runs-on: ubuntu-latest
     outputs:
-      dashboard: ${{ steps.filter.outputs.dashboard == 'true' || steps.filter.outputs.shared == 'true' }}
-      market: ${{ steps.filter.outputs.market == 'true' || steps.filter.outputs.shared == 'true' }}
-      profile: ${{ steps.filter.outputs.profile == 'true' || steps.filter.outputs.shared == 'true' }}
-      staking: ${{ steps.filter.outputs.staking == 'true' || steps.filter.outputs.shared == 'true' }}
+      dashboard: ${{ steps.filter.outputs.dashboard }}
+      market: ${{ steps.filter.outputs.market }}
+      profile: ${{ steps.filter.outputs.profile }}
+      staking: ${{ steps.filter.outputs.staking }}
     steps:
     - uses: actions/checkout@v2
     - uses: dorny/paths-filter@v2
@@ -94,7 +94,7 @@ jobs:
           path: ./
 
       - name: Sync Dashboard
-        if: needs.updated-packages.outputs.dashboard
+        if: needs.updated-packages.outputs.dashboard == 'true' || needs.updated-packages.outputs.shared == 'true'
         uses: SamKirkland/FTP-Deploy-Action@4.3.2
         with:
           server: ${{ secrets.CI_FTP_HOST }}
@@ -105,7 +105,7 @@ jobs:
           server-dir: home.gamingapeclub.com/public_html/
 
       - name: Sync Profile
-        if: needs.updated-packages.outputs.profile
+        if: needs.updated-packages.outputs.profile == 'true' || needs.updated-packages.outputs.shared == 'true'
         uses: SamKirkland/FTP-Deploy-Action@4.3.2
         with:
           server: ${{ secrets.CI_FTP_HOST }}
@@ -116,7 +116,7 @@ jobs:
           server-dir: profile.gamingapeclub.com/public_html/
 
       - name: Sync Market
-        if: needs.updated-packages.outputs.market
+        if: needs.updated-packages.outputs.market == 'true' || needs.updated-packages.outputs.shared == 'true'
         uses: SamKirkland/FTP-Deploy-Action@4.3.2
         with:
           server: ${{ secrets.CI_FTP_HOST }}
@@ -127,7 +127,7 @@ jobs:
           server-dir: shack.gamingapeclub.com/public_html/
 
       - name: Sync Staking
-        if: needs.updated-packages.outputs.staking
+        if: needs.updated-packages.outputs.staking == 'true' || needs.updated-packages.outputs.shared == 'true'
         uses: SamKirkland/FTP-Deploy-Action@4.3.2
         with:
           server: ${{ secrets.CI_FTP_HOST }}
