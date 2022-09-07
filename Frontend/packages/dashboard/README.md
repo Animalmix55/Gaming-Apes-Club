@@ -35,7 +35,7 @@ dashboard/
 
 ### Example - Adding News
 
-### 1 - Add Images
+#### 1 - Add Images
 
 First you would add all images required for news into the `dashboard/assets/news` folder.
 
