@@ -82,16 +82,16 @@ module.exports = (env) => ({
         new webpack.ProvidePlugin({
             Buffer: ['buffer', 'Buffer'],
         }),
-        new ImageMinimizerPlugin({
-            minimizerOptions: {
-                // Lossless optimization with custom option
-                // Feel free to experiment with options for better result for you
-                plugins: [
-                    ['gifsicle', { interlaced: true }],
-                    ['jpegtran', { progressive: true }],
-                    ['optipng', { optimizationLevel: 5 }],
-                ],
-            },
-        }),
+        // new ImageMinimizerPlugin({
+        //     minimizerOptions: {
+        //         // Lossless optimization with custom option
+        //         // Feel free to experiment with options for better result for you
+        //         plugins: [
+        //             ['gifsicle', { interlaced: true }],
+        //             ['jpegtran', { progressive: true }],
+        //             ['optipng', { optimizationLevel: 5 }],
+        //         ],
+        //     },
+        // }),
     ],
 });

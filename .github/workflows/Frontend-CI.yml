@@ -87,7 +87,7 @@ jobs:
         uses: actions/download-artifact@master
         with:
           name: Builds
-          path: /
+          path: ./
 
       - name: Sync Dashboard
         if: needs.updated-packages.outputs.dashboard == 'true'
