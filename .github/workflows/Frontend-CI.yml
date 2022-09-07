@@ -19,14 +19,34 @@ on:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "build"
-  build:
-    # The type of runner that the job will run on
+  updated-packages:
     runs-on: ubuntu-latest
-
-    # Steps represent a sequence of tasks that will be executed as part of the job
+    outputs:
+      dashboard: ${{ steps.filter.outputs.dashboard }}
+      market: ${{ steps.filter.outputs.market }}
+      profile: ${{ steps.filter.outputs.profile }}
+      shared: ${{ steps.filter.outputs.shared }}
+      staking: ${{ steps.filter.outputs.staking }}
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+    - uses: actions/checkout@v2
+    - uses: dorny/paths-filter@v2
+      id: filter
+      with:
+        filters: |
+          dashboard:
+            - 'Frontend/packages/dashboard/**'
+          market:
+            - 'Frontend/packages/market/**'
+          profile:
+            - 'Frontend/packages/profile/**'
+          shared:
+            - 'Frontend/packages/shared-v2/**'
+          staking:
+            - 'Frontend/packages/staking/**'
+
+  build:
+    runs-on: ubuntu-latest
+    steps:
       - uses: actions/checkout@v2
 
       - uses: actions/cache@v2
@@ -44,37 +64,39 @@ jobs:
         
       - name: Build
         working-directory: Frontend/
-        run: yarn build
+        run: yarn build --since=master --include-dependencies
 
       - name: Upload Artifacts
         uses: actions/upload-artifact@master
         with:
-          name: Dashboard
-          path: Frontend/packages/dashboard/dist
+          name: Builds
+          # the root will be the contents of packages (with only packages with dist folders)
+          path: Frontend/packages/*/dist
 
 
   production-deploy:
     if: github.event_name != 'pull_request' || github.event.pull_request.merged
-    needs: build
+    needs: 
+      - build
+      - paths-filter
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-
       - name: Download Artifacts
         uses: actions/download-artifact@master
         with:
-          name: Dashboard
-          path: Frontend/Temp-Builds/Dashboard
+          name: Builds
+          path: /
 
-      - name: Sync files
+      - name: Sync Dashboard
+        if: needs.updated-packages.outputs.dashboard == 'true'
         uses: SamKirkland/FTP-Deploy-Action@4.3.2
         with:
           server: ${{ secrets.ftp_password }}
           username: ${{ secrets.ftp_password }}
           password: ${{ secrets.ftp_password }}
           port: ${{ secrets.ftp_password }}
-          local-dir: Frontend/Temp-Builds/Dashboard
-          server-dir: home.gamingapeclub.com/public_html/dist
+          local-dir: dashboard/dist/
+          server-dir: home.gamingapeclub.com/public_html/dist/
 
       
 
