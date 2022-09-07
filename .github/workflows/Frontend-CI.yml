@@ -64,7 +64,7 @@ jobs:
         
       - name: Build
         working-directory: Frontend/
-        run: yarn build --since=HEAD~1 --include-dependencies
+        run: yarn build --since=master~1 --include-dependencies
 
       - name: Upload Artifacts
         uses: actions/upload-artifact@master
