@@ -22,11 +22,10 @@ jobs:
   updated-packages:
     runs-on: ubuntu-latest
     outputs:
-      dashboard: ${{ steps.filter.outputs.dashboard }}
-      market: ${{ steps.filter.outputs.market }}
-      profile: ${{ steps.filter.outputs.profile }}
-      shared: ${{ steps.filter.outputs.shared }}
-      staking: ${{ steps.filter.outputs.staking }}
+      dashboard: ${{ steps.filter.outputs.dashboard == 'true' || steps.filter.outputs.shared == 'true' }}
+      market: ${{ steps.filter.outputs.market == 'true' || steps.filter.outputs.shared == 'true' }}
+      profile: ${{ steps.filter.outputs.profile == 'true' || steps.filter.outputs.shared == 'true' }}
+      staking: ${{ steps.filter.outputs.staking == 'true' || steps.filter.outputs.shared == 'true' }}
     steps:
     - uses: actions/checkout@v2
     - uses: dorny/paths-filter@v2
@@ -66,7 +65,7 @@ jobs:
         
       - name: Build
         working-directory: Frontend/
-        run: yarn build --since=@~1 --include-dependencies
+        run: yarn build --since=@~1 --include-dependencies --include-dependents
 
       - name: Upload Artifacts
         uses: actions/upload-artifact@master
@@ -95,7 +94,7 @@ jobs:
           path: ./
 
       - name: Sync Dashboard
-        if: needs.updated-packages.outputs.dashboard == 'true'
+        if: needs.updated-packages.outputs.dashboard
         uses: SamKirkland/FTP-Deploy-Action@4.3.2
         with:
           server: ${{ secrets.CI_FTP_HOST }}
@@ -104,6 +103,39 @@ jobs:
           port: ${{ secrets.CI_FTP_PORT }}
           local-dir: dashboard/
           server-dir: home.gamingapeclub.com/public_html/
+
+      - name: Sync Profile
+        if: needs.updated-packages.outputs.profile
+        uses: SamKirkland/FTP-Deploy-Action@4.3.2
+        with:
+          server: ${{ secrets.CI_FTP_HOST }}
+          username: ${{ secrets.CI_FTP_USER }}
+          password: ${{ secrets.CI_FTP_PASSWORD }}
+          port: ${{ secrets.CI_FTP_PORT }}
+          local-dir: profile/
+          server-dir: profile.gamingapeclub.com/public_html/
+
+      - name: Sync Market
+        if: needs.updated-packages.outputs.market
+        uses: SamKirkland/FTP-Deploy-Action@4.3.2
+        with:
+          server: ${{ secrets.CI_FTP_HOST }}
+          username: ${{ secrets.CI_FTP_USER }}
+          password: ${{ secrets.CI_FTP_PASSWORD }}
+          port: ${{ secrets.CI_FTP_PORT }}
+          local-dir: market/
+          server-dir: shack.gamingapeclub.com/public_html/
+
+      - name: Sync Staking
+        if: needs.updated-packages.outputs.staking
+        uses: SamKirkland/FTP-Deploy-Action@4.3.2
+        with:
+          server: ${{ secrets.CI_FTP_HOST }}
+          username: ${{ secrets.CI_FTP_USER }}
+          password: ${{ secrets.CI_FTP_PASSWORD }}
+          port: ${{ secrets.CI_FTP_PORT }}
+          local-dir: staking/
+          server-dir: staking.gamingapeclub.com/public_html/
 
       
 
