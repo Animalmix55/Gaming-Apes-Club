@@ -75,7 +75,10 @@ jobs:
           # the root will be the contents of packages (with only packages with dist folders)
           path: |
             Frontend/packages/*/dist
-            Frontend/packages/*/*.{png,xml,html,webmanifest,ico}
+            Frontend/packages/*/*.png
+            Frontend/packages/*/*.html
+            Frontend/packages/*/*.webmanifest
+            Frontend/packages/*/*.ico
 
 
   production-deploy:
