@@ -70,6 +70,7 @@ const Root = (): JSX.Element => {
                             }}
                         >
                             <>
+                                <div>Test!</div>
                                 <DashboardPage />
                                 <ToastContainer position="bottom-left" />
                             </>
