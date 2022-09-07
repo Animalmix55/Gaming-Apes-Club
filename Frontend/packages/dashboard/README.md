@@ -35,6 +35,8 @@ dashboard/
 
 ### Example - Adding News
 
+---
+
 #### 1 - Add Images
 
 First you would add all images required for news into the `dashboard/assets/news` folder.
@@ -56,6 +58,8 @@ dashboard/
     │   └── ...
     └── ...
 ```
+
+---
 
 #### 2 - Opening `index.ts`
 
@@ -91,6 +95,8 @@ const bannerNews = {
 
 `bannerNews` controls the big news banner next to the stats.
 
+---
+
 #### 3 - Importing images
 
 At the top of the `index.ts` files below the other imports, we need to add in our images.
@@ -109,6 +115,8 @@ import EthMerge from './eth-merge.png';
 ```
 
 Please ensure the import name, I.E the word after `import`, e.g `GACPass`, `EthMerge`, is unique to the file.
+
+---
 
 #### 4 - Add data to structure
 
@@ -136,6 +144,8 @@ const latestNews: NewsType[] = [
     }
 ];
 ```
+
+---
 
 #### 5 - Commit and create a PR
 
