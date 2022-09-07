@@ -93,10 +93,10 @@ jobs:
         if: needs.updated-packages.outputs.dashboard == 'true'
         uses: SamKirkland/FTP-Deploy-Action@4.3.2
         with:
-          server: ${{ secrets.ftp_password }}
-          username: ${{ secrets.ftp_password }}
-          password: ${{ secrets.ftp_password }}
-          port: ${{ secrets.ftp_password }}
+          server: ${{ secrets.CI_FTP_HOST }}
+          username: ${{ secrets.CI_FTP_USER }}
+          password: ${{ secrets.CI_FTP_PASSWORD }}
+          port: ${{ secrets.CI_FTP_PORT }}
           local-dir: dashboard/dist/
           server-dir: home.gamingapeclub.com/public_html/dist/
 
