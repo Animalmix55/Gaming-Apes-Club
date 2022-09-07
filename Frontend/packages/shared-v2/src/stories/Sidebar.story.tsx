@@ -18,7 +18,7 @@ const defaultItems: SidebarItem[] = [
     },
     {
         icon: Icons.Mission,
-        displayText: 'Game Plan V2',
+        displayText: 'Game Plan',
         id: 'Game Plan',
     },
     {
