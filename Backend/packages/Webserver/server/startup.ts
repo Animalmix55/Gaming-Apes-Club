@@ -117,6 +117,7 @@ const startExpressInstance = async () => {
         OAUTH_CLIENT_ID,
         OAUTH_SECRET,
         OAUTH_REDIRECT_URL,
+        PROFILE_OAUTH_REDIRECT_URL,
         REQUEST_TIMEOUT,
         WEB3_PROVIDER,
         TOKEN_ADDRESS,
@@ -150,6 +151,8 @@ const startExpressInstance = async () => {
     if (!OAUTH_CLIENT_ID) throw new Error('Missing OAUTH client id');
     if (!OAUTH_SECRET) throw new Error('Missing OAUTH client private');
     if (!OAUTH_REDIRECT_URL) throw new Error('Missing OAUTH redirect url');
+    if (!PROFILE_OAUTH_REDIRECT_URL)
+        throw new Error('Missing PROFILE_OAUTH redirect url');
     if (!DISCORD_BOT_TOKEN) throw new Error('Missing Discord bot token');
     if (!TRANSACTION_CHANNEL)
         throw new Error('Missing Discord transaction channel');
@@ -189,7 +192,7 @@ const startExpressInstance = async () => {
     const { LoginRouter } = await getLoginRouter(
         OAUTH_CLIENT_ID,
         OAUTH_SECRET,
-        OAUTH_REDIRECT_URL,
+        { shack: OAUTH_REDIRECT_URL, profile: PROFILE_OAUTH_REDIRECT_URL },
         GUILD_ID,
         JWT_PRIVATE,
         DISCORD_BOT_TOKEN,
