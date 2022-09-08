@@ -17,6 +17,7 @@ interface GetResponse extends BaseResponse {
 
 interface PostRequest {
     code?: string;
+    ref?: string;
 }
 
 interface PostResponse extends BaseResponse, Partial<User> {
@@ -29,7 +30,7 @@ const SCOPE = ['email', 'identify', 'guilds.members.read'];
 export const getLoginRouter = async (
     clientId: string,
     clientSecret: string,
-    redirectUrl: string,
+    redirectUris: { [key: string]: string | undefined },
     guildId: string,
     jwtSecret: string,
     discordBotToken: string,
@@ -37,12 +38,7 @@ export const getLoginRouter = async (
     jwtExpiry = '24h'
 ) => {
     const LoginRouter = express.Router();
-    const client = getOauth2Client(
-        clientId,
-        clientSecret,
-        redirectUrl,
-        oauthTimeout
-    );
+    const client = getOauth2Client(clientId, clientSecret, oauthTimeout);
     const discordjsClient = await getClient(discordBotToken, [
         Intents.FLAGS.GUILD_MEMBERS,
         Intents.FLAGS.GUILDS,
@@ -50,9 +46,12 @@ export const getLoginRouter = async (
 
     LoginRouter.get<string, never, GetResponse, never, never>(
         '/',
-        async (_, res) => {
+        async (req, res) => {
+            const { ref } = req.query;
+            const redirectUri = redirectUris[ref] ?? redirectUris.shack;
+
             try {
-                const oauthUrl = generatureOath2Url(client, SCOPE);
+                const oauthUrl = generatureOath2Url(client, SCOPE, redirectUri);
 
                 res.status(200).send({ loginUrl: oauthUrl });
                 return;
@@ -66,7 +65,10 @@ export const getLoginRouter = async (
         '/',
         async (req, res) => {
             const { body } = req;
-            const { code } = body;
+            const { code, ref } = body;
+
+            const redirectUri =
+                (ref && redirectUris[ref]) || redirectUris.shack;
 
             if (!code) {
                 return res.status(400).send({ error: 'Missing code' });
@@ -79,7 +81,8 @@ export const getLoginRouter = async (
                     client,
                     code,
                     SCOPE,
-                    'authorization_code'
+                    'authorization_code',
+                    redirectUri
                 ));
             } catch (e) {
                 console.error(`Failed to login user at ${req.ip}`, e);

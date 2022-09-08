@@ -49,7 +49,7 @@ export interface LoginPostResponse extends BaseResponse, Partial<User> {
  */
 export const Login = {
     async getLoginUrl(api: string): Promise<string> {
-        const url = `${api}/login`;
+        const url = `${api}/login?ref=profile`;
 
         const { data } = await axios.get(url);
         const { loginUrl } = data;
@@ -63,7 +63,7 @@ export const Login = {
     ): Promise<LoginPostResponse> {
         const url = `${api}/login`;
 
-        const body = { code };
+        const body = { code, ref: 'profile' };
 
         const { data } = await axios.post(url, body);
         return data as LoginPostResponse;

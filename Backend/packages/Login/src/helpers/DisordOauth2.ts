@@ -5,14 +5,12 @@ import crypto from 'crypto';
 export const getOauth2Client = (
     clientId: string,
     clientSecret: string,
-    redirectUri: string,
     requestTimeout?: number
 ) => {
     return new DiscordOauth2({
         clientId,
         clientSecret,
         requestTimeout,
-        redirectUri,
     });
 };
 
@@ -20,12 +18,14 @@ export const getTokenFromCode = (
     client: DiscordOauth2,
     code: string,
     scope: string[],
-    grantType: 'authorization_code' | 'refresh_token'
+    grantType: 'authorization_code' | 'refresh_token',
+    redirectUri: string | undefined
 ) => {
     return client.tokenRequest({
         code,
         scope,
         grantType,
+        redirectUri,
     });
 };
 
@@ -60,9 +60,14 @@ export const getGuildMember = (
 /**
  * Generates an OATH2 url
  */
-export const generatureOath2Url = (client: DiscordOauth2, scope: string[]) => {
+export const generatureOath2Url = (
+    client: DiscordOauth2,
+    scope: string[],
+    redirectUri: string | undefined
+) => {
     return client.generateAuthUrl({
         scope,
+        redirectUri,
         state: crypto.randomBytes(16).toString('hex'),
     });
 };
