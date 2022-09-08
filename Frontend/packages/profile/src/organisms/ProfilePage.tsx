@@ -218,28 +218,24 @@ export const ProfilePage = (): JSX.Element => {
                     window.location.href = i.url;
                 }}
             />
-            <div>
-                {discordId ? (
-                    <Body />
-                ) : (
-                    <div
-                        className={css({
-                            overflowY: 'auto',
-                            overflowX: 'hidden',
-                            width: '100%',
-                            display: 'flex',
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            padding: PADDING,
-                        })}
-                    >
-                        <ConnectDiscord
-                            login={login}
-                            isLoggingIn={isLoggingIn}
-                        />
-                    </div>
-                )}
-            </div>
+
+            {discordId ? (
+                <Body />
+            ) : (
+                <div
+                    className={css({
+                        overflowY: 'auto',
+                        overflowX: 'hidden',
+                        width: '100%',
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        padding: PADDING,
+                    })}
+                >
+                    <ConnectDiscord login={login} isLoggingIn={isLoggingIn} />
+                </div>
+            )}
         </div>
     );
 };
