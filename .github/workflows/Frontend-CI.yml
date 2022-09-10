@@ -63,9 +63,15 @@ jobs:
         working-directory: Frontend/
         run: lerna bootstrap
         
-      - name: Build
+      - name: Build Push
+        if: github.event_name != 'pull_request'
         working-directory: Frontend/
         run: yarn build --since=master~1 --include-dependencies --include-dependents
+
+      - name: Build PR
+        if: github.event_name == 'pull_request'
+        working-directory: Frontend/
+        run: yarn build --since=master --include-dependencies --include-dependents
 
       - name: Upload Artifacts
         uses: actions/upload-artifact@master
