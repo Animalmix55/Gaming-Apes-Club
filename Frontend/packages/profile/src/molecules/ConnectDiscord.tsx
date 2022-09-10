@@ -43,9 +43,7 @@ export const ConnectDiscord = ({
                 className={css({})}
             />
             <p>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam a
-                efficitur neque, vitae molestie nisi. Suspendis consectetur
-                adipiscing elit. Nam a efficit adipiscing elit adipiscing elit.
+                Connect your Discord to get started.
             </p>
             <Button
                 icon={Icons.Discord}
