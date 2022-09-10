@@ -8,21 +8,21 @@ const specials = [
         tag: 'Raffle',
         cost: '1,750',
         image: PC,
-        url: '#',
+        url: 'https://shack.gamingapeclub.com',
     },
     {
         name: 'RTX 3080 TI',
         tag: 'Raffle',
         cost: '1,550',
         image: Card,
-        url: '#',
+        url: 'https://shack.gamingapeclub.com',
     },
     {
         name: 'Gaming PC',
         tag: 'Raffle',
         cost: '1,750',
         image: Ape,
-        url: '#',
+        url: 'https://shack.gamingapeclub.com',
     },
 ];
 
