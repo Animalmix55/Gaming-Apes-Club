@@ -8,12 +8,10 @@ import DashboardSection from '../molecules/DashboardSection';
 export const ShackSpecials = (): JSX.Element => {
     return (
         <DashboardSection
-            heading={
-                <Header title="The Shack's" subtitle="Special of the month" />
-            }
+            heading={<Header title="The Shack's" subtitle="Hottest Products" />}
             action={
                 <LinkButton
-                    text="Shop the Shack"
+                    text="Shop the Shack 🛒"
                     href="https://shack.gamingapeclub.com/"
                 />
             }
