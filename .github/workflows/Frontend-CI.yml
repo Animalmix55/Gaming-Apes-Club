@@ -109,7 +109,7 @@ jobs:
           password: ${{ secrets.CI_FTP_PASSWORD }}
           port: ${{ secrets.CI_FTP_PORT }}
           local-dir: dashboard/
-          server-dir: home.gamingapeclub.com/public_html/
+          server-dir: gamingapeclub.com/public_html/
 
       - name: Sync Profile
         if: needs.updated-packages.outputs.profile == 'true' || needs.updated-packages.outputs.shared == 'true'
