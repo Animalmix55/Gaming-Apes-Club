@@ -48,12 +48,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
         with:
-          fetch-depth: 2
-          ref: master
-
-      - uses: actions/checkout@v2
-        with:
-          fetch-depth: 1
+          fetch-depth: 0
 
       - uses: actions/cache@v2
         with:
