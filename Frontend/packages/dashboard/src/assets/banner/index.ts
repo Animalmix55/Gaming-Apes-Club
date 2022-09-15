@@ -1,33 +1,29 @@
 import Ape from './ape.png';
-import TESTING from './TESTING.png';
+import GACland from './Gacland.png';
+import V2 from './V2.png';
+import DD from './DiamondDistrict.jpeg';
 
 const data = [
     {
-        image: TESTING,
-        url: '#',
-        title: 'Gaming Ape Club Utility & Game Plan V1',
-        description: 'This is Rubiks',
+        image: GACland,
+        url: 'https://docs.gamingapeclub.com/guide-to-being-a-holder/gacland-beta',
+        title: 'GACland BETA is LIVE!',
+        description:
+            'GACland BETA is available to play on Windows, Mac, Console (Xbox/PlayStation), Nintendo Switch, iPhone, and Android.',
     },
     {
-        image: Ape,
-        url: '#',
-        title: 'Test',
+        image: V2,
+        url: 'https://docs.gamingapeclub.com/what-now-for-gac/game-plan-v2',
+        title: 'Game Plan V2',
         description:
-            'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
+            'This article discusses the execution of our Roadmap (Game Plan) V2, Utility & Game-to-Earn Opportunities.',
     },
     {
-        image: Ape,
+        image: DD,
         url: '#',
-        title: 'ABC',
+        title: 'Diamond District Merchandise',
         description:
-            'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
-    },
-    {
-        image: Ape,
-        url: '#',
-        title: 'DEF',
-        description:
-            'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
+            'Exclusive GAC merchandise will be available to all Diamond District members, free of charge. Additional merchandise will be available for the community. All GAC holders will receive a discount. More information will be announced soon on how to claim.',
     },
 ];
 

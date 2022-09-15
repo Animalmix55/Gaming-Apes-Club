@@ -13,8 +13,8 @@ export const LatestNewsGrid = (): JSX.Element => {
             }
             action={
                 <LinkButton
-                    text="Check the news"
-                    href="https://docs.gamingapeclub.com/"
+                    text="Stay Updated 👋"
+                    href="https://www.twitter.com/GamingApeClub"
                 />
             }
         >
