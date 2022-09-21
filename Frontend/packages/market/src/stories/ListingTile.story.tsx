@@ -10,6 +10,7 @@ export const StandAlone = (): JSX.Element => {
     return (
         <ListingTile
             listing={{
+                onlyVisibleWhenFiltered: false,
                 id: 'test',
                 createdBy: 'me',
                 createdOn: new Date(),

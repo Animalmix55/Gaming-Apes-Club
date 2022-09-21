@@ -14,6 +14,7 @@ export interface NewListing {
     discordMessage: string | null;
     startDate: Date | null;
     endDate: Date | null;
+    onlyVisibleWhenFiltered: boolean | null;
     /**
      * The id of a role to apply after purchase
      */
@@ -63,6 +64,7 @@ export const sanitizeAndValidateListing: Sanitizer = (model, add) => {
         tags,
         startDate,
         endDate,
+        onlyVisibleWhenFiltered,
     } = model as unknown as Omit<Omit<UpdatedListing, 'startDate'>, 'endDate'> &
         Partial<HasRoleIds> & { startDate?: string; endDate?: string };
 
@@ -106,6 +108,7 @@ export const sanitizeAndValidateListing: Sanitizer = (model, add) => {
             requiresLinkedAddress,
             discordMessage,
             resultantRole,
+            onlyVisibleWhenFiltered: !!onlyVisibleWhenFiltered,
             startDate: startDate ? new Date(startDate) : null,
             endDate: endDate ? new Date(endDate) : null,
             ...(!add && { id, disabled }),

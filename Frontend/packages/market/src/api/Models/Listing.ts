@@ -14,6 +14,7 @@ export interface NewListing {
     discordMessage: string | null;
     startDate: string | null;
     endDate: string | null;
+    onlyVisibleWhenFiltered: boolean | null;
     tags?: ListingTag[];
     resultantRole: string | null;
 }

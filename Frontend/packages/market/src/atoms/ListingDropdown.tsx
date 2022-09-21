@@ -13,18 +13,26 @@ export const ListingDropdown = ({
     className,
     showDisabled,
     showInactive,
+    showHidden,
 }: {
     selectedKey?: string;
     onSelect?: (key?: string) => void;
     className?: string;
     showDisabled?: boolean;
     showInactive?: boolean;
+    showHidden?: boolean;
 }): JSX.Element => {
     const {
         data: listings,
         isLoading,
         error,
-    } = useListings(undefined, undefined, showDisabled, showInactive);
+    } = useListings(
+        undefined,
+        undefined,
+        showDisabled,
+        showInactive,
+        showHidden
+    );
 
     const options = React.useMemo((): IComboBoxOption[] => {
         if (!listings?.records) return [];

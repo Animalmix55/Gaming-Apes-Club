@@ -34,6 +34,7 @@ interface GetRequest extends Record<string, string | undefined> {
     offset?: string;
     showDisabled?: 'true' | 'false';
     showInactive?: 'true' | 'false';
+    showHidden?: 'true' | 'false';
     /**
      * comma-delimited tag ids OR'ed
      */
@@ -76,6 +77,7 @@ export const getListingRouter = (
                 offset: offsetStr,
                 pageSize: pageSizeStr,
                 showDisabled,
+                showHidden,
                 tags: tagsStr,
                 showInactive,
             } = query;
@@ -92,11 +94,12 @@ export const getListingRouter = (
                     limit,
                     showDisabled === 'true',
                     showInactive === 'true',
+                    showHidden === 'true',
                     tags
                 ));
             } catch (e) {
                 console.error(
-                    `Failed to fetch listings from db (showDisabled: ${showDisabled})`,
+                    `Failed to fetch listings from db (showDisabled: ${showDisabled}, showInactive: ${showInactive}, showHidden: ${showHidden})`,
                     e
                 );
                 return res

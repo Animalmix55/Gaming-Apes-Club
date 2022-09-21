@@ -77,6 +77,11 @@ export const InitializeListingModel = (instance: Sequelize): void => {
                 type: DataTypes.DATE,
                 allowNull: true,
             },
+            onlyVisibleWhenFiltered: {
+                type: DataTypes.BOOLEAN,
+                allowNull: false,
+                defaultValue: false,
+            },
         },
         {
             sequelize: instance,

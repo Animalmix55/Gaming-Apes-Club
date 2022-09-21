@@ -69,6 +69,7 @@ export const ListingDetails = (): JSX.Element => {
                     onSelect={setSelectedListing}
                     showDisabled
                     showInactive
+                    showHidden
                 />
                 <Button
                     className={css({

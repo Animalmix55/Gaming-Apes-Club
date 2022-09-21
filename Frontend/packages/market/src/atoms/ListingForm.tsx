@@ -68,6 +68,7 @@ export const convertToListing = (
         tags: partialListing.tags,
         startDate: partialListing.startDate ?? null,
         endDate: partialListing.endDate ?? null,
+        onlyVisibleWhenFiltered: !!partialListing.onlyVisibleWhenFiltered,
     };
 };
 
@@ -96,6 +97,7 @@ export const ListingForm = (props: Props): JSX.Element => {
         discordMessage,
         startDate,
         endDate,
+        onlyVisibleWhenFiltered,
     } = listing;
 
     const { defaultDiscordMessage } = useGamingApeContext();
@@ -481,6 +483,19 @@ export const ListingForm = (props: Props): JSX.Element => {
                             checked={!!disabled}
                             onChange={(_, v): void =>
                                 onChange({ ...listing, disabled: !!v })
+                            }
+                        />
+                        <Checkbox
+                            disabled={formDisabled}
+                            className={fieldClass}
+                            label="Only When Filtered"
+                            styles={styles}
+                            checked={!!onlyVisibleWhenFiltered}
+                            onChange={(_, v): void =>
+                                onChange({
+                                    ...listing,
+                                    onlyVisibleWhenFiltered: !!v,
+                                })
                             }
                         />
                     </ThemeProvider>
