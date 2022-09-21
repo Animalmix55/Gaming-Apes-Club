@@ -165,7 +165,7 @@ export const ListingModal = (props: Props): JSX.Element => {
     }, [roles, userRoles]);
 
     const hasBlockedRole = React.useMemo(() => {
-        if (roles.length === 0) return true;
+        if (roles.length === 0) return false;
 
         if (!userRoles) return false;
         return userRoles.some((r) =>
