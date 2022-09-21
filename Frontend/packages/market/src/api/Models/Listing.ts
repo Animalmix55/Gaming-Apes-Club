@@ -1,3 +1,4 @@
+import { ListingRole } from './ListingRole';
 import { ListingTag } from './ListingTag';
 
 export interface NewListing {
@@ -10,7 +11,7 @@ export interface NewListing {
     requiresHoldership: boolean | null;
     requiresLinkedAddress: boolean | null;
     disabled: boolean | null;
-    roles: string[];
+    roles: ListingRole[];
     discordMessage: string | null;
     startDate: string | null;
     endDate: string | null;

@@ -414,7 +414,6 @@ export const getTransactionRouter = async (
 
             // always fetch the newest role
             if (requiredRoles.length > 0) {
-                const requiredRoleIds = requiredRoles.map((r) => r.roleId);
                 try {
                     const guildMember = await getGuildMember(
                         discordClient,
@@ -423,22 +422,29 @@ export const getTransactionRouter = async (
                     );
 
                     const roles = guildMember.roles.cache;
+                    const blacklisted = requiredRoles.some(
+                        (r) => r.blacklisted && roles.has(r.roleId)
+                    );
+                    const whitelisted = requiredRoles.every(
+                        (r) => !r.blacklisted && roles.has(r.roleId)
+                    );
 
-                    if (
-                        !requiredRoleIds.every((reqRoleId) =>
-                            roles.has(reqRoleId)
-                        )
-                    ) {
+                    if (blacklisted) {
                         console.log(
-                            `${id} requested a transaction for listing ${
-                                listing.title
-                            } (${listingId}) but they lacked the required roles (${requiredRoleIds.join(
-                                ', '
-                            )})`
+                            `${id} requested a transaction for listing ${listing.title} (${listingId}) but they possessed blacklisted role(s)`
                         );
                         return res
                             .status(403)
-                            .send({ error: 'Required role missing' });
+                            .send({ error: 'User has blacklisted role' });
+                    }
+
+                    if (!whitelisted) {
+                        console.log(
+                            `${id} requested a transaction for listing ${listing.title} (${listingId}) but they lacked required role(s)`
+                        );
+                        return res
+                            .status(403)
+                            .send({ error: 'User lacks required role(s)' });
                     }
                 } catch (e) {
                     console.error(`Failed to fetch user role for ${id}`, e);

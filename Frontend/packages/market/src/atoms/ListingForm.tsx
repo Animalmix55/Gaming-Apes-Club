@@ -98,6 +98,7 @@ export const ListingForm = (props: Props): JSX.Element => {
         startDate,
         endDate,
         onlyVisibleWhenFiltered,
+        roles,
     } = listing;
 
     const { defaultDiscordMessage } = useGamingApeContext();
@@ -114,6 +115,14 @@ export const ListingForm = (props: Props): JSX.Element => {
     };
     const [discordHelpModalOpen, setDiscordHelpModalOpen] =
         React.useState(false);
+    const requiredRoles = React.useMemo(
+        () => roles.filter((r) => !r.blacklisted).map((r) => r.roleId),
+        [roles]
+    );
+    const blockedRoles = React.useMemo(
+        () => roles.filter((r) => !!r.blacklisted).map((r) => r.roleId),
+        [roles]
+    );
 
     return (
         <>
@@ -307,18 +316,81 @@ export const ListingForm = (props: Props): JSX.Element => {
                             }
                         />
                         <RolesDropdown
-                            label="Applicable Roles (none for all)"
-                            onSelect={(v): void =>
-                                onChange({ ...listing, roles: v })
-                            }
-                            selectedKeys={listing.roles}
+                            label="Required Roles"
+                            onSelect={(v): void => {
+                                let result = [...roles];
+
+                                const currentIndex = result
+                                    .map((r) => r.roleId)
+                                    .indexOf(v);
+
+                                if (currentIndex > -1) {
+                                    if (result[currentIndex].blacklisted)
+                                        result[currentIndex].blacklisted =
+                                            false;
+                                    else
+                                        result = result.filter(
+                                            (r) => r.roleId !== v
+                                        );
+                                } else {
+                                    result = [
+                                        ...result,
+                                        { roleId: v, blacklisted: false },
+                                    ];
+                                }
+
+                                onChange({
+                                    ...listing,
+                                    roles: result,
+                                });
+                            }}
+                            selectedKeys={requiredRoles}
                             multiSelect
                             disabled={formDisabled}
                             className={fieldClass}
                             onClear={(): void => {
                                 onChange({
                                     ...listing,
-                                    roles: [],
+                                    roles: roles.filter((r) => !!r.blacklisted),
+                                });
+                            }}
+                        />
+                        <RolesDropdown
+                            label="Blocked Roles"
+                            onSelect={(v): void => {
+                                let result = [...roles];
+
+                                const currentIndex = result
+                                    .map((r) => r.roleId)
+                                    .indexOf(v);
+
+                                if (currentIndex > -1) {
+                                    if (!result[currentIndex].blacklisted)
+                                        result[currentIndex].blacklisted = true;
+                                    else
+                                        result = result.filter(
+                                            (r) => r.roleId !== v
+                                        );
+                                } else {
+                                    result = [
+                                        ...result,
+                                        { roleId: v, blacklisted: true },
+                                    ];
+                                }
+
+                                onChange({
+                                    ...listing,
+                                    roles: result,
+                                });
+                            }}
+                            selectedKeys={blockedRoles}
+                            multiSelect
+                            disabled={formDisabled}
+                            className={fieldClass}
+                            onClear={(): void => {
+                                onChange({
+                                    ...listing,
+                                    roles: roles.filter((r) => !r.blacklisted),
                                 });
                             }}
                         />
@@ -334,9 +406,7 @@ export const ListingForm = (props: Props): JSX.Element => {
                                 onChange({
                                     ...listing,
                                     resultantRole:
-                                        listing.resultantRole === v[0]
-                                            ? null
-                                            : v[0],
+                                        listing.resultantRole === v ? null : v,
                                 })
                             }
                             selectedKeys={
