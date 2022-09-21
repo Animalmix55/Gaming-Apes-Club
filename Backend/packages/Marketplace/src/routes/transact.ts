@@ -426,7 +426,7 @@ export const getTransactionRouter = async (
                         (r) => r.blacklisted && roles.has(r.roleId)
                     );
                     const whitelisted = requiredRoles.every(
-                        (r) => !r.blacklisted && roles.has(r.roleId)
+                        (r) => !!r.blacklisted || roles.has(r.roleId)
                     );
 
                     if (blacklisted) {
