@@ -77,6 +77,7 @@ jobs:
       - name: Upload Artifacts
         uses: actions/upload-artifact@master
         with:
+          retention-days: 1
           name: Builds
           # the root will be the contents of packages (with only packages with dist folders)
           path: |
