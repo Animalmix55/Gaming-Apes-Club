@@ -18,11 +18,6 @@ const latestNews: NewsType[] = [
         url: 'https://twitter.com/GamingApeClub/status/1569794263830888451?s=20&t=TqMJmIoiu7xZuKa1PwDhnw',
     },
     {
-        image: Blur,
-        title: 'Introducing GAC Weekly',
-        url: 'https://twitter.com/GamingApeClub/status/1569005852366880775?s=20&t=Tzvd-aYBSYgfj-f7x7BW6w',
-    },
-    {
         image: MainBanner,
         title: 'Diamond District Merchandise',
         url: 'https://twitter.com/GamingApeClub/status/1565089157843755009?s=20&t=Tzvd-aYBSYgfj-f7x7BW6w',
@@ -32,11 +27,7 @@ const latestNews: NewsType[] = [
         title: 'GAC x Alpha Sharks Partnership',
         url: 'https://twitter.com/GamingApeClub/status/1563591216054566914?s=20&t=nZ9BihbyRhKLKGgKelFcaw',
     },
-    {
-        image: Gacland,
-        title: 'GACland BETA Access is now LIVE',
-        url: 'https://twitter.com/GamingApeClub/status/1560750156848500736?s=20&t=nZ9BihbyRhKLKGgKelFcaw',
-    },
+
 ];
 
 const bannerNews = {
