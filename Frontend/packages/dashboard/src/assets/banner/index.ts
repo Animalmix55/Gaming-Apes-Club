@@ -1,29 +1,29 @@
 import Ape from './ape.png';
-import GACland from './Gacland.png';
-import V2 from './V2.png';
+import GACland from './GAC2023.jpg';
+import ETH from './ETH.jpg';
 import DD from './DiamondDistrict.jpeg';
 
 const data = [
     {
         image: GACland,
-        url: 'https://docs.gamingapeclub.com/guide-to-being-a-holder/gacland-beta',
-        title: 'GACland BETA is LIVE!',
+        url: 'https://www.twitter.com/GamingApeClub',
+        title: 'NEW GAC BRANDING!',
         description:
-            'GACland BETA is available to play on Windows, Mac, Console (Xbox/PlayStation), Nintendo Switch, iPhone, and Android.',
+            'Welcome to GAC 2023. Stay tuned for upcoming announcements on Twitter & Discord to learn more about what is planned!',
     },
     {
-        image: V2,
-        url: 'https://docs.gamingapeclub.com/what-now-for-gac/game-plan-v2',
-        title: 'Game Plan V2',
+        image: ETH,
+        url: 'https://twitter.com/GamingApeClub/status/1606370033143250979',
+        title: '1,000 ETH Traded!',
         description:
-            'This article discusses the execution of our Roadmap (Game Plan) V2, Utility & Game-to-Earn Opportunities.',
+            'Thank you for all your support. We can’t wait to show you our plans for 2023, a lot is underway and we are excited to share with you.',
     },
     {
         image: DD,
         url: '#',
         title: 'Diamond District Merchandise',
         description:
-            'Exclusive GAC merchandise will be available to all Diamond District members, free of charge. Additional merchandise will be available for the community. All GAC holders will receive a discount. More information will be announced soon on how to claim.',
+            'Almost all GAC merchandise has been sent out to Diamond District members. More information will be available for future DD perks.',
     },
 ];
 

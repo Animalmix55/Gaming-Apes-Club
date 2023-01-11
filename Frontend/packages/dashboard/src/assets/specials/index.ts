@@ -1,18 +1,18 @@
-import Glasses from './Glasses.png';
-import Nanoleaf from './Nanoleaf.png';
+import Glasses from './Sharks.jpg';
+import Nanoleaf from './GAC2023.jpg';
 
 const specials = [
     {
-        name: 'GAC Eyeglasses',
+        name: 'AS Full Access',
         tag: 'Products',
-        cost: '25,000',
+        cost: '2,055',
         image: Glasses,
         url: 'https://shack.gamingapeclub.com',
     },
     {
-        name: 'Nanoleaf Raffle',
+        name: 'GAC NFT Raffle',
         tag: 'Raffle',
-        cost: '4,500',
+        cost: '500',
         image: Nanoleaf,
         url: 'https://shack.gamingapeclub.com',
     },
