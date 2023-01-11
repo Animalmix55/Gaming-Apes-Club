@@ -1,9 +1,11 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import { Spinner, SpinnerSize } from '@fluentui/react';
 import { Header, Icons, LinkButton, MOBILE, TABLET } from '@gac/shared-v2';
+import { ethers } from 'ethers';
 import React from 'react';
 import { useStyletron } from 'styletron-react';
 import ListingCard from '../atoms/ListingCard';
+import { useGamingApeContext } from '../contexts/GamingApeClubContext';
 import useOpenSeaListings from '../hooks/useOpenSeaListings';
 import Carousel from '../molecules/Carousel';
 import DashboardSection from '../molecules/DashboardSection';
@@ -12,6 +14,7 @@ export const RecentListings = (): JSX.Element => {
     const [css] = useStyletron();
 
     const { isLoading, isError, data } = useOpenSeaListings();
+    const { gamingApeClubAddress } = useGamingApeContext();
 
     return (
         <DashboardSection
@@ -74,11 +77,11 @@ export const RecentListings = (): JSX.Element => {
                 <Carousel itemPaddingVertical={32} itemPaddingHorizontal={12}>
                     {(data || []).map((listing) => (
                         <ListingCard
-                            key={listing.permalink}
-                            image={listing.image_url}
-                            name={`Gaming Ape Club #${listing.tokenId}`}
-                            price={parseFloat(listing.price).toFixed(2)}
-                            url={listing.permalink}
+                            key={listing.tokenId}
+                            image={listing.metadata.image}
+                            name={`${listing.metadata.name}`}
+                            price={ethers.utils.formatEther(listing.price)}
+                            url={`https://opensea.io/assets/ethereum/${gamingApeClubAddress}/${listing.tokenId}`}
                         />
                     ))}
                 </Carousel>
