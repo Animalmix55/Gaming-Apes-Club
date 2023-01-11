@@ -1,6 +1,9 @@
-import UtilityImage from './utility-game-plan.png';
-import GridCraftImage from './grid-craft.png';
-import P2EImage from './p2e.png';
+import Blur from './Blur.png';
+import Gacland from './Gacland.png';
+import MainBanner from './MainBanner.png';
+import GACWeekly from './GACThumb.png';
+import AlphaSharks from './AlphaSharks.jpg';
+import Llamaverse from './llamaverse.jpg';
 
 export interface NewsType {
     image: string;
@@ -10,42 +13,28 @@ export interface NewsType {
 
 const latestNews: NewsType[] = [
     {
-        image: UtilityImage,
-        title: 'Gaming Ape Club Utility & Game Plan V1',
-        url: '#',
+        image: Llamaverse,
+        title: 'GAC x Llamaverse Update',
+        url: 'https://twitter.com/GamingApeClub/status/1569794263830888451?s=20&t=TqMJmIoiu7xZuKa1PwDhnw',
     },
     {
-        image: GridCraftImage,
-        title: 'GAC x GridCraft Latest Updates',
-        url: '#',
+        image: MainBanner,
+        title: 'Diamond District Merchandise',
+        url: 'https://twitter.com/GamingApeClub/status/1565089157843755009?s=20&t=Tzvd-aYBSYgfj-f7x7BW6w',
     },
     {
-        image: P2EImage,
-        title: 'Play 2 Earn Intergration has arrived!',
-        url: '#',
+        image: AlphaSharks,
+        title: 'GAC x Alpha Sharks Partnership',
+        url: 'https://twitter.com/GamingApeClub/status/1563591216054566914?s=20&t=nZ9BihbyRhKLKGgKelFcaw',
     },
-    {
-        image: UtilityImage,
-        title: 'Gaming Ape Club Utility & Game Plan V2',
-        url: '#',
-    },
-    {
-        image: GridCraftImage,
-        title: 'GAC x GridCraft Latest Updates 2',
-        url: '#',
-    },
-    {
-        image: P2EImage,
-        title: 'Play 2 Earn Intergration has arrived! 2',
-        url: '#',
-    },
+
 ];
 
 const bannerNews = {
-    image: GridCraftImage,
-    title: 'GAC x GridCraft Latest Updates',
+    image: MainBanner,
+    title: 'Gaming Ape Club Stats',
     description:
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
+        'Gaming Ape Club is a 6,550 Supply Genesis Collection. Currently 74% of the collection is staked. P2E GAC XP to exchange for NFTs, whitelists, and more.',
 };
 
 export default { latestNews, bannerNews };

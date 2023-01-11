@@ -75,12 +75,16 @@ const ListingTags = ({
                     })}
                 />
             ))}
-            {roleNames?.map((r, i) => (
+            {roles.map((r, i) => (
                 <Badge
                     color={theme.buttonPallette.inactive.toRgbaString()}
-                    text={r}
+                    text={
+                        r.blacklisted
+                            ? `Not ${roleNames?.[i] || r.roleId}`
+                            : roleNames?.[i] || r.roleId
+                    }
                     textColor={theme.foregroundPallette.white.toRgbaString()}
-                    key={r}
+                    key={r.roleId}
                     className={css({
                         marginLeft:
                             i === 0 && !tags?.length ? undefined : '16px',
@@ -150,11 +154,26 @@ export const ListingModal = (props: Props): JSX.Element => {
         title,
     } = listing;
 
-    const hasRole = React.useMemo(() => {
+    const hasRequiredRoles = React.useMemo(() => {
         if (roles.length === 0) return true;
 
         if (!userRoles) return false;
-        return userRoles.some((r) => roles.includes(r));
+        return roles
+            .filter((r): boolean => !r.blacklisted)
+            .map((r) => r.roleId)
+            .every((r) => userRoles.includes(r));
+    }, [roles, userRoles]);
+
+    const hasBlockedRole = React.useMemo(() => {
+        if (roles.length === 0) return false;
+
+        if (!userRoles) return false;
+        return userRoles.some((r) =>
+            roles
+                .filter((r): boolean => !!r.blacklisted)
+                .map((r) => r.roleId)
+                .includes(r)
+        );
     }, [roles, userRoles]);
 
     const remaining = Math.max(0, (supply ?? Infinity) - totalPurchased);
@@ -162,9 +181,17 @@ export const ListingModal = (props: Props): JSX.Element => {
     const errorMessage = React.useMemo(() => {
         if (remaining === 0) return 'Sold out';
         if (!addressValid && requiresLinkedAddress) return 'Invalid address';
-        if (!hasRole) return 'Missing required role';
+        if (!hasRequiredRoles) return 'Missing required roles';
+        if (hasBlockedRole) return 'User roles blacklisted';
         return ExtractErrorMessageFromError(error);
-    }, [addressValid, error, hasRole, requiresLinkedAddress, remaining]);
+    }, [
+        remaining,
+        addressValid,
+        requiresLinkedAddress,
+        hasRequiredRoles,
+        hasBlockedRole,
+        error,
+    ]);
 
     const listingTags = (
         <ListingTags
@@ -380,7 +407,8 @@ export const ListingModal = (props: Props): JSX.Element => {
                             disabled={
                                 isLoading ||
                                 remaining === 0 ||
-                                !hasRole ||
+                                !hasRequiredRoles ||
+                                hasBlockedRole ||
                                 (!!requiresLinkedAddress && !addressValid)
                             }
                             className={css({

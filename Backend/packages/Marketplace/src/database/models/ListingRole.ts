@@ -14,6 +14,11 @@ export const InitializeListingRolesModel = (instance: Sequelize): void => {
                 type: DataTypes.STRING,
                 allowNull: false,
             },
+            blacklisted: {
+                type: DataTypes.BOOLEAN,
+                allowNull: false,
+                defaultValue: false,
+            },
         },
         {
             sequelize: instance,

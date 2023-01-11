@@ -1,28 +1,20 @@
-import PC from './pc.png';
-import Card from './card.png';
-import Ape from './ape.png';
+import Glasses from './Sharks.jpg';
+import Nanoleaf from './GAC2023.jpg';
 
 const specials = [
     {
-        name: 'Gaming PC',
-        tag: 'Raffle',
-        cost: '1,750',
-        image: PC,
-        url: '#',
+        name: 'AS Full Access',
+        tag: 'Products',
+        cost: '2,055',
+        image: Glasses,
+        url: 'https://shack.gamingapeclub.com',
     },
     {
-        name: 'RTX 3080 TI',
+        name: 'GAC NFT Raffle',
         tag: 'Raffle',
-        cost: '1,550',
-        image: Card,
-        url: '#',
-    },
-    {
-        name: 'Gaming PC',
-        tag: 'Raffle',
-        cost: '1,750',
-        image: Ape,
-        url: '#',
+        cost: '500',
+        image: Nanoleaf,
+        url: 'https://shack.gamingapeclub.com',
     },
 ];
 

@@ -10,6 +10,7 @@ export const useListings = (
     pageSize?: number,
     showDisabled?: boolean,
     showInactive?: boolean,
+    showHidden?: boolean,
     tags?: string[]
 ): RequestResult<GetListingResponse> => {
     const { api } = useGamingApeContext();
@@ -20,6 +21,7 @@ export const useListings = (
             pageSize?: number,
             showDisabled?: boolean,
             showInactive?: boolean,
+            showHidden?: boolean,
             tags?: string
         ) => {
             if (!api) throw new Error('Missing api');
@@ -30,6 +32,7 @@ export const useListings = (
                 offset,
                 showDisabled,
                 showInactive,
+                showHidden,
                 tags
             );
         },
@@ -41,7 +44,7 @@ export const useListings = (
     const result = useRequest(
         queryFn,
         ListingsKey,
-        [offset, pageSize, showDisabled, showInactive, mergedTags],
+        [offset, pageSize, showDisabled, showInactive, showHidden, mergedTags],
         {
             staleTime: Infinity,
         }

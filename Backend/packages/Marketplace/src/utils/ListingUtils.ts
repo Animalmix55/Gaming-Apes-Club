@@ -30,6 +30,7 @@ export const getListingsWithCounts = async (
     limit = 1000,
     showDisabled = false,
     showInactive = false,
+    showHidden = false,
     tags: string[] = []
 ) => {
     const { count, rows } = await StoredListing.findAndCountAll({
@@ -41,6 +42,12 @@ export const getListingsWithCounts = async (
             include: includeCount,
         },
         where: {
+            ...(!tags.length &&
+                !showHidden && {
+                    onlyVisibleWhenFiltered: {
+                        [Op.not]: true,
+                    },
+                }),
             ...(!showDisabled && { disabled: false }),
             ...(!showInactive && {
                 startDate: {

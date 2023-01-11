@@ -175,9 +175,8 @@ export const ProfilePage = (): JSX.Element => {
     return (
         <div
             className={css({
-                minHeight: '100vh',
+                height: '100%',
                 width: '100%',
-                overflowX: 'hidden',
                 display: 'flex',
                 alignItems: 'stretch',
                 backgroundImage: `url(${Background})`,
@@ -219,6 +218,7 @@ export const ProfilePage = (): JSX.Element => {
                     window.location.href = i.url;
                 }}
             />
+
             {discordId ? (
                 <Body />
             ) : (

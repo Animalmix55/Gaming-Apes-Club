@@ -10,16 +10,16 @@ export const RolesDropdown = ({
     className,
     disabled,
     label,
-    multiSelect,
     onClear,
+    multiSelect,
 }: {
     selectedKeys?: string[];
     disabled?: boolean;
-    onSelect?: (keys: string[]) => void;
+    onSelect?: (key: string) => void;
     className?: string;
     label?: string;
-    multiSelect?: boolean;
     onClear?: () => void;
+    multiSelect?: boolean;
 }): JSX.Element => {
     const { data: roles, isLoading, error } = useRoles();
 
@@ -70,17 +70,10 @@ export const RolesDropdown = ({
             option?: IComboBoxOption | undefined
         ) => {
             if (!option || !onSelect) return;
-            const filteredKeys = selectedKeys?.filter((k) => !!roles?.[k]);
 
-            if (!multiSelect) {
-                onSelect(option ? [String(option.key)] : []);
-            } else if (!option.selected) {
-                onSelect((filteredKeys || []).filter((v) => v !== option.key));
-            } else {
-                onSelect([...(filteredKeys || []), String(option.key)]);
-            }
+            onSelect(option.key as string);
         },
-        [multiSelect, onSelect, roles, selectedKeys]
+        [onSelect]
     );
 
     return (

@@ -46,9 +46,10 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout
+        uses: actions/checkout@v2
         with:
-          fetch-depth: 2
+          fetch-depth: 0
 
       - uses: actions/cache@v2
         with:
@@ -63,13 +64,20 @@ jobs:
         working-directory: Frontend/
         run: lerna bootstrap
         
-      - name: Build
+      - name: Build Push
+        if: github.event_name != 'pull_request'
         working-directory: Frontend/
-        run: yarn build --since=@~1 --include-dependencies --include-dependents
+        run: yarn build --since=master~1 --include-dependencies --include-dependents
+
+      - name: Build PR
+        if: github.event_name == 'pull_request'
+        working-directory: Frontend/
+        run: yarn build --since=${{ github.event.pull_request.base.sha }} --include-dependencies --include-dependents
 
       - name: Upload Artifacts
         uses: actions/upload-artifact@master
         with:
+          retention-days: 1
           name: Builds
           # the root will be the contents of packages (with only packages with dist folders)
           path: |
@@ -102,7 +110,7 @@ jobs:
           password: ${{ secrets.CI_FTP_PASSWORD }}
           port: ${{ secrets.CI_FTP_PORT }}
           local-dir: dashboard/
-          server-dir: home.gamingapeclub.com/public_html/
+          server-dir: gamingapeclub.com/public_html/
 
       - name: Sync Profile
         if: needs.updated-packages.outputs.profile == 'true' || needs.updated-packages.outputs.shared == 'true'

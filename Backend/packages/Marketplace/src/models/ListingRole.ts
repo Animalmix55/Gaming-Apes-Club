@@ -2,25 +2,13 @@ export interface HasListingRoles {
     roles: ListingRole[];
 }
 
-export interface HasRoleIds {
-    roles: string[];
-}
-
 export interface ListingRole {
     listingId: string;
     roleId: string;
+    /**
+     * Indicates the role CANT access listing
+     */
+    blacklisted: boolean | null;
 }
 
 export const getRoleId = (role: ListingRole) => role.roleId;
-
-export const mapToRoleId = <BaseType>(
-    input: BaseType & HasListingRoles
-): BaseType & HasRoleIds => {
-    return { ...input, roles: input.roles.map(getRoleId) } as never;
-};
-
-export const mapToRoleIds = <BaseType>(
-    input: (BaseType & HasListingRoles)[]
-): (BaseType & HasRoleIds)[] => {
-    return input.map((i) => mapToRoleId(i)) as never;
-};

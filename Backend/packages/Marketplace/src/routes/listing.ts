@@ -17,12 +17,7 @@ import {
     getListingWithCount,
     ListingWithCount,
 } from '../utils/ListingUtils';
-import {
-    HasListingRoles,
-    HasRoleIds,
-    mapToRoleId,
-    mapToRoleIds,
-} from '../models/ListingRole';
+import { HasListingRoles } from '../models/ListingRole';
 import ListingRole from '../database/models/ListingRole';
 import { ListingTagEntity } from '../database/models/ListingTag';
 import { ListingTagToListingEntity } from '../database/models/ListingTagToListing';
@@ -34,6 +29,7 @@ interface GetRequest extends Record<string, string | undefined> {
     offset?: string;
     showDisabled?: 'true' | 'false';
     showInactive?: 'true' | 'false';
+    showHidden?: 'true' | 'false';
     /**
      * comma-delimited tag ids OR'ed
      */
@@ -41,20 +37,20 @@ interface GetRequest extends Record<string, string | undefined> {
 }
 
 interface GetResponse extends BaseResponse {
-    records?: (ListingWithCount & HasRoleIds)[];
+    records?: (ListingWithCount & HasListingRoles)[];
     numRecords?: number;
 }
 
-type PostBody = NewListing & Partial<HasRoleIds>;
-type PostResponse = Partial<Listing & HasRoleIds> & BaseResponse;
+type PostBody = NewListing & Partial<HasListingRoles>;
+type PostResponse = Partial<Listing & HasListingRoles> & BaseResponse;
 
-type PutBody = UpdatedListing & Partial<HasRoleIds>;
+type PutBody = UpdatedListing & Partial<HasListingRoles>;
 type PutResponse = PostResponse;
 
 interface GetByIdParams {
     listingId: string;
 }
-type GetByIdReponse = Partial<Listing & HasRoleIds> & BaseResponse;
+type GetByIdReponse = Partial<Listing & HasListingRoles> & BaseResponse;
 
 interface PostRefundParams {
     listingId: string;
@@ -76,6 +72,7 @@ export const getListingRouter = (
                 offset: offsetStr,
                 pageSize: pageSizeStr,
                 showDisabled,
+                showHidden,
                 tags: tagsStr,
                 showInactive,
             } = query;
@@ -92,11 +89,12 @@ export const getListingRouter = (
                     limit,
                     showDisabled === 'true',
                     showInactive === 'true',
+                    showHidden === 'true',
                     tags
                 ));
             } catch (e) {
                 console.error(
-                    `Failed to fetch listings from db (showDisabled: ${showDisabled})`,
+                    `Failed to fetch listings from db (showDisabled: ${showDisabled}, showInactive: ${showInactive}, showHidden: ${showHidden})`,
                     e
                 );
                 return res
@@ -105,7 +103,7 @@ export const getListingRouter = (
             }
 
             return res.status(200).send({
-                records: mapToRoleIds(rows),
+                records: rows,
                 numRecords: count,
             });
         }
@@ -136,7 +134,7 @@ export const getListingRouter = (
         if (!listing)
             return res.status(404).send({ error: 'Listing not found' });
 
-        return res.status(200).send(mapToRoleId<ListingWithCount>(listing));
+        return res.status(200).send(listing);
     });
 
     ListingRouter.post<
@@ -172,9 +170,11 @@ export const getListingRouter = (
 
                 await Promise.all(
                     roles.map(async (r) => {
+                        const { blacklisted, roleId } = r;
                         ListingRole.create(
                             {
-                                roleId: r,
+                                roleId,
+                                blacklisted: !!blacklisted,
                                 listingId: dbListing.get().id,
                             },
                             { transaction: tx }
@@ -217,7 +217,7 @@ export const getListingRouter = (
             const response = await getListingWithCount(dbListing.get().id);
             if (!response) throw new Error('Could not refetch new record');
 
-            return res.status(200).send(mapToRoleId(response));
+            return res.status(200).send(response);
         } catch (e) {
             return res
                 .status(500)
@@ -264,9 +264,11 @@ export const getListingRouter = (
 
                     await Promise.all(
                         roles.map(async (r) => {
+                            const { roleId, blacklisted } = r;
                             await ListingRole.create(
                                 {
-                                    roleId: r,
+                                    roleId,
+                                    blacklisted: !!blacklisted,
                                     listingId: listing.id,
                                 },
                                 { transaction: tx }
@@ -323,7 +325,7 @@ export const getListingRouter = (
                         error: 'Updated listing could not be retrieved',
                     });
 
-                return res.status(200).send(mapToRoleId(updatedListing));
+                return res.status(200).send(updatedListing);
             } catch (e) {
                 return res
                     .status(500)

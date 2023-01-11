@@ -56,6 +56,7 @@ export const MarketplacePage = (): JSX.Element => {
         undefined,
         undefined,
         undefined,
+        undefined,
         selectedFilterTags
     );
     const { data: listings } = listingRequest;

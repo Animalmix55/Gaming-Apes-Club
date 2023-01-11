@@ -1,33 +1,29 @@
 import Ape from './ape.png';
+import GACland from './GAC2023.jpg';
+import ETH from './ETH.jpg';
+import DD from './DiamondDistrict.jpeg';
 
 const data = [
     {
-        image: Ape,
-        url: '#',
-        title: 'Gaming Ape Club Utility & Game Plan V1',
+        image: GACland,
+        url: 'https://www.twitter.com/GamingApeClub',
+        title: 'NEW GAC BRANDING!',
         description:
-            'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
+            'Welcome to GAC 2023. Stay tuned for upcoming announcements on Twitter & Discord to learn more about what is planned!',
     },
     {
-        image: Ape,
-        url: '#',
-        title: 'Test',
+        image: ETH,
+        url: 'https://twitter.com/GamingApeClub/status/1606370033143250979',
+        title: '1,000 ETH Traded!',
         description:
-            'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
+            'Thank you for all your support. We can’t wait to show you our plans for 2023, a lot is underway and we are excited to share with you.',
     },
     {
-        image: Ape,
+        image: DD,
         url: '#',
-        title: 'ABC',
+        title: 'Diamond District Merchandise',
         description:
-            'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
-    },
-    {
-        image: Ape,
-        url: '#',
-        title: 'DEF',
-        description:
-            'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
+            'Almost all GAC merchandise has been sent out to Diamond District members. More information will be available for future DD perks.',
     },
 ];
 

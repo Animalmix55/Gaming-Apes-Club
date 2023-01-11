@@ -42,11 +42,7 @@ export const ConnectDiscord = ({
                 subtitle="And Track your engagement"
                 className={css({})}
             />
-            <p>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam a
-                efficitur neque, vitae molestie nisi. Suspendis consectetur
-                adipiscing elit. Nam a efficit adipiscing elit adipiscing elit.
-            </p>
+            <p>Connect your Discord to get started.</p>
             <Button
                 icon={Icons.Discord}
                 themeType={ButtonType.primary}

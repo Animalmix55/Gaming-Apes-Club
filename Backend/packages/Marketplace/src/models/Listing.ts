@@ -1,4 +1,4 @@
-import { HasRoleIds } from './ListingRole';
+import { HasListingRoles } from './ListingRole';
 import { ListingTag, ListingTagToListing } from './ListingTag';
 
 export interface NewListing {
@@ -14,6 +14,7 @@ export interface NewListing {
     discordMessage: string | null;
     startDate: Date | null;
     endDate: Date | null;
+    onlyVisibleWhenFiltered: boolean | null;
     /**
      * The id of a role to apply after purchase
      */
@@ -33,14 +34,14 @@ export interface Listing extends NewListing {
 }
 
 interface Sanitizer {
-    (model: NewListing & Partial<HasRoleIds>, add: true): {
+    (model: NewListing & Partial<HasListingRoles>, add: true): {
         listing: NewListing;
-        roles: HasRoleIds['roles'];
+        roles: HasListingRoles['roles'];
         tags: ListingTag[];
     };
-    (model: UpdatedListing & Partial<HasRoleIds>, add?: false): {
+    (model: UpdatedListing & Partial<HasListingRoles>, add?: false): {
         listing: UpdatedListing;
-        roles: HasRoleIds['roles'];
+        roles: HasListingRoles['roles'];
         tags: ListingTag[];
     };
 }
@@ -63,8 +64,9 @@ export const sanitizeAndValidateListing: Sanitizer = (model, add) => {
         tags,
         startDate,
         endDate,
+        onlyVisibleWhenFiltered,
     } = model as unknown as Omit<Omit<UpdatedListing, 'startDate'>, 'endDate'> &
-        Partial<HasRoleIds> & { startDate?: string; endDate?: string };
+        Partial<HasListingRoles> & { startDate?: string; endDate?: string };
 
     if (!add && !id) throw new Error('Missing id');
     if (add && id) throw new Error('New records cannot contain an id');
@@ -106,6 +108,7 @@ export const sanitizeAndValidateListing: Sanitizer = (model, add) => {
             requiresLinkedAddress,
             discordMessage,
             resultantRole,
+            onlyVisibleWhenFiltered: !!onlyVisibleWhenFiltered,
             startDate: startDate ? new Date(startDate) : null,
             endDate: endDate ? new Date(endDate) : null,
             ...(!add && { id, disabled }),

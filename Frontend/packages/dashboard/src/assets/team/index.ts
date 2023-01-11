@@ -7,20 +7,6 @@ import Cory from './Cory.jpg';
 
 const members = [
     {
-        name: 'David',
-        alias: 'Politikos',
-        title: 'Chief Executive Officer',
-        image: David,
-        twitter: 'itsPolitikos',
-    },
-    {
-        name: 'Luke',
-        alias: 'Truzo',
-        title: 'Chief Operating Officer',
-        image: Luke,
-        twitter: 'itsTruzo',
-    },
-    {
         name: 'Alex',
         alias: 'Rubiks',
         title: 'Chief Information Officer',
@@ -35,18 +21,32 @@ const members = [
         twitter: 'itsminski',
     },
     {
-        name: 'Justin',
-        alias: 'MysterJustyn',
-        title: 'Chief Financial Officer',
-        image: Justin,
-        twitter: 'MysterJustyn',
-    },
-    {
         name: 'Cory',
         alias: 'ToxicPizza',
         title: 'Developer',
         image: Cory,
         twitter: 'Animalmix55',
+    },
+    {
+        name: 'David',
+        alias: 'Politikos',
+        title: 'Chief Executive Officer',
+        image: David,
+        twitter: 'itsPolitikos',
+    },
+    {
+        name: 'Luke',
+        alias: 'Truzo',
+        title: 'Chief Operating Officer',
+        image: Luke,
+        twitter: 'itsTruzo',
+    },
+    {
+        name: 'Justin',
+        alias: 'MysterJustyn',
+        title: 'Chief Financial Officer',
+        image: Justin,
+        twitter: 'MysterJustyn',
     },
 ];
 

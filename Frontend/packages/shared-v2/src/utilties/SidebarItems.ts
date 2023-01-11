@@ -9,16 +9,10 @@ export const SidebarItems: (SidebarItem & { url?: string })[] = [
         url: 'https://gamingapeclub.com/',
     },
     {
-        icon: Icons.Mission,
-        displayText: 'Game Plan',
-        id: 'Game Plan',
-        url: 'https://docs.gamingapeclub.com/what-now-for-gac/game-plan-v2',
-    },
-    {
         icon: Icons.News,
         displayText: 'Whitepaper',
         id: 'Whitepaper',
-        url: 'http://docs.gamingapeclub.com/',
+        url: 'https://docs.gamingapeclub.com/what-now-for-gac/game-plan-v2',
     },
     {
         icon: Icons.Shack,

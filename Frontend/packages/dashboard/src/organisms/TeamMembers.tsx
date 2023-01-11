@@ -13,8 +13,8 @@ export const TeamMembers = (): JSX.Element => {
             heading={<Header title="Meet the" subtitle="founding team" />}
             action={
                 <LinkButton
-                    text="Our mission"
-                    href="https://app.gitbook.com/s/eQzDpDMnDp8m5Um37K2y/what-now-for-gac/game-plan-v2"
+                    text="Stay Connected 🤝"
+                    href="https://www.twitter.com/GamingApeClub"
                 />
             }
         >
