@@ -9,14 +9,14 @@ const members = [
     {
         name: 'Alex',
         alias: 'Rubiks',
-        title: 'Chief Information Officer',
+        title: 'Founder / Owner',
         image: Alex,
         twitter: 'RubiksLive',
     },
     {
         name: 'Nick',
         alias: 'Minski',
-        title: 'Chief Marketing Officer',
+        title: 'Founder / Owner',
         image: Nick,
         twitter: 'itsminski',
     },
@@ -26,27 +26,6 @@ const members = [
         title: 'Developer',
         image: Cory,
         twitter: 'Animalmix55',
-    },
-    {
-        name: 'David',
-        alias: 'Politikos',
-        title: 'Chief Executive Officer',
-        image: David,
-        twitter: 'itsPolitikos',
-    },
-    {
-        name: 'Luke',
-        alias: 'Truzo',
-        title: 'Chief Operating Officer',
-        image: Luke,
-        twitter: 'itsTruzo',
-    },
-    {
-        name: 'Justin',
-        alias: 'MysterJustyn',
-        title: 'Chief Financial Officer',
-        image: Justin,
-        twitter: 'MysterJustyn',
     },
 ];
 
